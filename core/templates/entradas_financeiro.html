@@ -1,0 +1,198 @@
+{% extends "base_financeiro.html" %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold">
+        <i class="bi bi-cash-stack me-2 text-success"></i>
+        Entradas Financeiras
+    </h4>
+
+    <form method="get" class="d-flex gap-2 align-items-center">
+
+        <select name="mes" class="form-select form-select-sm">
+            <option value="">Todos os meses</option>
+            {% for i, nome in MESES %}
+            <option value="{{ i }}" {% if mes == i %}selected{% endif %}>{{ nome }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" name="ano" min="2020" max="2100"
+        placeholder="Ano"
+        value="{{ ano }}"
+        class="form-control form-control-sm"
+        style="width:90px">
+
+        <button type="submit" class="btn btn-primary btn-sm">
+            Filtrar
+        </button>
+
+        <button type="submit" name="export_excel" value="1"
+        class="btn btn-success btn-sm ms-2">
+            <i class="bi bi-file-earmark-excel"></i> Excel
+        </button>
+
+    </form>
+</div>
+
+
+<div class="row mb-4 g-4">
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-lg p-4 hover-scale bg-gradient-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small>Total Recebido</small>
+                    <h2 class="fw-bold mb-0">{{ total_entradas|intcomma }} Kz</h2>
+                </div>
+                <div class="bg-white bg-opacity-25 p-4 rounded-circle">
+                    <i class="bi bi-currency-dollar fs-2 text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-lg p-4 hover-scale bg-gradient-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small>Total de Pagamentos</small>
+                    <h2 class="fw-bold mb-0">{{ pagamentos|length }}</h2>
+                </div>
+                <div class="bg-white bg-opacity-25 p-4 rounded-circle">
+                    <i class="bi bi-list-ul fs-2 text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-lg p-4 hover-scale bg-gradient-dark text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <small>Sistema</small>
+                    <h5 class="fw-bold mb-0">Financeiro Escolar</h5>
+                </div>
+                <div class="bg-white bg-opacity-25 p-4 rounded-circle">
+                    <i class="bi bi-bank fs-2 text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+        <strong>Pagamentos Recebidos</strong>
+        <small class="text-muted">{{ pagamentos|length }} registros</small>
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Aluno</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for pagamento in pagamentos %}
+                <tr>
+
+                    <td>
+                        <i class="bi bi-person-circle text-primary me-2"></i>
+                        <strong>{{ pagamento.aluno.usuario.get_full_name }}</strong>
+                    </td>
+
+                    <td>
+
+                        {% if pagamento.mensalidade %}
+
+                            <span class="text-primary fw-semibold">
+                                Mensalidade - {{ pagamento.mensalidade.mes }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-secondary fw-semibold">
+                                {{ pagamento.tipo }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td class="text-success fw-bold">
+                        {{ pagamento.valor_pago|intcomma }} Kz
+                    </td>
+
+                    <td>
+                        {{ pagamento.data_pagamento|date:"d/m/Y" }}
+                    </td>
+
+                    <td>
+                        <span class="badge bg-success">
+                            Pago
+                        </span>
+                    </td>
+
+                </tr>
+                {% empty %}
+
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox fs-1"></i>
+                        <p class="mt-2">Nenhum pagamento registrado</p>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.hover-scale{
+    transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.hover-scale:hover{
+    transform:translateY(-7px) scale(1.04);
+    box-shadow:0 15px 35px rgba(0,0,0,0.25);
+}
+
+.bg-gradient-success{
+    background:linear-gradient(135deg,#28a745,#218838);
+}
+
+.bg-gradient-primary{
+    background:linear-gradient(135deg,#0d6efd,#0b5ed7);
+}
+
+.bg-gradient-dark{
+    background:linear-gradient(135deg,#343a40,#212529);
+}
+
+</style>
+
+{% endblock %}

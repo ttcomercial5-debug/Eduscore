@@ -1,0 +1,765 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ================= HERO HEADER ================= -->
+
+    <div class="calendar-hero mb-4">
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+
+            <div>
+
+                <div class="hero-badge">
+
+                    <i class="bi bi-stars"></i>
+                    Gestão Inteligente Escolar
+
+                </div>
+
+                <h1 class="hero-title">
+                    Calendário Escolar Inteligente
+                </h1>
+
+                <p class="hero-subtitle">
+
+                    Controle completo de provas, férias, reuniões,
+                    pagamentos, eventos académicos e encerramentos trimestrais.
+
+                </p>
+
+            </div>
+
+            <div class="hero-actions">
+
+                <a href="{% url 'criar_evento' %}"
+                   class="btn btn-premium">
+
+                    <i class="bi bi-plus-circle-fill me-2"></i>
+                    Criar Evento
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= STATS ================= -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card primary-card">
+
+                <div>
+
+                    <small class="stat-label">
+                        Total Eventos
+                    </small>
+
+                    <h2 class="stat-number">
+                        {{ eventos|length }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="bi bi-calendar-event-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card success-card">
+
+                <div>
+
+                    <small class="stat-label">
+                        Provas
+                    </small>
+
+                    <h2 class="stat-number">
+                        {{ total_provas|default:"0" }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card warning-card">
+
+                <div>
+
+                    <small class="stat-label">
+                        Reuniões
+                    </small>
+
+                    <h2 class="stat-number">
+                        {{ total_reunioes|default:"0" }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="stat-card danger-card">
+
+                <div>
+
+                    <small class="stat-label">
+                        Férias/Eventos
+                    </small>
+
+                    <h2 class="stat-number">
+                        {{ total_ferias|default:"0" }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="bi bi-airplane-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= CALENDÁRIO ================= -->
+
+    <div class="calendar-card">
+
+        <div class="calendar-header">
+
+            <div>
+
+                <h3 class="mb-1 fw-bold">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    Agenda Escolar Premium
+                </h3>
+
+                <small class="opacity-75">
+                    Eventos organizados e monitorados em tempo real
+                </small>
+
+            </div>
+
+            <div class="calendar-live">
+
+                <span class="live-dot"></span>
+
+                Sistema Ativo
+
+            </div>
+
+        </div>
+
+        <div class="calendar-body">
+
+            {% if eventos %}
+
+            <div class="table-responsive">
+
+                <table class="table premium-table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Evento</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Turma</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for evento in eventos %}
+
+                        <tr>
+
+                            <!-- EVENTO -->
+
+                            <td>
+
+                                <div class="event-info">
+
+                                    <div class="event-avatar">
+
+                                        {% if evento.tipo == 'PROVA' %}
+                                            <i class="bi bi-journal-text"></i>
+
+                                        {% elif evento.tipo == 'FERIAS' %}
+                                            <i class="bi bi-airplane"></i>
+
+                                        {% elif evento.tipo == 'REUNIAO' %}
+                                            <i class="bi bi-people"></i>
+
+                                        {% elif evento.tipo == 'PAGAMENTO' %}
+                                            <i class="bi bi-cash-stack"></i>
+
+                                        {% else %}
+                                            <i class="bi bi-calendar-event"></i>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong class="event-title">
+                                            {{ evento.titulo }}
+                                        </strong>
+
+                                        <br>
+
+                                        <small class="text-muted">
+                                            {{ evento.descricao }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <!-- TIPO -->
+
+                            <td>
+
+                                {% if evento.tipo == "PROVA" %}
+
+                                    <span class="badge badge-danger">
+                                        {{ evento.get_tipo_display }}
+                                    </span>
+
+                                {% elif evento.tipo == "FERIAS" %}
+
+                                    <span class="badge badge-success">
+                                        {{ evento.get_tipo_display }}
+                                    </span>
+
+                                {% elif evento.tipo == "REUNIAO" %}
+
+                                    <span class="badge badge-warning">
+                                        {{ evento.get_tipo_display }}
+                                    </span>
+
+                                {% elif evento.tipo == "PAGAMENTO" %}
+
+                                    <span class="badge badge-primary">
+                                        {{ evento.get_tipo_display }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-secondary">
+                                        {{ evento.get_tipo_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- DATA -->
+
+                            <td>
+
+                                <div class="date-box">
+
+                                    <strong>
+                                        {{ evento.data_inicio }}
+                                    </strong>
+
+                                    {% if evento.data_fim %}
+
+                                    <small>
+                                        até {{ evento.data_fim }}
+                                    </small>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                            <!-- TURMA -->
+
+                            <td>
+
+                                {% if evento.turma %}
+
+                                    <span class="turma-pill">
+                                        {{ evento.turma }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-muted fw-semibold">
+                                        Evento Geral
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                <span class="status-active">
+
+                                    <span class="pulse"></span>
+
+                                    Agendado
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-calendar2-plus"></i>
+
+                </div>
+
+                <h3>
+                    Nenhum evento encontrado
+                </h3>
+
+                <p>
+
+                    O calendário escolar ainda não possui eventos cadastrados.
+
+                </p>
+
+                <a href="{% url 'criar_evento' %}"
+                   class="btn btn-premium mt-2">
+
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Criar Primeiro Evento
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+/* ================= BODY ================= */
+
+body{
+background:#f1f5f9;
+}
+
+/* ================= HERO ================= */
+
+.calendar-hero{
+position:relative;
+overflow:hidden;
+border-radius:28px;
+padding:45px;
+background:
+linear-gradient(135deg,#020617,#0f172a,#1e293b);
+color:white;
+box-shadow:0 25px 60px rgba(15,23,42,0.35);
+}
+
+.hero-overlay{
+position:absolute;
+top:0;
+right:0;
+width:450px;
+height:450px;
+background:radial-gradient(circle,
+rgba(59,130,246,0.35),
+transparent 70%);
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.hero-badge{
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:rgba(255,255,255,0.08);
+padding:10px 18px;
+border-radius:50px;
+font-size:13px;
+margin-bottom:20px;
+backdrop-filter:blur(10px);
+}
+
+.hero-title{
+font-size:42px;
+font-weight:800;
+margin-bottom:12px;
+}
+
+.hero-subtitle{
+max-width:750px;
+font-size:16px;
+opacity:0.85;
+line-height:1.7;
+}
+
+/* ================= BUTTON ================= */
+
+.btn-premium{
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+border:none;
+padding:14px 28px;
+border-radius:16px;
+font-weight:700;
+font-size:15px;
+color:white;
+box-shadow:0 15px 35px rgba(37,99,235,0.35);
+transition:0.3s ease;
+text-decoration:none;
+display:inline-flex;
+align-items:center;
+}
+
+.btn-premium:hover{
+transform:translateY(-4px);
+color:white;
+}
+
+/* ================= STATS ================= */
+
+.stat-card{
+border-radius:24px;
+padding:28px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:white;
+box-shadow:0 18px 40px rgba(0,0,0,0.08);
+transition:0.3s ease;
+}
+
+.stat-card:hover{
+transform:translateY(-6px);
+}
+
+.primary-card{
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.success-card{
+background:linear-gradient(135deg,#059669,#047857);
+}
+
+.warning-card{
+background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.danger-card{
+background:linear-gradient(135deg,#dc2626,#991b1b);
+}
+
+.stat-label{
+font-size:13px;
+text-transform:uppercase;
+opacity:0.8;
+}
+
+.stat-number{
+font-size:38px;
+font-weight:800;
+margin-top:8px;
+}
+
+.stat-icon{
+font-size:42px;
+opacity:0.9;
+}
+
+/* ================= CALENDAR ================= */
+
+.calendar-card{
+background:white;
+border-radius:28px;
+overflow:hidden;
+box-shadow:0 20px 50px rgba(0,0,0,0.06);
+}
+
+.calendar-header{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+padding:25px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:20px;
+}
+
+.calendar-live{
+background:rgba(255,255,255,0.1);
+padding:10px 18px;
+border-radius:50px;
+display:flex;
+align-items:center;
+gap:10px;
+font-size:13px;
+}
+
+.live-dot{
+width:10px;
+height:10px;
+background:#22c55e;
+border-radius:50%;
+animation:pulseLive 1.5s infinite;
+}
+
+@keyframes pulseLive{
+0%{opacity:1;}
+50%{opacity:0.4;}
+100%{opacity:1;}
+}
+
+.calendar-body{
+padding:25px;
+}
+
+/* ================= TABLE ================= */
+
+.premium-table thead th{
+background:#f8fafc;
+padding:18px;
+font-size:13px;
+text-transform:uppercase;
+letter-spacing:0.6px;
+border:none;
+color:#475569;
+}
+
+.premium-table tbody td{
+padding:22px 18px;
+border-bottom:1px solid #f1f5f9;
+vertical-align:middle;
+}
+
+.premium-table tbody tr{
+transition:0.25s ease;
+}
+
+.premium-table tbody tr:hover{
+background:#f8fafc;
+transform:scale(1.003);
+}
+
+.event-info{
+display:flex;
+align-items:center;
+gap:16px;
+}
+
+.event-avatar{
+width:55px;
+height:55px;
+border-radius:18px;
+background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+color:#2563eb;
+}
+
+.event-title{
+font-size:15px;
+color:#0f172a;
+}
+
+.date-box{
+display:flex;
+flex-direction:column;
+}
+
+.date-box small{
+color:#64748b;
+margin-top:3px;
+}
+
+.turma-pill{
+background:#e2e8f0;
+padding:8px 16px;
+border-radius:50px;
+font-size:13px;
+font-weight:700;
+color:#1e293b;
+}
+
+.status-active{
+display:inline-flex;
+align-items:center;
+gap:8px;
+font-size:13px;
+font-weight:700;
+color:#16a34a;
+}
+
+.pulse{
+width:10px;
+height:10px;
+background:#22c55e;
+border-radius:50%;
+animation:pulseLive 1.5s infinite;
+}
+
+/* ================= BADGES ================= */
+
+.badge{
+padding:10px 16px;
+border-radius:50px;
+font-size:12px;
+font-weight:700;
+}
+
+.badge-primary{
+background:#dbeafe;
+color:#1d4ed8;
+}
+
+.badge-success{
+background:#dcfce7;
+color:#15803d;
+}
+
+.badge-warning{
+background:#fef3c7;
+color:#b45309;
+}
+
+.badge-danger{
+background:#fee2e2;
+color:#b91c1c;
+}
+
+.badge-secondary{
+background:#e2e8f0;
+color:#334155;
+}
+
+/* ================= EMPTY ================= */
+
+.empty-state{
+padding:80px 20px;
+text-align:center;
+}
+
+.empty-icon{
+width:120px;
+height:120px;
+border-radius:50%;
+background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+margin-bottom:25px;
+font-size:50px;
+color:#2563eb;
+}
+
+.empty-state h3{
+font-weight:800;
+margin-bottom:10px;
+color:#0f172a;
+}
+
+.empty-state p{
+color:#64748b;
+max-width:500px;
+margin:auto;
+}
+
+/* ================= RESPONSIVO ================= */
+
+@media(max-width:768px){
+
+.hero-title{
+font-size:28px;
+}
+
+.hero-content{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.stat-number{
+font-size:30px;
+}
+
+.calendar-header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+}
+
+</style>
+
+{% endblock %}

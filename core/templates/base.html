@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão Escolar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2f7, #f8fafc);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f172a, #1e293b);
+            padding: 30px 20px;
+            color: white;
+            box-shadow: 6px 0 25px rgba(0,0,0,0.08);
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            overflow-y: auto;
+        }
+
+        .sidebar-content{
+            flex: 1;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 12px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-link i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .menu-link:hover {
+            background: #334155;
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .menu-link.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        /* ================= FOOTER ================= */
+
+        .sidebar-footer {
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logout-link {
+            color: #f87171;
+        }
+
+        .logout-link:hover {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            margin-left: 260px;
+            padding: 35px;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .btn-switch {
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        /* ================= CARDS ================= */
+
+        .card-dashboard {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+
+        /* ================= RESPONSIVO ================= */
+
+        @media(max-width: 992px){
+
+            .sidebar{
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .content{
+                margin-left: 0;
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="sidebar">
+
+    <div class="sidebar-content">
+
+        <!-- LOGO -->
+
+        <div class="brand">
+            Sistema de Gestão Escolar
+        </div>
+
+        <!-- MENU -->
+
+        <ul class="menu">
+
+            <!-- DASHBOARD -->
+
+            <li class="menu-item">
+
+                <a href="/dashboard/"
+                   class="menu-link {% if request.path == '/dashboard/' %}active{% endif %}">
+
+                    <i class="bi bi-speedometer2"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+            <!-- ALUNOS -->
+
+            <li class="menu-item">
+
+                <a href="/alunos/"
+                   class="menu-link {% if '/alunos/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-people"></i>
+
+                    Alunos
+
+                </a>
+
+            </li>
+
+            <!-- PROFESSORES -->
+
+            <li class="menu-item">
+
+                <a href="/professores/"
+                   class="menu-link {% if '/professores/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-person-badge"></i>
+
+                    Professores
+
+                </a>
+
+            </li>
+
+            <!-- CURSOS -->
+
+            <li class="menu-item">
+
+                <a href="{% url 'cursos' %}"
+                   class="menu-link {% if request.resolver_match.url_name == 'cursos' %}active{% endif %}">
+
+                    <i class="bi bi-mortarboard"></i>
+
+                    Cursos
+
+                </a>
+
+            </li>
+
+            <!-- TURMAS -->
+
+            <li class="menu-item">
+
+                <a href="/turmas/"
+                   class="menu-link {% if '/turmas/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-easel"></i>
+
+                    Turmas
+
+                </a>
+
+            </li>
+
+            <!-- HORÁRIOS -->
+
+            <li class="menu-item">
+
+                <a href="{% url 'horarios_turma' %}"
+                   class="menu-link {% if request.resolver_match.url_name == 'horarios_turma' %}active{% endif %}">
+
+                    <i class="bi bi-clock-history"></i>
+
+                    Horários
+
+                </a>
+
+            </li>
+
+            <!-- DISCIPLINAS -->
+
+            <li class="menu-item">
+
+                <a href="/disciplinas/"
+                   class="menu-link {% if '/disciplinas/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-book"></i>
+
+                    Disciplinas
+
+                </a>
+
+            </li>
+
+            <!-- CALENDÁRIO ESCOLAR -->
+
+            <li class="menu-item">
+
+                <a href="{% url 'calendario_escolar' %}"
+                   class="menu-link {% if request.resolver_match.url_name == 'calendario_escolar' %}active{% endif %}">
+
+                    <i class="bi bi-calendar-event"></i>
+
+                    Calendário Escolar
+
+                </a>
+
+            </li>
+
+            <!-- FUNCIONÁRIOS -->
+
+            <li class="menu-item">
+
+                <a href="{% url 'cadastrar_secretaria' %}"
+                   class="menu-link {% if request.resolver_match.url_name == 'cadastrar_secretaria' %}active{% endif %}">
+
+                    <i class="bi bi-person-plus"></i>
+
+                    Cadastrar Funcionários
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- ================= BOTÃO SAIR ================= -->
+
+    <div class="sidebar-footer">
+
+        <a href="/logout/" class="menu-link logout-link">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+            <span>Sair</span>
+
+        </a>
+
+    </div>
+
+</div>
+
+<!-- ================= CONTENT ================= -->
+
+<div class="content">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Lista de Notas</h2>
+
+<div class="card p-3 shadow-sm table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark text-center">
+            <tr>
+                <th>Aluno</th>
+                <th>Turma</th>
+                <th>Disciplina</th>
+                <th>Trimestre</th>
+                <th>Nota P1</th>
+                <th>Nota P2</th>
+                <th>Média</th>
+                <th>Professor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nota in notas %}
+            <tr class="text-center">
+                <td>{{ nota.aluno.nome }}</td>
+                <td>{{ nota.turma.nome }}</td>
+                <td>{{ nota.disciplina.nome }}</td>
+                <td>{{ nota.trimestre }}º</td>
+                <td>{{ nota.p1|default:"-" }}</td>
+                <td>{{ nota.p2|default:"-" }}</td>
+                <td>
+                    <span class="badge bg-info text-dark">
+                        {{ nota.media|default:"-" }}
+                    </span>
+                </td>
+                <td>{{ nota.professor.get_full_name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center text-muted">
+                    Nenhuma nota registrada.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

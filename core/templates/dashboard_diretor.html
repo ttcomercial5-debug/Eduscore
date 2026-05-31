@@ -1,0 +1,246 @@
+<h2>Painel Diretor - {{ escola.nome }}</h2>
+
+<{% extends "base_secretaria.html" %}
+{% block content %}
+
+<style>
+.dashboard-wrapper {
+    padding: 30px;
+}
+
+/* HEADER PREMIUM */
+.header-premium {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: white;
+    border-radius: 18px;
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    font-size: 18px;
+}
+
+.card-finance {
+    border: none;
+    border-radius: 18px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card-finance:hover {
+    transform: translateY(-4px);
+}
+
+.bg-recebido {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.bg-divida {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+}
+
+.bg-devedores {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.card-finance h6 {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.card-finance h3 {
+    font-size: 28px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.table-modern {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.table-modern thead {
+    background: #1e293b;
+    color: white;
+}
+
+.section-title {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+</style>
+
+<div class="dashboard-wrapper">
+
+    <!-- HEADER -->
+    <div class="header-premium d-flex justify-content-between align-items-center">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-cash-stack me-2"></i>
+                Painel da Secretaria
+            </h4>
+            <small class="text-light opacity-75">
+                {{ request.user.escola.nome }}
+            </small>
+        </div>
+
+        <div class="profile-badge">
+            <div class="profile-icon">
+                {{ request.user.username|first|upper }}
+            </div>
+            <div>
+                <small class="text-light opacity-75">Secretaria</small><br>
+                <strong>{{ request.user.username }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS (NÃO ALTERADOS) -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-finance bg-recebido">
+                <h6>Total Recebido</h6>
+                <h3>{{ total_recebido }} Kz</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-finance bg-divida">
+                <h6>Total em Dívida</h6>
+                <h3>{{ total_divida }} Kz</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-finance bg-devedores">
+                <h6>Alunos Devedores</h6>
+                <h3>{{ alunos_devedores }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BOTÕES RÁPIDOS ================= -->
+    <div class="section-title">
+        Ações Rápidas
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <a href="{% url 'nova_matricula' %}" class="btn btn-primary w-100">
+                Nova Matrícula
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'registrar_pagamento' %}" class="btn btn-success w-100">
+                Registrar Pagamento
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'mensalidades' %}" class="btn btn-warning w-100">
+                Ver Mensalidades
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'relatorios_financeiro' %}" class="btn btn-dark w-100">
+                Relatórios
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= ÚLTIMAS MATRÍCULAS ================= -->
+    <div class="section-title">
+        Últimas Matrículas
+    </div>
+
+    <div class="table-modern p-3">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Classe</th>
+                    <th>Nº Processo</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in ultimas_matriculas %}
+                <tr>
+                    <td>{{ m.aluno.nome }}</td>
+                    <td>{{ m.classe }}</td>
+                    <td>{{ m.numero_processo }}</td>
+                    <td>
+                        {% if m.estado == "Confirmada" %}
+                            <span class="badge bg-success">Confirmada</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pendente</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhuma matrícula encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= ÚLTIMOS PAGAMENTOS ================= -->
+    <div class="section-title">
+        Últimos Pagamentos
+    </div>
+
+    <div class="table-modern p-3">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in ultimos_pagamentos %}
+                <tr>
+                    <td>{{ p.aluno.nome }}</td>
+                    <td>{{ p.valor }} Kz</td>
+                    <td>{{ p.data_pagamento }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhum pagamento recente.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
+
+<p>Total de Alunos: {{ total_alunos }}</p>
+<p>Total de Professores: {{ total_professores }}</p>
+<p>Total de Turmas: {{ total_turmas }}</p>

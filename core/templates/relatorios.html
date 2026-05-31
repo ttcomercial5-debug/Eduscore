@@ -1,0 +1,121 @@
+{% extends "base_professor.html" %}
+{% block content %}
+
+<style>
+.relatorio-wrapper {
+    padding: 30px;
+}
+
+.relatorio-header {
+    margin-bottom: 25px;
+}
+
+.relatorio-header h2 {
+    margin: 0;
+}
+
+.card-resumo {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.tabela-relatorio {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-relatorio th {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.tabela-relatorio td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.tabela-relatorio tr:hover {
+    background-color: #f8f9fa;
+}
+
+.badge-aprovado {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.badge-reprovado {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.sem-dados {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+</style>
+
+<div class="relatorio-wrapper">
+
+    <div class="relatorio-header">
+        <h2>Relatórios Estatísticos</h2>
+        <p>Resumo geral das turmas que leciona</p>
+    </div>
+
+    <div class="card-resumo">
+        <table class="tabela-relatorio">
+            <thead>
+                <tr>
+                    <th>Turma</th>
+                    <th>Total de Alunos</th>
+                    <th>Média Geral</th>
+                    <th>Total Aprovados</th>
+                    <th>% Aprovados</th>
+                    <th>Status Geral</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for item in dados %}
+                <tr>
+                    <!-- AQUI ESTÁ A CORREÇÃO -->
+                    <td>{{ item.turma.classe }}ª {{ item.turma.identificador }}</td>
+
+                    <td>{{ item.total_alunos }}</td>
+                    <td>{{ item.media }}</td>
+                    <td>{{ item.total_aprovados }}</td>
+                    <td>{{ item.percentagem }}%</td>
+                    <td>
+                        {% if item.percentagem >= 50 %}
+                            <span class="badge-aprovado">Bom Desempenho</span>
+                        {% else %}
+                            <span class="badge-reprovado">Precisa Melhorar</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="sem-dados">
+                        Nenhuma turma encontrada para gerar relatório.
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

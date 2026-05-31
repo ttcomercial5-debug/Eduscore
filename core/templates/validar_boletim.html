@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Validação de Boletim</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f1f5f9;
+            padding: 40px;
+        }
+        .card {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .titulo {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .linha {
+            margin-bottom: 10px;
+        }
+        .status {
+            font-weight: bold;
+            padding: 8px;
+            display: inline-block;
+            border-radius: 6px;
+        }
+        .aprovado {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .reprovado {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="titulo">
+        Boletim Validado com Sucesso
+    </div>
+
+    <div class="linha"><strong>Escola:</strong> {{ escola }}</div>
+    <div class="linha"><strong>Aluno:</strong> {{ aluno_nome }}</div>
+    <div class="linha"><strong>Turma:</strong> {{ turma }}</div>
+    <div class="linha"><strong>Ano Letivo:</strong> {{ ano_letivo }}</div>
+    <div class="linha"><strong>Média Anual:</strong> {{ boletim.media_anual }}</div>
+
+    <div class="linha">
+        <strong>Situação Final:</strong>
+        <span class="status {% if boletim.status_final == 'APROVADO' %}aprovado{% else %}reprovado{% endif %}">
+            {{ boletim.status_final }}
+        </span>
+    </div>
+
+    <div class="linha">
+        <strong>Data de Emissão:</strong> {{ boletim.data_emissao|date:"d/m/Y H:i" }}
+    </div>
+
+    <div class="linha">
+        <strong>Código de Validação:</strong> {{ boletim.codigo_validacao }}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Administração - Superadmin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2f7, #f8fafc);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0f172a, #1e293b);
+            padding: 30px 20px;
+            color: white;
+            box-shadow: 6px 0 25px rgba(0,0,0,0.08);
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 12px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-weight: 500;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .menu-link i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .menu-link:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .menu-link.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 30px;
+            width: 85%;
+        }
+
+        .logout-link {
+            color: #f87171;
+        }
+
+        .logout-link:hover {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        /* CONTENT */
+        .content {
+            margin-left: 260px;
+            padding: 35px;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .btn-switch {
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        /* CARDS */
+        .card-dashboard {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="brand">
+        Administração
+    </div>
+
+    <ul class="menu">
+
+        <!-- Menu Superadmin -->
+        <li class="menu-item">
+                <a href="/escolas/" class="menu-link">
+                    <i class="bi bi-buildings"></i> Gerenciar Escolas
+                </a>
+        </li>
+
+
+
+        <li class="menu-item">
+            <a href="/planos/" class="menu-link">
+                <i class="bi bi-credit-card"></i> Gerenciar Planos
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="/pagamentos-escolas/" class="menu-link">
+                <i class="bi bi-currency-dollar"></i> Pagamentos
+            </a>
+        </li>
+
+        <li class="menu-item">
+            <a href="/configuracoes/" class="menu-link">
+                <i class="bi bi-gear"></i> Configurações
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="sidebar-footer">
+        <a href="/logout/" class="menu-link logout-link">
+            <i class="bi bi-box-arrow-right"></i> Sair
+        </a>
+    </div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="user-info">
+            Superadmin: {{ user.username }}
+        </div>
+    </div>
+
+    <!-- DASHBOARD CONTENT -->
+    {% block content %}
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="card card-dashboard p-3">
+                <div class="card-title">Total Escolas</div>
+                <div class="card-value">{{ total_escolas }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-dashboard p-3">
+                <div class="card-title">Total Usuários</div>
+                <div class="card-value">{{ total_usuarios }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-dashboard p-3">
+                <div class="card-title">Total Planos</div>
+                <div class="card-value">{{ total_planos }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card card-dashboard p-3">
+                <div class="card-title">Pagamentos Pendentes</div>
+                <div class="card-value">{{ total_pagamentos_pendentes }}</div>
+            </div>
+        </div>
+
+    </div>
+    {% endblock %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

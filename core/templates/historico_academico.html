@@ -1,0 +1,127 @@
+{% extends "base_aluno.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body">
+
+            <h3 class="fw-bold mb-4">
+                Histórico Académico
+            </h3>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>
+                                Ano Letivo
+                            </th>
+
+                            <th>
+                                Classe
+                            </th>
+
+                            <th>
+                                Turma
+                            </th>
+
+                            <th>
+                                Situação
+                            </th>
+
+                            <th>
+                                PDF
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for h in historicos %}
+
+                        <tr>
+
+                            <td>
+                                {{ h.ano_letivo.nome }}
+                            </td>
+
+                            <td>
+                                {{ h.classe }}ª
+                            </td>
+
+                            <td>
+                                {{ h.turma.identificador }}
+                            </td>
+
+                            <td>
+
+                                {% if h.situacao == "APROVADO" %}
+
+                                    <span class="badge bg-success">
+                                        Aprovado
+                                    </span>
+
+                                {% elif h.situacao == "REPROVADO" %}
+
+                                    <span class="badge bg-danger">
+                                        Reprovado
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-primary">
+                                        Finalista
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="{% url 'boletim_historico_pdf' h.id %}"
+                                   class="btn btn-sm btn-danger">
+
+                                    PDF
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center text-muted">
+
+                                Nenhum histórico encontrado.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

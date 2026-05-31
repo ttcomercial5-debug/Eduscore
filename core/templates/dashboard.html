@@ -1,0 +1,948 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid px-4 mt-4">
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show mt-3">
+            {{ message }}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- ================= HEADER PREMIUM ================= -->
+<div class="card border-0 shadow-lg rounded-4 mb-4 header-premium">
+
+    <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+        <div class="d-flex align-items-center gap-3">
+
+            {% if request.user.escola.logo %}
+            <div class="logo-container">
+
+                <img src="{{ request.user.escola.logo.url }}"
+                     alt="Logo da escola"
+                     class="logo-escola">
+
+            </div>
+            {% endif %}
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard Executivo
+                </h4>
+
+                <small class="text-light opacity-75">
+                    {{ request.user.escola.nome }}
+                </small>
+
+                {% if ano %}
+                <div class="mt-2">
+                    <span class="badge bg-primary">
+                        Ano Letivo: {{ ano.nome }}
+                    </span>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="profile-badge">
+
+            <div class="profile-icon">
+                {{ request.user.username|first|upper }}
+            </div>
+
+            <div>
+
+                <small class="text-light opacity-75">
+                    Diretor
+                </small>
+
+                <br>
+
+                <strong>
+                    {{ request.user.username }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= CARDS ================= -->
+
+<div class="row g-4">
+
+    <!-- ALUNOS -->
+    <div class="col-md-3">
+
+        <div class="card dashboard-card glass-card">
+
+            <div>
+
+                <span class="card-label">
+                    Alunos
+                </span>
+
+                <h2>{{ total_alunos }}</h2>
+
+                <small>
+                    Estudantes ativos
+                </small>
+
+            </div>
+
+            <i class="bi bi-mortarboard-fill icon"></i>
+
+        </div>
+
+    </div>
+
+    <!-- PROFESSORES -->
+    <div class="col-md-3">
+
+        <div class="card dashboard-card glass-card success">
+
+            <div>
+
+                <span class="card-label">
+                    Professores
+                </span>
+
+                <h2>{{ total_professores }}</h2>
+
+                <small>
+                    Corpo docente
+                </small>
+
+            </div>
+
+            <i class="bi bi-person-workspace icon"></i>
+
+        </div>
+
+    </div>
+
+    <!-- TURMAS -->
+    <div class="col-md-3">
+
+        <div class="card dashboard-card glass-card warning">
+
+            <div>
+
+                <span class="card-label">
+                    Turmas
+                </span>
+
+                <h2>{{ total_turmas }}</h2>
+
+                <small>
+                    Classes ativas
+                </small>
+
+            </div>
+
+            <i class="bi bi-building icon"></i>
+
+        </div>
+
+    </div>
+
+    <!-- FINANÇAS -->
+    <div class="col-md-3">
+
+        <div class="card dashboard-card glass-card danger">
+
+            <div>
+
+                <span class="card-label">
+                    Pagamentos
+                </span>
+
+                <h2>{{ total_recebido }}</h2>
+
+                <small>
+                    Registros financeiros
+                </small>
+
+            </div>
+
+            <i class="bi bi-cash-stack icon"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= DASHBOARD INTELIGENTE ================= -->
+
+<div class="row mt-5 g-4">
+
+    <!-- TAXA APROVAÇÃO -->
+    <div class="col-md-6">
+
+        <div class="smart-card">
+
+            <h5 class="smart-title">
+                <i class="bi bi-bar-chart-fill me-2"></i>
+                Taxa de Aprovação
+            </h5>
+
+            <div class="smart-content">
+
+                <h1>{{ percentagem_aprovacao }}%</h1>
+
+                <p>
+                    {{ aprovados }} aprovados
+                    •
+                    {{ reprovados }} reprovados
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MELHOR TURMA -->
+    <div class="col-md-6">
+
+        <div class="smart-card success-card">
+
+            <h5 class="smart-title">
+                <i class="bi bi-trophy-fill me-2"></i>
+                Melhor Turma
+            </h5>
+
+            {% if melhor_turma %}
+
+            <div class="smart-content">
+
+                <h3>
+                    {{ melhor_turma.nome }}
+                </h3>
+
+                <p>
+                    Média Geral:
+                    <strong>{{ melhor_turma.media }}</strong>
+                </p>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-light">
+                Nenhuma informação disponível.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SEGUNDA LINHA -->
+<div class="row mt-4 g-4">
+
+    <!-- PIOR DISCIPLINA -->
+    <div class="col-md-6">
+
+        <div class="smart-card danger-card">
+
+            <h5 class="smart-title">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Pior Disciplina
+            </h5>
+
+            {% if pior_disciplina %}
+
+            <div class="smart-content">
+
+                <h3>
+                    {{ pior_disciplina.nome }}
+                </h3>
+
+                <p>
+                    Média:
+                    <strong>{{ pior_disciplina.media }}</strong>
+                </p>
+
+                <small>
+                    {{ pior_disciplina.negativas }} negativas
+                </small>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-light">
+                Nenhuma informação disponível.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- EVOLUÇÃO -->
+    <div class="col-md-6">
+
+        <div class="smart-card evolution-card">
+
+            <h5 class="smart-title">
+                <i class="bi bi-graph-up-arrow me-2"></i>
+                Evolução Escolar
+            </h5>
+
+            {% for item in evolucao %}
+
+            <div class="evolution-item">
+
+                <span>{{ item.trimestre }}</span>
+
+                <strong>{{ item.media }}</strong>
+
+            </div>
+
+            {% empty %}
+
+            <div class="alert alert-light">
+                Sem dados disponíveis.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= ALERTAS ================= -->
+
+<div class="smart-card mt-4">
+
+    <h5 class="smart-title text-danger">
+        <i class="bi bi-bell-fill me-2"></i>
+        Alertas Automáticos
+    </h5>
+
+    {% if alertas %}
+
+        <ul class="alert-list">
+
+            {% for alerta in alertas %}
+
+            <li>
+                {{ alerta }}
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% else %}
+
+        <div class="alert alert-success mb-0">
+            Nenhum alerta encontrado.
+        </div>
+
+    {% endif %}
+
+</div>
+
+<!-- ================= ALTERAR SENHA ================= -->
+
+<a href="{% url 'alterar_senha' %}"
+   class="card-password-diretor">
+
+    <div class="password-text">
+
+        <strong>
+            Alterar Senha
+        </strong>
+
+        <span>
+             da conta do diretor
+        </span>
+
+    </div>
+
+    <i class="bi bi-shield-lock-fill"></i>
+
+</a>
+
+<!-- ================= ENCERRAR ANO LETIVO ================= -->
+
+{% if ano %}
+
+<div class="encerrar-container">
+
+    <div class="encerrar-box">
+
+        <small class="encerrar-label">
+            Área administrativa avançada
+        </small>
+
+        {% if mostrar_botao_promocao %}
+
+        <button class="btn btn-encerrar rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#modalPromocao">
+
+            <i class="bi bi-calendar-x me-2"></i>
+
+            Encerrar Ano Letivo {{ ano.nome }}
+
+        </button>
+
+        {% else %}
+
+        <div class="alert alert-warning mt-2 rounded-pill px-4 py-2">
+            O botão será liberado após lançamento das notas finais.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- ================= MODAL PROMOÇÃO ================= -->
+
+{% if ano and ano.id %}
+
+<div class="modal fade" id="modalPromocao" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <div class="modal-header bg-dark text-white rounded-top-4">
+
+                <h5 class="modal-title">
+                    Encerrar Ano Letivo {{ ano.nome }}
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body px-4 py-4">
+
+                <p class="fw-semibold mb-3">
+                    Esta ação irá executar automaticamente:
+                </p>
+
+                <ul class="list-group list-group-flush mb-3">
+
+                    <li class="list-group-item">
+                        Criar novo Ano Letivo {{ proximo_ano }}
+                    </li>
+
+                    <li class="list-group-item">
+                        Promover alunos automaticamente
+                    </li>
+
+                    <li class="list-group-item">
+                        Finalizar alunos da 12ª classe
+                    </li>
+
+                    <li class="list-group-item">
+                        Manter histórico no ano anterior
+                    </li>
+
+                </ul>
+
+                <div class="alert alert-danger mt-3">
+                    Esta ação não poderá ser desfeita.
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-0 pb-4">
+
+                <button type="button"
+                        class="btn btn-outline-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <form method="POST"
+                      action="{% url 'promover_alunos' ano.id %}">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3 text-start">
+
+                        <label class="form-label fw-semibold">
+                            Confirme sua senha
+                        </label>
+
+                        <input type="password"
+                               name="senha_confirmacao"
+                               class="form-control rounded-3"
+                               placeholder="Digite sua senha"
+                               required>
+
+                        <small class="text-muted">
+                            Por segurança, informe sua senha para continuar.
+                        </small>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-success rounded-pill px-4 shadow-sm">
+
+                        Confirmar Promoção
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<!-- ================= RODAPÉ PREMIUM ================= -->
+
+<footer class="support-footer mt-5">
+
+    <div class="support-card">
+
+        <div class="support-left">
+
+            <div class="support-icon">
+                <i class="bi bi-headset"></i>
+            </div>
+
+            <div>
+
+                <h6 class="mb-1">
+                    Apoio Técnico
+                </h6>
+
+                <small class="opacity-75">
+                    Atendimento rápido via WhatsApp ou Email
+                </small>
+
+            </div>
+
+        </div>
+
+        <div class="support-right">
+
+            <a href="https://wa.me/940162472?text=Olá,%20preciso%20de%20suporte%20no%20Sistema%20de%20Gestão%20Escolar."
+               target="_blank"
+               class="contact-item whatsapp">
+
+                <i class="bi bi-whatsapp"></i>
+
+                <span>
+                    940 162 472
+                </span>
+
+            </a>
+
+            <a href="mailto:ivocardoso658@gmail.com?subject=Suporte%20Sistema%20de%20Gestão%20Escolar"
+               class="contact-item email">
+
+                <i class="bi bi-envelope-fill"></i>
+
+                <span>
+                    ivocardoso658@gmail.com
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="developer text-center mt-4">
+
+        <small>
+            Desenvolvido por
+            <strong>Ivo Cardoso Avelino</strong> © 2026
+        </small>
+
+    </div>
+
+</footer>
+
+</div>
+
+<style>
+
+/* ================= LOGO ESCOLA ================= */
+
+.logo-container{
+width:100px;
+height:100px;
+background:white;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:6px;
+box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+.logo-escola{
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+}
+
+/* ================= HEADER ================= */
+
+.header-premium{
+background:linear-gradient(135deg,#1e293b,#0f172a);
+color:white;
+}
+
+.profile-badge{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.profile-icon{
+width:45px;
+height:45px;
+background:linear-gradient(135deg,#2563eb,#1e40af);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+color:white;
+font-size:18px;
+}
+
+/* ================= CARDS ================= */
+
+.dashboard-card{
+padding:28px;
+border-radius:22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:0.3s ease;
+border:none;
+cursor:pointer;
+color:white;
+}
+
+.dashboard-card:hover{
+transform:translateY(-6px);
+}
+
+.glass-card{
+background:linear-gradient(135deg,#2563eb,#1e40af);
+}
+
+.glass-card.success{
+background:linear-gradient(135deg,#16a34a,#065f46);
+}
+
+.glass-card.warning{
+background:linear-gradient(135deg,#f59e0b,#b45309);
+}
+
+.glass-card.danger{
+background:linear-gradient(135deg,#dc2626,#7f1d1d);
+}
+
+.dashboard-card h2{
+font-size:32px;
+font-weight:700;
+margin:6px 0;
+}
+
+.card-label{
+font-size:13px;
+text-transform:uppercase;
+opacity:0.85;
+}
+
+.icon{
+font-size:40px;
+opacity:0.95;
+}
+
+/* ================= DASHBOARD INTELIGENTE ================= */
+
+.smart-card{
+background:white;
+border-radius:22px;
+padding:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+border:none;
+height:100%;
+}
+
+.smart-title{
+font-weight:700;
+margin-bottom:20px;
+color:#0f172a;
+}
+
+.smart-content h1{
+font-size:48px;
+font-weight:800;
+margin:0;
+color:#2563eb;
+}
+
+.smart-content h3{
+font-weight:700;
+margin-bottom:10px;
+}
+
+.smart-content p{
+margin-bottom:0;
+color:#64748b;
+}
+
+.success-card{
+border-left:6px solid #16a34a;
+}
+
+.danger-card{
+border-left:6px solid #dc2626;
+}
+
+.evolution-card{
+border-left:6px solid #2563eb;
+}
+
+.evolution-item{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid #e2e8f0;
+font-size:15px;
+}
+
+.alert-list{
+padding-left:18px;
+margin-bottom:0;
+}
+
+.alert-list li{
+margin-bottom:10px;
+font-size:14px;
+color:#b91c1c;
+font-weight:500;
+}
+
+/* ================= ALTERAR SENHA ================= */
+
+.card-password-diretor{
+border:none;
+border-radius:16px;
+padding:22px 26px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 10px 30px rgba(0,0,0,0.10);
+margin-top:30px;
+transition:0.3s;
+text-decoration:none;
+color:white;
+background:linear-gradient(135deg,#1e3a8a,#2563eb);
+}
+
+.card-password-diretor:hover{
+transform:translateY(-4px);
+box-shadow:0 18px 40px rgba(0,0,0,0.18);
+color:white;
+}
+
+.card-password-diretor i{
+font-size:28px;
+}
+
+/* ================= ENCERRAR ================= */
+
+.encerrar-container{
+display:flex;
+justify-content:center;
+margin-top:45px;
+margin-bottom:15px;
+}
+
+.encerrar-box{
+text-align:center;
+}
+
+.encerrar-label{
+display:block;
+color:#94a3b8;
+font-size:11px;
+margin-bottom:10px;
+letter-spacing:1px;
+text-transform:uppercase;
+}
+
+.btn-encerrar{
+background:#e2e8f0;
+color:#475569;
+border:none;
+padding:10px 24px;
+font-size:13px;
+font-weight:600;
+transition:0.3s ease;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.btn-encerrar:hover{
+background:#cbd5e1;
+color:#1e293b;
+transform:translateY(-2px);
+}
+
+/* ================= MODAL ================= */
+
+.modal-content{
+animation:fadeInScale 0.25s ease;
+}
+
+@keyframes fadeInScale{
+
+from{
+opacity:0;
+transform:scale(0.95);
+}
+
+to{
+opacity:1;
+transform:scale(1);
+}
+
+}
+
+/* ================= SUPORTE ================= */
+
+.support-footer{
+padding-top:60px;
+}
+
+.support-card{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+border-radius:20px;
+padding:28px 35px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 20px 45px rgba(0,0,0,0.18);
+flex-wrap:wrap;
+gap:20px;
+}
+
+.support-left{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.support-icon{
+width:60px;
+height:60px;
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+}
+
+.support-right{
+display:flex;
+gap:35px;
+flex-wrap:wrap;
+}
+
+.contact-item{
+display:flex;
+align-items:center;
+gap:10px;
+text-decoration:none;
+font-weight:500;
+font-size:14px;
+transition:all 0.3s ease;
+}
+
+.contact-item:hover{
+transform:translateY(-3px);
+opacity:0.85;
+}
+
+.whatsapp{
+color:#25D366;
+}
+
+.email{
+color:#60a5fa;
+}
+
+.developer{
+color:#64748b;
+font-size:13px;
+}
+
+.developer strong{
+color:#0f172a;
+}
+
+/* ================= RESPONSIVO ================= */
+
+@media(max-width:768px){
+
+.dashboard-card{
+padding:20px;
+}
+
+.smart-content h1{
+font-size:34px;
+}
+
+.logo-container{
+width:80px;
+height:80px;
+}
+
+}
+
+</style>
+
+{% endblock %}

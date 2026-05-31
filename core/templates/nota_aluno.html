@@ -1,0 +1,288 @@
+{% extends "base_aluno.html" %}
+{% block content %}
+
+<style>
+
+.section-title{
+    font-weight:700;
+    margin-bottom:25px;
+    font-size:26px;
+    color:#0f172a;
+}
+
+/* CARD */
+.table-modern{
+    background:white;
+    border-radius:16px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* RESPONSIVO */
+.table-responsive{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+/* TABLE */
+.table thead{
+    background:#0f172a;
+    color:white;
+}
+
+.table thead th{
+    padding:14px !important;
+    font-size:13px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.table tbody td{
+    padding:14px;
+    font-size:14px;
+    white-space:nowrap;
+    vertical-align:middle;
+}
+
+.table tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* DISCIPLINA */
+.disciplina{
+    font-weight:700;
+    color:#0f172a;
+    min-width:200px;
+    font-size:14px;
+}
+
+/* =========================
+MÉDIAS (COM CORES AUTOMÁTICAS)
+========================= */
+
+.media-box{
+    font-weight:800;
+    padding:6px 10px;
+    border-radius:10px;
+    display:inline-block;
+    min-width:50px;
+    font-size:13px;
+}
+
+/* VERDE (14–20) */
+.media-green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+/* AMARELO (10–13) */
+.media-yellow{
+    background:#fef9c3;
+    color:#854d0e;
+}
+
+/* VERMELHO (0–9) */
+.media-red{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* FINAL */
+.media-final{
+    font-weight:800;
+    padding:7px 12px;
+    border-radius:10px;
+    display:inline-block;
+    min-width:60px;
+    font-size:13px;
+}
+
+/* BLOQUEIO */
+.alert-block{
+    max-width:600px;
+    margin:auto;
+    padding:40px;
+    text-align:center;
+    border-radius:16px;
+}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+
+    .section-title{
+        font-size:22px;
+    }
+
+    .table thead th,
+    .table tbody td{
+        font-size:12px;
+        padding:10px;
+    }
+
+    .disciplina{
+        min-width:160px;
+    }
+}
+
+</style>
+
+
+<h5 class="section-title">
+    Boletim de Notas
+</h5>
+
+
+{% if bloqueado %}
+
+<div class="alert alert-danger alert-block">
+
+    <h4 class="mb-3">
+        Acesso Bloqueado
+    </h4>
+
+    <p class="mb-2">
+        Você possui <strong>mensalidades em atraso</strong>.
+    </p>
+
+    <p>
+        Regularize o pagamento na secretaria para visualizar o boletim.
+    </p>
+
+    <a href="{% url 'situacao_financeira' %}" class="btn btn-danger mt-3">
+        Ver Situação Financeira
+    </a>
+
+</div>
+
+{% else %}
+
+<div class="table-modern p-3">
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered align-middle text-center">
+
+            <thead>
+
+                <tr>
+
+                    <th rowspan="2">Disciplina</th>
+
+                    <th colspan="3" class="border-end border-dark">1º Trimestre</th>
+
+                    <th colspan="3" class="border-end border-dark">2º Trimestre</th>
+
+                    <th colspan="3" class="border-end border-dark">3º Trimestre</th>
+
+                    <th rowspan="2">Média Final</th>
+
+                </tr>
+
+                <tr>
+
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th class="border-end border-dark">Média</th>
+
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th class="border-end border-dark">Média</th>
+
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th class="border-end border-dark">Média</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for disciplina, dados in disciplinas.items %}
+
+                <tr>
+
+                    <td class="text-start disciplina">
+                        {{ disciplina }}
+                    </td>
+
+                    <!-- 1º TRIMESTRE -->
+                    <td>{{ dados.1.p1|default:"-" }}</td>
+                    <td>{{ dados.1.p2|default:"-" }}</td>
+
+                    <td>
+                        <span class="media-box
+                            {% if dados.1.media >= 14 %}media-green
+                            {% elif dados.1.media >= 10 %}media-yellow
+                            {% elif dados.1.media >= 0 %}media-red
+                            {% endif %}
+                        ">
+                            {{ dados.1.media|default:"-" }}
+                        </span>
+                    </td>
+
+                    <!-- 2º TRIMESTRE -->
+                    <td>{{ dados.2.p1|default:"-" }}</td>
+                    <td>{{ dados.2.p2|default:"-" }}</td>
+
+                    <td>
+                        <span class="media-box
+                            {% if dados.2.media >= 14 %}media-green
+                            {% elif dados.2.media >= 10 %}media-yellow
+                            {% elif dados.2.media >= 0 %}media-red
+                            {% endif %}
+                        ">
+                            {{ dados.2.media|default:"-" }}
+                        </span>
+                    </td>
+
+                    <!-- 3º TRIMESTRE -->
+                    <td>{{ dados.3.p1|default:"-" }}</td>
+                    <td>{{ dados.3.p2|default:"-" }}</td>
+
+                    <td>
+                        <span class="media-box
+                            {% if dados.3.media >= 14 %}media-green
+                            {% elif dados.3.media >= 10 %}media-yellow
+                            {% elif dados.3.media >= 0 %}media-red
+                            {% endif %}
+                        ">
+                            {{ dados.3.media|default:"-" }}
+                        </span>
+                    </td>
+
+                    <!-- MÉDIA FINAL -->
+                    <td>
+                        <span class="media-final
+                            {% if dados.media_final >= 14 %}media-green
+                            {% elif dados.media_final >= 10 %}media-yellow
+                            {% elif dados.media_final >= 0 %}media-red
+                            {% endif %}
+                        ">
+                            {{ dados.media_final|default:"-" }}
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="11" class="text-muted py-4">
+                        Nenhuma nota lançada.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

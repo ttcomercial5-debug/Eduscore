@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Recuperar Senha</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: system-ui;
+}
+.card {
+    width: 380px;
+    padding: 35px;
+    border-radius: 18px;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+h4 { color: white; }
+.form-control {
+    background: rgba(255,255,255,0.07);
+    border: none;
+    color: white;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+.form-control::placeholder { color: #cbd5f5; }
+.form-control:focus {
+    background: rgba(255,255,255,0.1);
+    box-shadow: none;
+    color: white;
+}
+.btn-primary {
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37,99,235,0.45);
+}
+.alert { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<h4 class="text-center mb-4">Recuperar Senha</h4>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if nova_senha %}
+<div class="alert alert-success text-center">
+Nova senha gerada: <strong>{{ nova_senha }}</strong>
+</div>
+<a href="{% url 'login' %}" class="btn btn-primary w-100 mt-3">Voltar ao login</a>
+{% else %}
+<form method="POST">
+{% csrf_token %}
+<input type="text" name="codigo_escola" class="form-control" placeholder="Código da Escola (exceto Superadmin)">
+<input type="text" name="username" class="form-control" placeholder="Nome de Usuário" required>
+<button class="btn btn-primary w-100">Gerar nova senha</button>
+</form>
+{% endif %}
+</div>
+
+</body>
+</html>

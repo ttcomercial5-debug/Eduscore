@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+<h2 class="fw-bold mb-0">
+📚 Gestão de Disciplinas
+</h2>
+<small class="text-muted">
+Organização curricular da escola
+</small>
+</div>
+
+{% if user.role == "DIRETOR" %}
+<a href="{% url 'adicionar_disciplina' %}"
+class="btn btn-primary shadow">
+
+<i class="fas fa-plus"></i>
+Nova Disciplina
+
+</a>
+{% endif %}
+
+</div>
+
+<div class="row">
+
+{% for disciplina in disciplinas %}
+
+<div class="col-md-6 col-xl-4 mb-4">
+
+<div class="card border-0 shadow-lg h-100 rounded-4">
+
+<div class="card-header bg-primary text-white">
+
+<h5 class="mb-0 fw-bold">
+{{ disciplina.nome }}
+</h5>
+
+</div>
+
+<div class="card-body">
+
+<p>
+<strong>Turma:</strong><br>
+{{ disciplina.turma }}
+</p>
+
+<p>
+<strong>Curso:</strong><br>
+
+{% if disciplina.turma.curso %}
+<span class="badge bg-info">
+{{ disciplina.turma.curso.nome }}
+</span>
+{% else %}
+<span class="text-muted">
+Ensino Geral
+</span>
+{% endif %}
+
+</p>
+
+<p>
+<strong>Professor:</strong><br>
+
+{% if disciplina.professor %}
+
+<span class="text-success fw-bold">
+{{ disciplina.professor.get_full_name|default:disciplina.professor.username }}
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+Não atribuído
+</span>
+
+{% endif %}
+
+</p>
+
+<p>
+<strong>Ano Letivo:</strong><br>
+{{ disciplina.turma.ano_letivo }}
+</p>
+
+</div>
+
+<div class="card-footer bg-white">
+
+<a href="{% url 'editar_disciplina' disciplina.id %}"
+class="btn btn-outline-primary btn-sm w-100">
+
+Editar Disciplina
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+
+<div class="alert alert-info text-center shadow">
+
+Nenhuma disciplina cadastrada.
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

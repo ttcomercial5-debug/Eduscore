@@ -1,0 +1,298 @@
+{% extends "base_professor.html" %}
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.card-custom{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+.table thead{
+    background:#0f172a;
+    color:white;
+}
+
+.table td{
+    vertical-align:middle;
+}
+
+.badge-aprovado{
+    background:#10b981;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.badge-reprovado{
+    background:#ef4444;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+</style>
+
+<div class="container-fluid">
+
+    <h3 class="page-title">
+
+        Histórico Acadêmico
+
+    </h3>
+
+    <!-- FILTROS -->
+
+    <div class="card card-custom mb-4">
+
+        <div class="card-body">
+
+            <form method="GET" class="row g-3">
+
+                <!-- ANO -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-bold">
+
+                        Ano Letivo
+
+                    </label>
+
+                    <select
+                        name="ano"
+                        class="form-select"
+                        onchange="this.form.submit()"
+                    >
+
+                        <option value="">
+                            Selecionar Ano
+                        </option>
+
+                        {% for ano in anos_passados %}
+
+                        <option
+                            value="{{ ano.id }}"
+                            {% if ano_selecionado.id == ano.id %}selected{% endif %}
+                        >
+
+                            {{ ano.nome }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- TURMA -->
+
+                {% if ano_selecionado %}
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-bold">
+
+                        Turma
+
+                    </label>
+
+                    <select
+                        name="turma"
+                        class="form-select"
+                        onchange="this.form.submit()"
+                    >
+
+                        <option value="">
+                            Selecionar Turma
+                        </option>
+
+                        {% for turma in turmas %}
+
+                        <option
+                            value="{{ turma.id }}"
+                            {% if turma_selecionada.id == turma.id %}selected{% endif %}
+                        >
+
+                            {{ turma.classe }}ª
+                            {{ turma.identificador }}
+
+                            -
+                            {{ turma.turno }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% endif %}
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- DISCIPLINAS -->
+
+    {% for item in disciplinas_historico %}
+
+    <div class="card card-custom mb-4">
+
+        <div class="card-header bg-dark text-white fw-bold">
+
+            {{ item.disciplina.nome }}
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Aluno</th>
+
+                            <th>Processo</th>
+
+                            <th>1º Trim.</th>
+
+                            <th>2º Trim.</th>
+
+                            <th>3º Trim.</th>
+
+                            <th>Média Final</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for aluno in item.alunos %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ aluno.numero }}
+
+                            </td>
+
+                            <td>
+
+                                {{ aluno.nome }}
+
+                            </td>
+
+                            <td>
+
+                                {{ aluno.processo }}
+
+                            </td>
+
+                            <td>
+
+                                {{ aluno.t1|default:"-" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ aluno.t2|default:"-" }}
+
+                            </td>
+
+                            <td>
+
+                                {{ aluno.t3|default:"-" }}
+
+                            </td>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ aluno.media_final|default:"-" }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                {% if aluno.status == "APROVADO" %}
+
+                                <span class="badge-aprovado">
+
+                                    Aprovado
+
+                                </span>
+
+                                {% elif aluno.status == "REPROVADO" %}
+
+                                <span class="badge-reprovado">
+
+                                    Reprovado
+
+                                </span>
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    {% if turma_selecionada %}
+
+    <div class="alert alert-warning">
+
+        Nenhum dado encontrado para esta turma.
+
+    </div>
+
+    {% endif %}
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

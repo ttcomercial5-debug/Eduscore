@@ -1,0 +1,105 @@
+{% extends "base_secretaria.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="topbar mb-4">
+        <h4 class="fw-bold">Confirmação de Matrícula</h4>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Número de Processo</label>
+                <input type="text" name="numero_processo" value="{{ numero_processo }}"
+                       class="form-control" placeholder="Digite o número do processo">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+
+    </div>
+
+    {% if numero_processo %}
+        <div class="card shadow-sm border-0 rounded-4 p-4">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Classe</th>
+                            <th>Nº BI</th>
+                            <th>Data Nascimento</th>
+                            <th>Sexo</th>
+                            <th>Nº Processo</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for aluno in alunos %}
+                        <tr>
+                            <td>{{ aluno.usuario.get_full_name}}</td>
+                            <td>{{ aluno.classe }}</td>
+                            <td>{{ aluno.numero_bi }}</td>
+                            <td>{{ aluno.data_nascimento|date:"d/m/Y" }}</td>
+                            <td>{{ aluno.sexo }}</td>
+
+                            <td>
+                                {% if aluno.numero_processo %}
+                                    {{ aluno.numero_processo }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if aluno.matricula_confirmada %}
+                                    <span class="badge bg-success">Confirmado</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Pendente</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if not aluno.matricula_confirmada %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="aluno_id" value="{{ aluno.id }}">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        Confirmar
+                                    </button>
+                                </form>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">
+                                Nenhum aluno encontrado para este número de processo.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

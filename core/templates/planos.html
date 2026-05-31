@@ -1,0 +1,60 @@
+{% extends 'admin.html' %}
+
+{% block content %}
+<h1 class="mb-4">Gerenciar Planos</h1>
+
+<div class="row g-4">
+    {% for plano in planos %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card card-dashboard p-3 border-0 shadow-sm h-100"
+             style="transition: transform 0.3s; cursor: pointer;"
+             onmouseover="this.style.transform='scale(1.05)'"
+             onmouseout="this.style.transform='scale(1)'">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ plano.nome }}</h5>
+                <p class="card-text"><strong>Escola:</strong> {{ plano.escola.nome }}</p>
+                <p class="card-text"><strong>Limite de Alunos:</strong> {{ plano.limite_alunos }}</p>
+                <p class="card-text"><strong>Valor Mensal:</strong> Kz {{ plano.valor_mensal }}</p>
+                <p class="card-text"><strong>Expira em:</strong> {{ plano.data_expiracao }}</p>
+                <span class="badge"
+                      style="
+                        background-color: {% if plano.ativo %}#2563eb{% else %}#ef4444{% endif %};
+                        color: white;
+                        font-size: 0.9rem;
+                        padding: 0.5em 0.8em;
+                        border-radius: 12px;
+                      ">
+                      {% if plano.ativo %}Ativo{% else %}Inativo{% endif %}
+                </span>
+            </div>
+
+            <div class="card-footer bg-transparent border-0 mt-2 d-flex justify-content-end">
+                <a href="{% url 'editar_plano' plano.id %}" class="btn btn-sm btn-primary me-2">
+                    Editar
+                </a>
+                <a href="{% url 'excluir_plano' plano.id %}" class="btn btn-sm btn-danger">
+                    Excluir
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            Nenhum plano encontrado.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pequena animação fade-in para os cards -->
+<script>
+    const cards = document.querySelectorAll('.card-dashboard');
+    cards.forEach((card, index) => {
+        card.style.opacity = 0;
+        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.3s ease`;
+        setTimeout(() => { card.style.opacity = 1; }, 100);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,399 @@
+{% extends "base_professor.html" %}
+{% block content %}
+
+<style>
+
+/* ===== HEADER ===== */
+.dashboard-header{
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    padding: 28px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.dashboard-header h3{
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.dashboard-header p{
+    margin:0;
+    opacity:.92;
+}
+
+.dashboard-header small{
+    opacity:.85;
+    font-size:13px;
+}
+
+/* ===== CARDS ===== */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card-box{
+    padding:18px;
+    border-radius:14px;
+    color:white;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-blue{
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+
+.card-green{
+    background:linear-gradient(135deg,#11998e,#38ef7d);
+}
+
+.card-purple{
+    background:linear-gradient(135deg,#7b4397,#dc2430);
+}
+
+/* ===== DISCIPLINA ===== */
+.disciplina-box{
+    margin-top:30px;
+    background:white;
+    border-radius:14px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+    overflow:hidden;
+}
+
+.disciplina-header{
+    padding:15px 18px;
+    background:#0f172a;
+    color:white;
+    font-weight:700;
+}
+
+/* ===== TABLE ===== */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#111827;
+    color:white;
+    padding:12px;
+    font-size:13px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    font-size:14px;
+    border-bottom:1px solid #eee;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+/* ===== STATUS ===== */
+.status{
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:700;
+    display:inline-block;
+}
+
+.aprovado{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.reprovado{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* ===== SELECT ===== */
+.select-box{
+    max-width:400px;
+    margin-bottom:20px;
+}
+
+.info-badge{
+    display:inline-block;
+    margin-top:8px;
+    padding:7px 14px;
+    background:rgba(255,255,255,0.12);
+    border-radius:10px;
+    font-size:13px;
+}
+
+</style>
+
+<!-- ===================================================== -->
+<!-- HEADER -->
+<!-- ===================================================== -->
+
+<div class="dashboard-header">
+
+    <div>
+
+        <!-- ESCOLA -->
+        <h3>
+            {{ escola_nome }}
+        </h3>
+
+        <!-- PROFESSOR -->
+        <p>
+            Seja Bem-vindo Sr.(a)
+            <strong>
+                {{ request.user.get_full_name|default:request.user.username }}
+            </strong>
+        </p>
+
+        <!-- ANO LETIVO -->
+        <div class="info-badge">
+
+            Ano Letivo:
+            <strong>
+
+                {% if ano_letivo %}
+                    {{ ano_letivo.nome }}
+                {% else %}
+                    Não definido
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- CARDS -->
+<!-- ===================================================== -->
+
+<div class="cards">
+
+    <div class="card-box card-blue">
+
+        <h4>Turmas</h4>
+
+        <h2>{{ total_turmas }}</h2>
+
+    </div>
+
+    <div class="card-box card-green">
+
+        <h4>Alunos</h4>
+
+        <h2>{{ total_alunos }}</h2>
+
+    </div>
+
+    <div class="card-box card-purple">
+
+        <h4>Disciplinas</h4>
+
+        <h2>{{ total_disciplinas }}</h2>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- SELECT TURMA -->
+<!-- ===================================================== -->
+
+<div class="select-box">
+
+<form method="GET">
+
+    <select
+        name="turma"
+        class="form-select"
+        onchange="this.form.submit()"
+    >
+
+        <option value="">
+            Seleciona a turma
+        </option>
+
+        {% for turma in turmas %}
+
+        <option
+            value="{{ turma.id }}"
+
+            {% if turma_selecionada and turma.id == turma_selecionada.id %}
+                selected
+            {% endif %}
+        >
+
+            {{ turma.classe }}ª
+            {{ turma.identificador }}
+            -
+            {{ turma.ano_letivo }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</form>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- ALERTA -->
+<!-- ===================================================== -->
+
+{% if not turma_selecionada %}
+
+<div class="alert alert-info">
+
+    Seleciona uma turma para ver as disciplinas.
+
+</div>
+
+{% endif %}
+
+<!-- ===================================================== -->
+<!-- DISCIPLINAS -->
+<!-- ===================================================== -->
+
+{% for disciplina in disciplinas %}
+
+<div class="disciplina-box">
+
+    <div class="disciplina-header">
+
+        {{ disciplina.nome }}
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+
+                <th>Aluno</th>
+
+                <th>Nº Processo</th>
+
+                <th>Média Final</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for aluno in disciplina.alunos %}
+
+            <tr>
+
+                <td>
+
+                    {{ forloop.counter }}
+
+                </td>
+
+                <td>
+
+                    {{ aluno.nome }}
+
+                </td>
+
+                <td>
+
+                    {{ aluno.numero_processo }}
+
+                </td>
+
+                <!-- MÉDIA -->
+                <td>
+
+                    <strong>
+
+                        {% if aluno.media_final != None %}
+
+                            {{ aluno.media_final }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </strong>
+
+                </td>
+
+                <!-- STATUS -->
+                <td>
+
+                    {% if aluno.media_final != None %}
+
+                        {% if aluno.media_final >= 10 %}
+
+                            <span class="status aprovado">
+
+                                Aprovado
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status reprovado">
+
+                                Reprovado
+
+                            </span>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% empty %}
+
+    {% if turma_selecionada %}
+
+    <div class="alert alert-warning">
+
+        Nenhuma disciplina encontrada para esta turma.
+
+    </div>
+
+    {% endif %}
+
+{% endfor %}
+
+{% endblock %}

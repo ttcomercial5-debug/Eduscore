@@ -1,0 +1,869 @@
+{% extends "base_secretaria.html" %}
+{% load humanize %}
+
+{% block content %}
+
+<style>
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page-wrapper{
+    padding:20px;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.payment-card{
+
+    border:none;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.payment-header{
+
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a,
+        #2563eb
+    );
+
+    padding:30px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+
+}
+
+.payment-header::before{
+
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    top:-120px;
+    right:-80px;
+
+}
+
+.payment-header::after{
+
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    bottom:-100px;
+    left:-70px;
+
+}
+
+.header-content{
+
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+
+}
+
+.header-title h3{
+
+    font-size:30px;
+    font-weight:800;
+    margin-bottom:8px;
+
+}
+
+.header-title p{
+
+    margin:0;
+    opacity:.9;
+
+}
+
+.year-badge{
+
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:12px 18px;
+    border-radius:14px;
+    backdrop-filter:blur(8px);
+    font-weight:700;
+
+}
+
+/* =====================================================
+   BODY
+===================================================== */
+
+.payment-body{
+
+    padding:35px;
+    background:#fff;
+
+}
+
+/* =====================================================
+   ALERTS
+===================================================== */
+
+.custom-alert{
+
+    border:none;
+    border-radius:14px;
+    padding:14px 18px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-box{
+
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:30px;
+
+}
+
+.section-title{
+
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:18px;
+    color:#0f172a;
+
+}
+
+.form-control,
+.form-select{
+
+    height:55px;
+    border-radius:14px;
+    border:1px solid #dbe2ea;
+    box-shadow:none;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#2563eb;
+    box-shadow:0 0 0 0.15rem rgba(37,99,235,0.12);
+
+}
+
+.btn-search{
+
+    height:55px;
+    border-radius:14px;
+    font-weight:700;
+
+}
+
+/* =====================================================
+   ALUNO
+===================================================== */
+
+.student-card{
+
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:30px;
+
+}
+
+.student-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:25px;
+
+}
+
+.student-name{
+
+    font-size:24px;
+    font-weight:800;
+    color:#0f172a;
+
+}
+
+.student-badge{
+
+    background:#dbeafe;
+    color:#1d4ed8;
+    padding:8px 14px;
+    border-radius:12px;
+    font-weight:700;
+    font-size:14px;
+
+}
+
+.student-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+
+}
+
+.info-box{
+
+    background:white;
+    border-radius:16px;
+    padding:18px;
+    border:1px solid #edf2f7;
+
+}
+
+.info-box small{
+
+    color:#64748b;
+    display:block;
+    margin-bottom:8px;
+
+}
+
+.info-box strong{
+
+    font-size:16px;
+    color:#0f172a;
+
+}
+
+/* =====================================================
+   FORM SECTION
+===================================================== */
+
+.form-section{
+
+    margin-top:35px;
+
+}
+
+.label-title{
+
+    font-weight:700;
+    margin-bottom:10px;
+    color:#0f172a;
+
+}
+
+/* =====================================================
+   MESES
+===================================================== */
+
+.meses-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:14px;
+
+}
+
+.mes-card{
+
+    position:relative;
+    cursor:pointer;
+
+}
+
+.mes-card input{
+
+    display:none;
+
+}
+
+.mes-content{
+
+    border:2px solid #e2e8f0;
+    background:white;
+    border-radius:16px;
+    padding:18px 10px;
+    text-align:center;
+    font-weight:700;
+    transition:.25s;
+
+}
+
+.mes-card:hover .mes-content{
+
+    border-color:#2563eb;
+    transform:translateY(-2px);
+
+}
+
+.mes-card input:checked + .mes-content{
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color:white;
+    border-color:#2563eb;
+    box-shadow:0 10px 25px rgba(37,99,235,0.25);
+
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.btn-confirmar{
+
+    height:58px;
+    border:none;
+    border-radius:16px;
+    font-weight:700;
+    font-size:16px;
+    padding:0 30px;
+
+    background:linear-gradient(
+        135deg,
+        #16a34a,
+        #15803d
+    );
+
+    box-shadow:0 10px 25px rgba(22,163,74,0.25);
+
+    transition:.25s;
+
+}
+
+.btn-confirmar:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media(max-width:768px){
+
+    .payment-body{
+
+        padding:22px;
+
+    }
+
+    .payment-header{
+
+        padding:25px;
+
+    }
+
+    .header-title h3{
+
+        font-size:24px;
+
+    }
+
+}
+
+</style>
+
+<div class="page-wrapper">
+
+    <div class="card payment-card">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="payment-header">
+
+            <div class="header-content">
+
+                <div class="header-title">
+
+                    <h3>
+                        Registrar Pagamento
+                    </h3>
+
+                    <p>
+                        Gestão de mensalidades e pagamentos escolares
+                    </p>
+
+                </div>
+
+                <div class="year-badge">
+
+                    {% if request.user.escola %}
+                        {{ request.user.escola.nome }}
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- =====================================================
+             BODY
+        ====================================================== -->
+
+        <div class="payment-body">
+
+            <!-- MESSAGES -->
+
+            {% if messages %}
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }} custom-alert">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+            <!-- =====================================================
+                 BUSCAR ALUNO
+            ====================================================== -->
+
+            <div class="search-box">
+
+                <div class="section-title">
+
+                    Buscar Aluno
+
+                </div>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+
+                        <div class="col-md-8">
+
+                            <label class="label-title">
+
+                                Número de Processo
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="numero_processo"
+                                class="form-control"
+                                value="{{ numero_processo|default:'' }}"
+                                placeholder="Digite o número de processo"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+
+                            <button
+                                type="submit"
+                                name="buscar_aluno"
+                                class="btn btn-primary btn-search w-100"
+                            >
+
+                                <i class="bi bi-search"></i>
+
+                                Buscar Aluno
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- =====================================================
+                 ALUNO
+            ====================================================== -->
+
+            {% if aluno %}
+
+            <div class="student-card">
+
+                <div class="student-header">
+
+                    <div>
+
+                        <div class="student-name">
+
+                            {{ aluno.usuario.get_full_name }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="student-badge">
+
+                        Processo:
+                        {{ aluno.numero_processo }}
+
+                    </div>
+
+                </div>
+
+                <div class="student-grid">
+
+                    <div class="info-box">
+
+                        <small>Turma</small>
+
+                        <strong>
+
+                            {{ aluno.turma|default:"Sem turma" }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <small>Classe</small>
+
+                        <strong>
+
+                            {{ aluno.turma.classe|default:"-" }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <small>Turno</small>
+
+                        <strong>
+
+                            {{ aluno.turma.turno|default:"-" }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- =====================================================
+                 FORM PAGAMENTO
+            ====================================================== -->
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="aluno_id"
+                    value="{{ aluno.id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="numero_processo"
+                    value="{{ aluno.numero_processo }}"
+                >
+
+                <div class="form-section">
+
+                    <div class="row g-4">
+
+                        <!-- TIPO -->
+
+                        <div class="col-md-4">
+
+                            <label class="label-title">
+
+                                Tipo de Pagamento
+
+                            </label>
+
+                            <select
+                                name="tipo_pagamento"
+                                class="form-select"
+                                id="tipo_pagamento"
+                                required
+                            >
+
+                                <option value="">
+                                    Selecionar...
+                                </option>
+
+                                <option value="MENSALIDADE">
+                                    Mensalidade
+                                </option>
+
+                                <option value="MATRICULA">
+                                    Matrícula
+                                </option>
+
+                                <option value="MULTA">
+                                    Multa
+                                </option>
+
+                                <option value="DECLARACAO">
+                                    Declaração
+                                </option>
+
+                                <option value="EXAME">
+                                    Exame
+                                </option>
+
+                                <option value="OUTRO">
+                                    Outro
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- VALOR -->
+
+                        <div
+                            class="col-md-4"
+                            id="valor_div"
+                        >
+
+                            <label class="label-title">
+
+                                Valor Pago (Kz)
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="valor_pago"
+                                id="valor_pago"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                placeholder="Digite o valor"
+                            >
+
+                        </div>
+
+                        <!-- FORMA -->
+
+                        <div class="col-md-4">
+
+                            <label class="label-title">
+
+                                Forma de Pagamento
+
+                            </label>
+
+                            <select
+                                name="forma_pagamento"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="DINHEIRO">
+                                    Dinheiro
+                                </option>
+
+                                <option value="TRANSFERENCIA">
+                                    Transferência
+                                </option>
+
+                                <option value="MULTICAIXA">
+                                    Multicaixa
+                                </option>
+
+                                <option value="TPA">
+                                    TPA
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MESES -->
+
+                    <div
+                        id="meses_div"
+                        style="display:none;"
+                        class="mt-5"
+                    >
+
+                        <label class="label-title mb-3">
+
+                            Selecionar Meses
+
+                        </label>
+
+                        <div class="meses-grid">
+
+                            {% for mes in meses_lista %}
+
+                            <label class="mes-card">
+
+                                <input
+                                    type="checkbox"
+                                    name="meses"
+                                    value="{{ mes }}"
+                                >
+
+                                <div class="mes-content">
+
+                                    {{ mes }}
+
+                                </div>
+
+                            </label>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- OBS -->
+
+                    <div class="mt-4">
+
+                        <label class="label-title">
+
+                            Observação
+
+                        </label>
+
+                        <textarea
+                            name="observacao"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Digite alguma observação..."
+                        ></textarea>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    <div class="mt-5">
+
+                        <button
+                            type="submit"
+                            name="confirmar_pagamento"
+                            class="btn btn-confirmar"
+                        >
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Confirmar Pagamento
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     SCRIPT
+===================================================== -->
+
+<script>
+
+const valores = {{ valores_pagamentos|safe }};
+
+const tipoPagamento = document.getElementById("tipo_pagamento");
+
+const mesesDiv = document.getElementById("meses_div");
+
+const valorDiv = document.getElementById("valor_div");
+
+const valorInput = document.getElementById("valor_pago");
+
+if(tipoPagamento){
+
+    tipoPagamento.addEventListener("change", function(){
+
+        let tipo = this.value;
+
+        // MENSALIDADE
+
+        if(tipo === "MENSALIDADE"){
+
+            mesesDiv.style.display = "block";
+
+            valorDiv.style.display = "none";
+
+            valorInput.value = "";
+
+        }
+
+        // OUTROS
+
+        else{
+
+            mesesDiv.style.display = "none";
+
+            valorDiv.style.display = "block";
+
+            if(valores[tipo]){
+
+                valorInput.value = valores[tipo];
+
+            }else{
+
+                valorInput.value = "";
+
+            }
+
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

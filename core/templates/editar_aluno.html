@@ -1,0 +1,213 @@
+
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.page-title{
+font-weight:700;
+color:#2c3e50;
+margin-bottom:30px;
+}
+
+.card-saas{
+border:none;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+animation:fadeUp .5s ease;
+}
+
+.form-label{
+font-weight:600;
+color:#555;
+}
+
+.form-control,
+.form-select{
+border-radius:8px;
+padding:10px;
+border:1px solid #ddd;
+transition:.2s;
+}
+
+.form-control:focus,
+.form-select:focus{
+border-color:#4f46e5;
+box-shadow:0 0 0 0.2rem rgba(79,70,229,.15);
+}
+
+.btn-saas{
+background:#4f46e5;
+border:none;
+padding:12px;
+font-weight:600;
+border-radius:8px;
+transition:.2s;
+}
+
+.btn-saas:hover{
+background:#4338ca;
+transform:translateY(-1px);
+}
+
+.btn-cancel{
+border-radius:8px;
+padding:12px;
+font-weight:600;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(15px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+<div class="container mt-5">
+
+<h2 class="page-title">Editar Aluno</h2>
+
+<div class="card card-saas">
+
+<div class="card-body p-4">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Nome</label>
+
+<input
+type="text"
+name="nome"
+class="form-control"
+value="{{ aluno.usuario.first_name }}"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Email</label>
+
+<input
+type="email"
+name="email"
+class="form-control"
+value="{{ aluno.usuario.email }}">
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Número do BI</label>
+
+<input
+type="text"
+name="numero_bi"
+class="form-control"
+value="{{ aluno.numero_bi }}"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Data de nascimento</label>
+
+<input
+type="date"
+name="data_nascimento"
+class="form-control"
+value="{{ aluno.data_nascimento|date:'Y-m-d' }}">
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Sexo</label>
+
+<select name="sexo" class="form-select">
+
+<option value="Masculino" {% if aluno.sexo == "Masculino" %}selected{% endif %}>
+Masculino
+</option>
+
+<option value="Feminino" {% if aluno.sexo == "Feminino" %}selected{% endif %}>
+Feminino
+</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">Turma</label>
+
+<select name="turma" class="form-select">
+
+{% for turma in turmas %}
+
+<option value="{{ turma.id }}"
+{% if turma.id == aluno.turma.id %}selected{% endif %}>
+
+{{ turma.classe }}ª - {{ turma.identificador }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="d-flex justify-content-end gap-2 mt-4">
+
+<a href="{% url 'alunos' %}" class="btn btn-light btn-cancel">
+
+Cancelar
+
+</a>
+
+<button type="submit" class="btn btn-saas">
+
+Salvar Alterações
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

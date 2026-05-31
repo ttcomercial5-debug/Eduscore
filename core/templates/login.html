@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login • Sistema de Gestão Escolar</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+
+<style>
+
+/* ================================
+   FUNDO SAAS
+================================ */
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b,#020617);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:system-ui;
+}
+
+
+/* ================================
+   CARD LOGIN
+================================ */
+
+.login-card{
+width:420px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(20px);
+border-radius:18px;
+padding:35px;
+box-shadow:0 25px 60px rgba(0,0,0,0.45);
+border:1px solid rgba(255,255,255,0.08);
+}
+
+
+/* ================================
+   TITULO
+================================ */
+
+.logo-title{
+font-size:22px;
+font-weight:700;
+color:white;
+text-align:center;
+margin-bottom:5px;
+}
+
+.logo-sub{
+font-size:13px;
+color:#cbd5f5;
+text-align:center;
+margin-bottom:25px;
+}
+
+
+/* ================================
+   INPUTS
+================================ */
+
+.form-control{
+background:rgba(255,255,255,0.07);
+border:none;
+color:white;
+padding:12px;
+}
+
+.form-control::placeholder{
+color:#cbd5f5;
+}
+
+.form-control:focus{
+background:rgba(255,255,255,0.1);
+color:white;
+box-shadow:none;
+}
+
+
+/* ================================
+   BOTÃO LOGIN
+================================ */
+
+.btn-login{
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+border:none;
+padding:12px;
+font-weight:600;
+transition:0.3s;
+}
+
+.btn-login:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(37,99,235,0.45);
+}
+
+
+/* ================================
+   LINK RECUPERAR SENHA
+================================ */
+
+.forgot-link{
+font-size:13px;
+color:#93c5fd;
+text-decoration:none;
+}
+
+.forgot-link:hover{
+color:white;
+}
+
+
+/* ================================
+   RODAPÉ
+================================ */
+
+.footer{
+margin-top:20px;
+text-align:center;
+font-size:12px;
+color:#94a3b8;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-card">
+
+<!-- TITULO -->
+
+<div class="logo-title">
+<i class="bi bi-mortarboard-fill"></i>
+Sistema de Gestão Escolar
+</div>
+
+<div class="logo-sub">
+Plataforma inteligente para gestão de escolas
+</div>
+
+
+<!-- ERRO LOGIN -->
+
+{% if error %}
+<div class="alert alert-danger">
+{{ error }}
+</div>
+{% endif %}
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<!-- ================================
+     CODIGO ESCOLA
+================================ -->
+
+<div class="mb-3">
+
+<label class="form-label text-light small">
+Código da Escola
+</label>
+
+<input
+type="text"
+name="codigo_escola"
+class="form-control"
+placeholder="Ex: 1024"
+required>
+
+</div>
+
+
+
+<!-- ================================
+     USUARIO
+================================ -->
+
+<div class="mb-3">
+
+<label class="form-label text-light small">
+Usuário
+</label>
+
+<input
+type="text"
+name="username"
+class="form-control"
+placeholder="Digite seu usuário"
+required>
+
+</div>
+
+
+
+<!-- ================================
+     SENHA
+================================ -->
+
+<div class="mb-3">
+
+<label class="form-label text-light small">
+Senha
+</label>
+
+<input
+type="password"
+name="password"
+class="form-control"
+placeholder="Digite sua senha"
+required>
+
+</div>
+
+
+
+<!-- BOTÃO LOGIN -->
+
+<button class="btn btn-login w-100 text-white mb-3">
+
+<i class="bi bi-box-arrow-in-right me-1"></i>
+Entrar no Sistema
+
+</button>
+
+
+
+<!-- ESQUECI SENHA -->
+
+<div class="text-center">
+
+<a href="{% url 'esqueci_senha' %}" class="forgot-link">
+
+<i class="bi bi-key"></i>
+Esqueci minha senha
+
+</a>
+
+</div>
+
+</form>
+
+
+
+<!-- RODAPE -->
+
+<div class="footer">
+
+Sistema Multi-SaaS • Gestão de Escolas
+© 2026
+
+</div>
+
+
+</div>
+
+</body>
+</html>

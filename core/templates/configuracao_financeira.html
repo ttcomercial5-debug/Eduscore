@@ -1,0 +1,415 @@
+{% extends "base_secretaria.html" %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+        <div class="card-header border-0 text-white py-4"
+             style="background: linear-gradient(135deg, #0d6efd, #198754);">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+
+                    <h3 class="fw-bold mb-1">
+                        Configuração Financeira
+                    </h3>
+
+                    <small class="opacity-75">
+                        Defina os valores financeiros da instituição
+                    </small>
+
+                </div>
+
+                <div class="text-end">
+
+                    <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                        {{ request.user.escola.nome }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- BODY -->
+        <!-- ===================================================== -->
+
+        <div class="card-body p-4 p-lg-5">
+
+            <!-- MENSAGENS -->
+
+            {% if messages %}
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3">
+
+                        {{ message|linebreaks }}
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+            <!-- ===================================================== -->
+            <!-- RESUMO -->
+            <!-- ===================================================== -->
+
+            <div class="row g-4 mb-5">
+
+                <div class="col-md-3">
+
+                    <div class="finance-card bg-primary">
+
+                        <small>Mensalidade</small>
+
+                        <h4>
+                            {{ config.valor_mensalidade|floatformat:2|intcomma }} Kz
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="finance-card bg-success">
+
+                        <small>Matrícula</small>
+
+                        <h4>
+                            {{ config.valor_matricula|floatformat:2|intcomma }} Kz
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="finance-card bg-warning">
+
+                        <small>Declaração</small>
+
+                        <h4>
+                            {{ config.valor_declaracao|floatformat:2|intcomma }} Kz
+                        </h4>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="finance-card bg-danger">
+
+                        <small>Exame</small>
+
+                        <h4>
+                            {{ config.valor_exame|floatformat:2|intcomma }} Kz
+                        </h4>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- FORM -->
+            <!-- ===================================================== -->
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-4">
+
+                    <!-- MENSALIDADE -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Valor da Mensalidade
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_mensalidade"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_mensalidade }}"
+                                       placeholder="0.00"
+                                       required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MULTA MENSALIDADE -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Multa da Mensalidade
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_multa_mensalidade"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_multa_mensalidade }}"
+                                       placeholder="0.00">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MATRÍCULA -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Valor da Matrícula
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_matricula"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_matricula }}"
+                                       placeholder="0.00">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MULTA MATRÍCULA -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Multa da Matrícula
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_multa_matricula"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_multa_matricula }}"
+                                       placeholder="0.00">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- DECLARAÇÃO -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Valor da Declaração
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_declaracao"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_declaracao }}"
+                                       placeholder="0.00">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- EXAME -->
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <div class="finance-box">
+
+                            <label class="form-label fw-semibold">
+                                Valor do Exame
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    Kz
+                                </span>
+
+                                <input type="number"
+                                       step="0.01"
+                                       min="0"
+                                       name="valor_exame"
+                                       class="form-control form-control-lg"
+                                       value="{{ config.valor_exame }}"
+                                       placeholder="0.00">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BOTÕES -->
+
+                <div class="d-flex justify-content-end gap-3 mt-5">
+
+                    <button type="reset"
+                            class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+
+                        Limpar
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success btn-lg px-5 rounded-pill shadow">
+
+                        Salvar Configuração
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- CSS -->
+<!-- ===================================================== -->
+
+<style>
+
+.finance-card{
+
+    color:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+.finance-card small{
+
+    opacity:.8;
+    font-size:14px;
+
+}
+
+.finance-card h4{
+
+    margin-top:10px;
+    font-weight:700;
+
+}
+
+.finance-box{
+
+    background:#fff;
+    border:1px solid #edf0f5;
+    border-radius:16px;
+    padding:20px;
+    height:100%;
+    transition:.2s;
+
+}
+
+.finance-box:hover{
+
+    transform:translateY(-3px);
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+
+}
+
+.form-control,
+.input-group-text{
+
+    height:55px;
+
+}
+
+.input-group-text{
+
+    font-weight:600;
+
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+<h2>RECIBO DE PAGAMENTO</h2>
+
+<table border="1" width="100%">
+<tr>
+<th>Aluno</th>
+<th>Tipo</th>
+<th>Valor</th>
+<th>Data</th>
+</tr>
+
+{% for p in pagamentos %}
+
+<tr>
+<td>{{ p.aluno.usuario.get_full_name }}</td>
+<td>{{ p.tipo }}</td>
+<td>{{ p.valor_pago }} Kz</td>
+<td>{{ p.data_pagamento }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h3>Total: {{ total }} Kz</h3>
+
+<button onclick="window.print()">Imprimir Recibo</button>

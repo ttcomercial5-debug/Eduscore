@@ -1,0 +1,143 @@
+{% extends "base_financeiro.html" %}
+{% block content %}
+
+<style>
+
+.card-finance{
+border:none;
+border-radius:12px;
+box-shadow:0 4px 16px rgba(0,0,0,0.08);
+transition:0.25s;
+}
+
+.card-finance:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 22px rgba(0,0,0,0.12);
+}
+
+.table thead{
+background:#0f172a;
+color:white;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<h3 class="mb-4 fw-bold">
+
+Despesas Financeiras
+
+</h3>
+
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+
+<div class="card card-finance">
+
+<div class="card-body">
+
+<h6>Total de Despesas</h6>
+
+<h3 class="text-danger">
+
+{{ total_despesas }} Kz
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card card-finance">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+
+<th>Descrição</th>
+<th>Valor</th>
+<th>Data</th>
+<th>Ação</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for despesa in despesas %}
+
+<tr>
+
+<td>
+
+{{ despesa.descricao }}
+
+</td>
+
+<td class="text-danger">
+
+{{ despesa.valor }} Kz
+
+</td>
+
+<td>
+
+{{ despesa.data }}
+
+</td>
+
+<td>
+
+<a href="{% url 'excluir_despesa' despesa.id %}"
+class="btn btn-sm btn-danger">
+
+Excluir
+
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="4" class="text-center">
+
+Nenhuma despesa registrada
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

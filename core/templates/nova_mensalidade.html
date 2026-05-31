@@ -1,0 +1,263 @@
+{% extends "base_secretaria.html" %}
+{% block content %}
+
+<style>
+
+/* CARD PREMIUM */
+.premium-card {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* INPUT EFFECT */
+.form-control, .form-select {
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+    transform: scale(1.02);
+}
+
+/* BOTÃO PREMIUM */
+.btn-premium {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* LOADING */
+.loader {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 3px solid #fff;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* STATUS BADGE */
+.status-preview {
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+
+<div class="container mt-4">
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Nova Mensalidade</h4>
+        </div>
+
+        <div class="card-body p-4">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} rounded-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- PRIMEIRA LINHA -->
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Número de Processo *</label>
+                        <div class="input-group">
+                            <input type="text"
+                                   id="numero_processo"
+                                   class="form-control"
+                                   placeholder="Digite o número de processo"
+                                   required>
+
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    onclick="buscarAluno()">
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Aluno</label>
+                        <input type="text"
+                               id="nome_aluno"
+                               class="form-control"
+                               readonly>
+
+                        <!-- IMPORTANTE -->
+                        <input type="hidden"
+                               name="aluno"
+                               id="aluno_id">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Mês *</label>
+                        <select name="mes"
+                                class="form-select"
+                                required>
+                            <option value="">Selecione...</option>
+                            <option value="Janeiro">Janeiro</option>
+                            <option value="Fevereiro">Fevereiro</option>
+                            <option value="Março">Março</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Maio">Maio</option>
+                            <option value="Junho">Junho</option>
+                            <option value="Julho">Julho</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Setembro">Setembro</option>
+                            <option value="Outubro">Outubro</option>
+                            <option value="Novembro">Novembro</option>
+                            <option value="Dezembro">Dezembro</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- SEGUNDA LINHA -->
+                <div class="row mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Valor (Kz) *</label>
+                        <input type="number"
+                               name="valor"
+                               step="0.01"
+                               min="0"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Data de Vencimento *</label>
+                        <input type="date"
+                               name="data_vencimento"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <div class="col-md-4">
+                    <label class="form-label fw-semibold">Status *</label>
+                    <select name="status"
+                            id="statusSelect"
+                            class="form-select"
+                            onchange="previewStatus()"
+                            required>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="PAGO">Pago</option>
+                        <option value="ATRASADO">Atrasado</option>
+                    </select>
+
+
+                </div>
+
+                </div>
+
+
+
+                <button type="submit" class="btn btn-success">
+                    Guardar Mensalidade
+                </button>
+
+                <a href="{% url 'lista_mensalidades' %}" class="btn btn-secondary">
+                    Voltar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT DE BUSCA -->
+<script>
+function buscarAluno() {
+
+    let numero = document.getElementById("numero_processo").value;
+
+    if (!numero) {
+        alert("Digite o número de processo!");
+        return;
+    }
+
+    fetch("{% url 'buscar_aluno' %}?processo=" + numero)
+    .then(response => response.json())
+    .then(data => {
+
+        if (data.sucesso) {
+
+            document.getElementById("nome_aluno").value = data.nome;
+            document.getElementById("aluno_id").value = data.id;
+
+        } else {
+
+            alert("Aluno não encontrado!");
+            document.getElementById("nome_aluno").value = "";
+            document.getElementById("aluno_id").value = "";
+
+        }
+    })
+    .catch(error => {
+        alert("Erro ao buscar aluno.");
+        console.log(error);
+    });
+
+
+    if (status === "PAGO") {
+        badge.className = "status-preview bg-success text-white";
+        badge.innerText = "Pago";
+    }
+    else if (status === "ATRASADO") {
+        badge.className = "status-preview bg-danger text-white";
+        badge.innerText = "Atrasado";
+    }
+    else {
+        badge.className = "status-preview bg-warning text-dark";
+        badge.innerText = "Pendente";
+    }
+
+}
+</script>
+
+{% endblock %}
+
+
+
+
+

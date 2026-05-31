@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="padding: 30px;">
+
+    <h2 style="margin-bottom: 25px;">
+        Painel do Diretor – {{ escola.nome }}
+    </h2>
+
+    <h4 style="color: #555;">
+        Ano Letivo: {{ ano_letivo }}
+    </h4>
+
+    <hr style="margin: 25px 0;">
+
+    <!-- ============================= -->
+    <!-- MÉTRICAS ACADÊMICAS -->
+    <!-- ============================= -->
+
+    <h3 style="margin-bottom: 20px;">Gestão Acadêmica</h3>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+        <div class="card">
+            <h4>Total de Alunos</h4>
+            <p class="number">{{ total_alunos }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Professores</h4>
+            <p class="number">{{ total_professores }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Turmas</h4>
+            <p class="number">{{ total_turmas }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Média Geral</h4>
+            <p class="number">{{ media_geral }}</p>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 30px;">
+        <h4>Taxa de Aprovação</h4>
+
+        <div style="background: #eee; height: 25px; border-radius: 20px; overflow: hidden;">
+            <div style="
+                width: {{ percent_aprovacao }}%;
+                background: #16a34a;
+                height: 100%;
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                line-height: 25px;">
+                {{ percent_aprovacao }}%
+            </div>
+        </div>
+
+        <p style="margin-top: 10px;">
+            Aprovados: <strong>{{ aprovados }}</strong> |
+            Reprovados: <strong>{{ reprovados }}</strong>
+        </p>
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- MÉTRICAS FINANCEIRAS -->
+    <!-- ============================= -->
+
+    <hr style="margin: 40px 0;">
+
+    <h3 style="margin-bottom: 20px;"> Gestão Financeira</h3>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+
+        <div class="card">
+            <h4>Total Recebido</h4>
+            <p class="number">Kz {{ total_recebido|floatformat:2 }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Total em Dívida</h4>
+            <p class="number" style="color: #dc2626;">
+                Kz {{ total_divida|floatformat:2 }}
+            </p>
+        </div>
+
+        <div class="card">
+            <h4>Alunos Devedores</h4>
+            <p class="number">{{ alunos_devedores }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- ESTILO INTERNO -->
+<!-- ============================= -->
+
+<style>
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    min-width: 220px;
+    flex: 1;
+}
+
+.card h4 {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1e293b;
+}
+</style>
+
+{% endblock %}

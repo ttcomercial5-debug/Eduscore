@@ -1,0 +1,110 @@
+{% extends 'admin.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="fw-bold text-primary">Gerenciar Escolas</h1>
+    <a href="/admin/academic/escola/add/" class="btn btn-lg btn-primary shadow-sm">
+        <i class="bi bi-plus-lg me-2"></i> Nova Escola
+    </a>
+</div>
+
+<div class="row g-4">
+    {% for escola in escolas %}
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow transition-shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-semibold text-dark mb-1">
+                    {{ escola.nome }}
+                </h5>
+
+                <span class="badge bg-dark mb-2">
+                    Código: {{ escola.codigo }}
+                </span>
+
+                <p class="card-text text-muted mb-2">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    {{ escola.endereco|default:"Endereço não informado" }}
+                </p>
+
+                {% if escola.telefone %}
+                <p class="card-text text-muted mb-2">
+                    <i class="bi bi-telephone me-2"></i>{{ escola.telefone }}
+                </p>
+                {% endif %}
+
+                {% if escola.email %}
+                <p class="card-text text-muted mb-2">
+                    <i class="bi bi-envelope me-2"></i>{{ escola.email }}
+                </p>
+                {% endif %}
+
+                {% if escola.nif %}
+                <p class="card-text text-muted mb-3">
+                    <i class="bi bi-card-text me-2"></i>NIF: {{ escola.nif }}
+                </p>
+                {% endif %}
+
+                {% comment %} Status do plano {% endcomment %}
+                {% if escola.plano %}
+                    {% if escola.esta_ativa %}
+                    <span class="badge bg-success mb-3" data-bs-toggle="tooltip" title="Plano ativo até {{ escola.data_expiracao }}">
+                        {{ escola.plano.nome }}
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger mb-3" data-bs-toggle="tooltip" title="Plano expirado em {{ escola.data_expiracao }}">
+                        {{ escola.plano.nome }} (Expirado)
+                    </span>
+                    {% endif %}
+                {% else %}
+                    <span class="badge bg-secondary mb-3">Sem plano</span>
+                {% endif %}
+
+                <div class="mt-auto d-flex gap-2">
+                    <a href="{% url 'selecionar_escola' escola.id %}"
+                       class="btn btn-outline-primary flex-grow-1 fw-medium shadow-sm">
+                       Entrar <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    <form method="POST" action="{% url 'eliminar_escola' escola.id %}" onsubmit="return confirm('Tem certeza que deseja eliminar esta escola?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger flex-grow-1 fw-medium shadow-sm">
+                            <i class="bi bi-trash me-1"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center py-4 fs-5">
+            Nenhuma escola cadastrada ainda.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    /* Transição suave e sombra ao passar o mouse nas cards */
+    .hover-shadow:hover {
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 123, 255, 0.25) !important;
+        transform: translateY(-4px);
+        transition: all 0.3s ease;
+    }
+    .transition-shadow {
+        transition: all 0.3s ease;
+    }
+</style>
+
+<script>
+    // Ativa tooltips do Bootstrap
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+
+{% endblock %}

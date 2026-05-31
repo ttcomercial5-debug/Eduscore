@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h4 class="mb-0">
+                Adicionar Novo Professor
+            </h4>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Username -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Nome de Usuário</label>
+                        <input type="text" name="username" class="form-control shadow-sm" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" name="email" class="form-control shadow-sm">
+                    </div>
+
+                    <!-- Senha -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Senha</label>
+                        <input type="password" name="password" class="form-control shadow-sm" required>
+                    </div>
+
+                    <!-- Disciplina -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Disciplina</label>
+                        <input type="text" name="disciplina" class="form-control shadow-sm" required>
+                    </div>
+
+                    <!-- Classes que leciona -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Classes</label>
+                        <input type="text" name="classes" class="form-control shadow-sm" placeholder="Ex: 10ª, 11ª, 12ª" required>
+                    </div>
+
+                    <!-- Turmas -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Turmas</label>
+
+                        <select name="turmas"
+                                class="form-select shadow-sm"
+                                multiple
+                                size="6"
+                                required>
+
+                            {% for turma in turmas %}
+                                <option value="{{ turma.id }}">
+                                    {{ turma }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+
+                        <small class="text-muted">
+                            Segure CTRL (ou CMD no Mac) para selecionar mais de uma turma
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="{% url 'professores' %}" class="btn btn-light me-2">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                         Salvar Professor
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

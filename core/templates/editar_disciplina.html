@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    background: linear-gradient(135deg,#2563eb,#4f46e5);
+    color:white;
+    padding:30px;
+    border-radius:20px;
+    margin-bottom:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.page-header h2{
+    font-weight:700;
+    margin:0;
+}
+
+.page-header p{
+    margin:5px 0 0;
+    opacity:.9;
+}
+
+.card-premium{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.card-body{
+    padding:35px;
+}
+
+.info-box{
+    background:#f8fafc;
+    border-left:5px solid #2563eb;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:25px;
+}
+
+.form-label{
+    font-weight:600;
+    color:#374151;
+}
+
+.form-control,
+.form-select{
+    min-height:52px;
+    border-radius:12px;
+}
+
+.form-control:focus,
+.form-select:focus{
+    box-shadow:none;
+    border-color:#2563eb;
+}
+
+.btn-save{
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    border:none;
+    color:white;
+    padding:12px 30px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.btn-save:hover{
+    transform:translateY(-2px);
+}
+
+.btn-back{
+    border-radius:12px;
+    padding:12px 25px;
+}
+
+.badge-status{
+    font-size:14px;
+    padding:8px 12px;
+}
+
+</style>
+
+<div class="container mt-4">
+
+    <div class="page-header">
+
+        <h2>
+            Editar Disciplina
+        </h2>
+
+        <p>
+            Gestão académica da disciplina e professor responsável
+        </p>
+
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card card-premium">
+
+        <div class="card-body">
+
+            <div class="info-box">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <strong>Turma:</strong><br>
+                        {{ disciplina.turma.classe }}ª
+                        {{ disciplina.turma.identificador }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Curso:</strong><br>
+
+                        {% if disciplina.turma.curso %}
+                            {{ disciplina.turma.curso.nome }}
+                        {% else %}
+                            Ensino Geral
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Ano Letivo:</strong><br>
+                        {{ disciplina.turma.ano_letivo }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            Nome da Disciplina
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nome"
+                            class="form-control"
+                            value="{{ disciplina.nome }}"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            Professor Responsável
+                        </label>
+
+                        <select
+                            name="professor"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Sem Professor
+                            </option>
+
+                            {% for professor in professores %}
+
+                                <option
+                                    value="{{ professor.id }}"
+                                    {% if disciplina.professor and disciplina.professor.id == professor.id %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    {{ professor.get_full_name|default:professor.username }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="row mb-4">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Situação Atual
+                        </label>
+
+                        <div>
+
+                            {% if disciplina.professor %}
+                                <span class="badge bg-success badge-status">
+                                    Professor Atribuído
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark badge-status">
+                                    Sem Professor
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <a
+                        href="{% url 'disciplinas' %}"
+                        class="btn btn-outline-secondary btn-back"
+                    >
+                        Voltar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-save"
+                    >
+                        Salvar Alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base_secretaria.html" %}
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <h2 class="mb-4 fw-bold">Gestão de Mensalidades</h2>
+
+    <!-- FILTROS -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4 p-3">
+        <form method="get" class="row g-3 align-items-end">
+
+            <div class="col-md-4">
+                <label class="form-label">Número de Processo</label>
+                <input type="text"
+                       name="numero_processo"
+                       value="{{ numero_processo }}"
+                       class="form-control"
+                       placeholder="Digite o número do processo">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Mês</label>
+                <select name="mes" class="form-select">
+                    <option value="">Todos</option>
+                    {% for m in meses %}
+                        <option value="{{ m }}" {% if m == mes %}selected{% endif %}>{{ m }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="PAGA" {% if status == "PAGA" %}selected{% endif %}>Paga</option>
+                    <option value="PENDENTE" {% if status == "PENDENTE" %}selected{% endif %}>Pendente</option>
+                    <option value="ATRASADA" {% if status == "ATRASADA" %}selected{% endif %}>Atrasada</option>
+                    <option value="PAGA_COM_MULTA" {% if status == "PAGA_COM_MULTA" %}selected{% endif %}>Paga com Multa</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Filtrar</button>
+            </div>
+
+        </form>
+    </div>
+
+    {% if numero_processo %}
+    <div class="card shadow-sm border-0 rounded-4 p-3">
+
+        {% if aluno %}
+        <div class="mb-3">
+            <strong>Aluno:</strong> {{ aluno.usuario.get_full_name }} <br>
+            <strong>Processo:</strong> {{ aluno.numero_processo }}
+        </div>
+        {% endif %}
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Mês</th>
+                        <th>Valor</th>
+                        <th>Vencimento</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for mensalidade in mensalidades %}
+                    <tr>
+                        <td>{{ mensalidade.mes }}</td>
+                        <td>{{ mensalidade.valor|floatformat:2 }}</td>
+                        <td>{{ mensalidade.vencimento|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if mensalidade.status == "PAGA" %}
+                                <span class="badge bg-success">Paga</span>
+                            {% elif mensalidade.status == "PAGA_COM_MULTA" %}
+                                <span class="badge bg-warning text-dark">Paga c/ Multa</span>
+                            {% elif mensalidade.status == "ATRASADA" %}
+                                <span class="badge bg-danger">Atrasada</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Pendente</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if mensalidade.status == "PAGA" or mensalidade.status == "PAGA_COM_MULTA" %}
+                                <a href="{% url 'gerar_recibo' mensalidade.id %}" class="btn btn-sm btn-primary">
+                                    Gerar Recibo
+                                </a>
+                            {% else %}
+                                <a href="{% url 'registrar_pagamento_mensalidade' mensalidade.id %}" class="btn btn-sm btn-success">
+                                    Registrar Pagamento
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Nenhuma mensalidade encontrada.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

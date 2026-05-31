@@ -1,0 +1,39 @@
+{% extends "base_professor.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="fw-bold mb-4">Minhas Turmas</h3>
+
+    {% if turmas %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Classe</th>
+                            <th>Turma</th>
+                            <th>Ano Letivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for turma in turmas %}
+                        <tr>
+                            <td>{{ turma.classe }}ª</td>
+                            <td>{{ turma.identificador }}</td>
+                            <td>{{ turma.ano_letivo }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Nenhuma turma encontrada.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,409 @@
+{% extends "base_secretaria.html" %}
+{% block content %}
+
+<style>
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.page-title h3{
+    font-weight:700;
+    margin:0;
+    color:#0f172a;
+}
+
+.page-title p{
+    margin:0;
+    color:#64748b;
+}
+
+.btn-alunos-existentes{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:12px 22px;
+    font-weight:600;
+    text-decoration:none;
+    box-shadow:0 10px 25px rgba(37,99,235,.25);
+    transition:.3s;
+}
+
+.btn-alunos-existentes:hover{
+    color:white;
+    transform:translateY(-2px);
+}
+
+.card-premium{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.card-header-premium{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:25px;
+}
+
+.card-header-premium h4{
+    margin:0;
+    font-weight:700;
+}
+
+.card-header-premium small{
+    color:#cbd5e1;
+}
+
+.section-title{
+    font-size:14px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:#2563eb;
+    border-bottom:2px solid #e2e8f0;
+    padding-bottom:10px;
+    margin-bottom:20px;
+}
+
+.form-label{
+    font-weight:600;
+    color:#334155;
+}
+
+.form-control,
+.form-select{
+    border-radius:12px;
+    min-height:48px;
+}
+
+.info-box{
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    padding:18px;
+    border-radius:12px;
+}
+
+.info-box h6{
+    margin-bottom:10px;
+    font-weight:700;
+}
+
+.info-box ul{
+    margin:0;
+    padding-left:18px;
+}
+
+.info-box li{
+    margin-bottom:6px;
+}
+
+.btn-salvar{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    border:none;
+    color:white;
+    font-weight:600;
+    border-radius:12px;
+    padding:12px 28px;
+}
+
+.btn-salvar:hover{
+    color:white;
+}
+
+.btn-confirmacoes{
+    border-radius:12px;
+    font-weight:600;
+}
+
+</style>
+
+<div class="container-fluid">
+
+    <!-- CABEÇALHO -->
+    <div class="page-header">
+
+        <div class="page-title">
+            <h3>
+                <i class="bi bi-journal-plus"></i>
+                Nova Matrícula
+            </h3>
+            <p>
+                Cadastro oficial de novos alunos no sistema académico
+            </p>
+        </div>
+
+        <a href="{% url 'adicionar_aluno' %}"
+           class="btn-alunos-existentes">
+            <i class="bi bi-people-fill"></i>
+            Alunos Existentes
+        </a>
+
+    </div>
+
+    <!-- ALERTAS -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'success' }} alert-dismissible fade show">
+                {{ message }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow card-premium">
+
+        <div class="card-header-premium">
+            <h4>
+                <i class="bi bi-person-vcard-fill"></i>
+                Registro de Matrícula
+            </h4>
+            <small>
+                Preencha corretamente todos os dados do aluno.
+            </small>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+
+                <div class="section-title">
+                    Dados Pessoais
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Nome Completo *
+                        </label>
+                        <input
+                            type="text"
+                            name="nome"
+                            class="form-control"
+                            value="{{ request.POST.nome }}"
+                            required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Número do BI *
+                        </label>
+                        <input
+                            type="text"
+                            name="numero_bi"
+                            class="form-control"
+                            value="{{ request.POST.numero_bi }}"
+                            required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Sexo *
+                        </label>
+
+                        <select
+                            name="sexo"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="Masculino"
+                                {% if request.POST.sexo == "Masculino" %}selected{% endif %}>
+                                Masculino
+                            </option>
+
+                            <option value="Feminino"
+                                {% if request.POST.sexo == "Feminino" %}selected{% endif %}>
+                                Feminino
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ request.POST.email }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Data de Nascimento *
+                        </label>
+
+                        <input
+                            type="date"
+                            name="data_nascimento"
+                            class="form-control"
+                            value="{{ request.POST.data_nascimento }}"
+                            required>
+                    </div>
+
+                </div>
+
+                <div class="section-title mt-5">
+                    Dados Académicos
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Curso
+                        </label>
+
+                        <select id="cursoSelect" class="form-select">
+
+                            <option value="">
+                                Selecione o Curso
+                            </option>
+
+                            {% for curso in cursos %}
+                            <option value="{{ curso.id }}">
+                                {{ curso.nome }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+                            Turma *
+                        </label>
+
+                        <select
+                            name="turma"
+                            id="turmaSelect"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Selecione a Turma
+                            </option>
+
+                            {% for turma in turmas %}
+
+                            <option
+                                value="{{ turma.id }}"
+                                data-curso="{{ turma.curso.id|default:'' }}"
+                                {% if request.POST.turma == turma.id|stringformat:"s" %}selected{% endif %}>
+
+                                {{ turma.classe }}ª
+                                {{ turma.identificador }}
+
+                                {% if turma.curso %}
+                                    - {{ turma.curso.nome }}
+                                {% endif %}
+
+                                - {{ turma.ano_letivo }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="info-box mt-4">
+
+                    <h6>
+                        <i class="bi bi-info-circle-fill"></i>
+                        Informações Automáticas
+                    </h6>
+
+                    <ul>
+                        <li>Username será o Número do Processo.</li>
+                        <li>Senha será gerada automaticamente pelo sistema.</li>
+                        <li>Matrícula será confirmada automaticamente.</li>
+                        <li>Mensalidades serão geradas automaticamente.</li>
+                        <li>O aluno ficará apto para confirmação nos próximos anos letivos.</li>
+                    </ul>
+
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+
+                    <a href="{% url 'confirmar_matricula' %}"
+                       class="btn btn-outline-secondary btn-confirmacoes">
+
+                        <i class="bi bi-check-circle"></i>
+                        Ver Confirmações
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-salvar">
+
+                        <i class="bi bi-save"></i>
+                        Registrar Matrícula
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const curso = document.getElementById("cursoSelect");
+const turma = document.getElementById("turmaSelect");
+
+curso.addEventListener("change", function(){
+
+    let cursoId = this.value;
+
+    for(let option of turma.options){
+
+        if(option.value === ""){
+            continue;
+        }
+
+        let cursoTurma = option.dataset.curso;
+
+        if(!cursoTurma){
+            option.style.display = "block";
+            continue;
+        }
+
+        if(cursoTurma === cursoId){
+            option.style.display = "block";
+        }else{
+            option.style.display = "none";
+        }
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+/* WRAPPER SEM QUEBRAR TOPBAR */
+
+.page-wrapper{
+padding-top:30px;
+padding-bottom:40px;
+animation:fadeIn .4s ease;
+background:linear-gradient(135deg,#f8f9fa,#eef2f7);
+}
+
+/* CARD */
+
+.password-card{
+border:none;
+border-radius:14px;
+overflow:hidden;
+transition:all .3s ease;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+background:white;
+}
+
+.password-card:hover{
+transform:translateY(-4px);
+box-shadow:0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* HEADER */
+
+.card-header-premium{
+background:linear-gradient(45deg,#0d6efd,#0a58ca);
+padding:18px 22px;
+}
+
+.card-header-premium h5{
+margin:0;
+font-weight:600;
+letter-spacing:.3px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+/* INPUTS */
+
+.form-control{
+border-radius:8px;
+padding:10px 12px;
+transition:all .2s ease;
+border:1px solid #dee2e6;
+}
+
+.form-control:focus{
+border-color:#0d6efd;
+box-shadow:0 0 0 .15rem rgba(13,110,253,.15);
+}
+
+/* BUTTON */
+
+.btn-premium{
+border-radius:8px;
+padding:10px;
+font-weight:500;
+transition:all .2s ease;
+}
+
+.btn-premium:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 16px rgba(13,110,253,.25);
+}
+
+/* ALERT */
+
+.alert{
+border-radius:8px;
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+
+<div class="page-wrapper">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-md-6 col-lg-5">
+
+<div class="card password-card">
+
+<div class="card-header card-header-premium text-white">
+
+<h5>
+<i class="bi bi-key"></i>
+Alterar Senha
+</h5>
+
+</div>
+
+<div class="card-body p-4">
+
+{% if messages %}
+{% for message in messages %}
+
+<div class="alert alert-info">
+{{ message }}
+</div>
+
+{% endfor %}
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label fw-semibold">
+Nova Senha
+</label>
+
+<input
+type="password"
+name="senha1"
+class="form-control"
+placeholder="Digite a nova senha"
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label fw-semibold">
+Confirmar Senha
+</label>
+
+<input
+type="password"
+name="senha2"
+class="form-control"
+placeholder="Repita a nova senha"
+required>
+
+</div>
+
+<button class="btn btn-primary btn-premium w-100">
+
+<i class="bi bi-save"></i>
+Guardar Nova Senha
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

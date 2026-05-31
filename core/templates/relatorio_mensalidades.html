@@ -1,0 +1,104 @@
+{% extends "base_secretaria.html" %}
+{% block content %}
+
+<div class="container-fluid py-4">
+
+<h2 class="fw-bold mb-4">Relatório de Mensalidades</h2>
+
+<div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+<form method="get" class="row g-3">
+
+<div class="col-md-4">
+<label class="form-label">Turma</label>
+<select name="turma" class="form-select">
+<option value="">Selecione a Turma</option>
+{% for turma in turmas %}
+<option value="{{ turma.id }}" {% if turma.id|stringformat:"s" == turma_id %}selected{% endif %}>
+{{ turma.classe }}ª - {{ turma.identificador }}
+</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-4">
+<label class="form-label">Mês</label>
+<select name="mes" class="form-select">
+<option value="">Selecione</option>
+{% for m in meses %}
+<option value="{{ m }}" {% if m == mes %}selected{% endif %}>
+{{ m }}
+</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-4 d-grid">
+<label class="form-label invisible">.</label>
+<button class="btn btn-primary">Gerar Relatório</button>
+</div>
+
+</form>
+</div>
+
+{% if mensalidades %}
+
+<div class="card shadow-sm border-0 rounded-4 p-4">
+
+<div class="table-responsive">
+
+<table class="table table-hover">
+
+<thead class="table-light">
+<tr>
+<th>Aluno</th>
+<th>Processo</th>
+<th>Mês</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for m in mensalidades %}
+
+<tr>
+<td>{{ m.aluno.usuario.get_full_name }}</td>
+<td>{{ m.aluno.numero_processo }}</td>
+<td>{{ m.mes }}</td>
+
+<td>
+{% if m.status == "PAGA" %}
+<span class="badge bg-success">Paga</span>
+{% else %}
+<span class="badge bg-danger">Atrasada</span>
+{% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% if turma_id and mes %}
+
+<a href="{% url 'exportar_estado_turma_pdf' %}?turma={{ turma_id }}&mes={{ mes }}"
+class="btn btn-danger mb-3">
+
+<i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+
+</a>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="card border-0 shadow-lg rounded-4">
+
+<div class="card-header bg-primary text-white">
+
+<h3 class="mb-0">
+📚 Nova Disciplina
+</h3>
+
+</div>
+
+<div class="card-body p-4">
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+{{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="mb-4">
+
+<label class="form-label fw-bold">
+Nome da Disciplina
+</label>
+
+<input type="text"
+name="nome"
+class="form-control form-control-lg"
+placeholder="Ex: Matemática">
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label fw-bold">
+Turma
+</label>
+
+<select
+name="turma"
+class="form-select form-select-lg">
+
+<option value="">
+Selecione
+</option>
+
+{% for turma in turmas %}
+
+<option value="{{ turma.id }}">
+
+{{ turma.classe }}ª
+{{ turma.identificador }}
+
+{% if turma.curso %}
+- {{ turma.curso.nome }}
+{% endif %}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label fw-bold">
+
+Professor
+<span class="text-muted">
+(opcional)
+</span>
+
+</label>
+
+<select
+name="professor"
+class="form-select form-select-lg">
+
+<option value="">
+Atribuir depois
+</option>
+
+{% for professor in professores %}
+
+<option value="{{ professor.id }}">
+{{ professor.get_full_name|default:professor.username }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="alert alert-light border">
+
+<strong>💡 Dica:</strong>
+
+Pode criar a disciplina agora e atribuir o professor mais tarde.
+
+</div>
+
+<div class="d-flex justify-content-between">
+
+<a href="{% url 'disciplinas' %}"
+class="btn btn-outline-secondary">
+
+Voltar
+
+</a>
+
+<button
+type="submit"
+class="btn btn-primary px-5">
+
+Criar Disciplina
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<h2>Caixa do Dia</h2>
+
+<h3>Entradas</h3>
+
+<ul>
+{% for e in entradas %}
+<li>{{ e.descricao }} - {{ e.valor }} Kz</li>
+{% endfor %}
+</ul>
+
+<p>Total Entradas: {{ total_entradas }} Kz</p>
+
+<hr>
+
+<h3>Saídas</h3>
+
+<ul>
+{% for s in saidas %}
+<li>{{ s.descricao }} - {{ s.valor }} Kz</li>
+{% endfor %}
+</ul>
+
+<p>Total Saídas: {{ total_saidas }} Kz</p>
+
+<hr>
+
+<h2>Saldo: {{ saldo }} Kz</h2>

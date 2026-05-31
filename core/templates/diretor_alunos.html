@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Painel do Diretor - Alunos</h2>
+
+    <!-- Filtro por Turma -->
+    <form method="GET" class="row mb-4">
+        <div class="col-md-4">
+            <select name="turma" class="form-select">
+                <option value="">Selecione a Turma</option>
+                {% for turma in turmas %}
+                    <option value="{{ turma.id }}"
+                        {% if request.GET.turma == turma.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ turma.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">
+                Filtrar
+            </button>
+        </div>
+    </form>
+
+    <!-- Tabela de alunos -->
+    {% if alunos %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nº</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Nº Processo</th>
+                    <th>Turma</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td>{{ aluno.numero_na_turma }}</td>
+                    <td>{{ aluno.usuario.get_full_name }}</td>
+                    <td>{{ aluno.usuario.email }}</td>
+                    <td>{{ aluno.numero_processo }}</td>
+                    <td>{{ aluno.turma.nome }}</td>
+                    <td>
+                        {% if aluno.aprovado %}
+                            <span class="badge bg-success">Aprovado</span>
+                        {% else %}
+                            <span class="badge bg-danger">Reprovado</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-info">Ver</a>
+                        <a href="#" class="btn btn-sm btn-warning">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info">
+            Nenhum aluno encontrado.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

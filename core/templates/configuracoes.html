@@ -1,0 +1,149 @@
+{% extends 'admin.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Configurações do Sistema</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-4">
+
+            <!--  Sistema -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Sistema</h5>
+                    <div class="mb-3">
+                        <label>Nome do sistema</label>
+                        {{ form.nome_sistema }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Logo do sistema</label>
+                        {{ form.logo_sistema }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Favicon</label>
+                        {{ form.favicon }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Cor principal</label>
+                        {{ form.cor_principal }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Cor secundária</label>
+                        {{ form.cor_secundaria }}
+                    </div>
+                </div>
+            </div>
+
+            <!--  Ano letivo -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Ano Letivo</h5>
+                    <div class="mb-3">
+                        <label>Ano letivo padrão</label>
+                        {{ form.ano_letivo_padrao }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.bloquear_alteracao_ano }}
+                        <label class="form-check-label">Bloquear alteração global do ano letivo</label>
+                    </div>
+                </div>
+            </div>
+
+            <!--  Gestão de escolas -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Gestão de Escolas</h5>
+                    <div class="mb-3 form-check">
+                        {{ form.ativar_novas_escolas }}
+                        <label class="form-check-label">Permitir registro de novas escolas</label>
+                    </div>
+                    <div class="mb-3">
+                        <label>Limite de alunos por escola</label>
+                        {{ form.limite_alunos_por_escola }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Limite de turmas por escola</label>
+                        {{ form.limite_turmas_por_escola }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Plano padrão</label>
+                        {{ form.plano_padrao }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Armazenamento por escola (MB)</label>
+                        {{ form.armazenamento_por_escola_mb }}
+                    </div>
+                </div>
+            </div>
+
+            <!--  Financeiro -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Financeiro</h5>
+                    <div class="mb-3">
+                        <label>Moeda</label>
+                        {{ form.moeda }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Valor mensal plano básico</label>
+                        {{ form.valor_mensal_plano_basico }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Valor anual plano básico</label>
+                        {{ form.valor_anual_plano_basico }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.cobranca_automatica }}
+                        <label class="form-check-label">Ativar cobrança automática</label>
+                    </div>
+                </div>
+            </div>
+
+            <!--  Segurança -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Segurança / Acesso</h5>
+                    <div class="mb-3 form-check">
+                        {{ form.login_ativo }}
+                        <label class="form-check-label">Login ativo</label>
+                    </div>
+                    <div class="mb-3">
+                        <label>Tempo de sessão (minutos)</label>
+                        {{ form.tempo_sessao_minutos }}
+                    </div>
+                    <div class="mb-3">
+                        <label>Bloqueio automático após tentativas</label>
+                        {{ form.bloqueio_tentativas_login }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.backup_automatico }}
+                        <label class="form-check-label">Backup automático</label>
+                    </div>
+                </div>
+            </div>
+
+            <!--  Modo manutenção -->
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5>Modo Manutenção</h5>
+                    <div class="mb-3 form-check">
+                        {{ form.modo_manutencao }}
+                        <label class="form-check-label">Ativar modo manutenção</label>
+                    </div>
+                    <div class="mb-3">
+                        <label>Mensagem de aviso</label>
+                        {{ form.mensagem_manutencao }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success btn-lg">Salvar Configurações</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,480 @@
+{% extends "base_professor.html" %}
+{% load custom_filters %}
+{% block content %}
+
+<style>
+
+.page-title{
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.card-custom{
+    border:none;
+    border-radius:14px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.08);
+    transition:0.25s;
+}
+
+.card-custom:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 22px rgba(0,0,0,0.12);
+}
+
+.table thead{
+    background:#0f172a;
+    color:white;
+}
+
+.table td{
+    vertical-align:middle;
+}
+
+.input-nota{
+    width:85px;
+    text-align:center;
+    margin:auto;
+}
+
+.actions-bar{
+    margin-top:20px;
+    padding-top:15px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.btn-action{
+    min-width:170px;
+}
+
+.info-fechamento{
+    background:#f1f5f9;
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.badge-aprovado{
+    background:#10b981;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge-reprovado{
+    background:#ef4444;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.media-box{
+    font-weight:700;
+    font-size:15px;
+}
+
+</style>
+
+<div class="container-fluid">
+
+    <h3 class="page-title">
+        Lançamento de Notas
+    </h3>
+
+    <!-- ALERTAS -->
+
+    {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show">
+
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+        {% endfor %}
+    {% endif %}
+
+    <!-- FILTROS -->
+
+    <div class="card card-custom mb-4">
+
+        <div class="card-body">
+
+            <form method="GET" class="row g-3">
+
+                <!-- DISCIPLINA -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Disciplina
+                    </label>
+
+                    <select
+                        name="disciplina"
+                        class="form-select"
+                        onchange="this.form.submit()">
+
+                        <option value="">
+                            Selecionar
+                        </option>
+
+                        {% for d in disciplinas %}
+
+                        <option
+                            value="{{ d.id }}"
+                            {% if disciplina and disciplina.id == d.id %}selected{% endif %}>
+
+                            {{ d.nome }} - {{ d.turma.classe }}ª {{ d.turma.identificador }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- TRIMESTRE -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Trimestre
+                    </label>
+
+                    <select
+                        name="trimestre"
+                        class="form-select"
+                        onchange="this.form.submit()">
+
+                        <option value="">
+                            Selecionar
+                        </option>
+
+                        <option value="1" {% if trimestre == "1" %}selected{% endif %}>
+                            1º Trimestre
+                        </option>
+
+                        <option value="2" {% if trimestre == "2" %}selected{% endif %}>
+                            2º Trimestre
+                        </option>
+
+                        <option value="3" {% if trimestre == "3" %}selected{% endif %}>
+                            3º Trimestre
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- TABELA -->
+
+    {% if disciplina and trimestre and alunos %}
+
+    <div class="card card-custom">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="disciplina"
+                    value="{{ disciplina.id }}">
+
+                <input
+                    type="hidden"
+                    name="trimestre"
+                    value="{{ trimestre }}">
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Nº</th>
+
+                                <th>Aluno</th>
+
+                                <th>P1</th>
+
+                                <th>P2</th>
+
+                                <th>Exame</th>
+
+                                <th>Recurso</th>
+
+                                <th>Média</th>
+
+                                <th>Situação</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for aluno in alunos %}
+                            {% with nota=notas_existentes|get_item:aluno.id %}
+
+                            <tr>
+
+                                <!-- NÚMERO -->
+
+                                <td class="text-center">
+
+                                    {{ forloop.counter }}
+
+                                </td>
+
+                                <!-- ALUNO -->
+
+                                <td>
+
+                                    <strong>
+                                        {{ aluno.usuario.username }}
+                                    </strong>
+
+                                </td>
+
+                                <!-- P1 -->
+
+                                <td>
+
+                                    <input
+                                        type="number"
+                                        name="p1_{{ aluno.id }}"
+                                        step="0.01"
+                                        min="0"
+                                        max="20"
+                                        class="form-control input-nota"
+                                        value="{% if nota %}{{ nota.p1 }}{% endif %}"
+                                        {% if trimestre_fechado %}disabled{% endif %}>
+
+                                </td>
+
+                                <!-- P2 -->
+
+                                <td>
+
+                                    <input
+                                        type="number"
+                                        name="p2_{{ aluno.id }}"
+                                        step="0.01"
+                                        min="0"
+                                        max="20"
+                                        class="form-control input-nota"
+                                        value="{% if nota %}{{ nota.p2 }}{% endif %}"
+                                        {% if trimestre_fechado %}disabled{% endif %}>
+
+                                </td>
+
+                                <!-- EXAME -->
+
+                                <td>
+
+                                    <input
+                                        type="number"
+                                        name="exame_{{ aluno.id }}"
+                                        step="0.01"
+                                        min="0"
+                                        max="20"
+                                        class="form-control input-nota"
+                                        value="{% if nota %}{{ nota.exame }}{% endif %}"
+                                        {% if trimestre_fechado %}disabled{% endif %}>
+
+                                </td>
+
+                                <!-- RECURSO -->
+
+                                <td>
+
+                                    <input
+                                        type="number"
+                                        name="recurso_{{ aluno.id }}"
+                                        step="0.01"
+                                        min="0"
+                                        max="20"
+                                        class="form-control input-nota"
+                                        value="{% if nota %}{{ nota.recurso }}{% endif %}"
+                                        {% if trimestre_fechado %}disabled{% endif %}>
+
+                                </td>
+
+                                <!-- MÉDIA -->
+
+                                <td class="text-center">
+
+                                    {% if nota and nota.media_final %}
+
+                                        <span class="media-box">
+
+                                            {{ nota.media_final }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+                                </td>
+
+                                <!-- SITUAÇÃO -->
+
+                                <td class="text-center">
+
+                                    {% if nota %}
+
+                                        {% if nota.situacao == "APROVADO" %}
+
+                                            <span class="badge-aprovado">
+
+                                                APROVADO
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge-reprovado">
+
+                                                REPROVADO
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endwith %}
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- BOTÕES -->
+
+                <div class="actions-bar">
+
+                    <div class="d-flex gap-2">
+
+                        {% if not trimestre_fechado %}
+
+                        <button
+                            type="submit"
+                            name="acao"
+                            value="salvar"
+                            class="btn btn-success btn-action">
+
+                            Salvar Notas
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            name="acao"
+                            value="abrir"
+                            class="btn btn-warning btn-action">
+
+                            Reabrir Trimestre
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            name="acao"
+                            value="fechar"
+                            class="btn btn-danger btn-action">
+
+                            Fechar Trimestre
+
+                        </button>
+
+                        {% else %}
+
+                        <button
+                            class="btn btn-secondary btn-action"
+                            disabled>
+
+                            Trimestre Fechado
+
+                        </button>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- INFO FECHAMENTO -->
+
+                    {% if trimestre_fechado and fechamento %}
+
+                    <div class="info-fechamento">
+
+                        Fechado por
+
+                        <strong>
+
+                            {{ fechamento.fechado_por }}
+
+                        </strong>
+
+                        em
+
+                        {{ fechamento.data_fechamento|date:"d/m/Y H:i" }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

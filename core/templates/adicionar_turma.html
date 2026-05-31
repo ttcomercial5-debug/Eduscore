@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+
+        <h3 class="mb-4 fw-bold text-primary">
+            Adicionar Nova Turma
+        </h3>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <!-- Classe -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Classe
+                    </label>
+
+                    <select name="classe"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="4">4ª Classe</option>
+                        <option value="5">5ª Classe</option>
+                        <option value="6">6ª Classe</option>
+                        <option value="7">7ª Classe</option>
+                        <option value="8">8ª Classe</option>
+                        <option value="9">9ª Classe</option>
+                        <option value="10">10ª Classe</option>
+                        <option value="11">11ª Classe</option>
+                        <option value="12">12ª Classe</option>
+                        <option value="13">13ª Classe</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Identificador -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Turma
+                    </label>
+
+                    <input type="text"
+                           name="identificador"
+                           class="form-control"
+                           placeholder="Ex: A, B, C"
+                           required>
+
+                </div>
+
+                <!-- Turno -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Turno
+                    </label>
+
+                    <select name="turno"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="MANHA">
+                            Manhã
+                        </option>
+
+                        <option value="TARDE">
+                            Tarde
+                        </option>
+
+                        <option value="NOITE">
+                            Noite
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Ano Letivo Automático -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Ano Letivo
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           value="{{ ano_ativo.nome }}"
+                           readonly>
+
+                </div>
+
+                <!-- Curso -->
+                <div class="col-md-12 mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Curso (Apenas 10ª-13ª)
+                    </label>
+
+                    <select name="curso"
+                            class="form-select">
+
+                        <option value="">
+                            Sem curso (Ensino geral)
+                        </option>
+
+                        {% for curso in cursos %}
+
+                        <option value="{{ curso.id }}">
+                            {{ curso.nome }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+
+                <a href="{% url 'turmas' %}"
+                   class="btn btn-light me-2">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary px-4">
+
+                    Salvar Turma
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

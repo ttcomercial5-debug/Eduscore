@@ -1,0 +1,151 @@
+{% extends 'admin.html' %}
+
+{% block content %}
+
+<h1 class="mb-4">Editar Plano: {{ plano.nome }}</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card card-dashboard shadow-sm p-4 border-0"
+             style="transition: transform 0.3s;"
+             onmouseover="this.style.transform='scale(1.02)'"
+             onmouseout="this.style.transform='scale(1)'">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Nome do Plano -->
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome do Plano</label>
+
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           id="nome"
+                           name="nome"
+                           value="{{ plano.nome }}"
+                           required>
+                </div>
+
+                <!-- Escola (somente visualização) -->
+                <div class="mb-3">
+                    <label class="form-label">Escola</label>
+
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           value="{{ plano.escola.nome }}"
+                           readonly>
+                </div>
+
+                <!-- Limite de alunos -->
+                <div class="mb-3">
+                    <label for="limite_alunos" class="form-label">
+                        Limite de Alunos
+                    </label>
+
+                    <input type="number"
+                           class="form-control form-control-lg"
+                           id="limite_alunos"
+                           name="limite_alunos"
+                           value="{{ plano.limite_alunos }}"
+                           min="1"
+                           required>
+                </div>
+
+                <!-- Valor mensal -->
+                <div class="mb-3">
+                    <label for="valor_mensal" class="form-label">
+                        Valor Mensal
+                    </label>
+
+                    <div class="input-group input-group-lg">
+
+                        <span class="input-group-text">
+                            Kz
+                        </span>
+
+                        <input type="number"
+                               step="0.01"
+                               class="form-control"
+                               id="valor_mensal"
+                               name="valor_mensal"
+                               value="{{ plano.valor_mensal }}"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <!-- Data de Expiração -->
+                <div class="mb-3">
+                    <label for="data_expiracao" class="form-label">
+                        Data de Expiração
+                    </label>
+
+                    <input type="date"
+                           class="form-control form-control-lg"
+                           id="data_expiracao"
+                           name="data_expiracao"
+                           value="{{ plano.data_expiracao|date:'Y-m-d' }}"
+                           required>
+                </div>
+
+                <!-- Plano ativo -->
+                <div class="form-check form-switch mb-4">
+
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="ativo"
+                           name="ativo"
+                           {% if plano.ativo %}checked{% endif %}>
+
+                    <label class="form-check-label" for="ativo">
+                        Plano Ativo
+                    </label>
+
+                </div>
+
+                <!-- Botões -->
+                <div class="d-flex justify-content-between">
+
+                    <a href="{% url 'gerenciar_planos' %}"
+                       class="btn btn-outline-secondary btn-lg">
+
+                        Cancelar
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary btn-lg">
+
+                        Salvar Alterações
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- animação de entrada -->
+<script>
+
+const card = document.querySelector('.card-dashboard');
+
+card.style.opacity = 0;
+card.style.transform = 'translateY(20px)';
+
+setTimeout(() => {
+
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    card.style.opacity = 1;
+    card.style.transform = 'translateY(0)';
+
+}, 100);
+
+</script>
+
+{% endblock %}

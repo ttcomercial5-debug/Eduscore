@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- CABEÇALHO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Gestão de Turmas
+            </h2>
+
+            <small class="text-muted">
+                Ano Letivo:
+                <strong>
+                    {{ ano_selecionado }}
+                </strong>
+            </small>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a href="{% url 'adicionar_turma' %}"
+               class="btn btn-success">
+
+                <i class="fas fa-plus"></i>
+                Nova Turma
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- FILTRO ANO LETIVO -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row align-items-end">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Histórico por Ano Letivo
+                        </label>
+
+                        <select
+                            name="ano"
+                            class="form-select"
+                            onchange="this.form.submit()">
+
+                            <option value="">
+                                Ano Letivo Atual
+                            </option>
+
+                            {% for ano in anos_letivos %}
+
+                            <option
+                                value="{{ ano.id }}"
+                                {% if ano.id == ano_selecionado.id %}
+                                selected
+                                {% endif %}
+                            >
+                                {{ ano.nome }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ESTATÍSTICAS -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Total de Turmas
+                    </h6>
+
+                    <h3 class="fw-bold text-primary">
+                        {{ turmas|length }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABELA -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Classe</th>
+
+                            <th>Turma</th>
+
+                            <th>Curso</th>
+
+                            <th>Turno</th>
+
+                            <th>Ano Letivo</th>
+
+                            <th>Total Alunos</th>
+
+                            <th class="text-center">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for turma in turmas %}
+
+                        <tr>
+
+                            <td>
+                                {{ turma.get_classe_display }}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    {{ turma.identificador }}
+                                </strong>
+                            </td>
+
+                            <td>
+
+                                {% if turma.curso %}
+
+                                    <span class="badge bg-primary">
+                                        {{ turma.curso.nome }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Geral
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {{ turma.get_turno_display }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-info">
+
+                                    {{ turma.ano_letivo }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ turma.total_alunos }}
+
+                                </span>
+
+                            </td>
+
+                            <td class="text-center">
+
+                                <div class="btn-group">
+
+                                    <a href="{% url 'imprimir_lista_turma' turma.id %}"
+                                       target="_blank"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        Lista
+
+                                    </a>
+
+                                    <a href="{% url 'editar_turma' turma.id %}"
+                                       class="btn btn-sm btn-outline-warning">
+
+                                        Editar
+
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5 text-muted">
+
+                                Nenhuma turma encontrada.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

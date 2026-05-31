@@ -1,0 +1,811 @@
+{% extends "base_secretaria.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.payment-page{
+    padding:10px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.payment-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #2563eb
+    );
+
+    border-radius:24px;
+    padding:28px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:28px;
+    box-shadow:0 18px 45px rgba(0,0,0,0.12);
+
+}
+
+.payment-header::before{
+
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    top:-100px;
+    right:-80px;
+
+}
+
+.payment-header-content{
+
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+
+}
+
+.payment-title h2{
+
+    font-size:30px;
+    font-weight:800;
+    margin-bottom:10px;
+
+}
+
+.payment-title p{
+
+    margin:0;
+    opacity:.92;
+    font-size:15px;
+
+}
+
+.year-badge{
+
+    background:rgba(255,255,255,0.12);
+    padding:12px 18px;
+    border-radius:14px;
+    backdrop-filter:blur(10px);
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+}
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.payment-card{
+
+    background:white;
+    border:none;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 18px 45px rgba(0,0,0,0.08);
+
+}
+
+/* =========================================================
+   INFO CARDS
+========================================================= */
+
+.info-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+    margin-bottom:25px;
+
+}
+
+.info-card{
+
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:22px;
+    transition:.3s;
+
+}
+
+.info-card:hover{
+
+    transform:translateY(-4px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+
+}
+
+.info-card small{
+
+    color:#64748b;
+    font-size:13px;
+
+}
+
+.info-card h5,
+.info-card h6{
+
+    margin-top:10px;
+    margin-bottom:0;
+    font-weight:700;
+    color:#0f172a;
+
+}
+
+.value-success{
+
+    color:#16a34a;
+
+}
+
+.value-danger{
+
+    color:#dc2626;
+
+}
+
+/* =========================================================
+   TOTAL PAGO ALERT
+========================================================= */
+
+.total-alert{
+
+    background:linear-gradient(
+        135deg,
+        #eff6ff,
+        #dbeafe
+    );
+
+    border:none;
+    border-radius:18px;
+    padding:18px 22px;
+    margin-bottom:30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+
+}
+
+.total-alert strong{
+
+    color:#1e3a8a;
+
+}
+
+.total-badge{
+
+    background:#2563eb;
+    color:white;
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:700;
+
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-section-title{
+
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:22px;
+    color:#0f172a;
+
+}
+
+.form-label{
+
+    font-weight:600;
+    margin-bottom:10px;
+    color:#334155;
+
+}
+
+.form-control,
+.form-select{
+
+    border-radius:14px;
+    min-height:56px;
+    border:1px solid #dbe2ea;
+    padding:14px 16px;
+    transition:.25s;
+    font-size:15px;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#2563eb;
+    box-shadow:0 0 0 0.15rem rgba(37,99,235,.15);
+
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.action-buttons{
+
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:35px;
+
+}
+
+.btn-modern{
+
+    border:none;
+    border-radius:14px;
+    padding:14px 28px;
+    font-weight:600;
+    transition:.25s;
+
+}
+
+.btn-modern:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.btn-back{
+
+    background:#f1f5f9;
+    color:#0f172a;
+
+}
+
+.btn-back:hover{
+
+    background:#e2e8f0;
+
+}
+
+.btn-pay{
+
+    background:linear-gradient(
+        135deg,
+        #16a34a,
+        #15803d
+    );
+
+    color:white;
+    box-shadow:0 12px 25px rgba(22,163,74,.25);
+
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.history-wrapper{
+
+    margin-top:45px;
+
+}
+
+.history-title{
+
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:20px;
+    color:#0f172a;
+
+}
+
+.table-modern{
+
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+
+}
+
+.table-modern table{
+
+    margin:0;
+
+}
+
+.table-modern thead{
+
+    background:#0f172a;
+    color:white;
+
+}
+
+.table-modern th{
+
+    padding:16px;
+    border:none;
+    font-weight:600;
+    font-size:14px;
+
+}
+
+.table-modern td{
+
+    padding:16px;
+    vertical-align:middle;
+    border-color:#eef2f7;
+
+}
+
+.payment-value{
+
+    font-weight:700;
+    color:#16a34a;
+
+}
+
+.payment-method{
+
+    background:#eff6ff;
+    color:#1d4ed8;
+    padding:8px 12px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:600;
+    display:inline-block;
+
+}
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.alert{
+
+    border:none;
+    border-radius:16px;
+    padding:16px 18px;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:768px){
+
+    .payment-header{
+
+        padding:22px;
+
+    }
+
+    .payment-title h2{
+
+        font-size:24px;
+
+    }
+
+    .action-buttons{
+
+        flex-direction:column;
+
+    }
+
+    .btn-modern{
+
+        width:100%;
+
+    }
+
+}
+
+</style>
+
+<div class="payment-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="payment-header">
+
+        <div class="payment-header-content">
+
+            <div class="payment-title">
+
+                <h2>
+
+                    <i class="bi bi-cash-coin me-2"></i>
+
+                    Registrar Pagamento
+
+                </h2>
+
+                <p>
+
+                    Registre pagamentos de mensalidades
+                    com segurança, organização e controlo financeiro.
+
+                </p>
+
+            </div>
+
+            <div class="year-badge">
+
+                <i class="bi bi-calendar2-check"></i>
+
+                {{ mensalidade.ano_letivo }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =====================================================
+         CARD
+    ====================================================== -->
+
+    <div class="payment-card">
+
+        <div class="card-body p-4 p-lg-5">
+
+            <!-- MESSAGES -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }} mb-4">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <!-- =====================================================
+                 INFO CARDS
+            ====================================================== -->
+
+            <div class="info-grid">
+
+                <!-- ALUNO -->
+
+                <div class="info-card">
+
+                    <small>
+                        Aluno
+                    </small>
+
+                    <h6>
+
+                        {{ mensalidade.aluno }}
+
+                    </h6>
+
+                </div>
+
+                <!-- MÊS -->
+
+                <div class="info-card">
+
+                    <small>
+                        Mês de Referência
+                    </small>
+
+                    <h6>
+
+                        {% if mensalidade.mes_referencia %}
+                            {{ mensalidade.mes_referencia }}
+                        {% else %}
+                            {{ mensalidade.mes }}
+                        {% endif %}
+
+                    </h6>
+
+                </div>
+
+                <!-- VALOR -->
+
+                <div class="info-card">
+
+                    <small>
+                        Valor Total
+                    </small>
+
+                    <h5 class="value-success">
+
+                        {{ mensalidade.valor }} Kz
+
+                    </h5>
+
+                </div>
+
+                <!-- RESTANTE -->
+
+                <div class="info-card">
+
+                    <small>
+                        Valor Restante
+                    </small>
+
+                    <h5 class="value-danger">
+
+                        {{ restante }} Kz
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+            <!-- =====================================================
+                 TOTAL PAGO
+            ====================================================== -->
+
+            <div class="total-alert">
+
+                <div>
+
+                    <strong>
+                        Total já pago:
+                    </strong>
+
+                    {{ total_pago }} Kz
+
+                </div>
+
+                <div class="total-badge">
+
+                    {% if restante <= 0 %}
+                        Mensalidade Liquidada
+                    {% else %}
+                        Pagamento Parcial
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- =====================================================
+                 FORM
+            ====================================================== -->
+
+            <div class="form-section-title">
+
+                Dados do Pagamento
+
+            </div>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-4">
+
+                    <!-- VALOR -->
+
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
+
+                            Valor Pago
+
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="valor_pago"
+                            class="form-control"
+                            placeholder="Digite o valor"
+                            max="{{ restante }}"
+                            required
+                        >
+
+                    </div>
+
+                    <!-- FORMA -->
+
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
+
+                            Forma de Pagamento
+
+                        </label>
+
+                        <select
+                            name="forma_pagamento"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="DINHEIRO">
+                                Dinheiro
+                            </option>
+
+                            <option value="TRANSFERENCIA">
+                                Transferência
+                            </option>
+
+                            <option value="MULTICAIXA">
+                                Multicaixa
+                            </option>
+
+                            <option value="TPA">
+                                TPA
+                            </option>
+
+                            <option value="OUTRO">
+                                Outro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- OBS -->
+
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
+
+                            Observação
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="observacao"
+                            class="form-control"
+                            placeholder="Opcional"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+
+                <div class="action-buttons">
+
+                    <a href="{% url 'mensalidades' %}"
+                       class="btn btn-modern btn-back">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Voltar
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-modern btn-pay">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Confirmar Pagamento
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            <!-- =====================================================
+                 HISTÓRICO
+            ====================================================== -->
+
+            {% if pagamentos %}
+
+            <div class="history-wrapper">
+
+                <div class="history-title">
+
+                    <i class="bi bi-clock-history me-2"></i>
+
+                    Histórico de Pagamentos
+
+                </div>
+
+                <div class="table-responsive table-modern">
+
+                    <table class="table align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Data</th>
+                                <th>Valor</th>
+                                <th>Forma</th>
+                                <th>Observação</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for pagamento in pagamentos %}
+
+                            <tr>
+
+                                <td>
+
+                                    {{ pagamento.data_pagamento|date:"d/m/Y H:i" }}
+
+                                </td>
+
+                                <td class="payment-value">
+
+                                    {{ pagamento.valor_pago }} Kz
+
+                                </td>
+
+                                <td>
+
+                                    <span class="payment-method">
+
+                                        {{ pagamento.forma_pagamento }}
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    {{ pagamento.observacao|default:"-" }}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

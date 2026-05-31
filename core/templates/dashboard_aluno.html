@@ -1,0 +1,454 @@
+{% extends "base_aluno.html" %}
+
+{% block content %}
+
+<style>
+
+.media-final-card{
+    background:linear-gradient(135deg,#4f46e5,#6366f1);
+    color:white;
+    padding:20px 25px;
+    border-radius:16px;
+    text-align:center;
+}
+
+.media-final-card h2{
+    margin:0;
+    font-size:34px;
+    font-weight:700;
+}
+
+.status-aprovado{
+    background:#10b981;
+    color:white;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.status-reprovado{
+    background:#ef4444;
+    color:white;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.kpi-card{
+    border-radius:20px;
+    padding:25px;
+    color:white;
+    transition:.3s;
+    text-align:center;
+}
+
+.kpi-card:hover{
+    transform:translateY(-5px);
+}
+
+.card-green{
+    background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.card-red{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.card-orange{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.kpi-title{
+    font-size:12px;
+    text-transform:uppercase;
+    opacity:.9;
+}
+
+.kpi-value{
+    font-size:28px;
+    font-weight:700;
+    margin-top:10px;
+}
+
+.card-password-aluno{
+    border:none;
+    border-radius:18px;
+    padding:24px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:30px;
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(135deg,#6d28d9,#a855f7);
+    box-shadow:0 12px 30px rgba(0,0,0,0.12);
+    transition:0.3s;
+}
+
+.card-password-aluno:hover{
+    transform:translateY(-5px);
+    box-shadow:0 20px 45px rgba(0,0,0,0.20);
+    color:white;
+}
+
+.card-password-aluno i{
+    font-size:30px;
+}
+
+.aluno-password-text{
+    display:flex;
+    flex-direction:column;
+}
+
+.aluno-password-text strong{
+    font-size:18px;
+    font-weight:600;
+}
+
+.aluno-password-text span{
+    font-size:13px;
+    opacity:0.9;
+    margin-top:3px;
+}
+
+.bloqueio-financeiro{
+    font-size:20px;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.card-info{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+
+.badge-turma{
+    background:#e0e7ff;
+    color:#3730a3;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.card-historico{
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+
+.table thead{
+    background:#111827;
+    color:white;
+}
+
+.btn-boletim{
+    border-radius:12px;
+    padding:10px 18px;
+    font-weight:600;
+}
+
+</style>
+
+
+<div class="container-fluid">
+
+    <!-- ========================= -->
+    <!-- DADOS DO ALUNO -->
+    <!-- ========================= -->
+
+    <div class="card-info mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h3 class="fw-bold mb-3">
+                    Bem-vindo,
+                    {{ aluno.usuario.get_full_name|default:aluno.usuario.username }}
+                </h3>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <span class="badge-turma">
+                        Turma:
+                        {{ aluno.turma.classe }}ª
+                        {{ aluno.turma.identificador }}
+                    </span>
+
+                    <span class="badge-turma">
+                        Ano Letivo:
+                        {{ aluno.turma.ano_letivo.nome }}
+                    </span>
+
+                    {% if aluno.turma.curso %}
+                    <span class="badge-turma">
+                        Curso:
+                        {{ aluno.turma.curso.nome }}
+                    </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                <a href="{% url 'boletim_pdf' %}"
+                   class="btn btn-primary btn-boletim">
+
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    Baixar Boletim Atual
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- KPIs -->
+    <!-- ========================= -->
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="media-final-card">
+
+                <div>Média Final do Ano</div>
+
+                {% if tem_divida %}
+
+                    <div class="bloqueio-financeiro">
+                        Regularize a mensalidade
+                    </div>
+
+                {% else %}
+
+                    <h2>{{ media_final_ano }}</h2>
+
+                    {% if aprovado %}
+                    <span class="status-aprovado">
+                        Aprovado
+                    </span>
+                    {% else %}
+                    <span class="status-reprovado">
+                        Reprovado
+                    </span>
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            {% if tem_divida %}
+
+            <div class="kpi-card card-red">
+
+                <div class="kpi-title">
+                    Situação Financeira
+                </div>
+
+                <div class="kpi-value">
+                    Em Dívida
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="kpi-card card-green">
+
+                <div class="kpi-title">
+                    Situação Financeira
+                </div>
+
+                <div class="kpi-value">
+                    Em Dia
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="kpi-card card-orange">
+
+                <div class="kpi-title">
+                    Total em Dívida
+                </div>
+
+                <div class="kpi-value">
+                    {{ total_divida|default:"0.00" }} Kz
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- HISTÓRICO ACADÉMICO -->
+    <!-- ========================= -->
+
+    <div class="card card-historico mt-5">
+
+        <div class="card-header bg-white border-0 pt-4 pb-0">
+
+            <h4 class="fw-bold">
+                Histórico Académico
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Ano Letivo</th>
+                            <th>Classe</th>
+                            <th>Turma</th>
+                            <th>Situação</th>
+                            <th>Boletim</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for historico in aluno.historicos.all %}
+
+                        <tr>
+
+                            <td>
+                                {{ historico.ano_letivo.nome }}
+                            </td>
+
+                            <td>
+                                {{ historico.classe }}ª
+                            </td>
+
+                            <td>
+
+                                {% if historico.turma %}
+                                    {{ historico.turma.identificador }}
+                                {% else %}
+                                    -
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if historico.situacao == "APROVADO" %}
+
+                                    <span class="badge bg-success">
+                                        Aprovado
+                                    </span>
+
+                                {% elif historico.situacao == "FINALISTA" %}
+
+                                    <span class="badge bg-primary">
+                                        Finalista
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Reprovado
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="{% url 'boletim_pdf' %}?ano={{ historico.ano_letivo.id }}"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                    PDF
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center text-muted">
+
+                                Nenhum histórico encontrado.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- ALTERAR SENHA -->
+    <!-- ========================= -->
+
+    <a href="{% url 'alterar_senha_aluno' %}"
+       class="card-password-aluno">
+
+        <div class="aluno-password-text">
+
+            <strong>
+                Segurança da Conta
+            </strong>
+
+            <span>
+                Atualize a sua senha de acesso
+            </span>
+
+        </div>
+
+        <i class="bi bi-key-fill"></i>
+
+    </a>
+
+</div>
+
+{% endblock %}

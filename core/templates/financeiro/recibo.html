@@ -1,0 +1,321 @@
+{% extends "base_secretaria.html" %}
+{% load humanize %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+    background:#f4f6f9;
+}
+
+.recibo-card{
+    background:white;
+    border-radius:12px;
+    padding:40px;
+    box-shadow:0 0 25px rgba(0,0,0,0.08);
+}
+
+.topo{
+    border-bottom:3px solid #0d6efd;
+    padding-bottom:20px;
+    margin-bottom:30px;
+}
+
+.logo-escola{
+    max-height:80px;
+}
+
+.titulo-recibo{
+    font-size:30px;
+    font-weight:700;
+    color:#0d6efd;
+}
+
+.info-text{
+    font-size:14px;
+    color:#555;
+}
+
+.table thead{
+    background:#0d6efd;
+    color:white;
+}
+
+.total-box{
+    background:#f8f9fa;
+    border-radius:10px;
+    padding:20px;
+}
+
+.carimbo{
+    border:2px dashed #198754;
+    color:#198754;
+    font-weight:bold;
+    padding:15px;
+    border-radius:10px;
+    display:inline-block;
+    margin-top:20px;
+}
+
+.btn-print{
+    padding:12px 30px;
+    font-weight:600;
+}
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .btn-area{
+        display:none;
+    }
+
+    .recibo-card{
+        box-shadow:none;
+        border:none;
+    }
+
+}
+
+</style>
+
+<div class="container py-5">
+
+    <div class="recibo-card">
+
+        <!-- TOPO -->
+
+        <div class="topo d-flex justify-content-between align-items-center flex-wrap">
+
+            <div>
+
+                {% if escola.logo %}
+                    <img src="{{ escola.logo.url }}" class="logo-escola">
+                {% endif %}
+
+            </div>
+
+            <div class="text-center">
+
+                <div class="titulo-recibo">
+                    RECIBO DE PAGAMENTO
+                </div>
+
+                <div class="info-text">
+                    {{ escola.nome }}
+                </div>
+
+                {% if escola.endereco %}
+                    <div class="info-text">
+                        {{ escola.endereco }}
+                    </div>
+                {% endif %}
+
+                {% if escola.telefone %}
+                    <div class="info-text">
+                        Tel: {{ escola.telefone }}
+                    </div>
+                {% endif %}
+
+                {% if escola.email %}
+                    <div class="info-text">
+                        {{ escola.email }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="text-end">
+
+                <h5 class="mb-1">
+                    Nº {{ numero_recibo }}
+                </h5>
+
+                <small>
+                    {{ data_emissao|date:"d/m/Y H:i" }}
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- DADOS -->
+
+        <div class="row mb-4">
+
+            <div class="col-md-6">
+
+                <div class="card border-0 bg-light p-3 h-100">
+
+                    <h6 class="fw-bold text-primary mb-3">
+                        Dados do Aluno
+                    </h6>
+
+                    <p class="mb-1">
+                        <strong>Nome:</strong>
+                        {{ aluno.usuario.get_full_name }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Código:</strong>
+                        {{ aluno.numero_processo }}
+                    </p>
+
+                    {% if turma %}
+                    <p class="mb-1">
+                        <strong>Turma:</strong>
+                        {{ turma.nome }}
+                    </p>
+                    {% endif %}
+
+                    {% if aluno.curso %}
+                    <p class="mb-1">
+                        <strong>Curso:</strong>
+                        {{ aluno.curso.nome }}
+                    </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="card border-0 bg-light p-3 h-100">
+
+                    <h6 class="fw-bold text-primary mb-3">
+                        Informações do Documento
+                    </h6>
+
+                    <p class="mb-1">
+                        <strong>Documento:</strong>
+                        Factura / Recibo
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Moeda:</strong>
+                        AOA
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Emitido em:</strong>
+                        {{ data_emissao|date:"d/m/Y H:i" }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABELA -->
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Descrição</th>
+                        <th width="80">Qtd</th>
+                        <th width="120">Preço</th>
+                        <th width="150">Total</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for pagamento in pagamentos %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ pagamento.tipo }}
+
+                            {% if pagamento.mes %}
+                                ({{ pagamento.mes }} / {{ pagamento.ano_letivo }})
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+                            1
+                        </td>
+
+                        <td class="text-end">
+                            {{ pagamento.valor|floatformat:2|intcomma }} AOA
+                        </td>
+
+                        <td class="text-end fw-bold">
+                            {{ pagamento.valor|floatformat:2|intcomma }} AOA
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- TOTAL -->
+
+        <div class="row justify-content-end mt-4">
+
+            <div class="col-md-5">
+
+                <div class="total-box">
+
+                    <table class="table table-borderless mb-0">
+
+                        <tr>
+                            <td>Total:</td>
+
+                            <td class="text-end fw-bold fs-5 text-success">
+                                {{ total_pago|floatformat:2|intcomma }} AOA
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CARIMBO -->
+
+        <div class="mt-4">
+
+            <div class="carimbo">
+                ✔ PAGAMENTO CONFIRMADO
+            </div>
+
+        </div>
+
+        <!-- BOTÃO -->
+
+        <div class="text-center mt-5 btn-area">
+
+            <button onclick="window.print()" class="btn btn-primary btn-lg btn-print">
+                🖨 Imprimir Recibo
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
