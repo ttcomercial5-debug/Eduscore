@@ -5054,8 +5054,6 @@ def criar_matricula(request):
 
             ultimo_ano_confirmado=ano_letivo,
 
-            estado_academico="PENDENTE",
-
             escola=escola,
 
         )
