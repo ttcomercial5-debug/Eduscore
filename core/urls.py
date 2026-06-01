@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
 
+    path('', views.login_view, name='home'),
+
     # =============================
     # AUTH
     # =============================
