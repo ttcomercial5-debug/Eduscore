@@ -5074,7 +5074,9 @@ def criar_matricula(request):
 
             aluno=aluno,
 
-            ano_letivo=ano_letivo
+            ano_letivo=ano_letivo,
+
+            valor=config.valor_mensalidade
 
         )
 
