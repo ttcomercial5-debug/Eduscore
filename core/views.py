@@ -5062,8 +5062,10 @@ def criar_matricula(request):
         # CONFIGURAÇÃO FINANCEIRA
         # ==================================================
 
-        ConfiguracaoFinanceira.objects.get_or_create(
+        config,_= (
+            ConfiguracaoFinanceira.objects.get_or_create(
             escola=escola
+            )
         )
 
         # ==================================================
