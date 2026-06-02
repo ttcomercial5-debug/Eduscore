@@ -19,7 +19,6 @@ box-sizing:border-box;
 
 body{
 margin:0;
-display:flex;
 font-family:'Inter',sans-serif;
 background:linear-gradient(135deg,#eef2f7,#f8fafc);
 color:#0f172a;
@@ -345,13 +344,20 @@ transform:translateY(0);
 
 .mobile-topbar{
     display:none;
+    position:fixed;
+    top:0;
+    letf:0;
+    right:0;
+
+    height:60px;
+
     background:white;
-    padding:16px 20px;
+    padding:0 20px;
+    display:flex;
     align-items:center;
     justify-content:space-between;
-    box-shadow:0 5px 15px rgba(0,0,0,.05);
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
     position:sticky;
-    top:0;
     z-index:1100;
 }
 
@@ -379,6 +385,12 @@ transform:translateY(0);
 
     .mobile-topbar{
         display:flex;
+    }
+
+    .main,
+    .content{
+        margin-top:60px;
+
     }
 }
 
@@ -534,7 +546,7 @@ Sair
         <i class="bi bi-list"></i>
     </button>
 
-    <strong>Área do Aluno</strong>
+    <strong>Menu</strong>
 
 </div>
 
