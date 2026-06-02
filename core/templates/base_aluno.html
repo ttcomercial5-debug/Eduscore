@@ -372,85 +372,7 @@ padding:25px;
 
 <ul class="menu">
 
-<!-- MENU MOBILE -->
 
-<div
-class="offcanvas offcanvas-start"
-tabindex="-1"
-id="menuAluno">
-
-<div class="offcanvas-header">
-
-    <h5 class="offcanvas-title">
-        Área do Aluno
-    </h5>
-
-    <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="offcanvas">
-    </button>
-
-</div>
-
-<div class="offcanvas-body">
-
-<ul class="menu">
-
-<li>
-<a href="{% url 'dashboard_aluno' %}">
-<i class="bi bi-speedometer2"></i>
-<span>Resumo</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'notas_aluno' %}">
-<i class="bi bi-journal-check"></i>
-<span>Notas</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'horario_aluno' %}">
-<i class="bi bi-calendar3"></i>
-<span>Horário</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'calendario_aluno' %}">
-<i class="bi bi-calendar-event"></i>
-<span>Calendário Escolar</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'situacao_financeira' %}">
-<i class="bi bi-wallet2"></i>
-<span>Situação Financeira</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'boletim_pdf' %}">
-<i class="bi bi-file-earmark-arrow-down"></i>
-<span>Baixar Boletim</span>
-</a>
-</li>
-
-<li>
-<a href="{% url 'logout' %}" class="logout">
-<i class="bi bi-box-arrow-right"></i>
-<span>Sair</span>
-</a>
-</li>
-
-</ul>
-
-</div>
-
-</div>
 
 <!-- DASHBOARD -->
 
@@ -572,6 +494,88 @@ Sair
 </ul>
 
 </div>
+
+
+<!-- MENU MOBILE -->
+
+<div
+class="offcanvas offcanvas-start"
+tabindex="-1"
+id="menuAluno">
+
+<div class="offcanvas-header">
+
+    <h5 class="offcanvas-title">
+        Área do Aluno
+    </h5>
+
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas">
+    </button>
+
+</div>
+
+<div class="offcanvas-body">
+
+<ul class="menu">
+
+<li>
+<a href="{% url 'dashboard_aluno' %}">
+<i class="bi bi-speedometer2"></i>
+<span>Resumo</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'notas_aluno' %}">
+<i class="bi bi-journal-check"></i>
+<span>Notas</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'horario_aluno' %}">
+<i class="bi bi-calendar3"></i>
+<span>Horário</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'calendario_aluno' %}">
+<i class="bi bi-calendar-event"></i>
+<span>Calendário Escolar</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'situacao_financeira' %}">
+<i class="bi bi-wallet2"></i>
+<span>Situação Financeira</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'boletim_pdf' %}">
+<i class="bi bi-file-earmark-arrow-down"></i>
+<span>Baixar Boletim</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'logout' %}" class="logout">
+<i class="bi bi-box-arrow-right"></i>
+<span>Sair</span>
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
 
 <!-- CONTENT -->
 
