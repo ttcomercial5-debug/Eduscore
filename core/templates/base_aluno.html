@@ -343,79 +343,47 @@ transform:translateY(0);
 
 /* RESPONSIVE */
 
+.mobile-topbar{
+    display:none;
+    background:white;
+    padding:16px 20px;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+    position:sticky;
+    top:0;
+    z-index:1100;
+}
+
+.menu-toggle{
+    border:none;
+    background:none;
+    font-size:26px;
+    color:#0f172a;
+}
+
 @media(max-width:992px){
 
-.sidebar{
-display:none;
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.show{
+        transform:translateX(0);
+    }
+
+    .content{
+        margin-left:0;
+        padding:20px;
+    }
+
+    .mobile-topbar{
+        display:flex;
+    }
 }
 
-.content{
-margin-left:0;
-padding:25px;
-}
 
-}
 
-/* MENU MOBILE */
-
-.offcanvas{
-    background: linear-gradient(180deg,#0f172a,#020617);
-    color: white;
-}
-
-.offcanvas-header{
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.offcanvas-title{
-    color: white;
-    font-weight: 700;
-}
-
-.offcanvas .btn-close{
-    filter: invert(1);
-}
-
-.offcanvas .menu{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.offcanvas .menu li{
-    margin-bottom: 8px;
-}
-
-.offcanvas .menu a{
-    text-decoration: none;
-    color: #cbd5e1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 15px;
-    border-radius: 12px;
-    font-weight: 500;
-    transition: all .25s ease;
-}
-
-.offcanvas .menu a:hover{
-    background: rgba(59,130,246,0.12);
-    color: white;
-}
-
-.offcanvas .menu a.active{
-    background: linear-gradient(90deg,#2563eb,#3b82f6);
-    color: white;
-    box-shadow: 0 4px 18px rgba(59,130,246,0.45);
-}
-
-.offcanvas .menu a.logout{
-    color: #f87171;
-}
-
-.offcanvas .menu a.logout:hover{
-    background: rgba(248,113,113,0.1);
-}
 
 
 </style>
@@ -425,7 +393,7 @@ padding:25px;
 
 <!-- SIDEBAR -->
 
-<div class="sidebar d-none d-lg-flex">
+<div class="sidebar" id="sidebar">
 
 <div class="logo">
 <i class="bi bi-mortarboard-fill"></i>
@@ -560,22 +528,13 @@ Sair
 
 <!-- MENU MOBILE -->
 
-<div
-class="offcanvas offcanvas-start"
-tabindex="-1"
-id="menuAluno">
+<div class="mobile-topbar d-lg-none">
 
-<div class="offcanvas-header">
-
-    <h5 class="offcanvas-title">
-        Área do Aluno
-    </h5>
-
-    <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="offcanvas">
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class="bi bi-list"></i>
     </button>
+
+    <strong>Área do Aluno</strong>
 
 </div>
 
@@ -636,7 +595,6 @@ id="menuAluno">
 
 </div>
 
-</div>
 
 
 <!-- CONTENT -->
@@ -724,7 +682,11 @@ Aluno
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleSidebar(){
+    document.getElementById("sidebar").classList.toggle("show");
+}
+</script>
 
 </body>
 </html>
