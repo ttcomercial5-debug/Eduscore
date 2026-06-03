@@ -1212,10 +1212,30 @@ def lista_disciplinas(request):
     if not escola:
         return redirect('dashboard')
 
+    # =====================================
+    # ANO LETIVO ATIVO
+    # =====================================
+    ano_ativo = AnoLetivo.objects.filter(
+        escola=escola,
+        ativo=True
+    ).first()
+
+    # =====================================
+    # FILTRO POR ANO (OPCIONAL)
+    # =====================================
+    ano_id = request.GET.get("ano")
+
+    # =====================================
+    # BASE QUERYSET
+    # =====================================
     if request.user.role == "DIRETOR":
-        disciplinas = Disciplina.objects.filter(escola=escola)
+
+        disciplinas = Disciplina.objects.filter(
+            escola=escola
+        )
 
     elif request.user.role == "PROFESSOR":
+
         disciplinas = Disciplina.objects.filter(
             escola=escola,
             professor=request.user
@@ -1224,8 +1244,33 @@ def lista_disciplinas(request):
     else:
         return redirect("dashboard")
 
+    # =====================================
+    # FILTRAR POR ANO LETIVO
+    # =====================================
+    if ano_id:
+
+        disciplinas = disciplinas.filter(
+            turma__ano_letivo_id=ano_id
+        )
+
+    else:
+
+        disciplinas = disciplinas.filter(
+            turma__ano_letivo=ano_ativo
+        )
+
+    # =====================================
+    # ANOS PARA O FILTRO
+    # =====================================
+    anos = AnoLetivo.objects.filter(
+        escola=escola
+    ).order_by("-nome")
+
     return render(request, "disciplinas.html", {
-        "disciplinas": disciplinas
+        "disciplinas": disciplinas,
+        "anos": anos,
+        "ano_selecionado": ano_id,
+        "ano_ativo": ano_ativo
     })
 
 

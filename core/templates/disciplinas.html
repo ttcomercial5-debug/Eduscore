@@ -3,124 +3,211 @@
 
 <div class="container-fluid mt-4">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- ================= HEADER ================= -->
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
-<div>
-<h2 class="fw-bold mb-0">
-📚 Gestão de Disciplinas
-</h2>
-<small class="text-muted">
-Organização curricular da escola
-</small>
-</div>
+    <div>
+        <h2 class="fw-bold mb-1">
+            📚 Gestão de Disciplinas
+        </h2>
+        <small class="text-muted">
+            Organização curricular da escola por ano letivo
+        </small>
+    </div>
 
-{% if user.role == "DIRETOR" %}
-<a href="{% url 'adicionar_disciplina' %}"
-class="btn btn-primary shadow">
+    {% if user.role == "DIRETOR" %}
+    <a href="{% url 'adicionar_disciplina' %}"
+       class="btn btn-primary shadow-sm rounded-pill px-4">
 
-<i class="fas fa-plus"></i>
-Nova Disciplina
-
-</a>
-{% endif %}
-
-</div>
-
-<div class="row">
-
-{% for disciplina in disciplinas %}
-
-<div class="col-md-6 col-xl-4 mb-4">
-
-<div class="card border-0 shadow-lg h-100 rounded-4">
-
-<div class="card-header bg-primary text-white">
-
-<h5 class="mb-0 fw-bold">
-{{ disciplina.nome }}
-</h5>
+        <i class="fas fa-plus me-2"></i>
+        Nova Disciplina
+    </a>
+    {% endif %}
 
 </div>
 
-<div class="card-body">
+<!-- ================= FILTRO ================= -->
+<form method="GET" class="mb-4">
 
-<p>
-<strong>Turma:</strong><br>
-{{ disciplina.turma }}
-</p>
+    <div class="row">
 
-<p>
-<strong>Curso:</strong><br>
+        <div class="col-md-4">
 
-{% if disciplina.turma.curso %}
-<span class="badge bg-info">
-{{ disciplina.turma.curso.nome }}
-</span>
-{% else %}
-<span class="text-muted">
-Ensino Geral
-</span>
-{% endif %}
+            <label class="form-label fw-semibold">
+                Filtrar por Ano Letivo
+            </label>
 
-</p>
+            <select name="ano"
+                    class="form-select shadow-sm rounded-3"
+                    onchange="this.form.submit()">
 
-<p>
-<strong>Professor:</strong><br>
+                <option value="">
+                    📅 Ano Atual ({{ ano_ativo.nome }})
+                </option>
 
-{% if disciplina.professor %}
+                {% for ano in anos %}
 
-<span class="text-success fw-bold">
-{{ disciplina.professor.get_full_name|default:disciplina.professor.username }}
-</span>
+                    <option value="{{ ano.id }}"
+                        {% if ano_selecionado and ano.id|stringformat:"s" == ano_selecionado %}
+                            selected
+                        {% endif %}>
 
-{% else %}
+                        {{ ano.nome }}
 
-<span class="badge bg-warning text-dark">
-Não atribuído
-</span>
+                    </option>
 
-{% endif %}
+                {% endfor %}
 
-</p>
+            </select>
 
-<p>
-<strong>Ano Letivo:</strong><br>
-{{ disciplina.turma.ano_letivo }}
-</p>
+        </div>
+
+    </div>
+
+</form>
+
+<!-- ================= LISTA ================= -->
+<div class="row g-4">
+
+    {% for disciplina in disciplinas %}
+
+    <div class="col-md-6 col-xl-4">
+
+        <div class="card border-0 shadow-lg h-100 rounded-4 hover-card">
+
+            <!-- HEADER -->
+            <div class="card-header bg-primary text-white border-0 rounded-top-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h6 class="mb-0 fw-bold">
+                        {{ disciplina.nome }}
+                    </h6>
+
+                    {% if disciplina.turma.ano_letivo.ativo %}
+                        <span class="badge bg-light text-dark">
+                            Atual
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            Histórico
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="card-body">
+
+                <p class="mb-2">
+                    <strong>📌 Turma:</strong><br>
+                    <span class="text-muted">{{ disciplina.turma }}</span>
+                </p>
+
+                <p class="mb-2">
+                    <strong>🎓 Curso:</strong><br>
+
+                    {% if disciplina.turma.curso %}
+                        <span class="badge bg-info text-dark">
+                            {{ disciplina.turma.curso.nome }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">
+                            Ensino Geral
+                        </span>
+                    {% endif %}
+
+                </p>
+
+                <p class="mb-2">
+                    <strong>👨‍🏫 Professor:</strong><br>
+
+                    {% if disciplina.professor %}
+                        <span class="text-success fw-semibold">
+                            {{ disciplina.professor.get_full_name|default:disciplina.professor.username }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">
+                            Não atribuído
+                        </span>
+                    {% endif %}
+
+                </p>
+
+                <p class="mb-0">
+                    <strong>📅 Ano Letivo:</strong><br>
+                    <span class="text-muted">
+                        {{ disciplina.turma.ano_letivo }}
+                    </span>
+                </p>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="card-footer bg-white border-0">
+
+                {% if disciplina.turma.ano_letivo.ativo %}
+
+                    <a href="{% url 'editar_disciplina' disciplina.id %}"
+                       class="btn btn-outline-primary btn-sm w-100 rounded-pill">
+                        Editar Disciplina
+                    </a>
+
+                {% else %}
+
+                    <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill"
+                            disabled
+                            title="Não é possível editar disciplinas de anos encerrados">
+
+                        Histórico (não editável)
+
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="col-12">
+
+        <div class="alert alert-info text-center shadow-sm rounded-4">
+
+            <strong>Sem disciplinas encontradas</strong><br>
+            Verifique o filtro de ano letivo ou crie novas disciplinas.
+
+        </div>
+
+    </div>
+
+    {% endfor %}
 
 </div>
 
-<div class="card-footer bg-white">
-
-<a href="{% url 'editar_disciplina' disciplina.id %}"
-class="btn btn-outline-primary btn-sm w-100">
-
-Editar Disciplina
-
-</a>
-
 </div>
 
-</div>
+<!-- ================= STYLE PREMIUM ================= -->
+<style>
 
-</div>
+.hover-card {
+    transition: all 0.25s ease;
+}
 
-{% empty %}
+.hover-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+}
 
-<div class="col-12">
+.card-header {
+    padding: 14px 18px;
+}
 
-<div class="alert alert-info text-center shadow">
-
-Nenhuma disciplina cadastrada.
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
+</style>
 
 {% endblock %}
