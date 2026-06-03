@@ -6763,42 +6763,101 @@ def gerenciar_pagamentos(request):
     return render(request, 'pagamentos_escola.html', {'pagamentos': pagamentos})
 
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import transaction
 
 @staff_member_required  # Apenas SuperAdmin
+@transaction.atomic
 def configuracoes(request):
-    # Pegamos a configuração única ou criamos se não existir
+
+    # ==============================
+    # CONFIG SINGLETON (GLOBAL)
+    # ==============================
     config, created = Configuracao.objects.get_or_create(pk=1)
 
     if request.method == 'POST':
-        form = ConfiguracaoForm(request.POST, request.FILES, instance=config)
+
+        form = ConfiguracaoForm(
+            request.POST,
+            request.FILES,
+            instance=config
+        )
+
         if form.is_valid():
-            form.save()
+
+            config_anterior = Configuracao.objects.get(pk=1)
+
+            config = form.save(commit=False)
+
+            # =========================================
+            # FUTURO: AQUI ENTRA AUDITORIA (IMPORTANTE)
+            # =========================================
+            # Ex: log de mudanças
+            # AuditLog.objects.create(...)
+
+            config.save()
+            form.save_m2m()
+
+            messages.success(
+                request,
+                "Configurações atualizadas com sucesso."
+            )
+
             return redirect('configuracoes')
+
+        else:
+
+            messages.error(
+                request,
+                "Existem erros no formulário. Verifique os campos."
+            )
+
     else:
         form = ConfiguracaoForm(instance=config)
 
-    return render(request, 'configuracoes.html', {'form': form})
+    return render(request, 'configuracoes.html', {
+        'form': form,
+        'config': config,
+        'created': created
+    })
 
-@login_required
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+
+@staff_member_required
 def editar_plano(request, plano_id):
 
     plano = get_object_or_404(Plano, id=plano_id)
 
     if request.method == "POST":
 
-        plano.nome = request.POST.get("nome")
-        plano.limite_alunos = request.POST.get("limite_alunos")
-        plano.limite_professores = request.POST.get("limite_professores")
-        plano.limite_turmas = request.POST.get("limite_turmas")
-        plano.valor_mensal = request.POST.get("valor_mensal")
-        plano.data_expiracao = request.POST.get("data_expiracao")
+        try:
+            plano.nome = request.POST.get("nome")
 
-        plano.save()
+            plano.limite_alunos = int(request.POST.get("limite_alunos") or 0)
+            plano.limite_professores = int(request.POST.get("limite_professores") or 0)
+            plano.limite_turmas = int(request.POST.get("limite_turmas") or 0)
 
-        messages.success(request, "Plano atualizado com sucesso!")
-        return redirect("planos")
+            plano.valor_mensal = float(request.POST.get("valor_mensal") or 0)
+
+            plano.data_expiracao = request.POST.get("data_expiracao")
+
+            plano.ativo = bool(request.POST.get("ativo"))
+
+            plano.save()
+
+            messages.success(request, "Plano atualizado com sucesso!")
+            return redirect("planos")
+
+        except Exception as e:
+            messages.error(request, f"Erro ao atualizar plano: {str(e)}")
 
     return render(request, "editar_plano.html", {"plano": plano})
+
 
 @login_required
 def excluir_plano(request, plano_id):

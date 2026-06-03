@@ -1,149 +1,219 @@
 {% extends 'admin.html' %}
 {% block content %}
 
-<div class="container mt-4">
-    <h2>Configurações do Sistema</h2>
+<div class="container-fluid py-4">
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="row g-4">
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1"> Configurações Globais</h2>
+        <small class="text-muted">
+            Controle total do sistema SaaS escolar
+        </small>
+    </div>
+</div>
 
-            <!--  Sistema -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Sistema</h5>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="row g-4">
+
+        <!-- ================= SISTEMA ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100">
+                <div class="card-header bg-primary text-white fw-bold">
+                     Identidade do Sistema
+                </div>
+                <div class="card-body">
+
                     <div class="mb-3">
-                        <label>Nome do sistema</label>
+                        <label class="form-label">Nome do Sistema</label>
                         {{ form.nome_sistema }}
                     </div>
+
                     <div class="mb-3">
-                        <label>Logo do sistema</label>
+                        <label class="form-label">Logo</label>
                         {{ form.logo_sistema }}
                     </div>
+
                     <div class="mb-3">
-                        <label>Favicon</label>
+                        <label class="form-label">Favicon</label>
                         {{ form.favicon }}
                     </div>
-                    <div class="mb-3">
-                        <label>Cor principal</label>
-                        {{ form.cor_principal }}
+
+                    <div class="row">
+                        <div class="col">
+                            <label>Cor Principal</label>
+                            {{ form.cor_principal }}
+                        </div>
+                        <div class="col">
+                            <label>Cor Secundária</label>
+                            {{ form.cor_secundaria }}
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label>Cor secundária</label>
-                        {{ form.cor_secundaria }}
-                    </div>
+
                 </div>
             </div>
+        </div>
 
-            <!--  Ano letivo -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Ano Letivo</h5>
+        <!-- ================= ANO LETIVO ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100">
+                <div class="card-header bg-success text-white fw-bold">
+                     Ano Letivo & Regras
+                </div>
+                <div class="card-body">
+
                     <div class="mb-3">
                         <label>Ano letivo padrão</label>
                         {{ form.ano_letivo_padrao }}
                     </div>
-                    <div class="mb-3 form-check">
+
+                    <div class="form-check form-switch mb-3">
                         {{ form.bloquear_alteracao_ano }}
-                        <label class="form-check-label">Bloquear alteração global do ano letivo</label>
+                        <label class="form-check-label">
+                            Bloquear alteração global do ano letivo
+                        </label>
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!--  Gestão de escolas -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Gestão de Escolas</h5>
-                    <div class="mb-3 form-check">
+        <!-- ================= ESCOLAS ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100">
+                <div class="card-header bg-warning fw-bold">
+                     Gestão de Escolas
+                </div>
+                <div class="card-body">
+
+                    <div class="form-check form-switch mb-3">
                         {{ form.ativar_novas_escolas }}
-                        <label class="form-check-label">Permitir registro de novas escolas</label>
+                        <label>Permitir novas escolas</label>
                     </div>
-                    <div class="mb-3">
-                        <label>Limite de alunos por escola</label>
+
+                    <div class="mb-2">
+                        <label>Limite alunos</label>
                         {{ form.limite_alunos_por_escola }}
                     </div>
-                    <div class="mb-3">
-                        <label>Limite de turmas por escola</label>
+
+                    <div class="mb-2">
+                        <label>Limite turmas</label>
                         {{ form.limite_turmas_por_escola }}
                     </div>
-                    <div class="mb-3">
+
+                    <div class="mb-2">
                         <label>Plano padrão</label>
                         {{ form.plano_padrao }}
                     </div>
-                    <div class="mb-3">
-                        <label>Armazenamento por escola (MB)</label>
+
+                    <div class="mb-2">
+                        <label>Storage (MB)</label>
                         {{ form.armazenamento_por_escola_mb }}
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!--  Financeiro -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Financeiro</h5>
-                    <div class="mb-3">
+        <!-- ================= FINANCEIRO ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100">
+                <div class="card-header bg-info text-white fw-bold">
+                     Financeiro
+                </div>
+                <div class="card-body">
+
+                    <div class="mb-2">
                         <label>Moeda</label>
                         {{ form.moeda }}
                     </div>
-                    <div class="mb-3">
-                        <label>Valor mensal plano básico</label>
+
+                    <div class="mb-2">
+                        <label>Mensal Básico</label>
                         {{ form.valor_mensal_plano_basico }}
                     </div>
-                    <div class="mb-3">
-                        <label>Valor anual plano básico</label>
+
+                    <div class="mb-2">
+                        <label>Anual Básico</label>
                         {{ form.valor_anual_plano_basico }}
                     </div>
-                    <div class="mb-3 form-check">
+
+                    <div class="form-check form-switch">
                         {{ form.cobranca_automatica }}
-                        <label class="form-check-label">Ativar cobrança automática</label>
+                        <label>Cobrança automática</label>
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!--  Segurança -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Segurança / Acesso</h5>
-                    <div class="mb-3 form-check">
+        <!-- ================= SEGURANÇA ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100">
+                <div class="card-header bg-dark text-white fw-bold">
+                     Segurança
+                </div>
+                <div class="card-body">
+
+                    <div class="form-check form-switch mb-2">
                         {{ form.login_ativo }}
-                        <label class="form-check-label">Login ativo</label>
+                        <label>Login ativo</label>
                     </div>
-                    <div class="mb-3">
-                        <label>Tempo de sessão (minutos)</label>
+
+                    <div class="mb-2">
+                        <label>Sessão (min)</label>
                         {{ form.tempo_sessao_minutos }}
                     </div>
-                    <div class="mb-3">
-                        <label>Bloqueio automático após tentativas</label>
+
+                    <div class="mb-2">
+                        <label>Tentativas login</label>
                         {{ form.bloqueio_tentativas_login }}
                     </div>
-                    <div class="mb-3 form-check">
+
+                    <div class="form-check form-switch">
                         {{ form.backup_automatico }}
-                        <label class="form-check-label">Backup automático</label>
+                        <label>Backup automático</label>
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!--  Modo manutenção -->
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5>Modo Manutenção</h5>
-                    <div class="mb-3 form-check">
+        <!-- ================= MANUTENÇÃO ================= -->
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4 h-100 border-danger">
+                <div class="card-header bg-danger text-white fw-bold">
+                     Modo Manutenção
+                </div>
+                <div class="card-body">
+
+                    <div class="form-check form-switch mb-3">
                         {{ form.modo_manutencao }}
-                        <label class="form-check-label">Ativar modo manutenção</label>
+                        <label>Ativar manutenção global</label>
                     </div>
-                    <div class="mb-3">
-                        <label>Mensagem de aviso</label>
+
+                    <div>
+                        <label>Mensagem exibida aos usuários</label>
                         {{ form.mensagem_manutencao }}
                     </div>
+
                 </div>
             </div>
-
         </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-success btn-lg">Salvar Configurações</button>
-        </div>
-    </form>
+    </div>
+
+    <!-- BOTÃO FIXO -->
+    <div class="position-sticky bottom-0 bg-white p-3 mt-4 shadow-lg rounded-3">
+        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+            Salvar Configurações Globais
+        </button>
+    </div>
+
+</form>
+
 </div>
 
 {% endblock %}
