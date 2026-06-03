@@ -273,19 +273,22 @@ body {
 .menu-toggle{
     border:none;
     background:none;
-    font-size:26px;
+    font-size:28px;
+    color:#0f172a;
 }
 
 @media(max-width:992px){
 
-    .sidebar{
-        position:fixed;
+    .mobile-topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px 20px;
+        background:white;
+        box-shadow:0 2px 10px rgba(0,0,0,.08);
+        position:sticky;
         top:0;
-        left:0;
-        width:260px;
-        height:100vh;
-        transform:translateX(-100%);
-        z-index:2000;
+        z-index:1200;
     }
 
     .sidebar.show{
@@ -313,6 +316,8 @@ body {
 
 <div class="mobile-topbar">
 
+    <strong>Financeiro</strong>
+
     <button class="menu-toggle"
             onclick="toggleSidebar()">
 
@@ -320,13 +325,11 @@ body {
 
     </button>
 
-    <strong>Financeiro</strong>
-
 </div>
 
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <div class="logo">Financeiro</div>
     <ul class="menu">
         <li>
