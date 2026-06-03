@@ -436,6 +436,76 @@ padding:25px;
 }
 
 
+/* ===================================
+   MOBILE TOPBAR
+=================================== */
+
+.mobile-topbar{
+    display:none;
+}
+
+@media(max-width:992px){
+
+    .mobile-topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        background:white;
+        padding:14px 18px;
+        border-radius:12px;
+        margin-bottom:15px;
+        box-shadow:0 3px 12px rgba(0,0,0,.08);
+    }
+
+    .mobile-title{
+        font-size:18px;
+        font-weight:700;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        color:#0f172a;
+    }
+
+    .mobile-title i{
+        color:#2563eb;
+    }
+
+    .menu-toggle{
+        border:none;
+        background:none;
+        font-size:30px;
+        color:#0f172a;
+        padding:0;
+    }
+
+    .sidebar{
+        display:none !important;
+    }
+
+    .content{
+        margin-left:0;
+        padding:15px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+        padding:20px;
+    }
+
+    .school-info small{
+        display:block;
+        line-height:1.8;
+    }
+
+    .user-box{
+        width:100%;
+    }
+
+}
+
+
 
 </style>
 </head>
@@ -663,17 +733,21 @@ id="menuAluno">
 <div class="content">
 
 
-<!-- BOTÃO MOBILE -->
+<!-- TOPBAR MOBILE -->
 
-<div class="d-lg-none mb-3">
+<div class="mobile-topbar d-lg-none">
+
+    <div class="mobile-title">
+        <i class="bi bi-mortarboard-fill"></i>
+        Área do Aluno
+    </div>
 
     <button
-        class="btn btn-dark"
+        class="menu-toggle"
         data-bs-toggle="offcanvas"
         data-bs-target="#menuAluno">
 
         <i class="bi bi-list"></i>
-        Menu
 
     </button>
 
