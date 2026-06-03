@@ -1412,200 +1412,7 @@ def calcular_media_anual(aluno, ano_letivo):
     return round(media_final, 2)
 
 
-# =====================================================
-# PROMOVER ALUNOS
-# =====================================================
 
-
-@login_required
-@transaction.atomic
-def promover_alunos(request, ano_id):
-
-    if request.user.role != "DIRETOR":
-        return redirect("dashboard")
-
-    if request.method != "POST":
-        return redirect("dashboard")
-
-    escola = request.user.escola
-
-
-# ======================================
-# VALIDAR SENHA
-# ======================================
-    senha = request.POST.get("senha_confirmacao")
-    if not request.user.check_password(senha):
-        messages.error(
-            request,
-            "Senha incorreta."
-        )
-        return redirect("dashboard")
-
-# ======================================
-# BUSCAR ANO LETIVO ATUAL
-# ======================================
-    ano_letivo = AnoLetivo.objects.filter(
-        id=ano_id,
-        escola=escola,
-        ativo=True
-    ).first()
-    if not ano_letivo:
-        messages.error(
-            request,
-            "Ano letivo não encontrado."
-        )
-        return redirect("dashboard")
-
-# ======================================
-# CRIAR NOVO ANO LETIVO
-# ======================================
-    try:
-        inicio, fim = ano_letivo.nome.split("/")
-        novo_nome = f"{int(inicio)+1}/{int(fim)+1}"
-    except:
-        messages.error(
-            request,
-            "Formato do ano letivo inválido."
-        )
-        return redirect("dashboard")
-    novo_ano, created = AnoLetivo.objects.get_or_create(
-        escola=escola,
-        nome=novo_nome,
-        defaults={
-            "ativo": True
-        }
-    )
-
-# ======================================
-# DESATIVAR ANO ANTIGO
-# ======================================
-    AnoLetivo.objects.filter(
-        escola=escola
-    ).update(
-        ativo=False
-    )
-    novo_ano.ativo = True
-    novo_ano.save()
-    promovidos = 0
-
-
-# ======================================
-# ALUNOS DO ANO ATUAL
-# ======================================
-    alunos = Aluno.objects.filter(
-        escola=escola,
-        ano_letivo=ano_letivo
-    ).select_related(
-        "turma",
-        "curso"
-    )
-    for aluno in alunos:
-        media = calcular_media_anual(
-            aluno,
-            ano_letivo
-        )
-        turma_atual = aluno.turma
-
-
-    # ======================================
-    # GUARDAR HISTÓRICO DA MATRÍCULA
-    # ======================================
-        quantidade_alunos = Aluno.objects.filter(
-            turma=turma_atual,
-            ano_letivo=ano_letivo
-        ).count()
-        HistoricoMatricula.objects.create(
-            aluno=aluno,
-            ano_letivo=ano_letivo,
-            classe=aluno.classe,
-            turma=turma_atual,
-            curso=aluno.curso,
-            numero_na_turma=aluno.numero_na_turma,
-            total_alunos_turma=quantidade_alunos,
-            media_final=media,
-            aprovado=media >= 10
-        )
-
-    # ======================================
-    # HISTÓRICO ACADÉMICO
-    # ======================================
-        situacao = (
-            "APROVADO"
-            if media >= 10
-            else "REPROVADO"
-        )
-        HistoricoAcademico.objects.create(
-            aluno=aluno,
-            ano_letivo=ano_letivo,
-            classe=aluno.classe,
-            turma=turma_atual,
-            situacao=situacao
-        )
-        try:
-            classe_atual = int(aluno.classe)
-        except:
-            continue
-
-
-    # ======================================
-    # REPROVADOS NÃO SOBEM
-    # ======================================
-        if media < 10:
-            aluno.precisa_confirmacao = True
-            aluno.matricula_confirmada = False
-            aluno.save()
-            continue
-        # ======================================
-        # FINALISTAS
-        # ======================================
-        if classe_atual >= 13:
-            HistoricoAcademico.objects.create(
-                aluno=aluno,
-                ano_letivo=ano_letivo,
-                classe=aluno.classe,
-                turma=aluno.turma,
-                situacao="FINALISTA"
-            )
-            aluno.ativo = False
-            aluno.save()
-            continue
-
-
-    # ======================================
-    # NOVA CLASSE
-    # ======================================
-        nova_classe = str(classe_atual + 1)
-        nova_turma, criada = Turma.objects.get_or_create(
-            classe=nova_classe,
-            identificador=turma_atual.identificador,
-            turno=turma_atual.turno,
-            escola=escola,
-            ano_letivo=novo_ano,
-            curso=turma_atual.curso
-        )
-
-    # ======================================
-    # PROMOVER ALUNO
-    # ======================================
-        aluno.classe = nova_classe
-        aluno.turma = nova_turma
-        aluno.ano_letivo = novo_ano
-        aluno.aprovado = True
-        aluno.precisa_confirmacao = True
-        aluno.matricula_confirmada = False
-        aluno.numero_na_turma = None
-        aluno.save()
-        promovidos += 1
-
-# ======================================
-# MENSAGEM FINAL
-# ======================================
-    messages.success(
-        request,
-        f"{promovidos} alunos promovidos para o ano letivo {novo_nome}. "
-        f"As matrículas ficaram pendentes de confirmação."
-    )
-    return redirect("dashboard")
 
 
 # =====================================================
@@ -5335,6 +5142,7 @@ from reportlab.lib.units import inch
 from datetime import datetime
 @login_required
 @transaction.atomic
+
 def promover_ano_letivo(request, ano_id):
 
     if request.method != "POST":
@@ -5522,6 +5330,319 @@ def promover_ano_letivo(request, ano_id):
     )
 
     return response
+
+
+
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.db import transaction
+from django.contrib.auth.decorators import login_required
+
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+
+from datetime import datetime
+from io import BytesIO
+
+
+@login_required
+@transaction.atomic
+def promover_alunos(request, ano_id):
+
+    if request.user.role != "DIRETOR":
+        return redirect("dashboard")
+
+    if request.method != "POST":
+        return redirect("dashboard")
+
+    escola = request.user.escola
+
+    # ======================================
+    # VALIDAR SENHA
+    # ======================================
+    senha = request.POST.get("senha_confirmacao")
+
+    if not request.user.check_password(senha):
+        messages.error(request, "Senha incorreta.")
+        return redirect("dashboard")
+
+    # ======================================
+    # ANO LETIVO ATUAL
+    # ======================================
+    ano_letivo = AnoLetivo.objects.filter(
+        id=ano_id,
+        escola=escola,
+        ativo=True
+    ).first()
+
+    if not ano_letivo:
+        messages.error(request, "Ano letivo não encontrado.")
+        return redirect("dashboard")
+
+    # ======================================
+    # NOVO ANO LETIVO
+    # ======================================
+    try:
+        inicio, fim = ano_letivo.nome.split("/")
+        novo_nome = f"{int(inicio)+1}/{int(fim)+1}"
+    except:
+        messages.error(request, "Formato do ano letivo inválido.")
+        return redirect("dashboard")
+
+    novo_ano, _ = AnoLetivo.objects.get_or_create(
+        escola=escola,
+        nome=novo_nome,
+        defaults={"ativo": True}
+    )
+
+    AnoLetivo.objects.filter(escola=escola).update(ativo=False)
+    novo_ano.ativo = True
+    novo_ano.save()
+
+    # ======================================
+    # CONTADORES
+    # ======================================
+    promovidos = 0
+    reprovados = 0
+    finalistas = 0
+
+    # ======================================
+    # ALUNOS
+    # ======================================
+    alunos = Aluno.objects.filter(
+        escola=escola,
+        ano_letivo=ano_letivo
+    ).select_related("turma", "curso", "usuario")
+
+    for aluno in alunos:
+
+        media = calcular_media_anual(aluno, ano_letivo)
+        turma_atual = aluno.turma
+
+        # ======================================
+        # HISTÓRICO MATRÍCULA
+        # ======================================
+        quantidade_alunos = Aluno.objects.filter(
+            turma=turma_atual,
+            ano_letivo=ano_letivo
+        ).count()
+
+        HistoricoMatricula.objects.create(
+            aluno=aluno,
+            ano_letivo=ano_letivo,
+            turma=turma_atual,
+            classe=aluno.classe,
+            curso=aluno.curso,
+            matricula=aluno.matricula,
+            numero_na_turma=aluno.numero_na_turma,
+            total_alunos_turma=quantidade_alunos,
+            media_final=media,
+            aprovado=(media >= 10)
+        )
+
+        try:
+            classe_atual = int(aluno.classe)
+        except:
+            continue
+
+        # ======================================
+        # REPROVADO
+        # ======================================
+        if media < 10:
+
+            HistoricoAcademico.objects.create(
+                aluno=aluno,
+                ano_letivo=ano_letivo,
+                classe=aluno.classe,
+                turma=turma_atual,
+                curso=aluno.curso,
+                media_final=media,
+                situacao="REPROVADO"
+            )
+
+            aluno.precisa_confirmacao = True
+            aluno.matricula_confirmada = False
+            aluno.aprovado = False
+            aluno.save()
+
+            reprovados += 1
+            continue
+
+        # ======================================
+        # FINALISTA
+        # ======================================
+        if classe_atual >= 13:
+
+            HistoricoAcademico.objects.create(
+                aluno=aluno,
+                ano_letivo=ano_letivo,
+                classe=aluno.classe,
+                turma=turma_atual,
+                curso=aluno.curso,
+                media_final=media,
+                situacao="FINALISTA"
+            )
+
+            aluno.ativo = False
+            aluno.aprovado = True
+            aluno.save()
+
+            finalistas += 1
+            continue
+
+        # ======================================
+        # APROVADO
+        # ======================================
+        HistoricoAcademico.objects.create(
+            aluno=aluno,
+            ano_letivo=ano_letivo,
+            classe=aluno.classe,
+            turma=turma_atual,
+            curso=aluno.curso,
+            media_final=media,
+            situacao="APROVADO"
+        )
+
+        nova_classe = str(classe_atual + 1)
+
+        nova_turma, _ = Turma.objects.get_or_create(
+            classe=nova_classe,
+            identificador=turma_atual.identificador,
+            turno=turma_atual.turno,
+            escola=escola,
+            ano_letivo=novo_ano,
+            curso=turma_atual.curso,
+            defaults={"professor": turma_atual.professor}
+        )
+
+        aluno.classe = nova_classe
+        aluno.turma = nova_turma
+        aluno.ano_letivo = novo_ano
+        aluno.aprovado = True
+        aluno.precisa_confirmacao = True
+        aluno.matricula_confirmada = False
+        aluno.numero_na_turma = None
+        aluno.save()
+
+        promovidos += 1
+
+    # ======================================
+    # PDF FINAL (DESIGN PROFISSIONAL)
+    # ======================================
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=30,
+        bottomMargin=30
+    )
+
+    styles = getSampleStyleSheet()
+    elements = []
+
+    # ================= HEADER =================
+    elements.append(Paragraph(
+        f"<font size=18><b>{escola.nome}</b></font>",
+        styles["Title"]
+    ))
+
+    elements.append(Spacer(1, 6))
+
+    elements.append(Paragraph(
+        f"<font size=12 color='#666666'>Relatório Oficial de Encerramento do Ano Letivo</font>",
+        styles["Normal"]
+    ))
+
+    elements.append(Spacer(1, 12))
+
+    # ================= CAIXA DO ANO =================
+    elements.append(Paragraph(
+        f"<font size=14><b>Ano Letivo: {ano_letivo.nome}</b></font>",
+        styles["Normal"]
+    ))
+
+    elements.append(Paragraph(
+        f"<font size=11 color='#444444'>Novo Ano Criado: {novo_nome}</font>",
+        styles["Normal"]
+    ))
+
+    elements.append(Spacer(1, 15))
+
+    # ================= RESUMO ESTILO DASHBOARD =================
+    data = [
+        ["Indicador", "Quantidade"],
+        ["Promovidos", str(promovidos)],
+        ["Reprovados", str(reprovados)],
+        ["Finalistas", str(finalistas)],
+    ]
+
+    table = Table(data, colWidths=[300, 200])
+
+    table.setStyle(TableStyle([
+        # HEADER
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1f2937")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, 0), 12),
+
+        # BODY
+        ("BACKGROUND", (0, 1), (-1, -1), colors.HexColor("#f8fafc")),
+        ("TEXTCOLOR", (0, 1), (-1, -1), colors.HexColor("#111827")),
+        ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 1), (-1, -1), 11),
+
+        # GRID
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+
+        # PADDING
+        ("TOPPADDING", (0, 0), (-1, -1), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+    ]))
+
+    elements.append(table)
+
+    elements.append(Spacer(1, 20))
+
+    # ================= DATA =================
+    elements.append(Paragraph(
+        f"<font size=10 color='#6b7280'>Data de emissão: {datetime.now().strftime('%d/%m/%Y %H:%M')}</font>",
+        styles["Normal"]
+    ))
+
+    doc.build(elements)
+
+    pdf = buffer.getvalue()
+    buffer.close()
+
+
+from django.http import HttpResponse
+
+@login_required
+def download_pdf_encerramento(request):
+
+    pdf = request.session.get("pdf_encerramento")
+
+    if not pdf:
+        return redirect("dashboard")
+
+    response = HttpResponse(
+        pdf.encode("latin1"),
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = 'attachment; filename="encerramento.pdf"'
+
+    del request.session["pdf_encerramento"]
+
+    return response
+
+
 
 
 @login_required

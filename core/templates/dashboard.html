@@ -419,6 +419,21 @@
 
         {% endif %}
 
+
+        {% if messages %}
+        <script>
+        window.onload = function () {
+
+            const url = "{% url 'download_pdf_encerramento' %}";
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.click();
+
+        }
+        </script>
+        {% endif %}
+
     </div>
 
 </div>

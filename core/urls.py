@@ -96,6 +96,7 @@ urlpatterns = [
     path("professor/eliminar/<int:id>/", views.eliminar_professor, name="eliminar_professor"),
     path("diretor/cursos/", views.cursos, name="cursos"),
     path('trimestre/toggle/<int:trimestre_id>/', views.toggle_trimestre, name='toggle_trimestre'),
+    path("download-encerramento-pdf/", views.download_pdf_encerramento, name="download_pdf_encerramento"),
 
     # =============================
     # SECRETARIA
