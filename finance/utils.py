@@ -5,7 +5,6 @@ from django.utils import timezone
 from academic.models import Mensalidade
 
 MESES_ANO_ESCOLAR = [
-    ("Agosto", 8),
     ("Setembro", 9),
     ("Outubro", 10),
     ("Novembro", 11),
@@ -15,6 +14,7 @@ MESES_ANO_ESCOLAR = [
     ("Março", 3),
     ("Abril", 4),
     ("Maio", 5),
+    ("Junho", 6),
 ]
 
 
@@ -30,7 +30,7 @@ def gerar_mensalidades_aluno(aluno, ano_letivo, valor):
         else:
             ano = ano_fim
 
-        vencimento = date(ano, mes_numero, 10)
+        vencimento = date(ano, mes_numero, 15)
 
         Mensalidade.objects.get_or_create(
             aluno=aluno,

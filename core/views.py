@@ -995,255 +995,7 @@ def selecionar_escola(request, escola_id):
     return redirect('dashboard')
 
 
-# =====================================================
-# BLOQUEADO
-# =====================================================
 
-@login_required
-def bloqueado(request):
-    return render(request, 'bloqueado.html')
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.db import transaction
-from django.utils.crypto import get_random_string
-
-
-@login_required
-def adicionar_aluno(request):
-
-    escola = get_escola(request)
-
-    if not escola:
-        return redirect("escolas")
-
-    if request.user.role != "SECRETARIA":
-        return redirect("dashboard")
-
-    ano_letivo = AnoLetivo.objects.filter(
-        escola=escola,
-        ativo=True
-    ).first()
-
-    if not ano_letivo:
-        messages.error(
-            request,
-            "Nenhum ano letivo ativo encontrado."
-        )
-        return redirect("alunos")
-
-    cursos = Curso.objects.filter(
-        escola=escola
-    ).order_by("nome")
-
-    turmas = (
-        Turma.objects
-        .filter(escola=escola)
-        .select_related("curso", "ano_letivo")
-        .order_by("classe", "identificador")
-    )
-
-    if request.method == "POST":
-
-        nome = request.POST.get("nome", "").strip()
-        email = request.POST.get("email", "").strip()
-        numero_processo = request.POST.get(
-            "numero_processo",
-            ""
-        ).strip()
-
-        numero_bi = request.POST.get(
-            "numero_bi",
-            ""
-        ).strip()
-
-        data_nascimento = request.POST.get(
-            "data_nascimento",
-            ""
-        ).strip()
-
-        sexo = request.POST.get(
-            "sexo",
-            ""
-        ).strip()
-
-        turma_id = request.POST.get(
-            "turma",
-            ""
-        ).strip()
-
-        # ==========================
-        # VALIDAÇÕES
-        # ==========================
-
-        if not nome:
-            messages.error(request, "Nome obrigatório.")
-            return redirect("adicionar_aluno")
-
-        if not numero_processo:
-            messages.error(request, "Número de processo obrigatório.")
-            return redirect("adicionar_aluno")
-
-        if not numero_bi:
-            messages.error(request, "BI obrigatório.")
-            return redirect("adicionar_aluno")
-
-        if not data_nascimento:
-            messages.error(request, "Data de nascimento obrigatória.")
-            return redirect("adicionar_aluno")
-
-        if not sexo:
-            messages.error(request, "Sexo obrigatório.")
-            return redirect("adicionar_aluno")
-
-        if not turma_id:
-            messages.error(request, "Selecione a turma.")
-            return redirect("adicionar_aluno")
-
-        turma = get_object_or_404(
-            Turma,
-            id=turma_id,
-            escola=escola
-        )
-
-        # Processo duplicado
-        if Aluno.objects.filter(
-            numero_processo=numero_processo,
-            escola=escola
-        ).exists():
-
-            messages.error(
-                request,
-                "Já existe um aluno com este número de processo."
-            )
-            return redirect("adicionar_aluno")
-
-        # BI duplicado
-        if Aluno.objects.filter(
-            numero_bi=numero_bi,
-            escola=escola
-        ).exists():
-
-            messages.error(
-                request,
-                "Já existe um aluno com este BI."
-            )
-            return redirect("adicionar_aluno")
-
-        # Username = Processo
-        if User.objects.filter(
-            username=numero_processo
-        ).exists():
-
-            messages.error(
-                request,
-                "Já existe utilizador com este número de processo."
-            )
-            return redirect("adicionar_aluno")
-
-        try:
-
-            with transaction.atomic():
-
-                # ==========================
-                # SENHA AUTOMÁTICA
-                # ==========================
-                senha_gerada = get_random_string(
-                    length=8
-                )
-
-                user = User.objects.create_user(
-                    username=numero_processo,
-                    email=email,
-                    password=senha_gerada,
-                    first_name=nome,
-                    role="ALUNO",
-                    escola=escola
-                )
-
-                # ==========================
-                # Nº na turma
-                # ==========================
-                numero_na_turma = (
-                    Aluno.objects.filter(
-                        turma=turma
-                    ).count() + 1
-                )
-
-                # ==========================
-                # Matrícula inteligente
-                # Ex: 2026-10A-0005
-                # ==========================
-                matricula = (
-                    f"{ano_letivo.id}-"
-                    f"{turma.classe}"
-                    f"{turma.identificador}-"
-                    f"{str(numero_na_turma).zfill(4)}"
-                )
-
-                aluno = Aluno.objects.create(
-                    usuario=user,
-                    matricula=matricula,
-                    numero_processo=numero_processo,
-                    numero_na_turma=numero_na_turma,
-                    numero_bi=numero_bi,
-                    data_nascimento=data_nascimento,
-                    sexo=sexo,
-                    turma=turma,
-                    classe=turma.classe,
-                    ano_letivo=ano_letivo,
-
-                    # Primeira matrícula já confirmada
-                    matricula_confirmada=True,
-
-                    escola=escola
-                )
-
-                # ==========================
-                # Geração mensalidades
-                # ==========================
-                config, _ = (
-                    ConfiguracaoFinanceira.objects
-                    .get_or_create(
-                        escola=escola
-                    )
-                )
-
-                gerar_mensalidades_aluno(
-                    aluno=aluno,
-                    ano_letivo=ano_letivo,
-                    valor=config.valor_mensalidade
-                )
-
-            messages.success(
-                request,
-                (
-                    f"Aluno cadastrado com sucesso. "
-                    f"Username: {numero_processo} | "
-                    f"Senha inicial: {senha_gerada}"
-                )
-            )
-
-            return redirect("alunos")
-
-        except Exception as e:
-
-            messages.error(
-                request,
-                f"Erro ao cadastrar aluno: {str(e)}"
-            )
-
-            return redirect("adicionar_aluno")
-
-    return render(
-        request,
-        "adicionar_aluno.html",
-        {
-            "turmas": turmas,
-            "cursos": cursos,
-        }
-    )
 
 
 @login_required
@@ -5140,6 +4892,258 @@ def criar_matricula(request):
         request,
         "matricula.html",
         context
+    )
+
+
+
+# =====================================================
+# BLOQUEADO
+# =====================================================
+
+@login_required
+def bloqueado(request):
+    return render(request, 'bloqueado.html')
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.db import transaction
+from django.utils.crypto import get_random_string
+
+
+@login_required
+def adicionar_aluno(request):
+
+    escola = get_escola(request)
+
+    if not escola:
+        return redirect("escolas")
+
+    if request.user.role != "SECRETARIA":
+        return redirect("dashboard")
+
+    ano_letivo = AnoLetivo.objects.filter(
+        escola=escola,
+        ativo=True
+    ).first()
+
+    if not ano_letivo:
+        messages.error(
+            request,
+            "Nenhum ano letivo ativo encontrado."
+        )
+        return redirect("alunos")
+
+    cursos = Curso.objects.filter(
+        escola=escola
+    ).order_by("nome")
+
+    turmas = (
+        Turma.objects
+        .filter(escola=escola)
+        .select_related("curso", "ano_letivo")
+        .order_by("classe", "identificador")
+    )
+
+    if request.method == "POST":
+
+        nome = request.POST.get("nome", "").strip()
+        email = request.POST.get("email", "").strip()
+        numero_processo = request.POST.get(
+            "numero_processo",
+            ""
+        ).strip()
+
+        numero_bi = request.POST.get(
+            "numero_bi",
+            ""
+        ).strip()
+
+        data_nascimento = request.POST.get(
+            "data_nascimento",
+            ""
+        ).strip()
+
+        sexo = request.POST.get(
+            "sexo",
+            ""
+        ).strip()
+
+        turma_id = request.POST.get(
+            "turma",
+            ""
+        ).strip()
+
+        # ==========================
+        # VALIDAÇÕES
+        # ==========================
+
+        if not nome:
+            messages.error(request, "Nome obrigatório.")
+            return redirect("adicionar_aluno")
+
+        if not numero_processo:
+            messages.error(request, "Número de processo obrigatório.")
+            return redirect("adicionar_aluno")
+
+        if not numero_bi:
+            messages.error(request, "BI obrigatório.")
+            return redirect("adicionar_aluno")
+
+        if not data_nascimento:
+            messages.error(request, "Data de nascimento obrigatória.")
+            return redirect("adicionar_aluno")
+
+        if not sexo:
+            messages.error(request, "Sexo obrigatório.")
+            return redirect("adicionar_aluno")
+
+        if not turma_id:
+            messages.error(request, "Selecione a turma.")
+            return redirect("adicionar_aluno")
+
+        turma = get_object_or_404(
+            Turma,
+            id=turma_id,
+            escola=escola
+        )
+
+        # Processo duplicado
+        if Aluno.objects.filter(
+            numero_processo=numero_processo,
+            escola=escola
+        ).exists():
+
+            messages.error(
+                request,
+                "Já existe um aluno com este número de processo."
+            )
+            return redirect("adicionar_aluno")
+
+        # BI duplicado
+        if Aluno.objects.filter(
+            numero_bi=numero_bi,
+            escola=escola
+        ).exists():
+
+            messages.error(
+                request,
+                "Já existe um aluno com este BI."
+            )
+            return redirect("adicionar_aluno")
+
+        # Username = Processo
+        if User.objects.filter(
+            username=numero_processo
+        ).exists():
+
+            messages.error(
+                request,
+                "Já existe utilizador com este número de processo."
+            )
+            return redirect("adicionar_aluno")
+
+        try:
+
+            with transaction.atomic():
+
+                # ==========================
+                # SENHA AUTOMÁTICA
+                # ==========================
+                senha_gerada = get_random_string(
+                    length=8
+                )
+
+                user = User.objects.create_user(
+                    username=numero_processo,
+                    email=email,
+                    password=senha_gerada,
+                    first_name=nome,
+                    role="ALUNO",
+                    escola=escola
+                )
+
+                # ==========================
+                # Nº na turma
+                # ==========================
+                numero_na_turma = (
+                    Aluno.objects.filter(
+                        turma=turma
+                    ).count() + 1
+                )
+
+                # ==========================
+                # Matrícula inteligente
+                # Ex: 2026-10A-0005
+                # ==========================
+                matricula = (
+                    f"{ano_letivo.id}-"
+                    f"{turma.classe}"
+                    f"{turma.identificador}-"
+                    f"{str(numero_na_turma).zfill(4)}"
+                )
+
+                aluno = Aluno.objects.create(
+                    usuario=user,
+                    matricula=matricula,
+                    numero_processo=numero_processo,
+                    numero_na_turma=numero_na_turma,
+                    numero_bi=numero_bi,
+                    data_nascimento=data_nascimento,
+                    sexo=sexo,
+                    turma=turma,
+                    classe=turma.classe,
+                    ano_letivo=ano_letivo,
+
+                    # Primeira matrícula já confirmada
+                    matricula_confirmada=True,
+
+                    escola=escola
+                )
+
+                # ==========================
+                # Geração mensalidades
+                # ==========================
+                config, _ = (
+                    ConfiguracaoFinanceira.objects
+                    .get_or_create(
+                        escola=escola
+                    )
+                )
+
+                gerar_mensalidades_aluno(
+                    aluno=aluno,
+                    ano_letivo=ano_letivo,
+                    valor=config.valor_mensalidade
+                )
+
+            messages.success(
+                request,
+                (
+                    f"Aluno cadastrado com sucesso. "
+                    f"Username: {numero_processo} | "
+                    f"Senha inicial: {senha_gerada}"
+                )
+            )
+
+            return redirect("alunos")
+
+        except Exception as e:
+
+            messages.error(
+                request,
+                f"Erro ao cadastrar aluno: {str(e)}"
+            )
+
+            return redirect("adicionar_aluno")
+
+    return render(
+        request,
+        "adicionar_aluno.html",
+        {
+            "turmas": turmas,
+            "cursos": cursos,
+        }
     )
 
 
