@@ -264,10 +264,66 @@ body {
     color:#9ca3af;
     font-size:13px;
 }
+
+
+.mobile-topbar{
+    display:none;
+}
+
+.menu-toggle{
+    border:none;
+    background:none;
+    font-size:26px;
+}
+
+@media(max-width:992px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        z-index:1100;
+    }
+
+    .sidebar.show{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+        padding:20px;
+    }
+
+    .mobile-topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px 20px;
+        background:white;
+        position:sticky;
+        top:0;
+        z-index:1200;
+    }
+}
+
+
 </style>
 </head>
 
 <body>
+
+
+<div class="mobile-topbar">
+
+    <button class="menu-toggle"
+            onclick="toggleSidebar()">
+
+        <i class="bi bi-list"></i>
+
+    </button>
+
+    <strong>Financeiro</strong>
+
+</div>
+
 
 <!-- SIDEBAR -->
 <div class="sidebar">
@@ -338,5 +394,49 @@ body {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+function toggleSidebar(){
+
+    document
+        .querySelector('.sidebar')
+        .classList
+        .toggle('show');
+
+}
+
+</script>
+
+<script>
+let timer;
+let warningTimer;
+
+function resetTimer() {
+    clearTimeout(timer);
+    clearTimeout(warningTimer);
+
+    // aviso antes de sair (opcional: 10 segundos antes)
+    warningTimer = setTimeout(() => {
+        console.log("Sessão vai expirar em 10 segundos por inatividade.");
+    }, 290000); // 4min50s
+
+    // logout após 5 minutos
+    timer = setTimeout(() => {
+        window.location.href = "{% url 'logout' %}";
+    }, 300000); // 5 minutos
+}
+
+// eventos de atividade
+document.addEventListener("mousemove", resetTimer);
+document.addEventListener("keypress", resetTimer);
+document.addEventListener("click", resetTimer);
+document.addEventListener("scroll", resetTimer);
+
+// inicia timer
+resetTimer();
+</script>
+
+
 </body>
 </html>
