@@ -220,6 +220,67 @@
             padding:20px;
         }
     }
+
+    /* MENU MOBILE */
+
+.offcanvas{
+    background: linear-gradient(180deg,#0f172a,#020617);
+    color: white;
+}
+
+.offcanvas-header{
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.offcanvas-title{
+    color: white;
+    font-weight: 700;
+}
+
+.offcanvas .btn-close{
+    filter: invert(1);
+}
+
+.offcanvas .menu{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.offcanvas .menu li{
+    margin-bottom: 8px;
+}
+
+.offcanvas .menu a{
+    text-decoration: none;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all .25s ease;
+}
+
+.offcanvas .menu a:hover{
+    background: rgba(59,130,246,0.12);
+    color: white;
+}
+
+.offcanvas .menu a.active{
+    background: linear-gradient(90deg,#2563eb,#3b82f6);
+    color: white;
+    box-shadow: 0 4px 18px rgba(59,130,246,0.45);
+}
+
+.offcanvas .menu a.logout{
+    color: #f87171;
+}
+
+.offcanvas .menu a.logout:hover{
+    background: rgba(248,113,113,0.1);
+}
 </style>
 </head>
 <body>
@@ -322,11 +383,124 @@
         </div>
     </div>
 </div>
+
+<!-- MENU MOBILE -->
+
+<div
+class="offcanvas offcanvas-start"
+tabindex="-1"
+id="menuAluno">
+
+<div class="offcanvas-header">
+
+    <h5 class="offcanvas-title">
+        Área do Aluno
+    </h5>
+
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas">
+    </button>
+
+</div>
+
+<div class="offcanvas-body">
+
+<ul class="menu">
+
+<li>
+<a href="{% url 'dashboard_professor' %}">
+<i class="bi bi-speedometer2"></i>
+<span>Resumo</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'minhas_turmas' %}">
+<i class="bi bi-journal-check"></i>
+<span>Minhas Turmas</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'lancar_notas' %}">
+<i class="bi bi-calendar3"></i>
+<span>Lançar Notas</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'historico_professor' %}">
+<i class="bi bi-calendar-event"></i>
+<span>Histórico Acâdemico</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'calendario_professor' %}">
+<i class="bi bi-wallet2"></i>
+<span>Calendário Escolar</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'relatorios_professor' %}">
+<i class="bi bi-file-earmark-arrow-down"></i>
+<span>Relatórios</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'logout' %}" class="logout">
+<i class="bi bi-box-arrow-right"></i>
+<span>Sair</span>
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
 <!-- CONTENT -->
 <div class="content">
     {% block content %}
     {% endblock %}
 </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+let timer;
+let warningTimer;
+
+function resetTimer() {
+    clearTimeout(timer);
+    clearTimeout(warningTimer);
+
+    // aviso antes de sair (opcional: 10 segundos antes)
+    warningTimer = setTimeout(() => {
+        console.log("Sessão vai expirar em 10 segundos por inatividade.");
+    }, 290000); // 4min50s
+
+    // logout após 5 minutos
+    timer = setTimeout(() => {
+        window.location.href = "{% url 'logout' %}";
+    }, 300000); // 5 minutos
+}
+
+// eventos de atividade
+document.addEventListener("mousemove", resetTimer);
+document.addEventListener("keypress", resetTimer);
+document.addEventListener("click", resetTimer);
+document.addEventListener("scroll", resetTimer);
+
+// inicia timer
+resetTimer();
+</script>
+
 </body>
 </html>
