@@ -279,8 +279,13 @@ body {
 @media(max-width:992px){
 
     .sidebar{
+        position:fixed;
+        top:0;
+        left:0;
+        width:260px;
+        height:100vh;
         transform:translateX(-100%);
-        z-index:1100;
+        z-index:2000;
     }
 
     .sidebar.show{
@@ -288,22 +293,17 @@ body {
     }
 
     .main{
-        margin-left:0;
-        padding:20px;
+        margin-left:0 !important;
+        width:100%;
+        padding:15px;
     }
 
     .mobile-topbar{
         display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:15px 20px;
-        background:white;
-        position:sticky;
-        top:0;
-        z-index:1200;
+        width:100%;
     }
-}
 
+}
 
 </style>
 </head>
@@ -395,18 +395,7 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
 
-function toggleSidebar(){
-
-    document
-        .querySelector('.sidebar')
-        .classList
-        .toggle('show');
-
-}
-
-</script>
 
 <script>
 let timer;
@@ -435,6 +424,20 @@ document.addEventListener("scroll", resetTimer);
 
 // inicia timer
 resetTimer();
+</script>
+
+
+<script>
+
+function toggleSidebar(){
+
+    document
+        .querySelector('.sidebar')
+        .classList
+        .toggle('show');
+
+}
+
 </script>
 
 
