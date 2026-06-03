@@ -266,6 +266,10 @@ body {
 }
 
 
+/* =====================================
+   MOBILE
+===================================== */
+
 .mobile-topbar{
     display:none;
 }
@@ -273,40 +277,81 @@ body {
 .menu-toggle{
     border:none;
     background:none;
-    font-size:28px;
+    font-size:30px;
     color:#0f172a;
+    padding:0;
+    line-height:1;
+    cursor:pointer;
 }
 
 @media(max-width:992px){
 
+    body{
+        display:block;
+    }
+
     .mobile-topbar{
+
         display:flex;
-        justify-content:space-between;
         align-items:center;
-        padding:15px 20px;
-        background:white;
-        box-shadow:0 2px 10px rgba(0,0,0,.08);
-        position:sticky;
+        justify-content:flex-start;
+
+        position:fixed;
         top:0;
-        z-index:1200;
+        left:0;
+        right:0;
+
+        height:60px;
+
+        background:#fff;
+
+        padding:0 15px;
+
+        box-shadow:0 2px 12px rgba(0,0,0,.08);
+
+        z-index:2000;
+    }
+
+    .sidebar{
+
+        left:-260px;
+
+        top:0;
+
+        width:260px;
+
+        height:100vh;
+
+        z-index:3000;
+
+        transition:.3s ease;
     }
 
     .sidebar.show{
-        transform:translateX(0);
+        left:0;
     }
 
     .main{
+
         margin-left:0 !important;
+
         width:100%;
-        padding:15px;
+
+        padding:80px 15px 20px 15px !important;
     }
 
-    .mobile-topbar{
-        display:flex;
-        width:100%;
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
     }
 
 }
+
+
 
 </style>
 </head>
@@ -316,10 +361,9 @@ body {
 
 <div class="mobile-topbar">
 
-    <strong>Financeiro</strong>
-
-    <button class="menu-toggle"
-            onclick="toggleSidebar()">
+    <button
+        class="menu-toggle"
+        onclick="toggleSidebar()">
 
         <i class="bi bi-list"></i>
 
@@ -435,11 +479,29 @@ resetTimer();
 function toggleSidebar(){
 
     document
-        .querySelector('.sidebar')
+        .getElementById("sidebar")
         .classList
-        .toggle('show');
+        .toggle("show");
 
 }
+
+document.addEventListener("click", function(e){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const button =
+        document.querySelector(".menu-toggle");
+
+    if(
+        window.innerWidth <= 992 &&
+        !sidebar.contains(e.target) &&
+        !button.contains(e.target)
+    ){
+        sidebar.classList.remove("show");
+    }
+
+});
 
 </script>
 
