@@ -1086,9 +1086,10 @@ class Nota(models.Model):
 
                         self.situacao = "REPROVADO"
 
+
                 else:
 
-                    self.situacao = "RECURSO"
+                    self.situacao = "REPROVADO"
 
         super().save(*args, **kwargs)
 

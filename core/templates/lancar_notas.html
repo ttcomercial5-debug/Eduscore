@@ -227,12 +227,15 @@
 
                                 <th>P2</th>
 
+                                {% if mostrar_exame %}
                                 <th>Exame</th>
+                                {% endif %}
 
+                                {% if mostrar_recurso %}
                                 <th>Recurso</th>
+                                {% endif %}
 
                                 <th>Média</th>
-
                                 <th>Situação</th>
 
                             </tr>
@@ -242,7 +245,7 @@
                         <tbody>
 
                             {% for aluno in alunos %}
-                            {% with nota=notas_existentes|get_item:aluno.id %}
+                                {% with nota=notas_existentes|get_item:aluno.id %}
 
                             <tr>
 
@@ -298,6 +301,8 @@
 
                                 <!-- EXAME -->
 
+                                {% if mostrar_exame %}
+
                                 <td>
 
                                     <input
@@ -312,21 +317,41 @@
 
                                 </td>
 
+                                {% endif %}
+
+
+
                                 <!-- RECURSO -->
+
+                                {% if mostrar_recurso %}
 
                                 <td>
 
-                                    <input
-                                        type="number"
-                                        name="recurso_{{ aluno.id }}"
-                                        step="0.01"
-                                        min="0"
-                                        max="20"
-                                        class="form-control input-nota"
-                                        value="{% if nota %}{{ nota.recurso }}{% endif %}"
-                                        {% if trimestre_fechado %}disabled{% endif %}>
+                                    {% if aluno.id in alunos_com_recurso %}
+
+                                        <input
+                                            type="number"
+                                            name="recurso_{{ aluno.id }}"
+                                            step="0.01"
+                                            min="0"
+                                            max="20"
+                                            class="form-control input-nota"
+                                            value="{% if nota %}{{ nota.recurso }}{% endif %}"
+                                            {% if trimestre_fechado %}disabled{% endif %}>
+
+                                    {% else %}
+
+                                        <span class="text-success fw-bold">
+                                            Sem recurso
+                                        </span>
+
+                                    {% endif %}
 
                                 </td>
+
+                                {% endif %}
+
+
 
                                 <!-- MÉDIA -->
 
@@ -357,17 +382,19 @@
                                         {% if nota.situacao == "APROVADO" %}
 
                                             <span class="badge-aprovado">
-
                                                 APROVADO
+                                            </span>
 
+                                        {% elif nota.situacao == "RECURSO" %}
+
+                                            <span class="badge bg-warning text-dark">
+                                                RECURSO
                                             </span>
 
                                         {% else %}
 
                                             <span class="badge-reprovado">
-
                                                 REPROVADO
-
                                             </span>
 
                                         {% endif %}

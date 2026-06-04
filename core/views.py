@@ -1939,6 +1939,8 @@ def lancar_notas(request):
     fechamento = None
 
     mostrar_exame = False
+    mostrar_recurso = False
+    alunos_com_recurso = []
 
     disciplina_id = request.GET.get("disciplina")
 
@@ -1973,7 +1975,10 @@ def lancar_notas(request):
                 disciplina.turma.classe
             )
 
-            mostrar_exame = classe in [6, 9, 12]
+            mostrar_exame = (
+                    classe in [6, 9, 12]
+                    and str(trimestre) == "3"
+            )
 
         except:
 
@@ -2016,6 +2021,24 @@ def lancar_notas(request):
                 for nota in notas
 
             }
+
+            # ==========================================
+            # RECURSO APENAS PARA NEGATIVAS
+            # ==========================================
+
+            if str(trimestre) == "3":
+
+                mostrar_recurso = True
+
+                for nota in notas:
+
+                    if (
+                            nota.media_final is not None
+                            and nota.media_final < 10
+                    ):
+                        alunos_com_recurso.append(
+                            nota.aluno.id
+                        )
 
     # =====================================================
     # POST
@@ -2167,7 +2190,11 @@ def lancar_notas(request):
                 # RECURSO
                 # =========================================
 
-                if mostrar_exame:
+                if (
+                        str(trimestre) == "3"
+                        and nota_obj.media_final is not None
+                        and nota_obj.media_final < 10
+                ):
 
                     if recurso_input not in [None, ""]:
 
@@ -2265,6 +2292,10 @@ def lancar_notas(request):
         "fechamento": fechamento,
 
         "mostrar_exame": mostrar_exame,
+
+        "mostrar_recurso": mostrar_recurso,
+
+        "alunos_com_recurso": alunos_com_recurso,
 
     }
 
