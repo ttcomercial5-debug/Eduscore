@@ -8111,19 +8111,35 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
     )
 
 
-
 @login_required
 def editar_turma(request, pk):
 
-    turma = get_object_or_404(
-        Turma,
-        id=pk
-    )
+    turma = get_object_or_404(Turma, id=pk)
+
+    cursos = Curso.objects.filter(
+        escola=turma.escola
+    ).order_by("nome")
+
+    if request.method == "POST":
+
+        turma.identificador = request.POST.get("identificador")
+        turma.classe = request.POST.get("classe")
+        turma.curso_id = request.POST.get("curso")
+
+        turma.save()
+
+        messages.success(
+            request,
+            "Turma atualizada com sucesso."
+        )
+
+        return redirect("turmas")
 
     return render(
         request,
         "editar_turma.html",
         {
-            "turma": turma
+            "turma": turma,
+            "cursos": cursos,
         }
     )

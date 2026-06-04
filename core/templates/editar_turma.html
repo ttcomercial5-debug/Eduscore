@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Turma{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="mb-0">
+                        <i class="fas fa-school me-2"></i>
+                        Editar Turma
+                    </h3>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                Nome / Identificador
+                            </label>
+                            <input
+                                type="text"
+                                name="identificador"
+                                class="form-control form-control-lg"
+                                value="{{ turma.identificador }}"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                Classe
+                            </label>
+                            <input
+                                type="text"
+                                name="classe"
+                                class="form-control form-control-lg"
+                                value="{{ turma.classe }}"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                Curso
+                            </label>
+
+                            <select
+                                name="curso"
+                                class="form-select form-select-lg">
+
+                                {% for curso in cursos %}
+                                <option
+                                    value="{{ curso.id }}"
+                                    {% if turma.curso.id == curso.id %}selected{% endif %}>
+                                    {{ curso.nome }}
+                                </option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'turmas' %}"
+                               class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Voltar
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-lg">
+
+                                <i class="fas fa-save me-2"></i>
+                                Guardar Alterações
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
