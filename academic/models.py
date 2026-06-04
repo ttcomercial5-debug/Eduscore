@@ -2318,3 +2318,5 @@ class CalendarioEscolar(models.Model):
             return self.data_inicio <= hoje <= self.data_fim
 
         return self.data_inicio == hoje
+
+

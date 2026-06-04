@@ -476,58 +476,42 @@ def dashboard(request):
                 f"⚠️ Disciplina crítica: {pior_disciplina['nome']}."
             )
 
-        # PROFESSORES SEM LANÇAR NOTAS
+        from django.utils import timezone
 
-        professores = User.objects.filter(
-            role="PROFESSOR",
-            escola=escola
+        hoje = timezone.now().date()
+
+        # =================================================
+        # PROFESSORES SEM LANÇAR NOTAS (BASEADO NO CALENDÁRIO)
+        # =================================================
+
+        provas_expiradas = CalendarioEscolar.objects.filter(
+            escola=escola,
+            ano_letivo=ano,
+            tipo="PROVA",
+            data_fim__lt=hoje
         )
 
-        for professor in professores:
+        for prova in provas_expiradas:
 
-            disciplinas_prof = Disciplina.objects.filter(
-                professor=professor
+            disciplinas_prova = Disciplina.objects.filter(
+                escola=escola,
+                ano_letivo=ano
             )
 
-            sem_notas = True
+            for disciplina in disciplinas_prova:
 
-            for disc in disciplinas_prof:
+                if Nota.objects.filter(
+                        disciplina=disciplina,
+                        ano_letivo=ano
+                ).exists():
+                    continue
 
-                existe = Nota.objects.filter(
-                    disciplina=disc,
-                    ano_letivo=ano
-                ).exists()
+                professor = disciplina.professor
 
-                if existe:
-                    sem_notas = False
-                    break
-
-            if sem_notas:
-
-                alertas.append(
-                    f"⚠️ Professor {professor.get_full_name() or professor.username} ainda não lançou notas."
-                )
-
-        # ALUNOS COM MUITAS NEGATIVAS
-
-        alunos = Aluno.objects.filter(
-            escola=escola,
-            ano_letivo=ano
-        )
-
-        for aluno in alunos:
-
-            negativas = Nota.objects.filter(
-                aluno=aluno,
-                ano_letivo=ano,
-                media_final__lt=10
-            ).count()
-
-            if negativas >= 3:
-
-                alertas.append(
-                    f"⚠️ Aluno {aluno.usuario.get_full_name() or aluno.usuario.username} possui muitas negativas."
-                )
+                if professor:
+                    alertas.append(
+                        f"⚠️ Professor {professor.get_full_name() or professor.username} não lançou notas da prova '{prova.titulo}'."
+                    )
 
     # =================================================
     # BOTÃO PROMOÇÃO
