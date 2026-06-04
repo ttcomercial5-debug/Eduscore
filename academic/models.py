@@ -476,7 +476,9 @@ class Disciplina(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         limit_choices_to={'role': 'PROFESSOR'},
-        related_name="disciplinas"
+        related_name="disciplinas",
+        null=True,
+        blank=True
     )
 
     escola = models.ForeignKey(
