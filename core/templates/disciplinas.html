@@ -8,7 +8,7 @@
 
     <div>
         <h2 class="fw-bold mb-1">
-            📚 Gestão de Disciplinas
+            Gestão de Disciplinas
         </h2>
         <small class="text-muted">
             Organização curricular da escola por ano letivo
@@ -42,7 +42,7 @@
                     onchange="this.form.submit()">
 
                 <option value="">
-                    📅 Ano Atual ({{ ano_ativo.nome }})
+                    Ano Atual ({{ ano_ativo.nome }})
                 </option>
 
                 {% for ano in anos %}
@@ -102,7 +102,7 @@
             <div class="card-body">
 
                 <p class="mb-2">
-                    <strong>📌 Turma:</strong><br>
+                    <strong>Turma:</strong><br>
                     <span class="text-muted">{{ disciplina.turma }}</span>
                 </p>
 
@@ -122,7 +122,7 @@
                 </p>
 
                 <p class="mb-2">
-                    <strong>👨‍🏫 Professor:</strong><br>
+                    <strong>Professor:</strong><br>
 
                     {% if disciplina.professor %}
                         <span class="text-success fw-semibold">
@@ -137,7 +137,7 @@
                 </p>
 
                 <p class="mb-0">
-                    <strong>📅 Ano Letivo:</strong><br>
+                    <strong>Ano Letivo:</strong><br>
                     <span class="text-muted">
                         {{ disciplina.turma.ano_letivo }}
                     </span>
