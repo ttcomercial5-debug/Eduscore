@@ -881,9 +881,8 @@ class Aluno(models.Model):
 # ==========================================================
 # NOTA
 # ==========================================================
-
 from decimal import Decimal
-from django.db import models
+from django.db import models, transaction
 
 
 class Nota(models.Model):
@@ -894,93 +893,21 @@ class Nota(models.Model):
         (3, "3º Trimestre"),
     ]
 
-    aluno = models.ForeignKey(
-        "Aluno",
-        on_delete=models.CASCADE,
-        related_name="notas"
-    )
+    aluno = models.ForeignKey("Aluno", on_delete=models.CASCADE, related_name="notas")
+    disciplina = models.ForeignKey("Disciplina", on_delete=models.CASCADE, related_name="notas")
+    ano_letivo = models.ForeignKey("AnoLetivo", on_delete=models.CASCADE, related_name="notas")
+    trimestre = models.IntegerField(choices=TRIMESTRE_CHOICES)
 
-    disciplina = models.ForeignKey(
-        "Disciplina",
-        on_delete=models.CASCADE,
-        related_name="notas"
-    )
+    # PROVAS
+    p1 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    p2 = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 
-    ano_letivo = models.ForeignKey(
-        "AnoLetivo",
-        on_delete=models.CASCADE,
-        related_name="notas"
-    )
+    exame = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    recurso = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
 
-    trimestre = models.IntegerField(
-        choices=TRIMESTRE_CHOICES
-    )
-
-    # =====================================================
-    # PROVAS NORMAIS
-    # =====================================================
-
-    p1 = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    p2 = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    # =====================================================
-    # EXAME NACIONAL
-    # =====================================================
-
-    exame = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    # =====================================================
-    # RECURSO
-    # =====================================================
-
-    recurso = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    # =====================================================
-    # MÉDIA NORMAL
-    # =====================================================
-
-    media = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    # =====================================================
-    # MÉDIA FINAL COM EXAME
-    # =====================================================
-
-    media_final = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-
-    # =====================================================
-    # SITUAÇÃO
-    # =====================================================
+    # MÉDIAS
+    media = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    media_final = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     situacao = models.CharField(
         max_length=20,
@@ -992,116 +919,143 @@ class Nota(models.Model):
         default="REPROVADO"
     )
 
-    escola = models.ForeignKey(
-        "Escola",
-        on_delete=models.CASCADE,
-        related_name="notas"
-    )
-
-    criada_em = models.DateTimeField(
-        auto_now_add=True
-    )
+    escola = models.ForeignKey("Escola", on_delete=models.CASCADE, related_name="notas")
+    criada_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (
-            "aluno",
-            "disciplina",
-            "trimestre",
-            "ano_letivo"
-        )
-
-        ordering = [
-            "disciplina",
-            "trimestre"
-        ]
-
-        verbose_name = "Nota"
-        verbose_name_plural = "Notas"
+        unique_together = ("aluno", "disciplina", "trimestre", "ano_letivo")
+        ordering = ["disciplina", "trimestre"]
 
     # =====================================================
-    # SAVE
+    # CONTROLO DE FECHO (opcional uso em UI/model)
     # =====================================================
+    def etapa_fechada(self, etapa):
+        from academic.models import FechamentoNota
 
-    def save(self, *args, **kwargs):
+        return FechamentoNota.objects.filter(
+            disciplina=self.disciplina,
+            trimestre=self.trimestre,
+            ano_letivo=self.ano_letivo,
+            etapa=etapa,
+            fechado=True
+        ).exists()
 
-        # =================================================
-        # MÉDIA NORMAL
-        # =================================================
+    # =====================================================
+    # CÁLCULO MÉDIA
+    # =====================================================
+    def calcular_media(self):
 
         if self.p1 is not None and self.p2 is not None:
+            return round((self.p1 + self.p2) / 2, 2)
 
-            self.media = Decimal(
-                round(
-                    (self.p1 + self.p2) / 2,
-                    2
-                )
-            )
+        return None
 
-        # =================================================
-        # MÉDIA FINAL COM EXAME
-        # =================================================
+    # =====================================================
+    # CÁLCULO FINAL
+    # =====================================================
+    def calcular_media_final(self, base):
 
-        if self.media is not None:
+        media = float(base)
 
-            media_base = float(self.media)
+        # EXAME
+        if self.exame is not None:
+            media = round((media + float(self.exame)) / 2, 2)
 
-            # EXAME OBRIGATÓRIO
-            if self.exame is not None:
+        # RECURSO (apenas se reprovado)
+        if media < 10 and self.recurso is not None:
+            media = round((media + float(self.recurso)) / 2, 2)
 
-                media_base = round(
-                    (media_base + float(self.exame)) / 2,
-                    2
-                )
+        return Decimal(media)
+
+    def save(self, *args, **kwargs):
+        from decimal import Decimal
+        from django.db import transaction
+        from academic.models import FechamentoNota
+
+        # =========================
+        # BLOQUEIO
+        # =========================
+        if self.pk:
+            old = Nota.objects.get(pk=self.pk)
+
+            for etapa, old_val, new_val in [
+                ("P1", old.p1, self.p1),
+                ("P2", old.p2, self.p2),
+                ("EXAME", old.exame, self.exame),
+                ("RECURSO", old.recurso, self.recurso),
+            ]:
+                if old_val != new_val:
+                    if FechamentoNota.objects.filter(
+                            disciplina=self.disciplina,
+                            trimestre=self.trimestre,
+                            ano_letivo=self.ano_letivo,
+                            etapa=etapa,
+                            fechado=True
+                    ).exists():
+                        raise ValueError(f"{etapa} está fechado")
+
+        # =========================
+        # PEGAR SEMPRE DA BASE DE DADOS
+        # =========================
+        db = None
+        if self.pk:
+            db = Nota.objects.get(pk=self.pk)
+
+        p1 = db.p1 if db else self.p1
+        p2 = db.p2 if db else self.p2
+        exame = db.exame if db else self.exame
+        recurso = db.recurso if db else self.recurso
+
+        # sobrescrever apenas se veio no POST
+        if self.p1 is not None:
+            p1 = self.p1
+
+        if self.p2 is not None:
+            p2 = self.p2
+
+        if self.exame is not None:
+            exame = self.exame
+
+        if self.recurso is not None:
+            recurso = self.recurso
+
+
+        # =========================
+        # MÉDIA BASE
+        # =========================
+        if p1 is not None and p2 is not None:
+            media = Decimal(round((p1 + p2) / 2, 2))
+        else:
+            media = None
+
+        self.media = media
+
+        # =========================
+        # MÉDIA FINAL
+        # =========================
+        if media is not None:
+            media_base = float(media)
+
+            if exame is not None:
+                media_base = round((media_base + float(exame)) / 2, 2)
+
+            if media_base < 10 and recurso is not None:
+                media_base = round((media_base + float(recurso)) / 2, 2)
 
             self.media_final = Decimal(media_base)
+            self.situacao = "APROVADO" if media_base >= 10 else "REPROVADO"
 
-            # =============================================
-            # SITUAÇÃO
-            # =============================================
-
-            if media_base >= 10:
-
-                self.situacao = "APROVADO"
-
-            else:
-
-                self.situacao = "REPROVADO"
-
-                # =========================================
-                # RECURSO
-                # =========================================
-
-                if self.recurso is not None:
-
-                    recurso_final = round(
-                        (media_base + float(self.recurso)) / 2,
-                        2
-                    )
-
-                    self.media_final = Decimal(recurso_final)
-
-                    if recurso_final >= 10:
-
-                        self.situacao = "APROVADO"
-
-                    else:
-
-                        self.situacao = "REPROVADO"
-
-
-                else:
-
-                    self.situacao = "REPROVADO"
+        else:
+            self.media_final = None
+            self.situacao = "REPROVADO"
 
         super().save(*args, **kwargs)
 
-        # Atualiza média geral do aluno
-        self.atualizar_media_aluno()
+        transaction.on_commit(lambda: self.atualizar_media_aluno())
 
     # =====================================================
-    # MÉDIA GERAL DO ALUNO
+    # MÉDIA GERAL ALUNO
     # =====================================================
-
     def atualizar_media_aluno(self):
 
         notas = Nota.objects.filter(
@@ -1115,56 +1069,23 @@ class Nota(models.Model):
             if n.media_final is not None
         ]
 
-        if medias:
+        if not medias:
+            return
 
-            media_geral = round(
-                sum(medias) / len(medias),
-                2
-            )
+        media_geral = round(sum(medias) / len(medias), 2)
+        negativas = len([m for m in medias if m < 10])
 
-            negativas = len([
-                n for n in medias
-                if n < 10
-            ])
+        self.aluno.media_final = media_geral
+        self.aluno.aprovado = negativas <= 3
 
-            aprovado = False
-
-            # =================================================
-            # REGRAS DE APROVAÇÃO
-            # =================================================
-
-            # Até 3 negativas → recurso
-            if negativas <= 3:
-
-                aprovado = True
-
-            # Mais de 3 negativas → reprovado
-            if negativas > 3:
-
-                aprovado = False
-
-            self.aluno.media_final = media_geral
-            self.aluno.aprovado = aprovado
-
-            self.aluno.save(
-                update_fields=[
-                    "media_final",
-                    "aprovado"
-                ]
-            )
+        self.aluno.save(update_fields=["media_final", "aprovado"])
 
     # =====================================================
     # STRING
     # =====================================================
-
     def __str__(self):
+        return f"{self.aluno} | {self.disciplina.nome} | {self.ano_letivo} | T{self.trimestre}"
 
-        return (
-            f"{self.aluno} | "
-            f"{self.disciplina.nome} | "
-            f"{self.ano_letivo} | "
-            f"T{self.trimestre}"
-        )
 
 
 # ==========================================================
@@ -2027,6 +1948,69 @@ class FechamentoTrimestre(models.Model):
 
     class Meta:
         unique_together = ["disciplina", "trimestre", "ano_letivo"]
+
+
+# ==========================================================
+# FECHAMENTO DE ETAPAS DAS NOTAS
+# ==========================================================
+
+class FechamentoNota(models.Model):
+
+    ETAPAS = [
+        ("P1", "P1"),
+        ("P2", "P2"),
+        ("EXAME", "EXAME"),
+    ]
+
+    disciplina = models.ForeignKey(
+        "Disciplina",
+        on_delete=models.CASCADE
+    )
+
+    trimestre = models.IntegerField()
+
+    ano_letivo = models.ForeignKey(
+        "AnoLetivo",
+        on_delete=models.CASCADE
+    )
+
+    etapa = models.CharField(
+        max_length=10,
+        choices=ETAPAS
+    )
+
+    fechado = models.BooleanField(
+        default=False
+    )
+
+    fechado_por = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    data_fechamento = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        unique_together = (
+            "disciplina",
+            "trimestre",
+            "ano_letivo",
+            "etapa"
+        )
+
+    def __str__(self):
+        return (
+            f"{self.disciplina} | "
+            f"T{self.trimestre} | "
+            f"{self.etapa}"
+        )
+
+
 
 from django.db import models
 from django.conf import settings

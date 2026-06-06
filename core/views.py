@@ -1863,8 +1863,23 @@ def relatorios_professor(request):
 
 
 # ==========================================================
-# LANÇAR NOTAS
+# LANÇAR NOTAS (VERSÃO FINAL LIMPA)
 # ==========================================================
+
+from decimal import Decimal
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+
+from academic.models import (
+    FechamentoNota,
+    FechamentoTrimestre,
+    Nota,
+    Disciplina,
+    AnoLetivo
+)
+
 
 @login_required
 def lancar_notas(request):
@@ -1872,422 +1887,310 @@ def lancar_notas(request):
     # =====================================================
     # PERMISSÃO
     # =====================================================
-
     if getattr(request.user, "role", None) != "PROFESSOR":
         return redirect("dashboard_professor")
 
     professor = request.user
-
     escola = professor.escola
 
     # =====================================================
-    # ANO LETIVO ATIVO
+    # ANO LETIVO
     # =====================================================
-
     ano_letivo = AnoLetivo.objects.filter(
         escola=escola,
         ativo=True
     ).first()
 
     if not ano_letivo:
-
-        messages.error(
-            request,
-            "Nenhum ano letivo ativo encontrado."
-        )
-
+        messages.error(request, "Nenhum ano letivo ativo encontrado.")
         return redirect("dashboard_professor")
 
     # =====================================================
-    # DISCIPLINAS
+    # GET SAFE
     # =====================================================
+    disciplina_id = request.GET.get("disciplina")
+    trimestre_raw = request.GET.get("trimestre")
 
+    trimestre = None
+    if trimestre_raw:
+        try:
+            trimestre = int(trimestre_raw)
+        except ValueError:
+            trimestre = None
+
+    # =====================================================
+    # CONTEXT BASE
+    # =====================================================
     disciplinas = Disciplina.objects.filter(
         professor=professor,
         escola=escola,
         turma__ano_letivo=ano_letivo
-    ).select_related(
-        "turma"
-    ).order_by(
-        "nome"
-    )
+    ).select_related("turma").order_by("nome")
 
     disciplina = None
-
     alunos = None
-
     notas_existentes = {}
 
     trimestre_fechado = False
-
     fechamento = None
 
     mostrar_exame = False
     mostrar_recurso = False
     alunos_com_recurso = []
 
-    disciplina_id = request.GET.get("disciplina")
+    # =====================================================
+    # ETAPA FECHADA
+    # =====================================================
+    def etapa_fechada(etapa):
+        if not disciplina or not trimestre:
+            return False
 
-    trimestre = request.GET.get("trimestre")
+        return FechamentoNota.objects.filter(
+            disciplina=disciplina,
+            trimestre=trimestre,
+            ano_letivo=ano_letivo,
+            etapa=etapa,
+            fechado=True
+        ).exists()
 
     # =====================================================
-    # DISCIPLINA
+    # DISCIPLINA + ALUNOS (GET)
     # =====================================================
-
     if disciplina_id:
 
         disciplina = get_object_or_404(
-
             Disciplina,
-
             id=disciplina_id,
-
             professor=professor,
-
             escola=escola
-
         )
 
-        # =================================================
-        # EXAME APENAS:
-        # 6ª / 9ª / 12ª
-        # =================================================
-
         try:
-
-            classe = int(
-                disciplina.turma.classe
-            )
-
-            mostrar_exame = (
-                    classe in [6, 9, 12]
-                    and str(trimestre) == "3"
-            )
-
+            classe = int(disciplina.turma.classe)
+            mostrar_exame = (classe in [6, 9, 12] and trimestre == 3)
         except:
-
             mostrar_exame = False
 
-        if trimestre:
+        if trimestre is not None:
 
-            fechamento = FechamentoTrimestre.objects.filter(
-
-                disciplina=disciplina,
-
-                trimestre=trimestre,
-
-                ano_letivo=ano_letivo
-
-            ).first()
-
-            if fechamento and fechamento.fechado:
-
-                trimestre_fechado = True
-
-            alunos = disciplina.turma.alunos.select_related(
-                "usuario"
-            ).all()
+            alunos = disciplina.turma.alunos.select_related("usuario").all()
 
             notas = Nota.objects.filter(
-
                 disciplina=disciplina,
-
                 trimestre=trimestre,
-
                 ano_letivo=ano_letivo
-
             )
 
             notas_existentes = {
-
-                nota.aluno.id: nota
-
-                for nota in notas
-
+                n.aluno.id: n for n in notas
             }
 
-            # ==========================================
-            # RECURSO APENAS PARA NEGATIVAS
-            # ==========================================
-
-            if str(trimestre) == "3":
-
+            if trimestre == 3:
                 mostrar_recurso = True
+                alunos_com_recurso = [
+                    n.aluno.id for n in notas
+                    if n.media_final is not None and n.media_final < 10
+                ]
 
-                for nota in notas:
+            fechamento = FechamentoTrimestre.objects.filter(
+                disciplina=disciplina,
+                trimestre=trimestre,
+                ano_letivo=ano_letivo
+            ).first()
 
-                    if (
-                            nota.media_final is not None
-                            and nota.media_final < 10
-                    ):
-                        alunos_com_recurso.append(
-                            nota.aluno.id
-                        )
+            if fechamento and fechamento.fechado:
+                trimestre_fechado = True
 
     # =====================================================
     # POST
     # =====================================================
-
     if request.method == "POST":
 
         acao = request.POST.get("acao")
-
         disciplina_id = request.POST.get("disciplina")
+        trimestre_raw = request.POST.get("trimestre")
 
-        trimestre = request.POST.get("trimestre")
-
-        disciplina = get_object_or_404(
-
-            Disciplina,
-
-            id=disciplina_id,
-
-            professor=professor,
-
-            escola=escola
-
-        )
+        if not disciplina_id or not trimestre_raw:
+            messages.error(request, "Dados inválidos.")
+            return redirect("lancar_notas")
 
         try:
+            trimestre = int(trimestre_raw)
+        except ValueError:
+            messages.error(request, "Trimestre inválido.")
+            return redirect("lancar_notas")
 
-            classe = int(
-                disciplina.turma.classe
-            )
+        disciplina = get_object_or_404(
+            Disciplina,
+            id=disciplina_id,
+            professor=professor,
+            escola=escola
+        )
 
-            mostrar_exame = classe in [6, 9, 12]
-
-        except:
-
-            mostrar_exame = False
-
-        fechamento, created = FechamentoTrimestre.objects.get_or_create(
-
+        fechamento, _ = FechamentoTrimestre.objects.get_or_create(
             disciplina=disciplina,
-
             trimestre=trimestre,
-
             ano_letivo=ano_letivo
-
         )
 
         # =================================================
-        # SALVAR
+        # SALVAR NOTAS
         # =================================================
-
         if acao == "salvar":
 
             if fechamento.fechado:
-
-                messages.error(
-                    request,
-                    "Este trimestre está fechado."
-                )
-
-                return redirect(
-                    request.get_full_path()
-                )
+                messages.error(request, "Este trimestre está fechado.")
+                return redirect(request.get_full_path())
 
             alunos = disciplina.turma.alunos.all()
 
             for aluno in alunos:
 
-                p1_input = request.POST.get(
-                    f"p1_{aluno.id}"
-                )
-
-                p2_input = request.POST.get(
-                    f"p2_{aluno.id}"
-                )
-
-                exame_input = request.POST.get(
-                    f"exame_{aluno.id}"
-                )
-
-                recurso_input = request.POST.get(
-                    f"recurso_{aluno.id}"
-                )
-
-                nota_obj, created = Nota.objects.get_or_create(
-
+                nota_obj, _ = Nota.objects.get_or_create(
                     aluno=aluno,
-
                     disciplina=disciplina,
-
                     trimestre=trimestre,
-
                     ano_letivo=ano_letivo,
-
-                    defaults={
-                        "escola": escola
-                    }
+                    defaults={"escola": escola}
                 )
 
-                # =========================================
-                # P1
-                # =========================================
+                # =========================
+                # BLOQUEIO ETAPAS
+                # =========================
+                if nota_obj.pk:
 
-                if p1_input not in [None, ""]:
+                    if nota_obj.p1 is not None and etapa_fechada("P1"):
+                        messages.error(request, "P1 está fechado.")
+                        return redirect(request.get_full_path())
 
-                    nota_obj.p1 = Decimal(
-                        p1_input
-                    )
+                    if nota_obj.p2 is not None and etapa_fechada("P2"):
+                        messages.error(request, "P2 está fechado.")
+                        return redirect(request.get_full_path())
 
-                else:
+                    if nota_obj.exame is not None and etapa_fechada("EXAME"):
+                        messages.error(request, "Exame está fechado.")
+                        return redirect(request.get_full_path())
 
-                    nota_obj.p1 = None
+                # =========================
+                # P1 (SAFE UPDATE)
+                # =========================
+                p1 = request.POST.get(f"p1_{aluno.id}")
+                if p1 not in [None, ""]:
+                    nota_obj.p1 = Decimal(p1)
 
-                # =========================================
-                # P2
-                # =========================================
+                # =========================
+                # P2 (SAFE UPDATE)
+                # =========================
+                p2 = request.POST.get(f"p2_{aluno.id}")
+                if p2 not in [None, ""]:
+                    nota_obj.p2 = Decimal(p2)
 
-                if p2_input not in [None, ""]:
-
-                    nota_obj.p2 = Decimal(
-                        p2_input
-                    )
-
-                else:
-
-                    nota_obj.p2 = None
-
-                # =========================================
+                # =========================
                 # EXAME
-                # =========================================
-
+                # =========================
                 if mostrar_exame:
-
-                    if exame_input not in [None, ""]:
-
-                        nota_obj.exame = Decimal(
-                            exame_input
-                        )
-
-                    else:
-
-                        nota_obj.exame = None
-
+                    exame = request.POST.get(f"exame_{aluno.id}")
+                    if exame not in [None, ""]:
+                        nota_obj.exame = Decimal(exame)
                 else:
-
                     nota_obj.exame = None
 
-                # =========================================
+                # =========================
                 # RECURSO
-                # =========================================
-
-                if (
-                        str(trimestre) == "3"
-                        and nota_obj.media_final is not None
-                        and nota_obj.media_final < 10
-                ):
-
-                    if recurso_input not in [None, ""]:
-
-                        nota_obj.recurso = Decimal(
-                            recurso_input
-                        )
-
-                    else:
-
-                        nota_obj.recurso = None
-
+                # =========================
+                if trimestre == 3 and nota_obj.media_final and nota_obj.media_final < 10:
+                    rec = request.POST.get(f"recurso_{aluno.id}")
+                    if rec not in [None, ""]:
+                        nota_obj.recurso = Decimal(rec)
                 else:
-
                     nota_obj.recurso = None
 
                 nota_obj.save()
 
-            messages.success(
-                request,
-                "Notas lançadas com sucesso."
+            messages.success(request, "Notas lançadas com sucesso.")
+            return redirect(request.get_full_path())
+
+        # =================================================
+        # FECHAR P1
+        # =================================================
+        elif acao == "fechar_p1":
+
+            FechamentoNota.objects.update_or_create(
+                disciplina=disciplina,
+                trimestre=trimestre,
+                ano_letivo=ano_letivo,
+                etapa="P1",
+                defaults={
+                    "fechado": True,
+                    "fechado_por": request.user,
+                    "data_fechamento": timezone.now()
+                }
             )
 
-        # =================================================
-        # ABRIR
-        # =================================================
-
-        elif acao == "abrir":
-
-            if fechamento.fechado:
-
-                messages.error(
-                    request,
-                    "Este trimestre já foi fechado."
-                )
-
-            else:
-
-                messages.success(
-                    request,
-                    "Trimestre disponível para edição."
-                )
+            messages.success(request, "P1 fechado.")
+            return redirect(request.get_full_path())
 
         # =================================================
-        # FECHAR
+        # FECHAR P2
         # =================================================
+        elif acao == "fechar_p2":
 
+            FechamentoNota.objects.update_or_create(
+                disciplina=disciplina,
+                trimestre=trimestre,
+                ano_letivo=ano_letivo,
+                etapa="P2",
+                defaults={
+                    "fechado": True,
+                    "fechado_por": request.user,
+                    "data_fechamento": timezone.now()
+                }
+            )
+
+            messages.success(request, "P2 fechado.")
+            return redirect(request.get_full_path())
+
+        # =================================================
+        # FECHAR TRIMESTRE
+        # =================================================
         elif acao == "fechar":
 
             if fechamento.fechado:
-
-                messages.warning(
-                    request,
-                    "Este trimestre já está fechado."
-                )
-
+                messages.warning(request, "Já está fechado.")
             else:
-
                 fechamento.fechado = True
-
                 fechamento.fechado_por = request.user
-
                 fechamento.data_fechamento = timezone.now()
-
                 fechamento.save()
 
-                messages.success(
-                    request,
-                    "Trimestre fechado com sucesso."
-                )
+                messages.success(request, "Trimestre fechado.")
 
-        return redirect(
-            f"{request.path}?disciplina={disciplina_id}&trimestre={trimestre}"
-        )
+            return redirect(request.get_full_path())
 
     # =====================================================
-    # CONTEXT
+    # CONTEXT FINAL
     # =====================================================
-
     context = {
-
         "ano_letivo": ano_letivo,
-
         "disciplinas": disciplinas,
-
         "disciplina": disciplina,
-
         "alunos": alunos,
-
         "notas_existentes": notas_existentes,
 
+        "p1_fechado": etapa_fechada("P1") if disciplina else False,
+        "p2_fechado": etapa_fechada("P2") if disciplina else False,
+        "exame_fechado": etapa_fechada("EXAME") if disciplina else False,
+
         "trimestre": trimestre,
-
         "trimestre_fechado": trimestre_fechado,
-
         "fechamento": fechamento,
 
         "mostrar_exame": mostrar_exame,
-
         "mostrar_recurso": mostrar_recurso,
-
         "alunos_com_recurso": alunos_com_recurso,
-
     }
 
-    return render(
-        request,
-        "lancar_notas.html",
-        context
-    )
+    return render(request, "lancar_notas.html", context)
 
 
 #=================================================================
