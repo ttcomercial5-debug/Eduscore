@@ -4802,9 +4802,9 @@ def adicionar_aluno(request):
             )
             return redirect("adicionar_aluno")
 
-        # Username = Processo
+        # Username = Nome
         if User.objects.filter(
-            username=numero_processo
+            username=nome
         ).exists():
 
             messages.error(
@@ -4891,12 +4891,12 @@ def adicionar_aluno(request):
                 request,
                 (
                     f"Aluno cadastrado com sucesso. "
-                    f"Username: {numero_processo} | "
+                    f"Username: {nome} | "
                     f"Senha inicial: {senha_gerada}"
                 )
             )
 
-            return redirect("alunos")
+            return redirect("criar_matricula")
 
         except Exception as e:
 
