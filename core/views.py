@@ -4486,7 +4486,7 @@ def criar_matricula(request):
         # USERNAME + SENHA
         # ==================================================
 
-        username = gerar_username_unico(nome)
+        username = nome
 
         senha_gerada = gerar_senha()
 
