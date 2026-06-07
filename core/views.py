@@ -4825,7 +4825,7 @@ def adicionar_aluno(request):
                 )
 
                 user = User.objects.create_user(
-                    username=numero_processo,
+                    username=nome,
                     email=email,
                     password=senha_gerada,
                     first_name=nome,
