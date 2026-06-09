@@ -200,8 +200,14 @@ TURMA + CURSO
             <option value="">Todas</option>
             {% for turma in turmas %}
                 <option value="{{ turma.id }}"
-                    {% if turma_id == turma.id|stringformat:"s" %}selected{% endif %}>
+                {% if turma_id == turma.id|stringformat:"s" %}selected{% endif %}>
+
                     {{ turma.classe }}ª {{ turma.identificador }}
+
+                    {% if turma.curso %}
+                        - {{ turma.curso.nome }}
+                    {% endif %}
+
                 </option>
             {% endfor %}
         </select>
