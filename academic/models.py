@@ -1024,8 +1024,17 @@ class Nota(models.Model):
         # MÉDIA BASE
         # =========================
         if p1 is not None and p2 is not None:
-            media = Decimal(round((p1 + p2) / 2, 2))
+
+            media = Decimal(
+                round((p1 + p2) / 2, 2)
+            )
+
+        elif p1 is not None:
+
+            media = Decimal(p1)
+
         else:
+
             media = None
 
         self.media = media

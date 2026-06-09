@@ -2059,42 +2059,18 @@ def lancar_notas(request):
         return redirect("dashboard_professor")
 
     # =====================================================
-    # GET SAFE
+    # SAFE TRIMESTRE
     # =====================================================
-    disciplina_id = request.GET.get("disciplina")
-    trimestre_raw = request.GET.get("trimestre")
-
-    trimestre = None
-    if trimestre_raw:
+    def parse_trimestre(value):
         try:
-            trimestre = int(trimestre_raw)
-        except ValueError:
-            trimestre = None
+            return int(value)
+        except:
+            return None
 
     # =====================================================
-    # CONTEXT BASE
+    # ETAPA FECHADA (FIX DEFINITIVO)
     # =====================================================
-    disciplinas = Disciplina.objects.filter(
-        professor=professor,
-        escola=escola,
-        turma__ano_letivo=ano_letivo
-    ).select_related("turma").order_by("nome")
-
-    disciplina = None
-    alunos = None
-    notas_existentes = {}
-
-    trimestre_fechado = False
-    fechamento = None
-
-    mostrar_exame = False
-    mostrar_recurso = False
-    alunos_com_recurso = []
-
-    # =====================================================
-    # ETAPA FECHADA
-    # =====================================================
-    def etapa_fechada(etapa):
+    def etapa_fechada(disciplina, trimestre, etapa):
         if not disciplina or not trimestre:
             return False
 
@@ -2107,7 +2083,33 @@ def lancar_notas(request):
         ).exists()
 
     # =====================================================
-    # DISCIPLINA + ALUNOS (GET)
+    # GET PARAMS
+    # =====================================================
+    disciplina_id = request.GET.get("disciplina")
+    trimestre = parse_trimestre(request.GET.get("trimestre"))
+
+    # =====================================================
+    # BASE QUERY
+    # =====================================================
+    disciplinas = Disciplina.objects.filter(
+        professor=professor,
+        escola=escola,
+        turma__ano_letivo=ano_letivo
+    ).select_related("turma").order_by("nome")
+
+    disciplina = None
+    alunos = None
+    notas_existentes = {}
+
+    fechamento = None
+    trimestre_fechado = False
+
+    mostrar_exame = False
+    mostrar_recurso = False
+    alunos_com_recurso = []
+
+    # =====================================================
+    # CARREGAMENTO (GET)
     # =====================================================
     if disciplina_id:
 
@@ -2118,41 +2120,43 @@ def lancar_notas(request):
             escola=escola
         )
 
+        alunos = disciplina.turma.alunos.select_related("usuario").all()
+
+        notas = Nota.objects.filter(
+            disciplina=disciplina,
+            trimestre=trimestre,
+            ano_letivo=ano_letivo
+        )
+
+        if trimestre:
+            notas = notas.filter(trimestre=trimestre)
+
+        notas_existentes = {n.aluno.id: n for n in notas}
+
+        # EXAME (classes finais)
         try:
             classe = int(disciplina.turma.classe)
             mostrar_exame = (classe in [6, 9, 12] and trimestre == 3)
         except:
             mostrar_exame = False
 
-        if trimestre is not None:
+        # RECURSO
+        if trimestre == 3:
+            mostrar_recurso = True
+            alunos_com_recurso = [
+                n.aluno.id for n in notas
+                if n.media_final is not None and n.media_final < 10
+            ]
 
-            alunos = disciplina.turma.alunos.select_related("usuario").all()
+        # FECHAMENTO TRIMESTRE
+        fechamento = FechamentoTrimestre.objects.filter(
+            disciplina=disciplina,
+            trimestre=trimestre,
+            ano_letivo=ano_letivo
+        ).first()
 
-            notas = Nota.objects.filter(
-                disciplina=disciplina,
-                trimestre=trimestre,
-                ano_letivo=ano_letivo
-            )
-
-            notas_existentes = {
-                n.aluno.id: n for n in notas
-            }
-
-            if trimestre == 3:
-                mostrar_recurso = True
-                alunos_com_recurso = [
-                    n.aluno.id for n in notas
-                    if n.media_final is not None and n.media_final < 10
-                ]
-
-            fechamento = FechamentoTrimestre.objects.filter(
-                disciplina=disciplina,
-                trimestre=trimestre,
-                ano_letivo=ano_letivo
-            ).first()
-
-            if fechamento and fechamento.fechado:
-                trimestre_fechado = True
+        if fechamento and fechamento.fechado:
+            trimestre_fechado = True
 
     # =====================================================
     # POST
@@ -2161,16 +2165,10 @@ def lancar_notas(request):
 
         acao = request.POST.get("acao")
         disciplina_id = request.POST.get("disciplina")
-        trimestre_raw = request.POST.get("trimestre")
+        trimestre = parse_trimestre(request.POST.get("trimestre"))
 
-        if not disciplina_id or not trimestre_raw:
+        if not disciplina_id or not trimestre:
             messages.error(request, "Dados inválidos.")
-            return redirect("lancar_notas")
-
-        try:
-            trimestre = int(trimestre_raw)
-        except ValueError:
-            messages.error(request, "Trimestre inválido.")
             return redirect("lancar_notas")
 
         disciplina = get_object_or_404(
@@ -2192,7 +2190,7 @@ def lancar_notas(request):
         if acao == "salvar":
 
             if fechamento.fechado:
-                messages.error(request, "Este trimestre está fechado.")
+                messages.error(request, "Trimestre fechado.")
                 return redirect(request.get_full_path())
 
             alunos = disciplina.turma.alunos.all()
@@ -2207,56 +2205,40 @@ def lancar_notas(request):
                     defaults={"escola": escola}
                 )
 
-                # =========================
-                # BLOQUEIO ETAPAS
-                # =========================
-                if nota_obj.pk:
+                # BLOQUEIOS REAIS
+                if etapa_fechada(disciplina, trimestre, "P1") and nota_obj.p1 is not None:
+                    pass
+                if etapa_fechada(disciplina, trimestre, "P2") and nota_obj.p2 is not None:
+                    pass
+                if etapa_fechada(disciplina, trimestre, "EXAME") and nota_obj.exame is not None:
+                    pass
 
-                    if nota_obj.p1 is not None and etapa_fechada("P1"):
-                        messages.error(request, "P1 está fechado.")
-                        return redirect(request.get_full_path())
-
-                    if nota_obj.p2 is not None and etapa_fechada("P2"):
-                        messages.error(request, "P2 está fechado.")
-                        return redirect(request.get_full_path())
-
-                    if nota_obj.exame is not None and etapa_fechada("EXAME"):
-                        messages.error(request, "Exame está fechado.")
-                        return redirect(request.get_full_path())
-
-                # =========================
-                # P1 (SAFE UPDATE)
-                # =========================
+                # P1
                 p1 = request.POST.get(f"p1_{aluno.id}")
                 if p1 not in [None, ""]:
-                    nota_obj.p1 = Decimal(p1)
+                    if not etapa_fechada(disciplina, trimestre, "P1"):
+                        nota_obj.p1 = Decimal(p1)
 
-                # =========================
-                # P2 (SAFE UPDATE)
-                # =========================
+                # P2
                 p2 = request.POST.get(f"p2_{aluno.id}")
                 if p2 not in [None, ""]:
-                    nota_obj.p2 = Decimal(p2)
+                    if etapa_fechada(disciplina, trimestre, "P1") and not etapa_fechada(disciplina, trimestre, "P2"):
+                        nota_obj.p2 = Decimal(p2)
 
-                # =========================
                 # EXAME
-                # =========================
                 if mostrar_exame:
                     exame = request.POST.get(f"exame_{aluno.id}")
                     if exame not in [None, ""]:
-                        nota_obj.exame = Decimal(exame)
+                        if not etapa_fechada(disciplina, trimestre, "EXAME"):
+                            nota_obj.exame = Decimal(exame)
                 else:
                     nota_obj.exame = None
 
-                # =========================
                 # RECURSO
-                # =========================
-                if trimestre == 3 and nota_obj.media_final and nota_obj.media_final < 10:
+                if mostrar_recurso and nota_obj.media_final and nota_obj.media_final < 10:
                     rec = request.POST.get(f"recurso_{aluno.id}")
                     if rec not in [None, ""]:
                         nota_obj.recurso = Decimal(rec)
-                else:
-                    nota_obj.recurso = None
 
                 nota_obj.save()
 
@@ -2330,9 +2312,9 @@ def lancar_notas(request):
         "alunos": alunos,
         "notas_existentes": notas_existentes,
 
-        "p1_fechado": etapa_fechada("P1") if disciplina else False,
-        "p2_fechado": etapa_fechada("P2") if disciplina else False,
-        "exame_fechado": etapa_fechada("EXAME") if disciplina else False,
+        "p1_fechado": etapa_fechada(disciplina, trimestre, "P1") if disciplina else False,
+        "p2_fechado": etapa_fechada(disciplina, trimestre, "P2") if disciplina else False,
+        "exame_fechado": etapa_fechada(disciplina, trimestre, "EXAME") if disciplina else False,
 
         "trimestre": trimestre,
         "trimestre_fechado": trimestre_fechado,
