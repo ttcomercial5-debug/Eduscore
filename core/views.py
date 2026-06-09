@@ -1720,6 +1720,159 @@ def dashboard_professor(request):
     )
 
 
+
+# =====================================================
+    # HISTÓRICO DE NOTAS
+# =====================================================
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required
+def historico_notas(request):
+
+    professor = request.user
+    escola = professor.escola
+
+    # =====================================================
+    # FILTROS
+    # =====================================================
+    ano_id = request.GET.get("ano_letivo")
+    turma_id = request.GET.get("turma")
+    disciplina_id = request.GET.get("disciplina")
+    trimestre = request.GET.get("trimestre")
+
+    # =====================================================
+    # ANOS LETIVOS
+    # =====================================================
+    anos_letivos = (
+        AnoLetivo.objects
+        .filter(escola=escola)
+        .order_by("-id")
+    )
+
+    # =====================================================
+    # TURMAS
+    # =====================================================
+    turmas = (
+        Turma.objects
+        .filter(
+            escola=escola,
+            disciplinas__professor=professor
+        )
+        .distinct()
+        .select_related("curso", "ano_letivo")
+    )
+
+    if ano_id:
+        turmas = turmas.filter(
+            ano_letivo_id=ano_id
+        )
+
+    turmas = turmas.order_by(
+        "classe",
+        "identificador"
+    )
+
+    # =====================================================
+    # DISCIPLINAS
+    # =====================================================
+    disciplinas = (
+        Disciplina.objects
+        .filter(
+            escola=escola,
+            professor=professor
+        )
+        .select_related(
+            "turma",
+            "turma__curso",
+            "turma__ano_letivo"
+        )
+    )
+
+    # MOSTRAR APENAS DISCIPLINAS DO ANO SELECIONADO
+    if ano_id:
+        disciplinas = disciplinas.filter(
+            turma__ano_letivo_id=ano_id
+        )
+
+    # SE ESCOLHER TURMA
+    if turma_id:
+        disciplinas = disciplinas.filter(
+            turma_id=turma_id
+        )
+
+    disciplinas = disciplinas.order_by("nome")
+
+    # =====================================================
+    # NOTAS
+    # =====================================================
+    notas_qs = Nota.objects.filter(
+        escola=escola,
+        disciplina__professor=professor
+    )
+
+    if ano_id:
+        notas_qs = notas_qs.filter(
+            ano_letivo_id=ano_id
+        )
+
+    if turma_id:
+        notas_qs = notas_qs.filter(
+            aluno__turma_id=turma_id
+        )
+
+    if disciplina_id:
+        notas_qs = notas_qs.filter(
+            disciplina_id=disciplina_id
+        )
+
+    if trimestre:
+        try:
+            notas_qs = notas_qs.filter(
+                trimestre=int(trimestre)
+            )
+        except (ValueError, TypeError):
+            notas_qs = notas_qs.none()
+
+    # =====================================================
+    # PERFORMANCE
+    # =====================================================
+    notas_qs = (
+        notas_qs
+        .select_related(
+            "aluno",
+            "aluno__usuario",
+            "aluno__turma",
+            "aluno__turma__curso",
+            "disciplina",
+            "ano_letivo"
+        )
+        .order_by("-id")
+    )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+    context = {
+        "notas": notas_qs,
+        "anos_letivos": anos_letivos,
+        "turmas": turmas,
+        "disciplinas": disciplinas,
+
+        "ano_id": ano_id,
+        "turma_id": turma_id,
+        "disciplina_id": disciplina_id,
+        "trimestre": trimestre,
+    }
+
+    return render(
+        request,
+        "historico_notas.html",
+        context
+    )
+
+
 # ==========================================================
 # MINHAS TURMAS
 # ==========================================================

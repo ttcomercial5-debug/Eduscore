@@ -4,7 +4,7 @@ from academic.models import Plano
 
 
 # =====================================================
-# 1️⃣ CONTROLE DE ATIVAÇÃO DA ESCOLA
+#  CONTROLE DE ATIVAÇÃO DA ESCOLA
 # =====================================================
 
 class EscolaAtivaMiddleware:
@@ -27,7 +27,7 @@ class EscolaAtivaMiddleware:
         if not request.user.is_authenticated:
             return self.get_response(request)
 
-        # 🔥 SUPERADMIN nunca é bloqueado
+        # SUPERADMIN nunca é bloqueado
         if request.user.role == 'SUPERADMIN':
             return self.get_response(request)
 
@@ -57,7 +57,7 @@ class EscolaAtivaMiddleware:
 
 
 # =====================================================
-# 2️⃣ BLOQUEAR ACESSO AO DJANGO ADMIN
+# BLOQUEAR ACESSO AO DJANGO ADMIN
 # =====================================================
 
 class AdminRestritoMiddleware:
@@ -72,7 +72,7 @@ class AdminRestritoMiddleware:
             if not request.user.is_authenticated:
                 return redirect('login')
 
-            # 🔒 Apenas SUPERADMIN pode entrar no admin
+            # Apenas SUPERADMIN pode entrar no admin
             if request.user.role != 'SUPERADMIN':
                 return redirect('dashboard')
 

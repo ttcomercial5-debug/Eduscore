@@ -72,6 +72,7 @@ urlpatterns = [
     path("professor/lancar-notas/", views.lancar_notas, name="lancar_notas"),
     path("professor/relatorios/", views.relatorios_professor, name="relatorios_professor"),
     path('professor/calendario/', views.calendario_professor, name='calendario_professor'),
+    path("historico-notas/", views.historico_notas, name="historico_notas"),
 
     # =============================
     # TURMAS & DISCIPLINAS

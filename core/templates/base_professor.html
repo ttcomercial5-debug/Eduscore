@@ -301,6 +301,9 @@
     </div>
 </div>
 <!-- MENU -->
+
+
+
 <ul class="menu">
     <!-- DASHBOARD -->
     <li>
@@ -326,6 +329,17 @@
             <span>Lançar Notas</span>
         </a>
     </li>
+
+    <!-- HISTÓRICO NOTAS -->
+
+    <li>
+        <a href="{% url 'historico_notas' %}"
+           class="{% if request.resolver_match.url_name == 'historico_notas' %}active{% endif %}">
+            <i class="bi bi-clock-history"></i>
+            <span>Histórico de Notas</span>
+        </a>
+    </li>
+
     <!-- HISTÓRICO -->
     <li>
         <a href="{% url 'historico_professor' %}"
@@ -448,11 +462,19 @@ id="menuAluno">
 </li>
 
 <li>
+<a href="{% url 'historico_notas' %}">
+<i class="bi bi-calendar-event"></i>
+<span>Histórico de Notas</span>
+</a>
+</li>
+
+<li>
 <a href="{% url 'historico_professor' %}">
 <i class="bi bi-calendar-event"></i>
 <span>Histórico Acâdemico</span>
 </a>
 </li>
+
 
 <li>
 <a href="{% url 'calendario_professor' %}">
