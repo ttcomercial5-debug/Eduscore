@@ -430,25 +430,26 @@ TABELA PRINCIPAL
 {% if mostrar_recurso %}
 <td>
 
-{% if aluno.id in alunos_com_recurso %}
-
 {% if nota and nota.recurso %}
 
+{% if nota.recurso >= 10 %}
+<div class="fw-bold text-success">
+    {{ nota.recurso }}
+</div>
+{% else %}
 <div class="fw-bold text-danger">
     {{ nota.recurso }}
 </div>
+{% endif %}
 
-{% else %}
+{% elif aluno.id in alunos_com_recurso %}
 
 <input
     type="number"
     step="0.01"
     name="recurso_{{ aluno.id }}"
     class="form-control input-nota"
-    value="{% if nota %}{{ nota.recurso }}{% endif %}"
-
-
-{% endif %}
+    value="{% if nota %}{{ nota.recurso }}{% endif %}">
 
 {% else %}
 

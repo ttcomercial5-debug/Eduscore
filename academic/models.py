@@ -1043,16 +1043,31 @@ class Nota(models.Model):
         # MÉDIA FINAL
         # =========================
         if media is not None:
+
             media_base = float(media)
 
+            # EXAME
             if exame is not None:
-                media_base = round((media_base + float(exame)) / 2, 2)
+                media_base = round(
+                    (media_base + float(exame)) / 2,
+                    2
+                )
 
+            # RECURSO (nota seca)
             if media_base < 10 and recurso is not None:
-                media_base = round((media_base + float(recurso)) / 2, 2)
 
-            self.media_final = Decimal(media_base)
-            self.situacao = "APROVADO" if media_base >= 10 else "REPROVADO"
+                recurso_valor = float(recurso)
+
+                if recurso_valor > media_base:
+                    media_base = recurso_valor
+
+            self.media_final = Decimal(str(media_base))
+
+            self.situacao = (
+                "APROVADO"
+                if media_base >= 10
+                else "REPROVADO"
+            )
 
         else:
             self.media_final = None
