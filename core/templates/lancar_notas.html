@@ -357,7 +357,14 @@ TABELA PRINCIPAL
 
 {% if p1_fechado %}
 
-<div class="fw-bold text-success">
+<div class="fw-bold
+{% if nota.p1 < 10 %}
+text-danger
+{% elif nota.p1 <= 15 %}
+text-success
+{% else %}
+text-primary
+{% endif %}">
     {{ nota.p1|default:"-" }}
 </div>
 
@@ -380,7 +387,14 @@ TABELA PRINCIPAL
 
 {% if p2_fechado %}
 
-<div class="fw-bold text-primary">
+<div class="fw-bold
+{% if nota.p2 < 10 %}
+text-danger
+{% elif nota.p2 <= 15 %}
+text-success
+{% else %}
+text-primary
+{% endif %}">
     {{ nota.p2|default:"-" }}
 </div>
 
@@ -405,7 +419,14 @@ TABELA PRINCIPAL
 
 {% if exame_fechado %}
 
-<div class="fw-bold text-warning">
+<div class="fw-bold
+{% if nota.exame < 10 %}
+text-danger
+{% elif nota.exame <= 15 %}
+text-success
+{% else %}
+text-primary
+{% endif %}">
     {{ nota.exame|default:"-" }}
 </div>
 
@@ -432,15 +453,16 @@ TABELA PRINCIPAL
 
 {% if nota and nota.recurso %}
 
-{% if nota.recurso >= 10 %}
-<div class="fw-bold text-success">
-    {{ nota.recurso }}
-</div>
+<div class="fw-bold
+{% if nota.recurso < 10 %}
+text-danger
+{% elif nota.recurso <= 15 %}
+text-success
 {% else %}
-<div class="fw-bold text-danger">
+text-primary
+{% endif %}">
     {{ nota.recurso }}
 </div>
-{% endif %}
 
 {% elif aluno.id in alunos_com_recurso %}
 
