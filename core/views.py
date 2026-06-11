@@ -1266,8 +1266,27 @@ def adicionar_disciplina(request):
 
     escola = request.user.escola
 
+    # ============================================
+    # ANO LETIVO ATIVO
+    # ============================================
+    ano_letivo = AnoLetivo.objects.filter(
+        escola=escola,
+        ativo=True
+    ).first()
+
+    if not ano_letivo:
+        messages.error(
+            request,
+            "Nenhum ano letivo ativo encontrado."
+        )
+        return redirect("disciplinas")
+
+    # ============================================
+    # TURMAS APENAS DO ANO ATIVO
+    # ============================================
     turmas = Turma.objects.filter(
-        escola=escola
+        escola=escola,
+        ano_letivo=ano_letivo
     ).select_related(
         "curso"
     ).order_by(
@@ -1275,36 +1294,48 @@ def adicionar_disciplina(request):
         "identificador"
     )
 
+    # ============================================
+    # PROFESSORES
+    # ============================================
     professores = User.objects.filter(
         escola=escola,
         role="PROFESSOR"
     ).order_by(
-        "first_name",
         "username"
     )
 
     if request.method == "POST":
 
-        nome = request.POST.get("nome", "").strip()
+        nome = request.POST.get(
+            "nome",
+            ""
+        ).strip()
+
         turma_id = request.POST.get("turma")
         professor_id = request.POST.get("professor")
 
         if not nome or not turma_id:
+
             messages.error(
                 request,
                 "Nome da disciplina e turma são obrigatórios."
             )
-            return redirect("adicionar_disciplina")
+
+            return redirect(
+                "adicionar_disciplina"
+            )
 
         turma = get_object_or_404(
             Turma,
             id=turma_id,
-            escola=escola
+            escola=escola,
+            ano_letivo=ano_letivo
         )
 
         professor = None
 
         if professor_id:
+
             professor = User.objects.filter(
                 id=professor_id,
                 escola=escola,
@@ -1322,7 +1353,9 @@ def adicionar_disciplina(request):
                 "Esta disciplina já existe nesta turma."
             )
 
-            return redirect("adicionar_disciplina")
+            return redirect(
+                "adicionar_disciplina"
+            )
 
         Disciplina.objects.create(
             nome=nome,
@@ -1336,14 +1369,17 @@ def adicionar_disciplina(request):
             "Disciplina criada com sucesso."
         )
 
-        return redirect("disciplinas")
+        return redirect(
+            "disciplinas"
+        )
 
     return render(
         request,
         "adicionar_disciplina.html",
         {
             "turmas": turmas,
-            "professores": professores
+            "professores": professores,
+            "ano_letivo": ano_letivo,
         }
     )
 
