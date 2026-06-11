@@ -354,42 +354,113 @@ TABELA PRINCIPAL
 
 <!-- P1 -->
 <td>
-<input type="number" name="p1_{{ aluno.id }}"
-class="form-control input-nota"
-value="{% if nota %}{{ nota.p1 }}{% endif %}"
-{% if p1_fechado %}disabled{% endif %}>
+
+{% if p1_fechado %}
+
+<div class="fw-bold text-success">
+    {{ nota.p1|default:"-" }}
+</div>
+
+{% else %}
+
+<input
+    type="number"
+    step="0.01"
+    name="p1_{{ aluno.id }}"
+    class="form-control input-nota"
+    value="{% if nota %}{{ nota.p1 }}{% endif %}"
+
+
+{% endif %}
+
 </td>
 
 <!-- P2 -->
 <td>
-<input type="number" name="p2_{{ aluno.id }}"
-class="form-control input-nota"
-value="{% if nota %}{{ nota.p2 }}{% endif %}"
-{% if not p1_fechado %}disabled title="P1 ainda não foi fechado"{% endif %}>
+
+{% if p2_fechado %}
+
+<div class="fw-bold text-primary">
+    {{ nota.p2|default:"-" }}
+</div>
+
+{% else %}
+
+<input
+    type="number"
+    step="0.01"
+    name="p2_{{ aluno.id }}"
+    class="form-control input-nota"
+    value="{% if nota %}{{ nota.p2 }}{% endif %}"
+    {% if not p1_fechado %}disabled{% endif %}
+
+
+{% endif %}
+
 </td>
 
 <!-- EXAME -->
 {% if mostrar_exame %}
 <td>
-<input type="number" name="exame_{{ aluno.id }}"
-class="form-control input-nota"
-value="{% if nota %}{{ nota.exame }}{% endif %}"
-{% if exame_fechado %}disabled{% endif %}>
+
+{% if exame_fechado %}
+
+<div class="fw-bold text-warning">
+    {{ nota.exame|default:"-" }}
+</div>
+
+{% else %}
+
+<input
+    type="number"
+    step="0.01"
+    name="exame_{{ aluno.id }}"
+    class="form-control input-nota"
+    value="{% if nota %}{{ nota.exame }}{% endif %}"
+
+
+{% endif %}
+
 </td>
 {% endif %}
+
+
 
 <!-- RECURSO -->
 {% if mostrar_recurso %}
 <td>
+
 {% if aluno.id in alunos_com_recurso %}
-<input type="number" name="recurso_{{ aluno.id }}"
-class="form-control input-nota"
-value="{% if nota %}{{ nota.recurso }}{% endif %}">
+
+{% if nota and nota.recurso %}
+
+<div class="fw-bold text-danger">
+    {{ nota.recurso }}
+</div>
+
 {% else %}
-<span class="badge badge-info">Sem Recurso</span>
+
+<input
+    type="number"
+    step="0.01"
+    name="recurso_{{ aluno.id }}"
+    class="form-control input-nota"
+    value="{% if nota %}{{ nota.recurso }}{% endif %}"
+
+
 {% endif %}
+
+{% else %}
+
+<span class="badge badge-info">
+    Sem Recurso
+</span>
+
+{% endif %}
+
 </td>
 {% endif %}
+
 
 <!-- MÉDIA -->
 <td class="text-center">
@@ -448,6 +519,15 @@ Fechar P1
 <button type="submit" name="acao" value="fechar_p2"
 class="btn btn-dark btn-action">
 Fechar P2
+</button>
+{% endif %}
+
+{% if mostrar_recurso and not recurso_fechado %}
+<button type="submit"
+        name="acao"
+        value="fechar_recurso"
+        class="btn btn-warning btn-action">
+    Fechar Recurso
 </button>
 {% endif %}
 

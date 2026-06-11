@@ -2236,8 +2236,17 @@ def lancar_notas(request):
 
                 # RECURSO
                 if mostrar_recurso and nota_obj.media_final and nota_obj.media_final < 10:
+
                     rec = request.POST.get(f"recurso_{aluno.id}")
-                    if rec not in [None, ""]:
+
+                    if (
+                            rec not in [None, ""]
+                            and not etapa_fechada(
+                        disciplina,
+                        trimestre,
+                        "RECURSO"
+                    )
+                    ):
                         nota_obj.recurso = Decimal(rec)
 
                 nota_obj.save()
@@ -2285,6 +2294,27 @@ def lancar_notas(request):
             messages.success(request, "P2 fechado.")
             return redirect(request.get_full_path())
 
+
+        # =================================================
+        # FECHAR RECURSO
+        # =================================================
+        elif acao == "fechar_recurso":
+
+            FechamentoNota.objects.update_or_create(
+                disciplina=disciplina,
+                trimestre=trimestre,
+                ano_letivo=ano_letivo,
+                etapa="RECURSO",
+                defaults={
+                    "fechado": True,
+                    "fechado_por": request.user,
+                    "data_fechamento": timezone.now()
+                }
+            )
+
+            messages.success(request, "Recurso fechado.")
+            return redirect(request.get_full_path())
+
         # =================================================
         # FECHAR TRIMESTRE
         # =================================================
@@ -2315,6 +2345,7 @@ def lancar_notas(request):
         "p1_fechado": etapa_fechada(disciplina, trimestre, "P1") if disciplina else False,
         "p2_fechado": etapa_fechada(disciplina, trimestre, "P2") if disciplina else False,
         "exame_fechado": etapa_fechada(disciplina, trimestre, "EXAME") if disciplina else False,
+        "recurso_fechado": etapa_fechada(disciplina, trimestre, "RECURSO") if disciplina else False,
 
         "trimestre": trimestre,
         "trimestre_fechado": trimestre_fechado,

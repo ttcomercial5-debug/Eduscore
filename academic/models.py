@@ -1969,6 +1969,7 @@ class FechamentoNota(models.Model):
         ("P1", "P1"),
         ("P2", "P2"),
         ("EXAME", "EXAME"),
+        ("RECURSO", "RECURSO"),
     ]
 
     disciplina = models.ForeignKey(
