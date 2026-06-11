@@ -2814,24 +2814,142 @@ def gerar_boletim_pdf(request):
     elementos = []
 
     # =====================================
-    # TÍTULO
+    # CABEÇALHO OFICIAL ANGOLA
+    # =====================================
+
+    from reportlab.lib.enums import TA_CENTER
+
+    estilo_centro = ParagraphStyle(
+        "Centro",
+        parent=styles["Normal"],
+        alignment=TA_CENTER,
+        leading=16,
+    )
+
+    estilo_escola = ParagraphStyle(
+        "Escola",
+        parent=styles["Normal"],
+        alignment=TA_CENTER,
+        fontName="Helvetica-Bold",
+        fontSize=14,
+        leading=18,
+    )
+
+    # =====================================
+    # INSÍGNIA DE ANGOLA
+    # =====================================
+
+    insignia_path = os.path.join(
+        settings.MEDIA_ROOT,
+        "insignia_angola.png"
+    )
+
+    if os.path.exists(insignia_path):
+        insignia = Image(
+            insignia_path,
+            width=65,
+            height=65
+        )
+
+        insignia.hAlign = "CENTER"
+
+        elementos.append(insignia)
+
+    # =====================================
+    # TEXTO OFICIAL
     # =====================================
 
     elementos.append(
         Paragraph(
-            f"<b>{escola.nome.upper()}</b>",
-            styles["Title"]
+            "REPÚBLICA DE ANGOLA",
+            estilo_centro
         )
     )
 
     elementos.append(
-        Spacer(1, 15)
+        Paragraph(
+            "MINISTÉRIO DA EDUCAÇÃO",
+            estilo_centro
+        )
+    )
+
+    # =====================================
+    # GOVERNO PROVINCIAL
+    # =====================================
+
+    if escola.provincia:
+        elementos.append(
+            Paragraph(
+                f"GOVERNO PROVINCIAL DE {escola.provincia.upper()}",
+                estilo_centro
+            )
+        )
+
+    # =====================================
+    # DIREÇÃO MUNICIPAL
+    # =====================================
+
+    if escola.municipio:
+        elementos.append(
+            Paragraph(
+                f"DIREÇÃO MUNICIPAL DA EDUCAÇÃO DE {escola.municipio.upper()}",
+                estilo_centro
+            )
+        )
+
+    # =====================================
+    # ENDEREÇO DA ESCOLA
+    # =====================================
+
+    if escola.endereco:
+        elementos.append(
+            Paragraph(
+                escola.endereco.upper(),
+                estilo_centro
+            )
+        )
+
+    elementos.append(
+        Paragraph(
+            f"<b>{escola.nome.upper()}</b>",
+            estilo_escola
+        )
+    )
+
+    elementos.append(
+        Spacer(1, 10))
+
+    elementos.append(
+        HRFlowable(
+            width="100%",
+            thickness=1,
+            color=colors.black
+        )
+    )
+
+    elementos.append(
+        Spacer(1, 10)
     )
 
     elementos.append(
         Paragraph(
             "<b>BOLETIM DE NOTAS</b>",
-            styles["Heading2"]
+            ParagraphStyle(
+                "TituloBoletim",
+                parent=styles["Heading2"],
+                alignment=TA_CENTER
+            )
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            f"Ano Letivo: <b>{ano_letivo.nome}</b>",
+            ParagraphStyle(
+                "AnoLetivo",
+                parent=styles["Normal"],
+                alignment=TA_CENTER
+            )
         )
     )
 
@@ -5808,6 +5926,8 @@ def promover_alunos(request, ano_id):
     response.write(pdf)
 
     return response
+
+
 
 
 from django.http import HttpResponse

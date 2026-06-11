@@ -22,10 +22,25 @@
                     Código: {{ escola.codigo }}
                 </span>
 
+
                 <p class="card-text text-muted mb-2">
                     <i class="bi bi-geo-alt me-2"></i>
                     {{ escola.endereco|default:"Endereço não informado" }}
                 </p>
+
+                {% if escola.provincia %}
+                <p class="card-text text-muted mb-2">
+                    <i class="bi bi-map me-2"></i>
+                    <strong>Província:</strong> {{ escola.provincia }}
+                </p>
+                {% endif %}
+
+                {% if escola.municipio %}
+                <p class="card-text text-muted mb-2">
+                    <i class="bi bi-building me-2"></i>
+                    <strong>Município:</strong> {{ escola.municipio }}
+                </p>
+                {% endif %}
 
                 {% if escola.telefone %}
                 <p class="card-text text-muted mb-2">

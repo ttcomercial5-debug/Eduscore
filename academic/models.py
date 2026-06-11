@@ -202,6 +202,20 @@ class Escola(models.Model):
         max_length=255
     )
 
+    provincia = models.CharField(
+        "Província",
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    municipio = models.CharField(
+        "Município",
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
     telefone = models.CharField(
         "Telefone",
         max_length=20
