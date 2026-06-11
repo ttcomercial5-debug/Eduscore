@@ -846,9 +846,11 @@ def lista_turmas(request):
     # =====================================
 
     turmas = (
-        Turma.objects
-        .filter(escola=escola)
-        .select_related("curso", "ano_letivo")
+        turmas
+        .select_related(
+            "curso",
+            "ano_letivo"
+        )
         .annotate(
             total_alunos=Count("alunos")
         )
