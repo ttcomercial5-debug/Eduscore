@@ -1626,7 +1626,8 @@ class HistoricoMatricula(models.Model):
 
     ano_letivo = models.ForeignKey(
         "AnoLetivo",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        db_index=True
     )
 
     turma = models.ForeignKey(
@@ -1636,9 +1637,7 @@ class HistoricoMatricula(models.Model):
         blank=True
     )
 
-    classe = models.CharField(
-        max_length=10
-    )
+    classe = models.CharField(max_length=10)
 
     curso = models.ForeignKey(
         "Curso",
@@ -1647,63 +1646,30 @@ class HistoricoMatricula(models.Model):
         blank=True
     )
 
-    numero_na_turma = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
+    numero_na_turma = models.PositiveIntegerField(null=True, blank=True)
 
-    matricula = models.CharField(
-        max_length=30
-    )
+    matricula = models.CharField(max_length=30)
 
-    # ==========================================
-    # DADOS HISTÓRICOS DA TURMA
-    # ==========================================
-
-    total_alunos_turma = models.PositiveIntegerField(
-        default=0,
-        verbose_name="Total de Alunos da Turma"
-    )
+    # 👇 snapshot correto da turma naquele ano
+    total_alunos_turma = models.PositiveIntegerField(default=0)
 
     media_final = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         null=True,
-        blank=True,
-        verbose_name="Média Final"
+        blank=True
     )
 
-    aprovado = models.BooleanField(
-        default=False
-    )
+    aprovado = models.BooleanField(default=False)
 
-    criado_em = models.DateTimeField(
-        auto_now_add=True
-    )
+    criado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-
-        ordering = [
-            "-ano_letivo__nome",
-            "classe",
-            "numero_na_turma"
-        ]
-
-        verbose_name = "Histórico de Matrícula"
-        verbose_name_plural = "Históricos de Matrícula"
-
-    @property
-    def situacao(self):
-
-        return "APROVADO" if self.aprovado else "REPROVADO"
+        ordering = ["-ano_letivo", "classe", "numero_na_turma"]
+        unique_together = ("aluno", "ano_letivo")  # 🔥 evita duplicados
 
     def __str__(self):
-
-        return (
-            f"{self.aluno.nome_completo} - "
-            f"{self.ano_letivo} - "
-            f"{self.classe}"
-        )
+        return f"{self.aluno} - {self.ano_letivo} - {self.classe}"
 
 
 

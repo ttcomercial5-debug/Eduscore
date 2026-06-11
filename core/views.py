@@ -4389,13 +4389,27 @@ def confirmar_matricula(request):
                 f"{request.path}?numero_processo={aluno.numero_processo}"
             )
 
-        # ==============================================
-        # CONFIRMAR
-        # ==============================================
+        # ======================================================
+        # CONFIRMAR MATRÍCULA + HISTÓRICO
+        # ======================================================
 
+        HistoricoMatricula.objects.create(
+            aluno=aluno,
+            ano_letivo=ano_letivo_ativo,
+            turma=aluno.turma,
+            classe=aluno.classe,
+            curso=aluno.curso,
+            numero_na_turma=aluno.numero_na_turma,
+            matricula=aluno.matricula,
+            total_alunos_turma=Aluno.objects.filter(
+                turma=aluno.turma,
+                ano_letivo=ano_letivo_ativo
+            ).count()
+        )
+
+        # depois sim confirma matrícula
         aluno.matricula_confirmada = True
 
-        # novos campos
         if hasattr(aluno, "precisa_confirmacao"):
             aluno.precisa_confirmacao = False
 
@@ -5786,6 +5800,14 @@ def promover_alunos(request, ano_id):
 
     pdf = buffer.getvalue()
     buffer.close()
+
+    from django.http import HttpResponse
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="relatorio_promocao.pdf"'
+    response.write(pdf)
+
+    return response
 
 
 from django.http import HttpResponse
