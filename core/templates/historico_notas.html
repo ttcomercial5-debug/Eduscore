@@ -1,22 +1,39 @@
-
 {% extends "base_professor.html" %}
 {% block content %}
 
 <style>
 
 /* =========================
-BASE
+PAGE
 ========================= */
 
+.page-wrapper{
+    padding:20px;
+}
+
+/* =========================
+HEADER
+========================= */
+
+.page-header{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:22px;
+    border-radius:16px;
+    margin-bottom:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
 .page-title{
-    font-size:24px;
+    font-size:22px;
     font-weight:800;
-    color:#0f172a;
+    margin:0;
 }
 
 .page-subtitle{
-    font-size:14px;
-    color:#6b7280;
+    font-size:13px;
+    opacity:.75;
+    margin-top:4px;
 }
 
 /* =========================
@@ -26,8 +43,26 @@ CARDS
 .card-custom{
     border:none;
     border-radius:14px;
-    box-shadow:0 4px 14px rgba(0,0,0,0.08);
-    margin-bottom:20px;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);
+    margin-bottom:18px;
+}
+
+/* =========================
+KPIs
+========================= */
+
+.kpi-card{
+    background:#fff;
+    border-radius:14px;
+    padding:16px;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
+}
+
+.kpi-number{
+    font-size:24px;
+    font-weight:800;
+    color:#0f172a;
 }
 
 /* =========================
@@ -40,140 +75,123 @@ TABLE
 }
 
 .table td{
-    vertical-align:middle;
     font-size:14px;
+    vertical-align:middle;
 }
 
 .table-hover tbody tr:hover{
-    background:#f1f5f9;
+    background:#f8fafc;
 }
 
 /* =========================
-BADGES (notas)
+NOTAS CORES (NOVO PADRÃO)
 ========================= */
 
-.badge-note{
+.grade{
+    font-weight:700;
     padding:6px 10px;
     border-radius:8px;
-    font-size:12px;
-    font-weight:700;
+    display:inline-block;
+    min-width:42px;
+    text-align:center;
     color:white;
 }
 
-.note-high{
-    background:#16a34a;
+.grade-low{
+    background:#dc2626; /* 0-9 vermelho */
 }
 
-.note-mid{
-    background:#f59e0b;
+.grade-mid{
+    background:#16a34a; /* 10-15 verde */
 }
 
-.note-low{
-    background:#ef4444;
+.grade-high{
+    background:#2563eb; /* 16-20 azul */
 }
 
-/* situação */
+/* =========================
+SITUAÇÃO
+========================= */
+
 .badge-aprovado{
-    background:#10b981;
+    background:#16a34a;
     color:white;
     padding:6px 12px;
-    border-radius:20px;
+    border-radius:999px;
     font-size:12px;
     font-weight:700;
 }
 
 .badge-reprovado{
-    background:#ef4444;
+    background:#dc2626;
     color:white;
     padding:6px 12px;
-    border-radius:20px;
+    border-radius:999px;
     font-size:12px;
     font-weight:700;
 }
 
-/* turma */
-.badge-soft{
-    background:#334155;
-    color:white;
-    padding:6px 10px;
-    border-radius:10px;
-    font-size:12px;
-}
-
-/* botão */
-.btn-view{
-    background:#2563eb;
-    color:white;
-    border:none;
-    padding:6px 10px;
-    border-radius:8px;
-    font-size:12px;
-    text-decoration:none;
-}
-
-.btn-view:hover{
-    background:#1d4ed8;
-    color:white;
-}
-
-
 /* =========================
-TURMA + CURSO
+TURMA (SEM CURSO)
 ========================= */
 
 .turma-info{
     display:flex;
     flex-direction:column;
-    gap:6px;
 }
 
 .turma-principal{
     font-weight:700;
     color:#0f172a;
-    font-size:14px;
-    line-height:1.2;
 }
 
-.curso-badge{
-    display:inline-flex;
-    align-items:center;
-    width:max-content;
+/* =========================
+BUTTONS
+========================= */
 
-    background:linear-gradient(
-        135deg,
-        #eff6ff,
-        #dbeafe
-    );
-
-    color:#1d4ed8;
-
-    border:1px solid #bfdbfe;
-
-    padding:4px 10px;
-
-    border-radius:999px;
-
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.3px;
-
-    transition:.2s;
+.btn-clean{
+    border-radius:10px;
+    font-weight:600;
 }
-
-.curso-badge:hover{
-    transform:translateY(-1px);
-    box-shadow:0 4px 12px rgba(37,99,235,.15);
-}
-
 
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid page-wrapper">
 
 <!-- HEADER -->
-<div class="mb-3">
-    <h3 class="page-title">Histórico de Notas</h3>
-    <p class="page-subtitle">Consulta completa de desempenho dos alunos</p>
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+
+    <div>
+        <h3 class="page-title">Histórico de Notas</h3>
+        <div class="page-subtitle">Consulta de desempenho dos alunos</div>
+    </div>
+
+</div>
+
+<!-- KPIs -->
+<div class="row mb-3">
+
+    <div class="col-md-4">
+        <div class="kpi-card">
+            <div class="kpi-number">{{ notas|length }}</div>
+            <small>Total de Registos</small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="kpi-card">
+            <div class="kpi-number">{{ notas|length }}</div>
+            <small>Notas Lançadas</small>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="kpi-card">
+            <div class="kpi-number">Sistema Ativo</div>
+            <small>Status</small>
+        </div>
+    </div>
+
 </div>
 
 <!-- FILTROS -->
@@ -182,7 +200,7 @@ TURMA + CURSO
 <form method="GET" class="row g-3">
 
     <div class="col-md-3">
-        <label class="form-label">Ano</label>
+        <label class="form-label">Ano Letivo</label>
         <select name="ano_letivo" class="form-select">
             <option value="">Todos</option>
             {% for ano in anos_letivos %}
@@ -200,14 +218,9 @@ TURMA + CURSO
             <option value="">Todas</option>
             {% for turma in turmas %}
                 <option value="{{ turma.id }}"
-                {% if turma_id == turma.id|stringformat:"s" %}selected{% endif %}>
-
+                    {% if turma_id == turma.id|stringformat:"s" %}selected{% endif %}>
                     {{ turma.classe }}ª {{ turma.identificador }}
-
-                    {% if turma.curso %}
-                        - {{ turma.curso.nome }}
-                    {% endif %}
-
+                    {% if turma.curso %} - {{ turma.curso.nome }}{% endif %}
                 </option>
             {% endfor %}
         </select>
@@ -237,11 +250,44 @@ TURMA + CURSO
     </div>
 
     <div class="col-12 d-flex gap-2 mt-2">
-        <button class="btn btn-primary btn-sm px-4">Filtrar</button>
-        <a href="{% url 'historico_notas' %}" class="btn btn-light btn-sm">Limpar</a>
+        <button class="btn btn-primary btn-clean">Filtrar</button>
+        <a href="{% url 'historico_notas' %}" class="btn btn-light btn-clean">Limpar</a>
     </div>
 
 </form>
+
+</div>
+
+<div class="card card-custom p-3 mb-3">
+
+    <div class="d-flex flex-wrap gap-2">
+
+        <a class="btn btn-success btn-sm"
+           href="{% url 'exportar_mini_pauta' %}?tipo=p1{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
+             P1 PDF
+        </a>
+
+        <a class="btn btn-primary btn-sm"
+           href="{% url 'exportar_mini_pauta' %}?tipo=p2{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
+            P2 PDF
+        </a>
+
+        <a class="btn btn-warning btn-sm"
+           href="{% url 'exportar_mini_pauta' %}?tipo=exame{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}">
+            Exame PDF
+        </a>
+
+        <a class="btn btn-danger btn-sm"
+           href="{% url 'exportar_mini_pauta' %}?tipo=recurso{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}">
+            Recurso PDF
+        </a>
+
+        <a class="btn btn-dark btn-sm"
+           href="{% url 'exportar_mini_pauta' %}?tipo=trimestre{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
+            Trimestre PDF
+        </a>
+
+    </div>
 
 </div>
 
@@ -280,25 +326,19 @@ TURMA + CURSO
 
     <td>
         <div class="turma-info">
-
             <div class="turma-principal">
                 {{ nota.aluno.turma.classe }}ª {{ nota.aluno.turma.identificador }}
             </div>
-
-            {% if nota.aluno.turma.curso %}
-            <div class="curso-badge">
-                {{ nota.aluno.turma.curso.nome }}
-            </div>
-            {% endif %}
-
         </div>
     </td>
 
     <!-- P1 -->
     <td>
-        {% if nota.p1 != None %}
-            <span class="badge-note {% if nota.p1 >= 10 %}note-high{% elif nota.p1 >= 7 %}note-mid{% else %}note-low{% endif %}"
-                  title="Primeira prova do trimestre">
+        {% if nota.p1 is not None %}
+            <span class="grade
+                {% if nota.p1 <= 9 %}grade-low
+                {% elif nota.p1 <= 15 %}grade-mid
+                {% else %}grade-high{% endif %}">
                 {{ nota.p1 }}
             </span>
         {% else %}-{% endif %}
@@ -306,9 +346,11 @@ TURMA + CURSO
 
     <!-- P2 -->
     <td>
-        {% if nota.p2 != None %}
-            <span class="badge-note {% if nota.p2 >= 10 %}note-high{% elif nota.p2 >= 7 %}note-mid{% else %}note-low{% endif %}"
-                  title="Segunda prova do trimestre">
+        {% if nota.p2 is not None %}
+            <span class="grade
+                {% if nota.p2 <= 9 %}grade-low
+                {% elif nota.p2 <= 15 %}grade-mid
+                {% else %}grade-high{% endif %}">
                 {{ nota.p2 }}
             </span>
         {% else %}-{% endif %}
@@ -316,9 +358,11 @@ TURMA + CURSO
 
     <!-- EXAME -->
     <td>
-        {% if nota.exame != None %}
-            <span class="badge-note {% if nota.exame >= 10 %}note-high{% elif nota.exame >= 7 %}note-mid{% else %}note-low{% endif %}"
-                  title="Exame final">
+        {% if nota.exame is not None %}
+            <span class="grade
+                {% if nota.exame <= 9 %}grade-low
+                {% elif nota.exame <= 15 %}grade-mid
+                {% else %}grade-high{% endif %}">
                 {{ nota.exame }}
             </span>
         {% else %}-{% endif %}
@@ -326,9 +370,11 @@ TURMA + CURSO
 
     <!-- RECURSO -->
     <td>
-        {% if nota.recurso != None %}
-            <span class="badge-note {% if nota.recurso >= 10 %}note-high{% elif nota.recurso >= 7 %}note-mid{% else %}note-low{% endif %}"
-                  title="Prova de recurso">
+        {% if nota.recurso is not None %}
+            <span class="grade
+                {% if nota.recurso <= 9 %}grade-low
+                {% elif nota.recurso <= 15 %}grade-mid
+                {% else %}grade-high{% endif %}">
                 {{ nota.recurso }}
             </span>
         {% else %}-{% endif %}
@@ -342,9 +388,9 @@ TURMA + CURSO
     <!-- SITUAÇÃO -->
     <td class="text-center">
         {% if nota.situacao == "APROVADO" %}
-            <span class="badge-aprovado">APROVADO</span>
+            <span class="badge-aprovado">Aprovado</span>
         {% else %}
-            <span class="badge-reprovado">REPROVADO</span>
+            <span class="badge-reprovado">Reprovado</span>
         {% endif %}
     </td>
 
@@ -353,8 +399,8 @@ TURMA + CURSO
 {% empty %}
 
 <tr>
-    <td colspan="10" class="text-center py-4 text-muted">
-        Nenhuma nota encontrada
+    <td colspan="9" class="text-center text-muted py-4">
+        Nenhum registo encontrado
     </td>
 </tr>
 

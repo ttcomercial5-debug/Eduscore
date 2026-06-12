@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from academic.models import  HistoricoMatricula, CalendarioEscolar, Entrada, FechamentoTrimestre, Trimestre, Escola, Despesa, Configuracao, PagamentoPlano, Plano, Curso, Aluno, Pagamento,  Turma, Nota, Professor, Disciplina, AnoLetivo, Horario, Mensalidade, Boletim, HistoricoAcademico, HorarioTurma, AulaHorario, ConfiguracaoFinanceira
 from finance.models import  MovimentoCaixa
 from django.db.models import Count, Avg, Sum
+from openpyxl.drawing import Drawing
 from users.models import User
 from decimal import Decimal
 from academic.forms import DisciplinaForm, AlunoForm, ConfiguracaoForm, CalendarioEscolarForm
@@ -1909,6 +1910,241 @@ def historico_notas(request):
         "historico_notas.html",
         context
     )
+
+
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.graphics import renderPDF
+from reportlab.graphics.shapes import Drawing
+
+from datetime import datetime
+
+
+
+@login_required
+def exportar_mini_pauta(request):
+
+    # =====================================================
+    # SEGURANÇA
+    # =====================================================
+    if getattr(request.user, "role", None) != "PROFESSOR":
+        return redirect("dashboard")
+
+    professor = request.user
+    escola = professor.escola
+
+    tipo = request.GET.get("tipo")
+    disciplina_id = request.GET.get("disciplina")
+    turma_id = request.GET.get("turma")
+    trimestre = request.GET.get("trimestre")
+
+    # =====================================================
+    # QUERY BASE
+    # =====================================================
+    notas = Nota.objects.filter(
+        escola=escola,
+        disciplina__professor=professor
+    ).select_related(
+        "aluno",
+        "aluno__turma",
+        "aluno__usuario",
+        "disciplina"
+    )
+
+    if disciplina_id:
+        notas = notas.filter(disciplina_id=disciplina_id)
+
+    if turma_id:
+        notas = notas.filter(aluno__turma_id=turma_id)
+
+    if trimestre:
+        notas = notas.filter(trimestre=trimestre)
+
+    notas = list(notas)
+
+    # =====================================================
+    # HELPERS
+    # =====================================================
+    def classe_exame(classe):
+        return classe in ["6", "9", "12"]
+
+    def tem_recurso(n):
+        return n.recurso is not None
+
+    # =====================================================
+    # FILTROS
+    # =====================================================
+    if tipo == "exame":
+        notas = [n for n in notas if classe_exame(n.aluno.turma.classe)]
+
+    if tipo == "recurso":
+        notas = [n for n in notas if tem_recurso(n)]
+
+    # =====================================================
+    # RESPONSE
+    # =====================================================
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="mini_pauta_{tipo}.pdf"'
+
+    doc = SimpleDocTemplate(
+        response,
+        rightMargin=20,
+        leftMargin=20,
+        topMargin=90,
+        bottomMargin=60
+    )
+
+    styles = getSampleStyleSheet()
+
+    title_style = ParagraphStyle(
+        "TITLE",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=16,
+        alignment=1,
+        spaceAfter=10
+    )
+
+    # =====================================================
+    # QR CODE
+    # =====================================================
+    qr_data = f"{escola.nome}-{tipo}-{datetime.now().isoformat()}"
+    qr = QrCodeWidget(qr_data)
+    qr_draw = Drawing(60, 60)
+    qr_draw.add(qr)
+
+    # =====================================================
+    # HEADER (NUNCA sobrescrever nome!)
+    # =====================================================
+    def draw_page(canvas, doc):
+
+        canvas.saveState()
+
+        canvas.setFont("Helvetica-Bold", 12)
+        canvas.drawCentredString(300, 800, escola.nome.upper())
+
+        canvas.setFont("Helvetica", 9)
+        canvas.drawCentredString(300, 785, "MINIPAUTA OFICIAL")
+
+        canvas.setFont("Helvetica", 10)
+        canvas.drawRightString(570, 800, datetime.now().strftime("%d/%m/%Y %H:%M"))
+
+        renderPDF.draw(qr_draw, canvas, 500, 740)
+
+        canvas.setFont("Helvetica", 10)
+        canvas.drawString(30, 40, "Professor: ____________________")
+        canvas.drawString(220, 40, "Diretor: ____________________")
+        canvas.drawRightString(570, 40, f"Página {doc.page}")
+
+        canvas.restoreState()
+
+    # =====================================================
+    # LÓGICA DE LINHAS (ISOLADA E SEGURA)
+    # =====================================================
+    def build_row(n):
+
+        aluno = n.aluno.usuario.get_full_name()
+        turma = str(n.aluno.turma)
+
+        if tipo == "p1":
+            return [aluno, turma, n.p1 or "-"]
+
+        if tipo == "p2":
+            return [aluno, turma, n.p2 or "-"]
+
+        if tipo == "exame":
+            return [aluno, turma, n.exame or "-"]
+
+        if tipo == "recurso":
+            return [aluno, turma, n.recurso or "-"]
+
+        # TRIMESTRE
+        if trimestre in ["1", "2"]:
+            return [
+                aluno,
+                turma,
+                n.p1 or "-",
+                n.p2 or "-",
+                n.media_final or "-"
+            ]
+
+        if classe_exame(n.aluno.turma.classe):
+            return [
+                aluno,
+                turma,
+                n.p1 or "-",
+                n.p2 or "-",
+                n.exame or "-",
+                n.media_final or "-"
+            ]
+
+        return [
+            aluno,
+            turma,
+            n.p1 or "-",
+            n.p2 or "-",
+            n.recurso or "-",
+            n.media_final or "-"
+        ]
+
+    # =====================================================
+    # HEADER DA TABELA (SEM CONFLITO DE NOMES)
+    # =====================================================
+    if tipo in ["p1", "p2", "exame", "recurso"]:
+        table_header = ["Aluno", "Turma", tipo.upper()]
+    else:
+        table_header = ["Aluno", "Turma", "P1", "P2", "Extra", "Média"]
+
+    table_data = [table_header]
+
+    for n in notas:
+        table_data.append(build_row(n))
+
+    # =====================================================
+    # TABELA
+    # =====================================================
+    table = Table(table_data, repeatRows=1)
+
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0b1220")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, 0), 10),
+
+        ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 1), (-1, -1), 9),
+
+        ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+    ]))
+
+    # =====================================================
+    # PDF FINAL
+    # =====================================================
+    elements = []
+    elements.append(Spacer(1, 10))
+    elements.append(Paragraph(f"MINIPAUTA - {tipo.upper()}", title_style))
+    elements.append(Spacer(1, 10))
+    elements.append(table)
+
+    doc.build(
+        elements,
+        onFirstPage=draw_page,
+        onLaterPages=draw_page
+    )
+
+    return response
 
 
 # ==========================================================

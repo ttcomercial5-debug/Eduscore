@@ -43,6 +43,7 @@ urlpatterns = [
     path("calendario/novo/", views.criar_evento, name="criar_evento"),
     path("cursos/editar/<int:curso_id>/", views.editar_curso, name="editar_curso"),
     path("cursos/eliminar/<int:curso_id>/", views.eliminar_curso, name="eliminar_curso"),
+    path("relatorios/exportar/", views.exportar_mini_pauta, name="exportar_mini_pauta"),
 
     # =============================
     # ALUNOS
