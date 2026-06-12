@@ -1973,9 +1973,13 @@ def minhas_turmas(request):
     )
 
 
-# ==========================================================
-# RELATÓRIOS PROFESSOR
-# ==========================================================
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.db.models import Avg
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 
 @login_required
 def relatorios_professor(request):
@@ -1984,7 +1988,6 @@ def relatorios_professor(request):
         return redirect("dashboard")
 
     professor = request.user
-
     escola = professor.escola
 
     ano_letivo = AnoLetivo.objects.filter(
@@ -2005,6 +2008,10 @@ def relatorios_professor(request):
 
     dados = []
 
+    total_alunos_geral = 0
+    total_aprovados_geral = 0
+    medias = []
+
     for turma in turmas:
 
         alunos = turma.alunos.all()
@@ -2014,43 +2021,76 @@ def relatorios_professor(request):
         )["media"] or 0
 
         total = alunos.count()
+        aprovados = alunos.filter(aprovado=True).count()
 
-        aprovados = alunos.filter(
-            aprovado=True
-        ).count()
+        percentagem = (aprovados / total) * 100 if total > 0 else 0
 
-        percentagem = (
-            (aprovados / total) * 100
-            if total > 0 else 0
-        )
+        total_alunos_geral += total
+        total_aprovados_geral += aprovados
+        medias.append(float(media))
 
         dados.append({
-
             "turma": turma,
-
             "media": round(float(media), 2),
-
             "percentagem": round(percentagem, 1),
-
             "total_alunos": total,
-
             "total_aprovados": aprovados
-
         })
 
+    media_global = round(sum(medias) / len(medias), 2) if medias else 0
+    percent_global = round((total_aprovados_geral / total_alunos_geral) * 100, 1) if total_alunos_geral else 0
+
+    # =========================
+    # PDF EXPORT
+    # =========================
+    if request.GET.get("export") == "pdf":
+
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = 'attachment; filename="relatorios_professor.pdf"'
+
+        doc = SimpleDocTemplate(response)
+        styles = getSampleStyleSheet()
+
+        elements = []
+
+        elements.append(Paragraph("Relatório do Professor", styles["Title"]))
+        elements.append(Spacer(1, 12))
+
+        data = [["Turma", "Alunos", "Média", "Aprovados", "%"]]
+
+        for item in dados:
+            data.append([
+                str(item["turma"]),
+                item["total_alunos"],
+                item["media"],
+                item["total_aprovados"],
+                f'{item["percentagem"]}%'
+            ])
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0,0), (-1,0), colors.grey),
+            ("TEXTCOLOR", (0,0), (-1,0), colors.white),
+            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
+            ("PADDING", (0,0), (-1,-1), 6),
+        ]))
+
+        elements.append(table)
+
+        doc.build(elements)
+
+        return response
+
     context = {
-
         "dados": dados,
-
         "ano_letivo": ano_letivo,
-
+        "media_global": media_global,
+        "percent_global": percent_global,
+        "total_turmas": len(dados),
+        "total_alunos_geral": total_alunos_geral,
     }
 
-    return render(
-        request,
-        "relatorios.html",
-        context
-    )
+    return render(request, "relatorios.html", context)
 
 
 # ==========================================================
