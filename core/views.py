@@ -6739,6 +6739,11 @@ def situacao_financeira(request):
 
 
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+@login_required
 def cursos(request):
 
     escola = request.user.escola
@@ -6749,8 +6754,27 @@ def cursos(request):
 
     if request.method == "POST":
 
-        nome = request.POST.get("nome")
-        descricao = request.POST.get("descricao")
+        nome = request.POST.get("nome", "").strip()
+        descricao = request.POST.get("descricao", "").strip()
+
+        if not nome:
+            messages.error(
+                request,
+                "Informe o nome do curso."
+            )
+            return redirect("cursos")
+
+        if Curso.objects.filter(
+            escola=escola,
+            nome__iexact=nome
+        ).exists():
+
+            messages.warning(
+                request,
+                "Já existe um curso com este nome."
+            )
+
+            return redirect("cursos")
 
         Curso.objects.create(
             escola=escola,
@@ -6758,13 +6782,115 @@ def cursos(request):
             descricao=descricao
         )
 
+        messages.success(
+            request,
+            "Curso criado com sucesso."
+        )
+
         return redirect("cursos")
 
     context = {
-        "cursos": cursos
+        "cursos": cursos,
+        "total_cursos": cursos.count(),
     }
 
-    return render(request, "cursos.html", context)
+    return render(
+        request,
+        "cursos.html",
+        context
+    )
+
+
+from django.contrib import messages
+from django.shortcuts import get_object_or_404
+
+@login_required
+def editar_curso(request, curso_id):
+
+    escola = request.user.escola
+
+    curso = get_object_or_404(
+        Curso,
+        id=curso_id,
+        escola=escola
+    )
+
+    if request.method == "POST":
+
+        nome = request.POST.get("nome", "").strip()
+        descricao = request.POST.get("descricao", "").strip()
+
+        if not nome:
+
+            messages.error(
+                request,
+                "Informe o nome do curso."
+            )
+
+            return redirect("cursos")
+
+        existe = Curso.objects.filter(
+            escola=escola,
+            nome__iexact=nome
+        ).exclude(
+            id=curso.id
+        ).exists()
+
+        if existe:
+
+            messages.warning(
+                request,
+                "Já existe outro curso com este nome."
+            )
+
+            return redirect("cursos")
+
+        curso.nome = nome
+        curso.descricao = descricao
+        curso.save()
+
+        messages.success(
+            request,
+            "Curso atualizado com sucesso."
+        )
+
+        return redirect("cursos")
+
+    return redirect("cursos")
+
+
+@login_required
+def eliminar_curso(request, curso_id):
+
+    escola = request.user.escola
+
+    curso = get_object_or_404(
+        Curso,
+        id=curso_id,
+        escola=escola
+    )
+
+    possui_turmas = Turma.objects.filter(
+        curso=curso
+    ).exists()
+
+    if possui_turmas:
+
+        messages.error(
+            request,
+            "Não é possível eliminar este curso porque existem turmas associadas."
+        )
+
+        return redirect("cursos")
+
+    curso.delete()
+
+    messages.success(
+        request,
+        "Curso eliminado com sucesso."
+    )
+
+    return redirect("cursos")
 
 
 # ==========================================================
