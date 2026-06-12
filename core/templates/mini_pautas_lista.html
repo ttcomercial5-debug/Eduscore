@@ -1,0 +1,215 @@
+{% extends "base_professor.html" %}
+{% block content %}
+
+<style>
+
+/* =========================
+PAGE WRAPPER
+========================= */
+
+.page-wrapper{
+    padding:20px;
+}
+
+/* =========================
+HEADER
+========================= */
+
+.page-header{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:22px;
+    border-radius:16px;
+    margin-bottom:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.page-title{
+    font-size:22px;
+    font-weight:800;
+    margin:0;
+}
+
+.page-subtitle{
+    font-size:13px;
+    opacity:.75;
+    margin-top:4px;
+}
+
+/* =========================
+CARDS
+========================= */
+
+.card-custom{
+    border:none;
+    border-radius:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.06);
+    margin-bottom:18px;
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+.btn-clean{
+    border-radius:10px;
+    font-weight:600;
+}
+
+/* =========================
+EMPTY STATE
+========================= */
+
+.empty-state{
+    text-align:center;
+    padding:40px;
+    color:#6b7280;
+}
+
+/* =========================
+BADGES
+========================= */
+
+.badge-mini{
+    background:#0f172a;
+    color:white;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:11px;
+}
+
+</style>
+
+<div class="container-fluid page-wrapper">
+
+<!-- HEADER -->
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+
+    <div>
+        <h3 class="page-title">Mini Pautas</h3>
+        <div class="page-subtitle">
+            Gestão por turma • disciplina • trimestre
+        </div>
+    </div>
+
+</div>
+
+<!-- =========================
+GERAR MINI PAUTA (TURMA-BASE)
+========================= -->
+<div class="card card-custom p-3">
+
+<form method="GET" action="{% url 'gerar_mini_pautas' %}" class="row g-3">
+
+    <div class="col-md-5">
+        <label class="form-label">Turma</label>
+        <select name="turma" class="form-select" required>
+            <option value="">Selecionar Turma</option>
+            {% for t in turmas %}
+                <option value="{{ t.id }}">{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-5">
+        <label class="form-label">Disciplina</label>
+        <select name="disciplina" class="form-select" required>
+            <option value="">Selecionar Disciplina</option>
+            {% for d in disciplinas %}
+                <option value="{{ d.id }}">{{ d.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Trimestre</label>
+        <select name="trimestre" class="form-select" required>
+            <option value="">Selecionar</option>
+            <option value="1">1º</option>
+            <option value="2">2º</option>
+            <option value="3">3º</option>
+        </select>
+    </div>
+
+    <div class="col-12 d-flex justify-content-end mt-2">
+        <button class="btn btn-success btn-clean px-4">
+            Gerar Mini Pauta
+        </button>
+    </div>
+
+</form>
+
+</div>
+
+<!-- =========================
+LISTA MINI PAUTAS (AGRUPADA POR TURMA)
+========================= -->
+
+<div class="card card-custom p-3">
+
+{% if mini_pautas %}
+
+<div class="row">
+
+    {% for mp in mini_pautas %}
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm mb-3">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+
+                    <h6 class="fw-bold mb-0">
+                        {{ mp.turma }}
+                    </h6>
+
+                    <span class="badge-mini">
+                        T{{ mp.trimestre }}
+                    </span>
+
+                </div>
+
+                <small class="text-muted">
+                    {{ mp.disciplina.nome }}
+                </small>
+
+                <hr>
+
+                <p class="mb-2">
+                    <strong>Ano:</strong> {{ mp.ano_letivo }}<br>
+                    <strong>Professor:</strong> {{ mp.professor.username }}
+                </p>
+
+                <a href="{% url 'mini_pauta_detalhe' mp.id %}"
+                   class="btn btn-primary btn-sm w-100 btn-clean">
+                    Abrir Grelha da Turma
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+    <h5>Nenhuma Mini Pauta encontrada</h5>
+    <p>
+        Cria uma mini pauta selecionando turma, disciplina e trimestre acima.
+    </p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}

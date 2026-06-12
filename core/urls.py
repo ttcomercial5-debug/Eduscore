@@ -43,7 +43,6 @@ urlpatterns = [
     path("calendario/novo/", views.criar_evento, name="criar_evento"),
     path("cursos/editar/<int:curso_id>/", views.editar_curso, name="editar_curso"),
     path("cursos/eliminar/<int:curso_id>/", views.eliminar_curso, name="eliminar_curso"),
-    path("relatorios/exportar/", views.exportar_mini_pauta, name="exportar_mini_pauta"),
 
     # =============================
     # ALUNOS
@@ -76,6 +75,16 @@ urlpatterns = [
     path("professor/relatorios/", views.relatorios_professor, name="relatorios_professor"),
     path('professor/calendario/', views.calendario_professor, name='calendario_professor'),
     path("historico-notas/", views.historico_notas, name="historico_notas"),
+
+    # =========================
+    # MINI PAUTAS
+    # =========================
+    path("professor/mini-pautas/", views.mini_pautas_lista, name="mini_pautas"),
+    path("professor/mini-pautas/<int:pk>/", views.mini_pauta_detalhe, name="mini_pauta_detalhe"),
+
+    # avaliações
+    path("professor/mini-pautas/gerar/", views.gerar_mini_pautas, name="gerar_mini_pautas"),
+    path("mini-pauta/<int:pk>/salvar/", views.salvar_mini_pauta_turma, name="salvar_mini_pauta_turma"),
 
     # =============================
     # TURMAS & DISCIPLINAS

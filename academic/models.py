@@ -2311,3 +2311,53 @@ class CalendarioEscolar(models.Model):
         return self.data_inicio == hoje
 
 
+class MiniPauta(models.Model):
+
+    TRIMESTRES = [
+        ("1", "1º Trimestre"),
+        ("2", "2º Trimestre"),
+        ("3", "3º Trimestre"),
+    ]
+
+    professor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    escola = models.ForeignKey(Escola, on_delete=models.CASCADE)
+
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+    ano_letivo = models.ForeignKey(AnoLetivo, on_delete=models.CASCADE)
+
+    trimestre = models.CharField(max_length=1, choices=TRIMESTRES)
+
+    # =========================
+    # AVALIAÇÕES FIXAS (GRADEBOOK)
+    # =========================
+    av1 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    av2 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    av3 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+
+    p1 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+
+    av4 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    av5 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    av6 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+
+    p2 = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+
+    exame = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    recurso = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+
+    observacao = models.TextField(blank=True, null=True)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("aluno", "disciplina", "ano_letivo", "trimestre")
+        ordering = ["aluno__numero_na_turma"]
+
+    def __str__(self):
+        return f"{self.aluno.nome_completo} - {self.disciplina.nome} - T{self.trimestre}"
+
+
+

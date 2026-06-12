@@ -258,38 +258,7 @@ BUTTONS
 
 </div>
 
-<div class="card card-custom p-3 mb-3">
 
-    <div class="d-flex flex-wrap gap-2">
-
-        <a class="btn btn-success btn-sm"
-           href="{% url 'exportar_mini_pauta' %}?tipo=p1{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
-             P1 PDF
-        </a>
-
-        <a class="btn btn-primary btn-sm"
-           href="{% url 'exportar_mini_pauta' %}?tipo=p2{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
-            P2 PDF
-        </a>
-
-        <a class="btn btn-warning btn-sm"
-           href="{% url 'exportar_mini_pauta' %}?tipo=exame{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}">
-            Exame PDF
-        </a>
-
-        <a class="btn btn-danger btn-sm"
-           href="{% url 'exportar_mini_pauta' %}?tipo=recurso{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}">
-            Recurso PDF
-        </a>
-
-        <a class="btn btn-dark btn-sm"
-           href="{% url 'exportar_mini_pauta' %}?tipo=trimestre{% if turma_id %}&turma={{turma_id}}{% endif %}{% if disciplina_id %}&disciplina={{disciplina_id}}{% endif %}{% if trimestre %}&trimestre={{trimestre}}{% endif %}">
-            Trimestre PDF
-        </a>
-
-    </div>
-
-</div>
 
 <!-- TABELA -->
 <div class="card card-custom p-3">

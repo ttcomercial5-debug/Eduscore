@@ -321,6 +321,16 @@
             <span>Minhas Turmas</span>
         </a>
     </li>
+
+    <!-- MINI PAUTAS -->
+    <li>
+        <a href="{% url 'mini_pautas' %}"
+           class="{% if request.resolver_match.url_name == 'mini_pautas' %}active{% endif %}">
+            <i class="bi bi-table"></i>
+            <span>Mini Pautas</span>
+        </a>
+    </li>
+
     <!-- LANÇAR NOTAS -->
     <li>
         <a href="{% url 'lancar_notas' %}"
@@ -451,6 +461,13 @@ id="menuAluno">
 <a href="{% url 'minhas_turmas' %}">
 <i class="bi bi-journal-check"></i>
 <span>Minhas Turmas</span>
+</a>
+</li>
+
+<li>
+<a href="{% url 'mini_pautas' %}">
+<i class="bi bi-table"></i>
+<span>Mini Pautas</span>
 </a>
 </li>
 

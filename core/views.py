@@ -1912,241 +1912,6 @@ def historico_notas(request):
     )
 
 
-from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-
-from reportlab.graphics.barcode.qr import QrCodeWidget
-from reportlab.graphics import renderPDF
-from reportlab.graphics.shapes import Drawing
-
-from datetime import datetime
-
-
-
-@login_required
-def exportar_mini_pauta(request):
-
-    # =====================================================
-    # SEGURANÇA
-    # =====================================================
-    if getattr(request.user, "role", None) != "PROFESSOR":
-        return redirect("dashboard")
-
-    professor = request.user
-    escola = professor.escola
-
-    tipo = request.GET.get("tipo")
-    disciplina_id = request.GET.get("disciplina")
-    turma_id = request.GET.get("turma")
-    trimestre = request.GET.get("trimestre")
-
-    # =====================================================
-    # QUERY BASE
-    # =====================================================
-    notas = Nota.objects.filter(
-        escola=escola,
-        disciplina__professor=professor
-    ).select_related(
-        "aluno",
-        "aluno__turma",
-        "aluno__usuario",
-        "disciplina"
-    )
-
-    if disciplina_id:
-        notas = notas.filter(disciplina_id=disciplina_id)
-
-    if turma_id:
-        notas = notas.filter(aluno__turma_id=turma_id)
-
-    if trimestre:
-        notas = notas.filter(trimestre=trimestre)
-
-    notas = list(notas)
-
-    # =====================================================
-    # HELPERS
-    # =====================================================
-    def classe_exame(classe):
-        return classe in ["6", "9", "12"]
-
-    def tem_recurso(n):
-        return n.recurso is not None
-
-    # =====================================================
-    # FILTROS
-    # =====================================================
-    if tipo == "exame":
-        notas = [n for n in notas if classe_exame(n.aluno.turma.classe)]
-
-    if tipo == "recurso":
-        notas = [n for n in notas if tem_recurso(n)]
-
-    # =====================================================
-    # RESPONSE
-    # =====================================================
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="mini_pauta_{tipo}.pdf"'
-
-    doc = SimpleDocTemplate(
-        response,
-        rightMargin=20,
-        leftMargin=20,
-        topMargin=90,
-        bottomMargin=60
-    )
-
-    styles = getSampleStyleSheet()
-
-    title_style = ParagraphStyle(
-        "TITLE",
-        parent=styles["Title"],
-        fontName="Helvetica-Bold",
-        fontSize=16,
-        alignment=1,
-        spaceAfter=10
-    )
-
-    # =====================================================
-    # QR CODE
-    # =====================================================
-    qr_data = f"{escola.nome}-{tipo}-{datetime.now().isoformat()}"
-    qr = QrCodeWidget(qr_data)
-    qr_draw = Drawing(60, 60)
-    qr_draw.add(qr)
-
-    # =====================================================
-    # HEADER (NUNCA sobrescrever nome!)
-    # =====================================================
-    def draw_page(canvas, doc):
-
-        canvas.saveState()
-
-        canvas.setFont("Helvetica-Bold", 12)
-        canvas.drawCentredString(300, 800, escola.nome.upper())
-
-        canvas.setFont("Helvetica", 9)
-        canvas.drawCentredString(300, 785, "MINIPAUTA OFICIAL")
-
-        canvas.setFont("Helvetica", 10)
-        canvas.drawRightString(570, 800, datetime.now().strftime("%d/%m/%Y %H:%M"))
-
-        renderPDF.draw(qr_draw, canvas, 500, 740)
-
-        canvas.setFont("Helvetica", 10)
-        canvas.drawString(30, 40, "Professor: ____________________")
-        canvas.drawString(220, 40, "Diretor: ____________________")
-        canvas.drawRightString(570, 40, f"Página {doc.page}")
-
-        canvas.restoreState()
-
-    # =====================================================
-    # LÓGICA DE LINHAS (ISOLADA E SEGURA)
-    # =====================================================
-    def build_row(n):
-
-        aluno = n.aluno.usuario.get_full_name()
-        turma = str(n.aluno.turma)
-
-        if tipo == "p1":
-            return [aluno, turma, n.p1 or "-"]
-
-        if tipo == "p2":
-            return [aluno, turma, n.p2 or "-"]
-
-        if tipo == "exame":
-            return [aluno, turma, n.exame or "-"]
-
-        if tipo == "recurso":
-            return [aluno, turma, n.recurso or "-"]
-
-        # TRIMESTRE
-        if trimestre in ["1", "2"]:
-            return [
-                aluno,
-                turma,
-                n.p1 or "-",
-                n.p2 or "-",
-                n.media_final or "-"
-            ]
-
-        if classe_exame(n.aluno.turma.classe):
-            return [
-                aluno,
-                turma,
-                n.p1 or "-",
-                n.p2 or "-",
-                n.exame or "-",
-                n.media_final or "-"
-            ]
-
-        return [
-            aluno,
-            turma,
-            n.p1 or "-",
-            n.p2 or "-",
-            n.recurso or "-",
-            n.media_final or "-"
-        ]
-
-    # =====================================================
-    # HEADER DA TABELA (SEM CONFLITO DE NOMES)
-    # =====================================================
-    if tipo in ["p1", "p2", "exame", "recurso"]:
-        table_header = ["Aluno", "Turma", tipo.upper()]
-    else:
-        table_header = ["Aluno", "Turma", "P1", "P2", "Extra", "Média"]
-
-    table_data = [table_header]
-
-    for n in notas:
-        table_data.append(build_row(n))
-
-    # =====================================================
-    # TABELA
-    # =====================================================
-    table = Table(table_data, repeatRows=1)
-
-    table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0b1220")),
-        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-        ("FONTSIZE", (0, 0), (-1, 0), 10),
-
-        ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
-        ("FONTSIZE", (0, 1), (-1, -1), 9),
-
-        ("GRID", (0, 0), (-1, -1), 0.3, colors.grey),
-        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-
-        ("TOPPADDING", (0, 0), (-1, -1), 6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-    ]))
-
-    # =====================================================
-    # PDF FINAL
-    # =====================================================
-    elements = []
-    elements.append(Spacer(1, 10))
-    elements.append(Paragraph(f"MINIPAUTA - {tipo.upper()}", title_style))
-    elements.append(Spacer(1, 10))
-    elements.append(table)
-
-    doc.build(
-        elements,
-        onFirstPage=draw_page,
-        onLaterPages=draw_page
-    )
-
-    return response
-
-
 # ==========================================================
 # MINHAS TURMAS
 # ==========================================================
@@ -8794,3 +8559,202 @@ def editar_turma(request, pk):
             "cursos": cursos,
         }
     )
+
+
+
+
+
+
+# =========================================================
+# LISTA MINI PAUTAS
+# =========================================================
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
+
+from academic.models import MiniPauta
+
+
+@login_required
+def mini_pautas_lista(request):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    professor = request.user
+    escola = professor.escola
+
+    ano_letivo = AnoLetivo.objects.filter(
+        escola=escola,
+        ativo=True
+    ).first()
+
+    turma_id = request.GET.get("turma")
+    disciplina_id = request.GET.get("disciplina")
+    trimestre = request.GET.get("trimestre")
+
+    turmas = Turma.objects.filter(
+        disciplinas__professor=professor,
+        escola=escola,
+        ano_letivo=ano_letivo
+    ).distinct()
+
+    disciplinas = Disciplina.objects.filter(
+        professor=professor,
+        escola=escola
+    ).distinct()
+
+    mini_pautas = MiniPauta.objects.filter(
+        professor=professor,
+        escola=escola,
+        ano_letivo=ano_letivo
+    ).select_related("turma", "disciplina", "aluno")
+
+    if turma_id:
+        mini_pautas = mini_pautas.filter(turma_id=turma_id)
+
+    if disciplina_id:
+        mini_pautas = mini_pautas.filter(disciplina_id=disciplina_id)
+
+    if trimestre:
+        mini_pautas = mini_pautas.filter(trimestre=trimestre)
+
+    context = {
+        "mini_pautas": mini_pautas,
+        "turmas": turmas,
+        "disciplinas": disciplinas,
+        "turma_id": turma_id,
+        "disciplina_id": disciplina_id,
+        "trimestre": trimestre,
+        "ano_letivo": ano_letivo
+    }
+
+    return render(request, "mini_pautas_lista.html", context)
+
+
+# =========================================================
+# DETALHE MINI PAUTA
+# =========================================================
+@login_required
+def mini_pauta_detalhe(request, pk):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    mini_pauta = get_object_or_404(
+        MiniPauta,
+        pk=pk,
+        professor=request.user,
+        escola=request.user.escola
+    )
+
+    return render(request, "mini_pauta_detalhe.html", {
+        "mini_pauta": mini_pauta
+    })
+
+
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+from academic.models import Turma, Disciplina, Aluno, AnoLetivo
+from academic.models import MiniPauta
+
+
+@login_required
+def gerar_mini_pautas(request):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    professor = request.user
+    escola = professor.escola
+
+    turma_id = request.GET.get("turma")
+    disciplina_id = request.GET.get("disciplina")
+    trimestre = request.GET.get("trimestre")
+
+    if not (turma_id and disciplina_id and trimestre):
+        return redirect("mini_pautas")
+
+    turma = get_object_or_404(Turma, id=turma_id, escola=escola)
+    disciplina = get_object_or_404(Disciplina, id=disciplina_id, escola=escola)
+
+    ano_letivo = AnoLetivo.objects.filter(escola=escola, ativo=True).first()
+
+    alunos = Aluno.objects.filter(
+        turma=turma,
+        escola=escola,
+        ativo=True
+    )
+
+    for aluno in alunos:
+        MiniPauta.objects.get_or_create(
+            professor=professor,
+            escola=escola,
+            aluno=aluno,
+            turma=turma,
+            disciplina=disciplina,
+            ano_letivo=ano_letivo,
+            trimestre=trimestre
+        )
+
+    return redirect("mini_pautas")
+
+
+@login_required
+def salvar_mini_pauta_turma(request, pk):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    mini_pauta_ref = get_object_or_404(
+        MiniPauta,
+        pk=pk,
+        professor=request.user,
+        escola=request.user.escola
+    )
+
+    if request.method == "POST":
+
+        alunos = mini_pauta_ref.turma.alunos.filter(ativo=True)
+
+        for aluno in alunos:
+
+            def g(field):
+                return request.POST.get(f"{field}_{aluno.id}")
+
+            obj, _ = MiniPauta.objects.get_or_create(
+                professor=request.user,
+                escola=request.user.escola,
+                aluno=aluno,
+                turma=mini_pauta_ref.turma,
+                disciplina=mini_pauta_ref.disciplina,
+                ano_letivo=mini_pauta_ref.ano_letivo,
+                trimestre=mini_pauta_ref.trimestre
+            )
+
+            obj.av1 = g("av1") or None
+            obj.av2 = g("av2") or None
+            obj.av3 = g("av3") or None
+
+            obj.p1 = g("p1") or None
+
+            obj.av4 = g("av4") or None
+            obj.av5 = g("av5") or None
+            obj.av6 = g("av6") or None
+
+            obj.p2 = g("p2") or None
+
+            if obj.trimestre == "3":
+                obj.exame = g("exame") or None
+                obj.recurso = g("recurso") or None
+
+            obj.save()
+
+        return redirect("mini_pauta_detalhe", pk=mini_pauta_ref.id)
+
+    return redirect("mini_pauta_detalhe", pk=mini_pauta_ref.id)
