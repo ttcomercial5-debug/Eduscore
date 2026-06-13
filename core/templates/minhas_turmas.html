@@ -1,38 +1,316 @@
 {% extends "base_professor.html" %}
 {% block content %}
 
-<div class="container mt-4">
+<style>
 
-    <h3 class="fw-bold mb-4">Minhas Turmas</h3>
+:root{
+    --primary:#1e3a8a;
+    --primary-light:#3b82f6;
+    --dark:#0f172a;
+    --gray:#64748b;
+    --bg:#f8fafc;
+}
 
-    {% if turmas %}
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Classe</th>
-                            <th>Turma</th>
-                            <th>Ano Letivo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for turma in turmas %}
-                        <tr>
-                            <td>{{ turma.classe }}ª</td>
-                            <td>{{ turma.identificador }}</td>
-                            <td>{{ turma.ano_letivo }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+.page-header{
+    background:linear-gradient(135deg,var(--dark),var(--primary));
+    color:#fff;
+    padding:28px;
+    border-radius:20px;
+    margin-bottom:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.page-title{
+    font-size:30px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.page-subtitle{
+    opacity:.85;
+    font-size:14px;
+}
+
+.summary-card{
+    background:#fff;
+    border:none;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.summary-number{
+    font-size:34px;
+    font-weight:800;
+    color:var(--primary);
+}
+
+.summary-label{
+    color:var(--gray);
+    font-size:14px;
+}
+
+.turma-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    transition:.25s;
+    height:100%;
+    background:white;
+}
+
+.turma-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.turma-banner{
+    background:linear-gradient(
+        135deg,
+        var(--primary-light),
+        var(--primary)
+    );
+    color:white;
+    padding:22px;
+}
+
+.turma-banner small{
+    opacity:.9;
+    font-size:13px;
+}
+
+.turma-banner h3{
+    margin:5px 0 0;
+    font-size:28px;
+    font-weight:800;
+}
+
+.turma-content{
+    padding:20px;
+}
+
+.info-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.info-item:last-child{
+    border-bottom:none;
+}
+
+.info-label{
+    color:var(--gray);
+    font-size:14px;
+}
+
+.info-value{
+    font-weight:700;
+    color:var(--dark);
+}
+
+.course-badge{
+    background:#dbeafe;
+    color:#1d4ed8;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.btn-turma{
+    border-radius:12px;
+    font-weight:700;
+    padding:10px;
+}
+
+.empty-state{
+    background:white;
+    border-radius:20px;
+    padding:70px 20px;
+    text-align:center;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+.empty-state h4{
+    font-weight:800;
+}
+
+</style>
+
+<div class="container-fluid py-4">
+
+
+<!-- HEADER -->
+
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+
+    <div>
+
+        <div class="page-title">
+            Minhas Turmas
+        </div>
+
+        <div class="page-subtitle">
+            Gestão das turmas atribuídas ao professor
+        </div>
+
+    </div>
+
+    <div class="text-end">
+
+        <small>Ano Letivo</small>
+
+        <h5 class="mb-0 mt-1">
+            {{ ano_letivo }}
+        </h5>
+
+    </div>
+
+</div>
+
+<!-- RESUMO -->
+
+<div class="row mb-3">
+
+    <div class="col-md-4">
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+                {{ total_turmas }}
             </div>
+
+            <div class="summary-label">
+                Turmas Atribuídas
+            </div>
+
         </div>
-    {% else %}
-        <div class="alert alert-info">
-            Nenhuma turma encontrada.
+
+    </div>
+
+</div>
+
+<!-- LISTA -->
+
+{% if turmas %}
+
+<div class="row">
+
+    {% for turma in turmas %}
+
+    <div class="col-lg-4 col-md-6 mb-4">
+
+        <div class="card turma-card">
+
+            <div class="turma-banner">
+
+                <small>
+                    {{ turma.get_classe_display }}
+                </small>
+
+                <h3>
+                    {{ turma.identificador }}
+                </h3>
+
+            </div>
+
+            <div class="turma-content">
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Classe
+                    </span>
+
+                    <span class="info-value">
+                        {{ turma.get_classe_display }}
+                    </span>
+
+                </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Turno
+                    </span>
+
+                    <span class="info-value">
+                        {{ turma.get_turno_display }}
+                    </span>
+
+                </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Ano Letivo
+                    </span>
+
+                    <span class="info-value">
+                        {{ turma.ano_letivo }}
+                    </span>
+
+                </div>
+
+                {% if turma.classe == "10" or turma.classe == "11" or turma.classe == "12" or turma.classe == "13" %}
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Curso
+                    </span>
+
+                    <span class="course-badge">
+                        {{ turma.curso|default:"Não definido" }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+                <div class="d-grid mt-4">
+
+
+
+                    <a href="{% url 'alunos_da_turma' turma.id %}"
+                       class="btn btn-primary btn-turma">
+                        <i class="fas fa-users me-2"></i>
+                        Ver Alunos
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
-    {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+    <h4>
+        Nenhuma turma encontrada
+    </h4>
+
+    <p class="text-muted mb-0">
+        Não existem turmas atribuídas ao professor neste ano letivo.
+    </p>
+
+</div>
+
+{% endif %}
+
 
 </div>
 

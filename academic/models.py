@@ -2353,7 +2353,13 @@ class MiniPauta(models.Model):
     atualizado_em = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ("aluno", "disciplina", "ano_letivo", "trimestre")
+        unique_together = (
+            "aluno",
+            "turma",
+            "disciplina",
+            "ano_letivo",
+            "trimestre",
+        )
         ordering = ["aluno__numero_na_turma"]
 
     def __str__(self):

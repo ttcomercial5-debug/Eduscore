@@ -1919,11 +1919,11 @@ def historico_notas(request):
 @login_required
 def minhas_turmas(request):
 
-    if getattr(request.user, "role", None) != "PROFESSOR":
+
+    if request.user.role != "PROFESSOR":
         return redirect("dashboard")
 
     professor = request.user
-
     escola = professor.escola
 
     ano_letivo = AnoLetivo.objects.filter(
@@ -1931,40 +1931,35 @@ def minhas_turmas(request):
         ativo=True
     ).first()
 
-    disciplinas = (
-        Disciplina.objects
+    if not ano_letivo:
+        return render(
+            request,
+            "minhas_turmas.html",
+            {
+                "turmas": [],
+                "total_turmas": 0,
+                "ano_letivo": None,
+            }
+        )
+
+    turmas = (
+        Turma.objects
         .filter(
-            professor=professor,
             escola=escola,
-            turma__ano_letivo=ano_letivo
+            ano_letivo=ano_letivo,
+            disciplinas__professor=professor
         )
-        .select_related("turma")
+        .distinct()
         .order_by(
-            "turma__classe",
-            "turma__identificador"
+            "classe",
+            "identificador"
         )
-    )
-
-    turmas_dict = {}
-
-    for disciplina in disciplinas:
-
-        turmas_dict[
-            disciplina.turma.id
-        ] = disciplina.turma
-
-    turmas = list(
-        turmas_dict.values()
     )
 
     context = {
-
         "turmas": turmas,
-
-        "total_turmas": len(turmas),
-
+        "total_turmas": turmas.count(),
         "ano_letivo": ano_letivo,
-
     }
 
     return render(
@@ -1972,6 +1967,8 @@ def minhas_turmas(request):
         "minhas_turmas.html",
         context
     )
+
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -8695,12 +8692,16 @@ def mini_pauta_detalhe(request, pk):
         turma=mini_pauta_ref.turma,
         disciplina=mini_pauta_ref.disciplina,
         ano_letivo=mini_pauta_ref.ano_letivo,
-        trimestre=int(mini_pauta_ref.trimestre)
+        trimestre=mini_pauta_ref.trimestre
     ).select_related("aluno")
 
     mini_pautas_existentes = {
         mp.aluno_id: mp for mp in mini_pautas
     }
+
+
+
+    print("TOTAL:", len(mini_pautas_existentes))
 
     context = {
         "mini_pauta_ref": mini_pauta_ref,
@@ -8823,3 +8824,69 @@ def salvar_mini_pauta_turma(request, pk):
         obj.save()
 
     return redirect("mini_pauta_detalhe", pk=pk)
+
+
+
+
+from django.db.models import Count, Q
+
+@login_required
+def alunos_da_turma(request, turma_id):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    turma = get_object_or_404(
+        Turma,
+        id=turma_id,
+        escola=request.user.escola
+    )
+
+    alunos = (
+        Aluno.objects
+        .filter(
+            turma=turma,
+            escola=request.user.escola,
+            ativo=True
+        )
+        .select_related(
+            "usuario",
+            "curso"
+        )
+        .order_by("numero_na_turma")
+    )
+
+    context = {
+
+        "turma": turma,
+
+        "alunos": alunos,
+
+        "total_alunos": alunos.count(),
+
+        "total_masculinos":
+            alunos.filter(
+                sexo="Masculino"
+            ).count(),
+
+        "total_femininos":
+            alunos.filter(
+                sexo="Feminino"
+            ).count(),
+
+        "total_aprovados":
+            alunos.filter(
+                aprovado=True
+            ).count(),
+
+        "total_reprovados":
+            alunos.filter(
+                aprovado=False
+            ).count(),
+    }
+
+    return render(
+        request,
+        "alunos_da_turma.html",
+        context
+    )
