@@ -244,16 +244,27 @@ FILTROS
 
     <form method="GET" class="row g-3" id="filterForm">
 
+
+
         <div class="col-md-6">
             <label class="form-label">Disciplina</label>
+
             <select name="disciplina" class="form-select" onchange="this.form.submit()">
                 <option value="">Selecionar</option>
+
                 {% for d in disciplinas %}
                     <option value="{{ d.id }}"
                         {% if disciplina and disciplina.id == d.id %}selected{% endif %}>
-                        {{ d.nome }} - {{ d.turma.classe }}ª {{ d.turma.identificador }}
+
+                        {{ d.nome }}
+                        ·
+                        {{ d.turma.classe }}ª {{ d.turma.identificador }}
+                        ·
+                        {{ d.turma.curso.nome }}
+
                     </option>
                 {% endfor %}
+
             </select>
         </div>
 
