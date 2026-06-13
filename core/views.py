@@ -2373,6 +2373,26 @@ def lancar_notas(request):
             messages.success(request, "P2 fechado.")
             return redirect(request.get_full_path())
 
+            # =================================================
+            # FECHAR EXAME
+            # =================================================
+        elif acao == "fechar_exame":
+
+            FechamentoNota.objects.update_or_create(
+                disciplina=disciplina,
+                trimestre=trimestre,
+                ano_letivo=ano_letivo,
+                etapa="EXAME",
+                defaults={
+                    "fechado": True,
+                    "fechado_por": request.user,
+                    "data_fechamento": timezone.now()
+                }
+            )
+
+            messages.success(request, "Exame fechado.")
+            return redirect(request.get_full_path())
+
 
         # =================================================
         # FECHAR RECURSO
@@ -8573,7 +8593,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 
-from academic.models import MiniPauta
+from academic.models import (
+    MiniPauta,
+    Turma,
+    Disciplina,
+    Aluno,
+    AnoLetivo
+)
 
 
 @login_required
@@ -8590,20 +8616,27 @@ def mini_pautas_lista(request):
         ativo=True
     ).first()
 
+    if not ano_letivo:
+        return redirect("dashboard")
+
     turma_id = request.GET.get("turma")
     disciplina_id = request.GET.get("disciplina")
     trimestre = request.GET.get("trimestre")
 
+    # ================================
+    # FILTRO CORRIGIDO (ANO LETIVO)
+    # ================================
     turmas = Turma.objects.filter(
-        disciplinas__professor=professor,
         escola=escola,
-        ano_letivo=ano_letivo
+        ano_letivo=ano_letivo,
+        disciplinas__professor=professor
     ).distinct()
 
     disciplinas = Disciplina.objects.filter(
         professor=professor,
-        escola=escola
-    ).distinct()
+        escola=escola,
+        turma__ano_letivo=ano_letivo
+    ).select_related("turma").distinct()
 
     mini_pautas = MiniPauta.objects.filter(
         professor=professor,
@@ -8618,7 +8651,7 @@ def mini_pautas_lista(request):
         mini_pautas = mini_pautas.filter(disciplina_id=disciplina_id)
 
     if trimestre:
-        mini_pautas = mini_pautas.filter(trimestre=trimestre)
+        mini_pautas = mini_pautas.filter(trimestre=int(trimestre))
 
     context = {
         "mini_pautas": mini_pautas,
@@ -8636,33 +8669,51 @@ def mini_pautas_lista(request):
 # =========================================================
 # DETALHE MINI PAUTA
 # =========================================================
+
 @login_required
 def mini_pauta_detalhe(request, pk):
 
     if request.user.role != "PROFESSOR":
         return redirect("dashboard")
 
-    mini_pauta = get_object_or_404(
+    mini_pauta_ref = get_object_or_404(
         MiniPauta,
         pk=pk,
         professor=request.user,
         escola=request.user.escola
     )
 
-    return render(request, "mini_pauta_detalhe.html", {
-        "mini_pauta": mini_pauta
-    })
+    alunos = Aluno.objects.filter(
+        turma=mini_pauta_ref.turma,
+        escola=request.user.escola,
+        ativo=True
+    ).order_by("numero_na_turma")
+
+    mini_pautas = MiniPauta.objects.filter(
+        professor=request.user,
+        escola=request.user.escola,
+        turma=mini_pauta_ref.turma,
+        disciplina=mini_pauta_ref.disciplina,
+        ano_letivo=mini_pauta_ref.ano_letivo,
+        trimestre=int(mini_pauta_ref.trimestre)
+    ).select_related("aluno")
+
+    mini_pautas_existentes = {
+        mp.aluno_id: mp for mp in mini_pautas
+    }
+
+    context = {
+        "mini_pauta_ref": mini_pauta_ref,
+        "alunos": alunos,
+        "mini_pautas_existentes": mini_pautas_existentes,
+    }
+
+    return render(request, "mini_pauta_detalhe.html", context)
 
 
-
-
-
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-
-from academic.models import Turma, Disciplina, Aluno, AnoLetivo
-from academic.models import MiniPauta
-
+# =========================================================
+# GERAR MINI PAUTAS
+# =========================================================
 
 @login_required
 def gerar_mini_pautas(request):
@@ -8680,10 +8731,18 @@ def gerar_mini_pautas(request):
     if not (turma_id and disciplina_id and trimestre):
         return redirect("mini_pautas")
 
-    turma = get_object_or_404(Turma, id=turma_id, escola=escola)
-    disciplina = get_object_or_404(Disciplina, id=disciplina_id, escola=escola)
+    ano_letivo = AnoLetivo.objects.filter(
+        escola=escola,
+        ativo=True
+    ).first()
 
-    ano_letivo = AnoLetivo.objects.filter(escola=escola, ativo=True).first()
+    turma = get_object_or_404(Turma, id=turma_id, escola=escola)
+    disciplina = get_object_or_404(
+        Disciplina,
+        id=disciplina_id,
+        escola=escola,
+        turma__ano_letivo=ano_letivo
+    )
 
     alunos = Aluno.objects.filter(
         turma=turma,
@@ -8692,6 +8751,7 @@ def gerar_mini_pautas(request):
     )
 
     for aluno in alunos:
+
         MiniPauta.objects.get_or_create(
             professor=professor,
             escola=escola,
@@ -8699,11 +8759,15 @@ def gerar_mini_pautas(request):
             turma=turma,
             disciplina=disciplina,
             ano_letivo=ano_letivo,
-            trimestre=trimestre
+            trimestre=int(trimestre)
         )
 
     return redirect("mini_pautas")
 
+
+# =========================================================
+# SALVAR MINI PAUTA
+# =========================================================
 
 @login_required
 def salvar_mini_pauta_turma(request, pk):
@@ -8718,43 +8782,44 @@ def salvar_mini_pauta_turma(request, pk):
         escola=request.user.escola
     )
 
-    if request.method == "POST":
+    if request.method != "POST":
+        return redirect("mini_pauta_detalhe", pk=pk)
 
-        alunos = mini_pauta_ref.turma.alunos.filter(ativo=True)
+    alunos = Aluno.objects.filter(
+        turma=mini_pauta_ref.turma,
+        escola=request.user.escola,
+        ativo=True
+    ).order_by("numero_na_turma")
 
-        for aluno in alunos:
+    def g(aluno, campo):
+        val = request.POST.get(f"{campo}_{aluno.id}")
+        return val if val not in ["", None] else None
 
-            def g(field):
-                return request.POST.get(f"{field}_{aluno.id}")
+    for aluno in alunos:
 
-            obj, _ = MiniPauta.objects.get_or_create(
-                professor=request.user,
-                escola=request.user.escola,
-                aluno=aluno,
-                turma=mini_pauta_ref.turma,
-                disciplina=mini_pauta_ref.disciplina,
-                ano_letivo=mini_pauta_ref.ano_letivo,
-                trimestre=mini_pauta_ref.trimestre
-            )
+        obj, _ = MiniPauta.objects.get_or_create(
+            professor=mini_pauta_ref.professor,
+            escola=mini_pauta_ref.escola,
+            aluno=aluno,
+            turma=mini_pauta_ref.turma,
+            disciplina=mini_pauta_ref.disciplina,
+            ano_letivo=mini_pauta_ref.ano_letivo,
+            trimestre=int(mini_pauta_ref.trimestre)
+        )
 
-            obj.av1 = g("av1") or None
-            obj.av2 = g("av2") or None
-            obj.av3 = g("av3") or None
+        obj.av1 = g(aluno, "av1")
+        obj.av2 = g(aluno, "av2")
+        obj.av3 = g(aluno, "av3")
+        obj.p1 = g(aluno, "p1")
 
-            obj.p1 = g("p1") or None
+        obj.av4 = g(aluno, "av4")
+        obj.av5 = g(aluno, "av5")
+        obj.av6 = g(aluno, "av6")
+        obj.p2 = g(aluno, "p2")
 
-            obj.av4 = g("av4") or None
-            obj.av5 = g("av5") or None
-            obj.av6 = g("av6") or None
+        obj.exame = g(aluno, "exame")
+        obj.recurso = g(aluno, "recurso")
 
-            obj.p2 = g("p2") or None
+        obj.save()
 
-            if obj.trimestre == "3":
-                obj.exame = g("exame") or None
-                obj.recurso = g("recurso") or None
-
-            obj.save()
-
-        return redirect("mini_pauta_detalhe", pk=mini_pauta_ref.id)
-
-    return redirect("mini_pauta_detalhe", pk=mini_pauta_ref.id)
+    return redirect("mini_pauta_detalhe", pk=pk)

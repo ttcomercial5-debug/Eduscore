@@ -545,6 +545,15 @@ Fechar P2
 </button>
 {% endif %}
 
+{% if mostrar_exame and not exame_fechado %}
+<button type="submit"
+        name="acao"
+        value="fechar_exame"
+        class="btn btn-warning btn-action">
+    Fechar Exame
+</button>
+{% endif %}
+
 {% if mostrar_recurso and not recurso_fechado %}
 <button type="submit"
         name="acao"

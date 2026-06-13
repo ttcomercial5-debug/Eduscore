@@ -1,21 +1,71 @@
 {% extends "base_professor.html" %}
+{% load custom_filters %}
 {% block content %}
 
 <style>
 
+/* ================= UI BASE ================= */
+
 .page-header{
-    background: linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
-    padding:18px;
-    border-radius:14px;
-    margin-bottom:15px;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#fff;
+    padding:24px;
+    border-radius:16px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.10);
 }
 
-.table-gradebook th{
+.page-header h4{margin:0;font-weight:700;}
+.page-header small{opacity:.9;}
+
+.stats-bar{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.stat-card{
+    background:#fff;
+    border-radius:12px;
+    padding:14px 18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    min-width:180px;
+}
+
+.stat-title{
+    font-size:12px;
+    color:#6b7280;
+}
+
+.stat-value{
+    font-size:20px;
+    font-weight:800;
+    color:#0f172a;
+}
+
+/* ================= TABLE ================= */
+
+.gradebook-card{
+    background:#fff;
+    border-radius:16px;
+    padding:15px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    overflow-x:auto;
+}
+
+.table-gradebook{
+    min-width:1100px;
+}
+
+.table-gradebook thead th{
     background:#0f172a;
     color:white;
-    font-size:12px;
     text-align:center;
+    font-size:12px;
+    position:sticky;
+    top:0;
+    z-index:10;
 }
 
 .table-gradebook td{
@@ -23,121 +73,253 @@
     vertical-align:middle;
 }
 
+.table-gradebook tbody tr:hover{
+    background:#f8fafc;
+}
+
+.student-col{
+    text-align:left !important;
+    min-width:260px;
+}
+
+.badge-numero{
+    background:#0f172a;
+    color:white;
+    padding:4px 8px;
+    border-radius:999px;
+    font-size:11px;
+    margin-right:6px;
+}
+
+/* ================= INPUT ================= */
+
 .input-grade{
-    width:60px;
+    width:70px;
     text-align:center;
-    border-radius:6px;
-    border:1px solid #ddd;
-    font-size:12px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    padding:5px;
+    font-size:13px;
+}
+
+.input-grade:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* ================= FOOTER ================= */
+
+.footer-actions{
+    margin-top:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
 }
 
 .btn-save{
     background:#16a34a;
-    color:white;
     border:none;
-    padding:6px 14px;
-    border-radius:8px;
-    font-weight:600;
+    color:white;
+    font-weight:700;
+    padding:10px 22px;
+    border-radius:10px;
 }
 
 .btn-save:hover{
     background:#15803d;
 }
 
-.badge-student{
-    background:#1e293b;
-    color:white;
-    padding:3px 7px;
-    border-radius:999px;
-    font-size:11px;
+.info-box{
+    font-size:14px;
+    color:#475569;
 }
 
 </style>
 
 <div class="container-fluid">
 
+<!-- HEADER -->
 <div class="page-header">
-    <h5>{{ mini_pauta.turma }} - {{ mini_pauta.disciplina.nome }}</h5>
-    <small>Trimestre {{ mini_pauta.trimestre }}</small>
+    <h4>
+        Mini Pauta - {{ mini_pauta_ref.disciplina.nome }}
+    </h4>
+    <small>
+        {{ mini_pauta_ref.turma }} •
+        {{ mini_pauta_ref.ano_letivo }} •
+        {{ mini_pauta_ref.get_trimestre_display }}
+    </small>
 </div>
 
-<form method="POST" action="{% url 'salvar_mini_pauta_turma' mini_pauta.id %}">
-{% csrf_token %}
+<!-- STATS -->
+<div class="stats-bar">
 
-<div class="table-responsive">
+    <div class="stat-card">
+        <div class="stat-title">Total de Alunos</div>
+        <div class="stat-value">{{ alunos|length }}</div>
+    </div>
 
-<table class="table table-bordered table-gradebook">
+    <div class="stat-card">
+        <div class="stat-title">Disciplina</div>
+        <div class="stat-value" style="font-size:14px;">
+            {{ mini_pauta_ref.disciplina.nome }}
+        </div>
+    </div>
 
-<thead>
-<tr>
-    <th>#</th>
-    <th>Aluno</th>
-
-    <th>AV.1</th>
-    <th>AV.2</th>
-    <th>AV.3</th>
-
-    <th>P1</th>
-
-    <th>AV.4</th>
-    <th>AV.5</th>
-    <th>AV.6</th>
-
-    <th>P2</th>
-
-    {% if mini_pauta.trimestre == "3" %}
-        <th>Exame</th>
-        <th>Recurso</th>
-    {% endif %}
-
-</tr>
-</thead>
-
-<tbody>
-
-{% for aluno in mini_pauta.turma.alunos.all %}
-
-<tr>
-
-    <td>{{ forloop.counter }}</td>
-
-    <td class="text-start">
-        <span class="badge-student">{{ aluno.numero_na_turma }}</span>
-        {{ aluno.nome_completo }}
-    </td>
-
-    <td><input class="input-grade" name="av1_{{ aluno.id }}"></td>
-    <td><input class="input-grade" name="av2_{{ aluno.id }}"></td>
-    <td><input class="input-grade" name="av3_{{ aluno.id }}"></td>
-
-    <td><input class="input-grade" name="p1_{{ aluno.id }}"></td>
-
-    <td><input class="input-grade" name="av4_{{ aluno.id }}"></td>
-    <td><input class="input-grade" name="av5_{{ aluno.id }}"></td>
-    <td><input class="input-grade" name="av6_{{ aluno.id }}"></td>
-
-    <td><input class="input-grade" name="p2_{{ aluno.id }}"></td>
-
-    {% if mini_pauta.trimestre == "3" %}
-        <td><input class="input-grade" name="exame_{{ aluno.id }}"></td>
-        <td><input class="input-grade" name="recurso_{{ aluno.id }}"></td>
-    {% endif %}
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
+    <div class="stat-card">
+        <div class="stat-title">Turma</div>
+        <div class="stat-value" style="font-size:14px;">
+            {{ mini_pauta_ref.turma }}
+        </div>
+    </div>
 
 </div>
 
-<br>
+<form method="POST"
+      action="{% url 'salvar_mini_pauta_turma' mini_pauta_ref.id %}">
 
-<button class="btn-save">
-    Salvar Turma
-</button>
+    {% csrf_token %}
+
+    <div class="gradebook-card">
+
+        <table class="table table-bordered table-gradebook">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Aluno</th>
+
+                <th>AV1</th>
+                <th>AV2</th>
+                <th>AV3</th>
+                <th>P1</th>
+
+                <th>AV4</th>
+                <th>AV5</th>
+                <th>AV6</th>
+                <th>P2</th>
+
+                {% if mini_pauta_ref.trimestre|add:"0" == 3 %}
+                    <th>EXAME</th>
+                    <th>RECURSO</th>
+                {% endif %}
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for aluno in alunos %}
+            {% with mp=mini_pautas_existentes|get_item:aluno.id %}
+
+            <tr>
+
+                <td>{{ forloop.counter }}</td>
+
+                <td class="student-col">
+                    <span class="badge-numero">
+                        {{ aluno.numero_na_turma }}
+                    </span>
+                    {{ aluno.nome_completo }}
+                </td>
+
+                <!-- AV1 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av1_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av1|default:'' }}{% endif %}">
+                </td>
+
+                <!-- AV2 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av2_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av2|default:'' }}{% endif %}">
+                </td>
+
+                <!-- AV3 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av3_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av3|default:'' }}{% endif %}">
+                </td>
+
+                <!-- P1 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="p1_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.p1|default:'' }}{% endif %}">
+                </td>
+
+                <!-- AV4 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av4_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av4|default:'' }}{% endif %}">
+                </td>
+
+                <!-- AV5 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av5_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av5|default:'' }}{% endif %}">
+                </td>
+
+                <!-- AV6 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="av6_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.av6|default:'' }}{% endif %}">
+                </td>
+
+                <!-- P2 -->
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="p2_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.p2|default:'' }}{% endif %}">
+                </td>
+
+                <!-- EXAME / RECURSO -->
+                {% if mini_pauta_ref.trimestre|add:"0" == 3 %}
+
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="exame_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.exame|default:'' }}{% endif %}">
+                </td>
+
+                <td>
+                    <input class="input-grade" type="number" step="0.01"
+                           name="recurso_{{ aluno.id }}"
+                           value="{% if mp %}{{ mp.recurso|default:'' }}{% endif %}">
+                </td>
+
+                {% endif %}
+
+            </tr>
+
+            {% endwith %}
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- FOOTER -->
+        <div class="footer-actions">
+
+            <div class="info-box">
+                Todas as alterações serão guardadas automaticamente por aluno.
+            </div>
+
+            <button type="submit" class="btn-save">
+                Salvar Mini Pauta
+            </button>
+
+        </div>
+
+    </div>
 
 </form>
 
