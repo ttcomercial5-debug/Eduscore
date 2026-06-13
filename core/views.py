@@ -8751,22 +8751,19 @@ def mini_pauta_detalhe(request, pk):
         ativo=True
     ).order_by("numero_na_turma")
 
-    mini_pautas = MiniPauta.objects.filter(
+    mini_pautas_qs = MiniPauta.objects.filter(
         professor=request.user,
         escola=request.user.escola,
         turma=mini_pauta_ref.turma,
         disciplina=mini_pauta_ref.disciplina,
         ano_letivo=mini_pauta_ref.ano_letivo,
         trimestre=mini_pauta_ref.trimestre
-    ).select_related("aluno")
+    )
 
+    # 🔥 MUITO MAIS SEGURO QUE DICT MANUAL
     mini_pautas_existentes = {
-        mp.aluno_id: mp for mp in mini_pautas
+        mp.aluno_id: mp for mp in mini_pautas_qs
     }
-
-
-
-    print("TOTAL:", len(mini_pautas_existentes))
 
     context = {
         "mini_pauta_ref": mini_pauta_ref,

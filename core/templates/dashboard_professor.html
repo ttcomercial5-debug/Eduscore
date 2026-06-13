@@ -235,10 +235,10 @@ tr:hover{
             {% endif %}
         >
 
-            {{ turma.classe }}ª
-            {{ turma.identificador }}
-            -
-            {{ turma.ano_letivo }}
+
+            {{ turma.classe }}ª {{ turma.identificador }}
+            - {{ turma.curso.nome }}
+            - {{ turma.ano_letivo }}
 
         </option>
 

@@ -201,7 +201,7 @@
                 <th>AV6</th>
                 <th>P2</th>
 
-                {% if mini_pauta_ref.trimestre|add:"0" == 3 %}
+                {% if mini_pauta_ref.trimestre == "3" %}
                     <th>EXAME</th>
                     <th>RECURSO</th>
                 {% endif %}
@@ -211,6 +211,7 @@
             <tbody>
 
             {% for aluno in alunos %}
+
             {% with mp=mini_pautas_existentes|get_item:aluno.id %}
 
             <tr>
@@ -228,71 +229,72 @@
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av1_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av1|default:'' }}{% endif %}">
+                           value="{{ mp.av1|default_if_none:'' }}">
                 </td>
 
                 <!-- AV2 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av2_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av2|default:'' }}{% endif %}">
+                           value="{{ mp.av2|default_if_none:'' }}">
                 </td>
 
                 <!-- AV3 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av3_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av3|default:'' }}{% endif %}">
+                           value="{{ mp.av3|default_if_none:'' }}">
                 </td>
 
                 <!-- P1 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="p1_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.p1|default:'' }}{% endif %}">
+                           value="{{ mp.p1|default_if_none:'' }}">
                 </td>
+
 
                 <!-- AV4 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av4_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av4|default:'' }}{% endif %}">
+                           value="{{ mp.av4|default_if_none:'' }}">
                 </td>
 
                 <!-- AV5 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av5_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av5|default:'' }}{% endif %}">
+                           value="{{ mp.av5|default_if_none:'' }}">
                 </td>
 
                 <!-- AV6 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="av6_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.av6|default:'' }}{% endif %}">
+                           value="{{ mp.av6|default_if_none:'' }}">
                 </td>
 
                 <!-- P2 -->
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="p2_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.p2|default:'' }}{% endif %}">
+                           value="{{ mp.p2|default_if_none:'' }}">
                 </td>
 
                 <!-- EXAME / RECURSO -->
-                {% if mini_pauta_ref.trimestre|add:"0" == 3 %}
+                {% if mini_pauta_ref.trimestre == "3" %}
 
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="exame_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.exame|default:'' }}{% endif %}">
+                           value="{{ mp.exame|default_if_none:'' }}">
                 </td>
 
                 <td>
                     <input class="input-grade" type="number" step="0.01"
                            name="recurso_{{ aluno.id }}"
-                           value="{% if mp %}{{ mp.recurso|default:'' }}{% endif %}">
+                           value="{{ mp.recurso|default_if_none:'' }}">
                 </td>
 
                 {% endif %}
@@ -300,6 +302,7 @@
             </tr>
 
             {% endwith %}
+
             {% endfor %}
 
             </tbody>
