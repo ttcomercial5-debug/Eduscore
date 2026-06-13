@@ -1970,6 +1970,71 @@ def minhas_turmas(request):
 
 
 
+from django.db.models import Count, Q
+
+@login_required
+def alunos_da_turma(request, turma_id):
+
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    turma = get_object_or_404(
+        Turma,
+        id=turma_id,
+        escola=request.user.escola
+    )
+
+    alunos = (
+        Aluno.objects
+        .filter(
+            turma=turma,
+            escola=request.user.escola,
+            ativo=True
+        )
+        .select_related(
+            "usuario",
+            "curso"
+        )
+        .order_by("numero_na_turma")
+    )
+
+    context = {
+
+        "turma": turma,
+
+        "alunos": alunos,
+
+        "total_alunos": alunos.count(),
+
+        "total_masculinos":
+            alunos.filter(
+                sexo="Masculino"
+            ).count(),
+
+        "total_femininos":
+            alunos.filter(
+                sexo="Feminino"
+            ).count(),
+
+        "total_aprovados":
+            alunos.filter(
+                aprovado=True
+            ).count(),
+
+        "total_reprovados":
+            alunos.filter(
+                aprovado=False
+            ).count(),
+    }
+
+    return render(
+        request,
+        "alunos_da_turma.html",
+        context
+    )
+
+
+
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -8827,66 +8892,3 @@ def salvar_mini_pauta_turma(request, pk):
 
 
 
-
-from django.db.models import Count, Q
-
-@login_required
-def alunos_da_turma(request, turma_id):
-
-    if request.user.role != "PROFESSOR":
-        return redirect("dashboard")
-
-    turma = get_object_or_404(
-        Turma,
-        id=turma_id,
-        escola=request.user.escola
-    )
-
-    alunos = (
-        Aluno.objects
-        .filter(
-            turma=turma,
-            escola=request.user.escola,
-            ativo=True
-        )
-        .select_related(
-            "usuario",
-            "curso"
-        )
-        .order_by("numero_na_turma")
-    )
-
-    context = {
-
-        "turma": turma,
-
-        "alunos": alunos,
-
-        "total_alunos": alunos.count(),
-
-        "total_masculinos":
-            alunos.filter(
-                sexo="Masculino"
-            ).count(),
-
-        "total_femininos":
-            alunos.filter(
-                sexo="Feminino"
-            ).count(),
-
-        "total_aprovados":
-            alunos.filter(
-                aprovado=True
-            ).count(),
-
-        "total_reprovados":
-            alunos.filter(
-                aprovado=False
-            ).count(),
-    }
-
-    return render(
-        request,
-        "alunos_da_turma.html",
-        context
-    )
