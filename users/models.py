@@ -81,6 +81,17 @@ class User(AbstractUser):
 
     criado_em = models.DateTimeField(auto_now_add=True)
 
+    # Segurança Login
+
+    tentativas_login = models.PositiveIntegerField(
+        default=0
+    )
+
+    bloqueado_ate = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
     # Manager personalizado
     objects = UserManager()
 

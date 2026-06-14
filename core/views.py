@@ -67,60 +67,187 @@ def get_escola(request):
 def login_view(request):
     error = None
 
-    # Se já estiver logado, redireciona pelo papel
+    # Se já estiver logado
     if request.user.is_authenticated:
         return redirect_user_by_role(request.user)
 
-    if request.method == 'POST':
-        codigo_escola = request.POST.get('codigo_escola')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    if request.method == "POST":
 
-        # Verificar campos obrigatórios
+        codigo_escola = request.POST.get("codigo_escola")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        # Campos obrigatórios
         if not username or not password:
             error = "Preencha todos os campos."
-            return render(request, 'login.html', {'error': error})
+            return render(request, "login.html", {"error": error})
 
-        # Autenticar usuário
-        user = authenticate(request, username=username, password=password)
+        # Verificar se o utilizador existe
+        try:
+            utilizador = User.objects.get(username=username)
+
+            # Conta bloqueada?
+            if (
+                utilizador.bloqueado_ate
+                and utilizador.bloqueado_ate > timezone.now()
+            ):
+                minutos = max(
+                    1,
+                    int(
+                        (
+                            utilizador.bloqueado_ate
+                            - timezone.now()
+                        ).total_seconds() / 60
+                    )
+                )
+
+                error = (
+                    f"Conta bloqueada. "
+                    f"Tente novamente em {minutos} minuto(s)."
+                )
+
+                return render(
+                    request,
+                    "login.html",
+                    {"error": error}
+                )
+
+        except User.DoesNotExist:
+            utilizador = None
+
+        # Autenticar
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        # Senha errada
         if user is None:
-            error = "Usuário ou senha inválidos."
-            return render(request, 'login.html', {'error': error})
 
-        # SUPERADMIN pula todas as checagens de escola
+            if utilizador:
+
+                utilizador.tentativas_login += 1
+
+                if utilizador.tentativas_login >= 3:
+
+                    utilizador.bloqueado_ate = (
+                        timezone.now()
+                        + timedelta(minutes=15)
+                    )
+
+                    utilizador.save()
+
+                    error = (
+                        "Conta bloqueada por 15 minutos devido "
+                        "a várias tentativas inválidas."
+                    )
+
+                else:
+
+                    restantes = (
+                        3 - utilizador.tentativas_login
+                    )
+
+                    utilizador.save()
+
+                    error = (
+                        f"Credenciais inválidas. "
+                        f"Restam {restantes} tentativa(s)."
+                    )
+
+            else:
+                error = "Usuário ou senha inválidos."
+
+            return render(
+                request,
+                "login.html",
+                {"error": error}
+            )
+
+        # Resetar contador após login correto
+        user.tentativas_login = 0
+        user.bloqueado_ate = None
+        user.save()
+
+        # SUPERADMIN
         if user.is_superuser:
+
             login(request, user)
+
             return redirect_user_by_role(user)
 
-        # Para todos os outros perfis, código da escola é obrigatório
+        # Código escola obrigatório
         if not codigo_escola:
+
             error = "Preencha o Código da Escola."
-            return render(request, 'login.html', {'error': error})
 
-        # Buscar escola pelo código
+            return render(
+                request,
+                "login.html",
+                {"error": error}
+            )
+
+        # Buscar escola
         try:
-            escola = Escola.objects.get(codigo=codigo_escola)
+
+            escola = Escola.objects.get(
+                codigo=codigo_escola
+            )
+
         except Escola.DoesNotExist:
+
             error = "Código da escola inválido."
-            return render(request, 'login.html', {'error': error})
 
-        # Verificar se usuário pertence a essa escola
-        if not user.escola or user.escola.codigo != codigo_escola:
-            error = "Usuário não pertence a esta escola."
-            return render(request, 'login.html', {'error': error})
+            return render(
+                request,
+                "login.html",
+                {"error": error}
+            )
 
-        # Verificar se usuário está ativo
+        # Verificar escola do utilizador
+        if (
+            not user.escola
+            or str(user.escola.codigo)
+            != str(codigo_escola)
+        ):
+
+            error = (
+                "Usuário não pertence a esta escola."
+            )
+
+            return render(
+                request,
+                "login.html",
+                {"error": error}
+            )
+
+        # Utilizador ativo
         if not user.ativo:
-            error = "Usuário bloqueado."
-            return render(request, 'login.html', {'error': error})
 
-        # Login normal para perfis não-superadmin
+            error = "Usuário bloqueado."
+
+            return render(
+                request,
+                "login.html",
+                {"error": error}
+            )
+
+        # Login
         login(request, user)
-        request.session['escola_id'] = user.escola.id
+
+        request.session["escola_id"] = (
+            user.escola.id
+        )
+
         return redirect_user_by_role(user)
 
-    # Renderiza página de login
-    return render(request, 'login.html', {'error': error})
+    return render(
+        request,
+        "login.html",
+        {"error": error}
+    )
+
 
 
 
@@ -2157,7 +2284,7 @@ def relatorios_professor(request):
 
 
 # ==========================================================
-# LANÇAR NOTAS (VERSÃO FINAL LIMPA)
+# LANÇAR NOTAS
 # ==========================================================
 
 from decimal import Decimal
