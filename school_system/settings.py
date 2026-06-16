@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'axes',
+
 
     # Terceiros
     'rest_framework',
@@ -43,11 +43,7 @@ INSTALLED_APPS = [
     'academic',
     'finance',
 
-    # Apps do Django
-    "django_otp",
-    "django_otp.plugins.otp_totp",
-    "django_otp.plugins.otp_static",  # códigos de recuperação
-    "two_factor",
+
 ]
 
 # =====================================================
@@ -113,8 +109,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.AdminRestritoMiddleware',
-    'axes.middleware.AxesMiddleware',
-    'django_otp.middleware.OTPMiddleware',
 
     # Futuro middleware para bloqueio de escola
     # 'core.middleware.EscolaAtivaMiddleware',
