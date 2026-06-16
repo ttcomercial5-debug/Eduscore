@@ -1,0 +1,215 @@
+{% extends "base_professor.html" %}
+
+{% block content %}
+
+<style>
+.page-header{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    color:#fff;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:24px;
+}
+
+.info-card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    padding:18px;
+    margin-bottom:20px;
+}
+
+.table-card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    overflow:hidden;
+}
+
+.table thead th{
+    vertical-align:middle;
+}
+
+.presenca-check{
+    transform:scale(1.3);
+    cursor:pointer;
+}
+
+.footer-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    padding-top:20px;
+}
+
+.weekend-alert{
+    background:#fff3cd;
+    color:#856404;
+    border:1px solid #ffeeba;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:20px;
+}
+</style>
+
+<div class="container-fluid py-4">
+
+    <div class="page-header">
+        <h2 class="fw-bold mb-2">
+            Marcação de Frequência
+        </h2>
+        <div>
+            Registe a assiduidade dos alunos de forma rápida e segura.
+        </div>
+    </div>
+
+    {% if hoje.weekday == 5 or hoje.weekday == 6 %}
+    <div class="weekend-alert">
+        <strong>Atenção:</strong>
+        Hoje é sábado ou domingo. Normalmente não existem aulas nestes dias.
+    </div>
+    {% endif %}
+
+    <div class="info-card">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <strong>Turma</strong><br>
+                {{ turma.get_classe_display }} {{ turma.identificador }}
+            </div>
+
+            <div class="col-md-4">
+                <strong>Disciplina</strong><br>
+                {{ disciplina.nome }}
+            </div>
+
+            <div class="col-md-4">
+                <strong>Data</strong><br>
+                {{ hoje|date:"d/m/Y" }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th style="width:80px;">Nº</th>
+                            <th>Aluno</th>
+                            <th class="text-center" style="width:160px;">
+                                Presente
+                            </th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for aluno in alunos %}
+
+                        <tr>
+
+                            <td>
+                                {{ aluno.numero_na_turma }}
+                            </td>
+
+                            <td>
+                                <strong>{{ aluno.nome_completo }}</strong>
+                            </td>
+
+                            <td class="text-center">
+
+                                <input
+                                    class="form-check-input presenca-check"
+                                    type="checkbox"
+                                    name="presente_{{ aluno.id }}"
+                                    checked
+                                >
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="3" class="text-center py-5">
+                                Nenhum aluno encontrado.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="footer-actions">
+
+            <a href="{% url 'alunos_da_turma' turma.id %}"
+               class="btn btn-outline-secondary">
+                ← Voltar
+            </a>
+
+            <div>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary me-2"
+                    onclick="marcarTodos()">
+                    Marcar Todos
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-warning me-2"
+                    onclick="desmarcarTodos()">
+                    Desmarcar Todos
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+                    Guardar Frequências
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+function marcarTodos() {
+    document.querySelectorAll(".presenca-check").forEach(function(el) {
+        el.checked = true;
+    });
+}
+
+function desmarcarTodos() {
+    document.querySelectorAll(".presenca-check").forEach(function(el) {
+        el.checked = false;
+    });
+}
+</script>
+
+{% endblock %}

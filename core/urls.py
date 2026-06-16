@@ -24,6 +24,7 @@ urlpatterns = [
     path("financeiro/alterar-senha/", views.alterar_senha_financeiro, name="alterar_senha_financeiro"),
     path("professor/alterar-senha/", views.alterar_senha_professor, name="alterar_senha_professor"),
     path("aluno/alterar-senha/", views.alterar_senha_aluno, name="alterar_senha_aluno"),
+    path("professor/turma/<int:turma_id>/disciplina/<int:disciplina_id>/frequencia/", views.marcar_frequencia, name="marcar_frequencia",),
 
 
 

@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-dev-key-change-in-production')
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
@@ -23,6 +23,7 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split('
 # =====================================================
 
 INSTALLED_APPS = [
+
     # Django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'axes',
 
     # Terceiros
     'rest_framework',
@@ -40,13 +42,19 @@ INSTALLED_APPS = [
     'users',
     'academic',
     'finance',
+
+    # Apps do Django
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "django_otp.plugins.otp_static",  # códigos de recuperação
+    "two_factor",
 ]
 
 # =====================================================
 # BANCO DE DADOS
 # =====================================================
 
-# 🔥 IMPORTANTE:
+# IMPORTANTE:
 # Para produção SaaS use PostgreSQL
 # Exemplo já preparado abaixo
 
@@ -105,6 +113,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.AdminRestritoMiddleware',
+    'axes.middleware.AxesMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 
     # Futuro middleware para bloqueio de escola
     # 'core.middleware.EscolaAtivaMiddleware',

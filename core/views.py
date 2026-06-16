@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from academic.models import  HistoricoMatricula, CalendarioEscolar, Entrada, FechamentoTrimestre, Trimestre, Escola, Despesa, Configuracao, PagamentoPlano, Plano, Curso, Aluno, Pagamento,  Turma, Nota, Professor, Disciplina, AnoLetivo, Horario, Mensalidade, Boletim, HistoricoAcademico, HorarioTurma, AulaHorario, ConfiguracaoFinanceira
+from academic.models import  HistoricoMatricula, CalendarioEscolar, Entrada, FechamentoTrimestre, Trimestre, Escola, Despesa, Configuracao, PagamentoPlano, Plano, Curso, Aluno, Pagamento,  Turma, Nota, Professor, Disciplina, AnoLetivo, Horario, Mensalidade, Boletim, Frequencia, HistoricoAcademico, HorarioTurma, AulaHorario, ConfiguracaoFinanceira
 from finance.models import  MovimentoCaixa
 from django.db.models import Count, Avg, Sum
 from openpyxl.drawing import Drawing
@@ -38,7 +38,7 @@ User = get_user_model()
 
 
 # =====================================================
-# FUNÇÃO AUXILIAR - OBTER ESCOLA ATIVA
+# TER A ESCOLA ATIVA
 # =====================================================
 
 def get_escola(request):
@@ -409,7 +409,7 @@ def dashboard(request):
     )['total'] or Decimal("0.00")
 
     # =================================================
-    # DASHBOARD INTELIGENTE
+    # DASHBOARD AVANÇADO
     # =================================================
 
     aprovados = 0
@@ -601,7 +601,7 @@ def dashboard(request):
         if pior_disciplina and pior_disciplina["media"] < 10:
 
             alertas.append(
-                f"⚠️ Disciplina crítica: {pior_disciplina['nome']}."
+                f" Disciplina crítica: {pior_disciplina['nome']}."
             )
 
         from django.utils import timezone
@@ -638,7 +638,7 @@ def dashboard(request):
 
                 if professor:
                     alertas.append(
-                        f"⚠️ Professor {professor.get_full_name() or professor.username} não lançou notas da prova '{prova.titulo}'."
+                        f" Professor {professor.get_full_name() or professor.username} não lançou notas da prova '{prova.titulo}'."
                     )
 
     # =================================================
@@ -692,7 +692,8 @@ def dashboard(request):
 
         "mostrar_botao_promocao": mostrar_botao_promocao,
 
-        # DASHBOARD INTELIGENTE
+        # DASHBOARD AVANÇADO
+
         "aprovados": aprovados,
         "reprovados": reprovados,
         "percentagem_aprovacao": percentagem_aprovacao,
@@ -1095,7 +1096,7 @@ def lista_escolas(request):
 # =========================================
 @login_required
 def selecionar_escola(request, escola_id):
-    # Restrição de acesso
+
     if request.user.role != 'SUPERADMIN':
         return redirect('dashboard')
 
@@ -1105,7 +1106,7 @@ def selecionar_escola(request, escola_id):
     # Salva o ID da escola na sessão do usuário
     request.session['escola_id'] = escola.id
 
-    # Redireciona para o dashboard já com a escola selecionada
+
     return redirect('dashboard')
 
 
@@ -1116,18 +1117,18 @@ def selecionar_escola(request, escola_id):
 @transaction.atomic
 def adicionar_professor(request):
 
-    #  Apenas Diretor
+
     if getattr(request.user, "role", None) != "DIRETOR":
         return redirect("dashboard")
 
-    #  Verificar escola
+
     if not request.user.escola:
         messages.error(request, "Usuário não está vinculado a nenhuma escola.")
         return redirect("dashboard")
 
     escola = request.user.escola
 
-    # Buscar turmas da escola
+
     turmas = Turma.objects.filter(
         escola=escola
     ).order_by("classe", "identificador")
@@ -1141,7 +1142,7 @@ def adicionar_professor(request):
         classes = request.POST.get("classes", "").strip()
         turmas_ids = request.POST.getlist("turmas")
 
-        #  Validação
+
         if not all([username, password, disciplina, classes]):
             messages.error(request, "Preencha todos os campos obrigatórios.")
             return redirect("adicionar_professor")
@@ -1150,12 +1151,12 @@ def adicionar_professor(request):
             messages.error(request, "Selecione pelo menos uma turma.")
             return redirect("adicionar_professor")
 
-        #  Username duplicado
+
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username já existe.")
             return redirect("adicionar_professor")
 
-        #  Criar usuário
+
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -1164,7 +1165,7 @@ def adicionar_professor(request):
             escola=escola
         )
 
-        #  Criar professor
+
         professor = Professor.objects.create(
             usuario=user,
             escola=escola,
@@ -1172,7 +1173,7 @@ def adicionar_professor(request):
             classes=classes
         )
 
-        #  Associar turmas
+
         professor.turmas.set(turmas_ids)
 
         messages.success(request, "Professor criado com sucesso!")
@@ -1183,6 +1184,9 @@ def adicionar_professor(request):
     })
 
 
+# ==========================================
+    # ADICIONAR TURMAS
+# ==========================================
 @login_required
 def adicionar_turma(request):
 
@@ -2097,7 +2101,8 @@ def minhas_turmas(request):
 
 
 
-from django.db.models import Count, Q
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
 @login_required
 def alunos_da_turma(request, turma_id):
@@ -2108,58 +2113,184 @@ def alunos_da_turma(request, turma_id):
     turma = get_object_or_404(
         Turma,
         id=turma_id,
-        escola=request.user.escola
+        escola=request.user.escola,
     )
 
     alunos = (
-        Aluno.objects
-        .filter(
+        Aluno.objects.filter(
             turma=turma,
             escola=request.user.escola,
-            ativo=True
+            ativo=True,
         )
         .select_related(
             "usuario",
-            "curso"
+            "curso",
         )
         .order_by("numero_na_turma")
     )
 
+    # Todas as disciplinas deste professor nesta turma
+    disciplinas = (
+        Disciplina.objects.filter(
+            turma=turma,
+            professor=request.user,
+            escola=request.user.escola,
+        )
+        .order_by("nome")
+    )
+
     context = {
-
         "turma": turma,
-
         "alunos": alunos,
-
+        "disciplinas": disciplinas,
         "total_alunos": alunos.count(),
-
-        "total_masculinos":
-            alunos.filter(
-                sexo="Masculino"
-            ).count(),
-
-        "total_femininos":
-            alunos.filter(
-                sexo="Feminino"
-            ).count(),
-
-        "total_aprovados":
-            alunos.filter(
-                aprovado=True
-            ).count(),
-
-        "total_reprovados":
-            alunos.filter(
-                aprovado=False
-            ).count(),
+        "total_masculinos": alunos.filter(
+            sexo="Masculino"
+        ).count(),
+        "total_femininos": alunos.filter(
+            sexo="Feminino"
+        ).count(),
+        "total_aprovados": alunos.filter(
+            aprovado=True
+        ).count(),
+        "total_reprovados": alunos.filter(
+            aprovado=False
+        ).count(),
     }
 
     return render(
         request,
         "alunos_da_turma.html",
-        context
+        context,
     )
 
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+
+@login_required
+def marcar_frequencia(request, turma_id, disciplina_id):
+
+    # =====================================================
+    # PERMISSÃO
+    # =====================================================
+    if request.user.role != "PROFESSOR":
+        return redirect("dashboard")
+
+    professor = request.user
+    escola = professor.escola
+
+    # =====================================================
+    # TURMA
+    # =====================================================
+    turma = get_object_or_404(
+        Turma,
+        id=turma_id,
+        escola=escola,
+    )
+
+    # =====================================================
+    # DISCIPLINA
+    # =====================================================
+    disciplina = get_object_or_404(
+        Disciplina,
+        id=disciplina_id,
+        turma=turma,
+        professor=professor,
+        escola=escola,
+    )
+
+    # =====================================================
+    # DATA ATUAL
+    # =====================================================
+    hoje = timezone.localdate()
+
+    # Não permitir marcação ao sábado (5) e domingo (6)
+    if hoje.weekday() in [5, 6]:
+        messages.warning(
+            request,
+            "Não é permitido lançar frequências aos sábados e domingos."
+        )
+        return redirect(
+            "alunos_da_turma",
+            turma_id=turma.id,
+        )
+
+    # =====================================================
+    # ALUNOS
+    # =====================================================
+    alunos = (
+        Aluno.objects.filter(
+            turma=turma,
+            escola=escola,
+            ativo=True,
+        )
+        .order_by("numero_na_turma")
+    )
+
+    # =====================================================
+    # GUARDAR
+    # =====================================================
+    if request.method == "POST":
+
+        for aluno in alunos:
+
+            presente = (
+                request.POST.get(
+                    f"presente_{aluno.id}"
+                ) == "on"
+            )
+
+            Frequencia.objects.update_or_create(
+                aluno=aluno,
+                disciplina=disciplina,
+                data=hoje,
+                defaults={
+                    "presente": presente,
+                    "escola": escola,
+                },
+            )
+
+        messages.success(
+            request,
+            "Frequências registadas com sucesso."
+        )
+
+        return redirect(
+            "marcar_frequencia",
+            turma_id=turma.id,
+            disciplina_id=disciplina.id,
+        )
+
+    # =====================================================
+    # FREQUÊNCIAS JÁ REGISTADAS
+    # =====================================================
+    frequencias = {
+        f.aluno_id: f.presente
+        for f in Frequencia.objects.filter(
+            disciplina=disciplina,
+            data=hoje,
+        )
+    }
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+    context = {
+        "turma": turma,
+        "disciplina": disciplina,
+        "alunos": alunos,
+        "hoje": hoje,
+        "frequencias": frequencias,
+    }
+
+    return render(
+        request,
+        "marcar_frequencia.html",
+        context,
+    )
 
 
 
@@ -5827,59 +5958,180 @@ def promover_ano_letivo(request, ano_id):
     # PDF
     # =========================
 
-    response = HttpResponse(content_type='application/pdf')
+    from reportlab.lib import colors
+    from reportlab.lib.enums import TA_CENTER
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.units import inch
+    from reportlab.platypus import (
+        SimpleDocTemplate,
+        Paragraph,
+        Spacer,
+        Table,
+        TableStyle,
+    )
+    from django.http import HttpResponse
+    from django.utils import timezone
 
-    response['Content-Disposition'] = (
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
         f'attachment; filename="encerramento_{ano_atual.nome}.pdf"'
     )
 
-    doc = SimpleDocTemplate(response, pagesize=A4)
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=A4,
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=30,
+        bottomMargin=30,
+    )
 
     styles = getSampleStyleSheet()
 
+    titulo = styles["Title"]
+    titulo.alignment = TA_CENTER
+
+    subtitulo = styles["Heading2"]
+    subtitulo.alignment = TA_CENTER
+
     elementos = []
 
-    elementos.append(
-        Paragraph(
-            f"<b>Encerramento do Ano Letivo {ano_atual.nome}</b>",
-            styles["Title"]
-        )
-    )
+    # =====================================================
+    # CABEÇALHO
+    # =====================================================
 
-    elementos.append(Spacer(1, 0.4 * inch))
-
-    elementos.append(
-        Paragraph(f"Novo Ano Letivo: {novo_nome}", styles["Normal"])
+    nome_escola = (
+        request.user.escola.nome
+        if getattr(request.user, "escola", None)
+        else "Sistema Eduscore"
     )
 
     elementos.append(
-        Paragraph(f"Alunos Promovidos: {promovidos}", styles["Normal"])
+        Paragraph("<b>EDUSCORE</b>", titulo)
     )
 
     elementos.append(
-        Paragraph(f"Finalistas: {finalistas}", styles["Normal"])
+        Paragraph(nome_escola, subtitulo)
     )
 
-    elementos.append(
-        Spacer(1, 0.3 * inch)
-    )
+    elementos.append(Spacer(1, 0.20 * inch))
 
     elementos.append(
         Paragraph(
-            f"Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}",
-            styles["Normal"]
+            f"<b>RELATÓRIO DE ENCERRAMENTO DO ANO LETIVO {ano_atual.nome}</b>",
+            styles["Heading1"],
         )
     )
 
+    elementos.append(Spacer(1, 0.35 * inch))
+
+    # =====================================================
+    # TABELA RESUMO
+    # =====================================================
+
+    dados = [
+        ["Campo", "Informação"],
+        ["Ano Letivo Encerrado", str(ano_atual.nome)],
+        ["Novo Ano Letivo", str(novo_nome)],
+        ["Alunos Promovidos", str(promovidos)],
+        ["Finalistas", str(finalistas)],
+        [
+            "Emitido em",
+            timezone.localtime().strftime("%d/%m/%Y %H:%M"),
+        ],
+        [
+            "Emitido por",
+            request.user.get_full_name() or request.user.username,
+        ],
+    ]
+
+    tabela = Table(
+        dados,
+        colWidths=[220, 250],
+    )
+
+    tabela.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F4E78")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 10),
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+            ]
+        )
+    )
+
+    elementos.append(tabela)
+
+    elementos.append(Spacer(1, 0.35 * inch))
+
+    # =====================================================
+    # MENSAGEM
+    # =====================================================
+
+    elementos.append(
+        Paragraph(
+            (
+                "O encerramento do ano letivo foi realizado com sucesso. "
+                "Os alunos elegíveis foram promovidos para o novo ano letivo "
+                "e os finalistas concluíram o seu ciclo académico."
+            ),
+            styles["Normal"],
+        )
+    )
+
+    elementos.append(Spacer(1, 0.60 * inch))
+
+    # =====================================================
+    # ASSINATURA
+    # =====================================================
+
+    elementos.append(
+        Paragraph(
+            "__________________________________________",
+            styles["Normal"],
+        )
+    )
+
+    elementos.append(
+        Paragraph(
+            "Direção da Escola",
+            styles["Normal"],
+        )
+    )
+
+    elementos.append(Spacer(1, 0.40 * inch))
+
+    # =====================================================
+    # RODAPÉ
+    # =====================================================
+
+    elementos.append(
+        Paragraph(
+            "<font size='8' color='grey'>"
+            "Documento gerado automaticamente pelo Sistema Eduscore. "
+            "Este relatório serve como comprovativo do encerramento do ano letivo."
+            "</font>",
+            styles["Normal"],
+        )
+    )
+
+    # Gerar PDF
     doc.build(elementos)
 
+    # Mensagem de sucesso
     messages.success(
         request,
-        f"{promovidos} alunos promovidos para {novo_nome}."
+        f"{promovidos} alunos promovidos para {novo_nome}.",
     )
 
     return response
-
 
 
 from django.http import HttpResponse

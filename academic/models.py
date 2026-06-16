@@ -1131,19 +1131,26 @@ class Nota(models.Model):
 # ==========================================================
 
 class Frequencia(models.Model):
-
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+    professor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
 
     data = models.DateField()
+
     presente = models.BooleanField(default=True)
+    justificada = models.BooleanField(default=False)
+
+    observacao = models.TextField(blank=True)
 
     escola = models.ForeignKey(Escola, on_delete=models.CASCADE)
 
     criada_em = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.aluno} - {self.data}"
+    class Meta:
+        unique_together = ("aluno", "disciplina", "data")
 
 
 # ==========================================================

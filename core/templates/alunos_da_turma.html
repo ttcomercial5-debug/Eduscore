@@ -112,11 +112,27 @@
             <!-- VOLTAR + TOTAL -->
             <div class="text-end">
 
-                <a href="{% url 'minhas_turmas' %}" class="btn-back d-inline-block mb-2">
-                    ← Voltar
-                </a>
+                <div class="d-flex flex-column gap-2 align-items-end">
 
-                <h3 class="mb-0">
+                    <a href="{% url 'minhas_turmas' %}" class="btn-back">
+                        ← Voltar
+                    </a>
+
+                    {% for disciplina in disciplinas %}
+                        <a href="{% url 'marcar_frequencia' turma.id disciplina.id %}"
+                           class="btn btn-success w-100">
+                            <i class="fas fa-user-check me-2"></i>
+                            Marcar Frequência - {{ disciplina.nome }}
+                        </a>
+                    {% empty %}
+                        <button class="btn btn-secondary w-100" disabled>
+                            Nenhuma disciplina atribuída
+                        </button>
+                    {% endfor %}
+
+                </div>
+
+                <h3 class="mb-0 mt-3">
                     {{ total_alunos }}
                 </h3>
 
