@@ -87,15 +87,31 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
-                            {% if mensalidade.status == "PAGA" or mensalidade.status == "PAGA_COM_MULTA" %}
-                                <a href="{% url 'gerar_recibo' mensalidade.id %}" class="btn btn-sm btn-primary">
-                                    Gerar Recibo
-                                </a>
+
+                            {% if mensalidade.status == "PAGA" %}
+
+                                {% with pagamento=mensalidade.pagamentos.first %}
+
+                                    {% if pagamento %}
+
+                                        <a href="{% url 'gerar_recibo' pagamento.id %}"
+                                           class="btn btn-sm btn-primary">
+                                            Gerar Recibo
+                                        </a>
+
+                                    {% endif %}
+
+                                {% endwith %}
+
                             {% else %}
-                                <a href="{% url 'registrar_pagamento_mensalidade' mensalidade.id %}" class="btn btn-sm btn-success">
+
+                                <a href="{% url 'registrar_pagamento_mensalidade' mensalidade.id %}"
+                                   class="btn btn-sm btn-success">
                                     Registrar Pagamento
                                 </a>
+
                             {% endif %}
+
                         </td>
                     </tr>
                 {% empty %}

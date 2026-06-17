@@ -1266,7 +1266,6 @@ class Mensalidade(models.Model):
 
     STATUS_CHOICES = [
         ("PENDENTE", "Pendente"),
-        ("PARCIAL", "Parcial"),
         ("PAGA", "Paga"),
         ("ATRASADA", "Atrasada"),
     ]
@@ -1350,38 +1349,18 @@ class Mensalidade(models.Model):
     # ======================================================
 
     def atualizar_status(self):
-
         hoje = timezone.now().date()
 
-        # totalmente pago
         if self.total_pago >= self.valor:
-
             novo_status = "PAGA"
-
-        # pagamento parcial
-        elif self.total_pago > 0:
-
-            if hoje > self.vencimento:
-                novo_status = "ATRASADA"
-            else:
-                novo_status = "PARCIAL"
-
-        # sem pagamento
+        elif hoje > self.vencimento:
+            novo_status = "ATRASADA"
         else:
+            novo_status = "PENDENTE"
 
-            if hoje > self.vencimento:
-                novo_status = "ATRASADA"
-            else:
-                novo_status = "PENDENTE"
-
-        # salva apenas se mudou
         if self.status != novo_status:
-
             self.status = novo_status
-
-            self.save(
-                update_fields=["status"]
-            )
+            self.save(update_fields=["status"])
 
     # ======================================================
     # SAVE
