@@ -1151,6 +1151,7 @@ class Frequencia(models.Model):
 
     class Meta:
         unique_together = ("aluno", "disciplina", "data")
+        ordering = ["-data", "disciplina"]
 
 
 # ==========================================================

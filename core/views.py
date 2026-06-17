@@ -2988,6 +2988,59 @@ def dashboard_aluno(request):
         .order_by("-criado_em")
     )
 
+    from django.utils import timezone
+
+    # =========================================================
+    # FREQUÊNCIAS
+    # =========================================================
+
+    frequencias = (
+        Frequencia.objects
+        .filter(aluno=aluno)
+        .select_related("disciplina")
+        .order_by("-data", "disciplina__nome")
+    )
+
+    total_aulas = frequencias.count()
+
+    total_presencas = frequencias.filter(
+        presente=True
+    ).count()
+
+    total_faltas = frequencias.filter(
+        presente=False
+    ).count()
+
+    total_faltas_justificadas = frequencias.filter(
+        presente=False,
+        justificada=True
+    ).count()
+
+    # =========================================================
+    # RESUMO DO MÊS ATUAL
+    # =========================================================
+
+    hoje = timezone.localdate()
+
+    frequencias_mes = frequencias.filter(
+        data__year=hoje.year,
+        data__month=hoje.month,
+    )
+
+    total_faltas_mes = frequencias_mes.filter(
+        presente=False
+    ).count()
+
+    total_faltas_justificadas_mes = frequencias_mes.filter(
+        presente=False,
+        justificada=True
+    ).count()
+
+    total_faltas_nao_justificadas_mes = frequencias_mes.filter(
+        presente=False,
+        justificada=False
+    ).count()
+
     # =========================================================
     # CONTEXTO
     # =========================================================
@@ -3003,6 +3056,14 @@ def dashboard_aluno(request):
         "horario": horario,
         "aulas": aulas,
         "historicos": historicos,
+        "frequencias": frequencias,
+        "total_aulas": total_aulas,
+        "total_presencas": total_presencas,
+        "total_faltas": total_faltas,
+        "total_faltas_justificadas": total_faltas_justificadas,
+        "total_faltas_mes": total_faltas_mes,
+        "total_faltas_justificadas_mes": total_faltas_justificadas_mes,
+        "total_faltas_nao_justificadas_mes": total_faltas_nao_justificadas_mes,
 
     }
 
@@ -9266,6 +9327,8 @@ def salvar_mini_pauta_turma(request, pk):
         obj.save()
 
     return redirect("mini_pauta_detalhe", pk=pk)
+
+
 
 
 

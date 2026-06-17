@@ -4,12 +4,24 @@
 
 <style>
 
+/* ========================= */
+/* MEDIA FINAL CARD */
+/* ========================= */
+
 .media-final-card{
     background:linear-gradient(135deg,#4f46e5,#6366f1);
     color:white;
-    padding:20px 25px;
     border-radius:16px;
     text-align:center;
+
+    height:150px;
+    padding:20px 25px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    transition:.3s;
 }
 
 .media-final-card h2{
@@ -17,6 +29,67 @@
     font-size:34px;
     font-weight:700;
 }
+
+/* ========================= */
+/* KPI CARDS */
+/* ========================= */
+
+.kpi-card{
+    border-radius:20px;
+    padding:25px;
+    color:white;
+    text-align:center;
+
+    height:150px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    transition:.3s;
+}
+
+.kpi-card:hover,
+.media-final-card:hover{
+    transform:translateY(-5px);
+}
+
+/* ========================= */
+/* CORES DOS KPIs */
+/* ========================= */
+
+.card-green{
+    background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.card-red{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.card-orange{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+/* ========================= */
+/* TEXTOS KPI */
+/* ========================= */
+
+.kpi-title{
+    font-size:12px;
+    text-transform:uppercase;
+    opacity:.9;
+    margin-bottom:6px;
+}
+
+.kpi-value{
+    font-size:30px;
+    font-weight:700;
+    line-height:1.2;
+}
+
+/* ========================= */
+/* STATUS BADGES */
+/* ========================= */
 
 .status-aprovado{
     background:#10b981;
@@ -34,54 +107,28 @@
     font-size:12px;
 }
 
-.kpi-card{
-    border-radius:20px;
-    padding:25px;
-    color:white;
-    transition:.3s;
-    text-align:center;
-}
-
-.kpi-card:hover{
-    transform:translateY(-5px);
-}
-
-.card-green{
-    background:linear-gradient(135deg,#10b981,#059669);
-}
-
-.card-red{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-}
-
-.card-orange{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-}
-
-.kpi-title{
-    font-size:12px;
-    text-transform:uppercase;
-    opacity:.9;
-}
-
-.kpi-value{
-    font-size:28px;
-    font-weight:700;
-    margin-top:10px;
-}
+/* ========================= */
+/* CARD PASSWORD */
+/* ========================= */
 
 .card-password-aluno{
     border:none;
     border-radius:18px;
     padding:24px 28px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     margin-top:30px;
+
     text-decoration:none;
     color:white;
+
     background:linear-gradient(135deg,#6d28d9,#a855f7);
+
     box-shadow:0 12px 30px rgba(0,0,0,0.12);
+
     transition:0.3s;
 }
 
@@ -111,11 +158,19 @@
     margin-top:3px;
 }
 
+/* ========================= */
+/* BLOQUEIO FINANCEIRO */
+/* ========================= */
+
 .bloqueio-financeiro{
     font-size:20px;
     font-weight:600;
     margin-top:10px;
 }
+
+/* ========================= */
+/* INFO CARD */
+/* ========================= */
 
 .card-info{
     background:white;
@@ -123,6 +178,10 @@
     padding:25px;
     box-shadow:0 4px 18px rgba(0,0,0,0.06);
 }
+
+/* ========================= */
+/* TURMA BADGE */
+/* ========================= */
 
 .badge-turma{
     background:#e0e7ff;
@@ -133,6 +192,10 @@
     font-weight:600;
 }
 
+/* ========================= */
+/* HISTÓRICO CARD */
+/* ========================= */
+
 .card-historico{
     border:none;
     border-radius:18px;
@@ -140,10 +203,18 @@
     box-shadow:0 4px 18px rgba(0,0,0,0.06);
 }
 
+/* ========================= */
+/* TABLE HEADER */
+/* ========================= */
+
 .table thead{
     background:#111827;
     color:white;
 }
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
 
 .btn-boletim{
     border-radius:12px;
@@ -297,6 +368,94 @@
                 <div class="kpi-value">
                     {{ total_divida|default:"0.00" }} Kz
                 </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="kpi-card card-red">
+                <div class="kpi-title">
+                    Total de Faltas
+                </div>
+                <div class="kpi-value">
+                    {{ total_faltas }}
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="card card-historico mt-5">
+
+        <div class="card-header bg-white border-0 pt-4 pb-0">
+            <h4 class="fw-bold mb-1">
+                Frequências Recentes
+            </h4>
+            <small class="text-muted">
+                Últimos registos de presença e faltas
+            </small>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Disciplina</th>
+                            <th>Estado</th>
+                            <th>Justificada</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for f in frequencias %}
+
+                        <tr>
+                            <td>{{ f.data }}</td>
+                            <td>{{ f.disciplina.nome }}</td>
+
+                            <td>
+                                {% if f.presente %}
+                                    <span class="badge bg-success">Presente</span>
+                                {% elif f.justificada %}
+                                    <span class="badge bg-warning text-dark">Falta Justificada</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Falta</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if f.justificada %}
+                                    <span class="badge bg-info">Sim</span>
+                                {% else %}
+                                    Não
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                Nenhuma frequência registada.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
 
             </div>
 
