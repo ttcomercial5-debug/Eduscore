@@ -2250,6 +2250,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
                 defaults={
                     "presente": presente,
                     "escola": escola,
+                    "professor": professor,
                 },
             )
 
