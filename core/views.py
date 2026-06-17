@@ -9299,6 +9299,13 @@ def salvar_mini_pauta_turma(request, pk):
         val = request.POST.get(f"{campo}_{aluno.id}")
         return val if val not in ["", None] else None
 
+    def set_if_value(obj, field, value):
+        """
+        Só atualiza se houver valor válido
+        """
+        if value is not None:
+            setattr(obj, field, value)
+
     for aluno in alunos:
 
         obj, _ = MiniPauta.objects.get_or_create(
@@ -9311,24 +9318,79 @@ def salvar_mini_pauta_turma(request, pk):
             trimestre=int(mini_pauta_ref.trimestre)
         )
 
-        obj.av1 = g(aluno, "av1")
-        obj.av2 = g(aluno, "av2")
-        obj.av3 = g(aluno, "av3")
-        obj.p1 = g(aluno, "p1")
+        # =========================
+        # NOTAS (incremental safe update)
+        # =========================
+        set_if_value(obj, "av1", g(aluno, "av1"))
+        set_if_value(obj, "av2", g(aluno, "av2"))
+        set_if_value(obj, "av3", g(aluno, "av3"))
+        set_if_value(obj, "p1", g(aluno, "p1"))
 
-        obj.av4 = g(aluno, "av4")
-        obj.av5 = g(aluno, "av5")
-        obj.av6 = g(aluno, "av6")
-        obj.p2 = g(aluno, "p2")
+        set_if_value(obj, "av4", g(aluno, "av4"))
+        set_if_value(obj, "av5", g(aluno, "av5"))
+        set_if_value(obj, "av6", g(aluno, "av6"))
+        set_if_value(obj, "p2", g(aluno, "p2"))
 
-        obj.exame = g(aluno, "exame")
-        obj.recurso = g(aluno, "recurso")
+        set_if_value(obj, "exame", g(aluno, "exame"))
+        set_if_value(obj, "recurso", g(aluno, "recurso"))
 
         obj.save()
 
     return redirect("mini_pauta_detalhe", pk=pk)
 
+@login_required
+def fechar_trimestre(request, pk):
+
+    mp = get_object_or_404(
+        MiniPauta,
+        pk=pk,
+        professor=request.user,
+        escola=request.user.escola
+    )
+
+    mp.trimestre_fechado = True
+    mp.save()
+
+    return redirect("mini_pauta_detalhe", pk=pk)
 
 
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def mini_pauta_pdf(request, pk):
 
+    mini_pauta_ref = get_object_or_404(
+        MiniPauta,
+        pk=pk,
+        professor=request.user,
+        escola=request.user.escola
+    )
+
+    alunos = Aluno.objects.filter(
+        turma=mini_pauta_ref.turma,
+        escola=request.user.escola,
+        ativo=True
+    ).order_by("numero_na_turma")
+
+    mini_pautas_existentes = {
+        mp.aluno.id: mp
+        for mp in MiniPauta.objects.filter(
+            professor=mini_pauta_ref.professor,
+            escola=mini_pauta_ref.escola,
+            turma=mini_pauta_ref.turma,
+            disciplina=mini_pauta_ref.disciplina,
+            ano_letivo=mini_pauta_ref.ano_letivo,
+            trimestre=mini_pauta_ref.trimestre,
+        )
+    }
+
+    html = render_to_string("mini_pauta_pdf.html", {
+        "mini_pauta_ref": mini_pauta_ref,
+        "alunos": alunos,
+        "mini_pautas_existentes": mini_pautas_existentes,
+    })
+
+    return HttpResponse(html)

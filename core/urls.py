@@ -77,6 +77,8 @@ urlpatterns = [
     path('professor/calendario/', views.calendario_professor, name='calendario_professor'),
     path("historico-notas/", views.historico_notas, name="historico_notas"),
     path("professor/turma/<int:turma_id>/alunos/", views.alunos_da_turma, name="alunos_da_turma"),
+    path("mini-pauta/fechar/<int:pk>/", views.fechar_trimestre, name="fechar_trimestre"),
+    path("mini-pauta/pdf/<int:pk>/", views.mini_pauta_pdf, name="mini_pauta_pdf"),
 
     # =========================
     # MINI PAUTAS

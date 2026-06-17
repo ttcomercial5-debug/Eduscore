@@ -153,6 +153,10 @@
     </small>
 </div>
 
+
+<div class="card shadow-sm p-3">
+
+
 <!-- STATS -->
 <div class="stats-bar">
 
@@ -322,9 +326,113 @@
 
         </div>
 
+
+        <div class="d-flex gap-2 mb-3">
+
+            {% if not mini_pauta_ref.trimestre_fechado %}
+
+            <a href="{% url 'fechar_trimestre' mini_pauta_ref.id %}"
+               class="btn btn-warning btn-sm">
+                Fechar Trimestre
+            </a>
+
+            {% else %}
+
+            <span class="badge bg-success">
+                Trimestre Fechado
+            </span>
+
+            {% endif %}
+
+
+
+        </div>
+
     </div>
 
 </form>
+
+</form>
+
+<!-- ===================== Mini Pautas (VISUALIZAÇÃO) ===================== -->
+
+<div class="mt-4">
+
+<h5 class="mb-3">
+     Mini Pautas (Visualização)
+</h5>
+
+<div class="gradebook-card">
+
+    <table class="table table-bordered table-gradebook">
+
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Aluno</th>
+
+            <th>AV1</th>
+            <th>AV2</th>
+            <th>AV3</th>
+            <th>P1</th>
+
+            <th>AV4</th>
+            <th>AV5</th>
+            <th>AV6</th>
+            <th>P2</th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for aluno in alunos %}
+
+        {% with mp=mini_pautas_existentes|get_item:aluno.id %}
+
+        <tr>
+
+            <td>{{ forloop.counter }}</td>
+
+            <td class="student-col">
+                <span class="badge-numero">{{ aluno.numero_na_turma }}</span>
+                {{ aluno.nome_completo }}
+            </td>
+
+            <td>{{ mp.av1|default:"-" }}</td>
+            <td>{{ mp.av2|default:"-" }}</td>
+            <td>{{ mp.av3|default:"-" }}</td>
+            <td>{{ mp.p1|default:"-" }}</td>
+
+            <td>{{ mp.av4|default:"-" }}</td>
+            <td>{{ mp.av5|default:"-" }}</td>
+            <td>{{ mp.av6|default:"-" }}</td>
+            <td>{{ mp.p2|default:"-" }}</td>
+
+
+
+        </tr>
+
+        {% endwith %}
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+</div>
+        <div class="d-flex gap-2 mb-3">
+
+            <a href="{% url 'mini_pauta_pdf' mini_pauta_ref.id %}"
+               class="btn btn-danger btn-sm">
+                Gerar PDF
+            </a>
+
+        </div>
+</div>
 
 </div>
 
