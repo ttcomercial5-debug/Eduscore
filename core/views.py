@@ -9273,9 +9273,16 @@ def gerar_mini_pautas(request):
 # SALVAR MINI PAUTA
 # =========================================================
 
+from decimal import Decimal, InvalidOperation
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+
 @login_required
 def salvar_mini_pauta_turma(request, pk):
 
+    # =========================
+    # PERMISSÃO
+    # =========================
     if request.user.role != "PROFESSOR":
         return redirect("dashboard")
 
@@ -9286,26 +9293,50 @@ def salvar_mini_pauta_turma(request, pk):
         escola=request.user.escola
     )
 
+    # =========================
+    # BLOQUEIO SE FECHADO
+    # =========================
+    if getattr(mini_pauta_ref, "trimestre_fechado", False):
+        return redirect("mini_pauta_detalhe", pk=pk)
+
     if request.method != "POST":
         return redirect("mini_pauta_detalhe", pk=pk)
 
+    # =========================
+    # ALUNOS DA TURMA
+    # =========================
     alunos = Aluno.objects.filter(
         turma=mini_pauta_ref.turma,
         escola=request.user.escola,
         ativo=True
     ).order_by("numero_na_turma")
 
-    def g(aluno, campo):
-        val = request.POST.get(f"{campo}_{aluno.id}")
-        return val if val not in ["", None] else None
-
-    def set_if_value(obj, field, value):
+    # =========================
+    # CONVERSÃO SEGURA
+    # =========================
+    def parse_decimal(value):
         """
-        Só atualiza se houver valor válido
+        Converte:
+        '12,0' -> 12.0
+        ' 14 ' -> 14.0
+        '' -> None
         """
-        if value is not None:
-            setattr(obj, field, value)
+        if value in [None, ""]:
+            return None
 
+        value = str(value).strip().replace(",", ".")
+
+        try:
+            return Decimal(value)
+        except (InvalidOperation, ValueError):
+            return None
+
+    def get_value(aluno, campo):
+        return parse_decimal(request.POST.get(f"{campo}_{aluno.id}"))
+
+    # =========================
+    # UPDATE INTELIGENTE
+    # =========================
     for aluno in alunos:
 
         obj, _ = MiniPauta.objects.get_or_create(
@@ -9319,24 +9350,25 @@ def salvar_mini_pauta_turma(request, pk):
         )
 
         # =========================
-        # NOTAS (incremental safe update)
+        # NOTAS (SÓ ATUALIZA SE EXISTIR VALOR)
         # =========================
-        set_if_value(obj, "av1", g(aluno, "av1"))
-        set_if_value(obj, "av2", g(aluno, "av2"))
-        set_if_value(obj, "av3", g(aluno, "av3"))
-        set_if_value(obj, "p1", g(aluno, "p1"))
 
-        set_if_value(obj, "av4", g(aluno, "av4"))
-        set_if_value(obj, "av5", g(aluno, "av5"))
-        set_if_value(obj, "av6", g(aluno, "av6"))
-        set_if_value(obj, "p2", g(aluno, "p2"))
+        campos = [
+            "av1", "av2", "av3", "p1",
+            "av4", "av5", "av6", "p2",
+            "exame", "recurso"
+        ]
 
-        set_if_value(obj, "exame", g(aluno, "exame"))
-        set_if_value(obj, "recurso", g(aluno, "recurso"))
+        for campo in campos:
+            valor = get_value(aluno, campo)
+            if valor is not None:
+                setattr(obj, campo, valor)
 
         obj.save()
 
     return redirect("mini_pauta_detalhe", pk=pk)
+
+
 
 @login_required
 def fechar_trimestre(request, pk):

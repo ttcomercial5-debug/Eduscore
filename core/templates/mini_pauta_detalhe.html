@@ -4,7 +4,7 @@
 
 <style>
 
-/* ================= UI BASE ================= */
+/* ================= BASE ================= */
 
 .page-header{
     background:linear-gradient(135deg,#0f172a,#1e293b);
@@ -16,11 +16,20 @@
 }
 
 .page-header h4{margin:0;font-weight:700;}
-.page-header small{opacity:.9;}
+.page-header small{opacity:.85;}
+
+.card-modern{
+    background:#fff;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+/* ================= STATS ================= */
 
 .stats-bar{
     display:flex;
-    gap:15px;
+    gap:12px;
     flex-wrap:wrap;
     margin-bottom:20px;
 }
@@ -28,49 +37,49 @@
 .stat-card{
     background:#fff;
     border-radius:12px;
-    padding:14px 18px;
+    padding:14px 16px;
     box-shadow:0 3px 12px rgba(0,0,0,.08);
-    min-width:180px;
+    min-width:160px;
 }
 
 .stat-title{
-    font-size:12px;
+    font-size:11px;
     color:#6b7280;
 }
 
 .stat-value{
-    font-size:20px;
+    font-size:18px;
     font-weight:800;
     color:#0f172a;
 }
 
 /* ================= TABLE ================= */
 
-.gradebook-card{
-    background:#fff;
-    border-radius:16px;
-    padding:15px;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
+.table-wrapper{
     overflow-x:auto;
+    border-radius:12px;
 }
 
 .table-gradebook{
-    min-width:1100px;
+    min-width:1000px;
+    width:100%;
 }
 
 .table-gradebook thead th{
     background:#0f172a;
-    color:white;
+    color:#fff;
+    font-size:11px;
     text-align:center;
-    font-size:12px;
     position:sticky;
     top:0;
     z-index:10;
+    padding:10px;
 }
 
 .table-gradebook td{
     text-align:center;
     vertical-align:middle;
+    padding:8px;
 }
 
 .table-gradebook tbody tr:hover{
@@ -79,27 +88,27 @@
 
 .student-col{
     text-align:left !important;
-    min-width:260px;
+    min-width:220px;
 }
 
 .badge-numero{
     background:#0f172a;
     color:white;
-    padding:4px 8px;
+    padding:3px 7px;
     border-radius:999px;
-    font-size:11px;
+    font-size:10px;
     margin-right:6px;
 }
 
 /* ================= INPUT ================= */
 
 .input-grade{
-    width:70px;
+    width:65px;
     text-align:center;
     border-radius:8px;
     border:1px solid #d1d5db;
-    padding:5px;
-    font-size:13px;
+    padding:4px;
+    font-size:12px;
 }
 
 .input-grade:focus{
@@ -108,33 +117,81 @@
     box-shadow:0 0 0 3px rgba(37,99,235,.15);
 }
 
-/* ================= FOOTER ================= */
+/* 🔒 LOCKED STATE */
+.input-grade:disabled{
+    background:#f1f5f9;
+    color:#64748b;
+    cursor:not-allowed;
+}
 
-.footer-actions{
-    margin-top:20px;
+/* ================= BUTTONS ================= */
+
+.actions-bar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     flex-wrap:wrap;
-    gap:15px;
+    gap:10px;
+    margin-top:15px;
 }
 
 .btn-save{
     background:#16a34a;
     border:none;
-    color:white;
+    color:#fff;
     font-weight:700;
-    padding:10px 22px;
+    padding:10px 18px;
     border-radius:10px;
 }
 
-.btn-save:hover{
-    background:#15803d;
+.btn-save:hover{background:#15803d;}
+
+.btn-save:disabled{
+    background:#94a3b8;
+    cursor:not-allowed;
 }
 
+.btn-warning-custom{
+    background:#f59e0b;
+    color:#000;
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.btn-danger-custom{
+    background:#dc2626;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.btn-danger-custom:hover{background:#b91c1c;}
+
 .info-box{
-    font-size:14px;
-    color:#475569;
+    font-size:13px;
+    color:#64748b;
+}
+
+/* ================= SECTIONS ================= */
+
+.section-title{
+    margin:25px 0 10px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.lock-banner{
+    background:#dc2626;
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-weight:600;
+    text-align:center;
 }
 
 </style>
@@ -143,50 +200,58 @@
 
 <!-- HEADER -->
 <div class="page-header">
-    <h4>
-        Mini Pauta - {{ mini_pauta_ref.disciplina.nome }}
-    </h4>
+    <h4>Mini Pauta - {{ mini_pauta_ref.disciplina.nome }}</h4>
     <small>
-        {{ mini_pauta_ref.turma }} •
-        {{ mini_pauta_ref.ano_letivo }} •
-        {{ mini_pauta_ref.get_trimestre_display }}
+        {{ mini_pauta_ref.turma }} • {{ mini_pauta_ref.ano_letivo }} • {{ mini_pauta_ref.get_trimestre_display }}
     </small>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
+
 </div>
 
+<div class="card-modern">
 
-<div class="card shadow-sm p-3">
 
+<!-- LOCK WARNING -->
+{% if mini_pauta_ref.trimestre_fechado %}
+<div class="lock-banner">
+    🔒 Este trimestre está fechado — edição desativada
+</div>
+{% endif %}
 
 <!-- STATS -->
 <div class="stats-bar">
 
     <div class="stat-card">
-        <div class="stat-title">Total de Alunos</div>
+        <div class="stat-title">ALUNOS</div>
         <div class="stat-value">{{ alunos|length }}</div>
     </div>
 
     <div class="stat-card">
-        <div class="stat-title">Disciplina</div>
-        <div class="stat-value" style="font-size:14px;">
+        <div class="stat-title">DISCIPLINA</div>
+        <div class="stat-value" style="font-size:13px;">
             {{ mini_pauta_ref.disciplina.nome }}
         </div>
     </div>
 
     <div class="stat-card">
-        <div class="stat-title">Turma</div>
-        <div class="stat-value" style="font-size:14px;">
+        <div class="stat-title">TURMA</div>
+        <div class="stat-value" style="font-size:13px;">
             {{ mini_pauta_ref.turma }}
         </div>
     </div>
 
 </div>
 
-<form method="POST"
-      action="{% url 'salvar_mini_pauta_turma' mini_pauta_ref.id %}">
-
+<!-- ================= FORM ================= -->
+<form method="POST" action="{% url 'salvar_mini_pauta_turma' mini_pauta_ref.id %}">
     {% csrf_token %}
 
-    <div class="gradebook-card">
+    <div class="table-wrapper">
 
         <table class="table table-bordered table-gradebook">
 
@@ -194,16 +259,8 @@
             <tr>
                 <th>#</th>
                 <th>Aluno</th>
-
-                <th>AV1</th>
-                <th>AV2</th>
-                <th>AV3</th>
-                <th>P1</th>
-
-                <th>AV4</th>
-                <th>AV5</th>
-                <th>AV6</th>
-                <th>P2</th>
+                <th>AV1</th><th>AV2</th><th>AV3</th><th>P1</th>
+                <th>AV4</th><th>AV5</th><th>AV6</th><th>P2</th>
 
                 {% if mini_pauta_ref.trimestre == "3" %}
                     <th>EXAME</th>
@@ -215,225 +272,124 @@
             <tbody>
 
             {% for aluno in alunos %}
-
             {% with mp=mini_pautas_existentes|get_item:aluno.id %}
 
             <tr>
-
                 <td>{{ forloop.counter }}</td>
 
                 <td class="student-col">
-                    <span class="badge-numero">
-                        {{ aluno.numero_na_turma }}
-                    </span>
+                    <span class="badge-numero">{{ aluno.numero_na_turma }}</span>
                     {{ aluno.nome_completo }}
                 </td>
 
-                <!-- AV1 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av1_{{ aluno.id }}"
-                           value="{{ mp.av1|default_if_none:'' }}">
-                </td>
+                <td><input class="input-grade" name="av1_{{ aluno.id }}" value="{{ mp.av1|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="av2_{{ aluno.id }}" value="{{ mp.av2|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="av3_{{ aluno.id }}" value="{{ mp.av3|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="p1_{{ aluno.id }}" value="{{ mp.p1|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
 
-                <!-- AV2 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av2_{{ aluno.id }}"
-                           value="{{ mp.av2|default_if_none:'' }}">
-                </td>
+                <td><input class="input-grade" name="av4_{{ aluno.id }}" value="{{ mp.av4|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="av5_{{ aluno.id }}" value="{{ mp.av5|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="av6_{{ aluno.id }}" value="{{ mp.av6|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                <td><input class="input-grade" name="p2_{{ aluno.id }}" value="{{ mp.p2|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
 
-                <!-- AV3 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av3_{{ aluno.id }}"
-                           value="{{ mp.av3|default_if_none:'' }}">
-                </td>
-
-                <!-- P1 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="p1_{{ aluno.id }}"
-                           value="{{ mp.p1|default_if_none:'' }}">
-                </td>
-
-
-                <!-- AV4 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av4_{{ aluno.id }}"
-                           value="{{ mp.av4|default_if_none:'' }}">
-                </td>
-
-                <!-- AV5 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av5_{{ aluno.id }}"
-                           value="{{ mp.av5|default_if_none:'' }}">
-                </td>
-
-                <!-- AV6 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="av6_{{ aluno.id }}"
-                           value="{{ mp.av6|default_if_none:'' }}">
-                </td>
-
-                <!-- P2 -->
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="p2_{{ aluno.id }}"
-                           value="{{ mp.p2|default_if_none:'' }}">
-                </td>
-
-                <!-- EXAME / RECURSO -->
                 {% if mini_pauta_ref.trimestre == "3" %}
-
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="exame_{{ aluno.id }}"
-                           value="{{ mp.exame|default_if_none:'' }}">
-                </td>
-
-                <td>
-                    <input class="input-grade" type="number" step="0.01"
-                           name="recurso_{{ aluno.id }}"
-                           value="{{ mp.recurso|default_if_none:'' }}">
-                </td>
-
+                    <td><input class="input-grade" name="exame_{{ aluno.id }}" value="{{ mp.exame|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
+                    <td><input class="input-grade" name="recurso_{{ aluno.id }}" value="{{ mp.recurso|default_if_none:'' }}" {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}></td>
                 {% endif %}
-
             </tr>
 
             {% endwith %}
-
             {% endfor %}
 
             </tbody>
 
         </table>
 
-        <!-- FOOTER -->
-        <div class="footer-actions">
+    </div>
 
-            <div class="info-box">
-                Todas as alterações serão guardadas automaticamente por aluno.
-            </div>
+    <div class="actions-bar">
 
-            <button type="submit" class="btn-save">
-                Salvar Mini Pauta
-            </button>
-
+        <div class="info-box">
+            Todas as alterações serão guardadas por aluno.
         </div>
 
-
-        <div class="d-flex gap-2 mb-3">
-
-            {% if not mini_pauta_ref.trimestre_fechado %}
-
-            <a href="{% url 'fechar_trimestre' mini_pauta_ref.id %}"
-               class="btn btn-warning btn-sm">
-                Fechar Trimestre
-            </a>
-
-            {% else %}
-
-            <span class="badge bg-success">
-                Trimestre Fechado
-            </span>
-
-            {% endif %}
-
-
-
-        </div>
+        <button type="submit" class="btn-save"
+                {% if mini_pauta_ref.trimestre_fechado %}disabled{% endif %}>
+            Salvar Mini Pauta
+        </button>
 
     </div>
 
 </form>
 
-</form>
+<!-- ================= VIEW ================= -->
 
-<!-- ===================== Mini Pautas (VISUALIZAÇÃO) ===================== -->
+<h5 class="section-title"> Planilha (Visualização)</h5>
 
-<div class="mt-4">
+<div class="table-wrapper">
 
-<h5 class="mb-3">
-     Mini Pautas (Visualização)
-</h5>
+<table class="table table-bordered table-gradebook">
 
-<div class="gradebook-card">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Aluno</th>
+        <th>AV1</th><th>AV2</th><th>AV3</th><th>P1</th>
+        <th>AV4</th><th>AV5</th><th>AV6</th><th>P2</th>
+    </tr>
+    </thead>
 
-    <table class="table table-bordered table-gradebook">
+    <tbody>
 
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Aluno</th>
+    {% for aluno in alunos %}
+    {% with mp=mini_pautas_existentes|get_item:aluno.id %}
 
-            <th>AV1</th>
-            <th>AV2</th>
-            <th>AV3</th>
-            <th>P1</th>
+    <tr>
+        <td>{{ forloop.counter }}</td>
 
-            <th>AV4</th>
-            <th>AV5</th>
-            <th>AV6</th>
-            <th>P2</th>
+        <td class="student-col">
+            <span class="badge-numero">{{ aluno.numero_na_turma }}</span>
+            {{ aluno.nome_completo }}
+        </td>
 
-        </tr>
-        </thead>
+        <td>{{ mp.av1|default:"-" }}</td>
+        <td>{{ mp.av2|default:"-" }}</td>
+        <td>{{ mp.av3|default:"-" }}</td>
+        <td>{{ mp.p1|default:"-" }}</td>
 
-        <tbody>
+        <td>{{ mp.av4|default:"-" }}</td>
+        <td>{{ mp.av5|default:"-" }}</td>
+        <td>{{ mp.av6|default:"-" }}</td>
+        <td>{{ mp.p2|default:"-" }}</td>
 
-        {% for aluno in alunos %}
+    </tr>
 
-        {% with mp=mini_pautas_existentes|get_item:aluno.id %}
+    {% endwith %}
+    {% endfor %}
 
-        <tr>
+    </tbody>
 
-            <td>{{ forloop.counter }}</td>
-
-            <td class="student-col">
-                <span class="badge-numero">{{ aluno.numero_na_turma }}</span>
-                {{ aluno.nome_completo }}
-            </td>
-
-            <td>{{ mp.av1|default:"-" }}</td>
-            <td>{{ mp.av2|default:"-" }}</td>
-            <td>{{ mp.av3|default:"-" }}</td>
-            <td>{{ mp.p1|default:"-" }}</td>
-
-            <td>{{ mp.av4|default:"-" }}</td>
-            <td>{{ mp.av5|default:"-" }}</td>
-            <td>{{ mp.av6|default:"-" }}</td>
-            <td>{{ mp.p2|default:"-" }}</td>
-
-
-
-        </tr>
-
-        {% endwith %}
-
-        {% endfor %}
-
-        </tbody>
-
-    </table>
-
-
+</table>
 
 </div>
-        <div class="d-flex gap-2 mb-3">
 
-            <a href="{% url 'mini_pauta_pdf' mini_pauta_ref.id %}"
-               class="btn btn-danger btn-sm">
-                Gerar PDF
-            </a>
+<div class="actions-bar">
 
-        </div>
+    <a href="{% url 'mini_pauta_pdf' mini_pauta_ref.id %}"
+       class="btn-danger-custom">
+        Gerar PDF
+    </a>
+
+    {% if not mini_pauta_ref.trimestre_fechado %}
+        <a href="{% url 'fechar_trimestre' mini_pauta_ref.id %}"
+           class="btn-warning-custom">
+            Fechar Trimestre
+        </a>
+    {% endif %}
+
 </div>
 
+</div>
 </div>
 
 {% endblock %}
