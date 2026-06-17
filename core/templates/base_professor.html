@@ -12,279 +12,301 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet">
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-    }
-    body{
-        font-family:'Inter',sans-serif;
-        background:#f1f5f9;
-        display:flex;
-        overflow-x:auto;
-    }
-    /* =====================================================
-       SIDEBAR
-    ===================================================== */
+
+/* =====================================================
+   RESET
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#f1f5f9;
+    overflow-x:hidden;
+}
+
+/* =====================================================
+   LAYOUT BASE
+===================================================== */
+
+.wrapper{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+    width:270px;
+    height:100vh;
+    background:linear-gradient(180deg,#0f172a,#111827);
+    position:fixed;
+    left:0;
+    top:0;
+    padding:25px 18px;
+    overflow-y:auto;
+    box-shadow:8px 0 30px rgba(0,0,0,0.12);
+    z-index:1000;
+}
+
+/* SCROLL */
+.sidebar::-webkit-scrollbar{
+    width:6px;
+}
+.sidebar::-webkit-scrollbar-thumb{
+    background:#334155;
+    border-radius:20px;
+}
+
+/* LOGO */
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:40px;
+    padding-bottom:22px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.logo-icon{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    color:white;
+    box-shadow:0 8px 18px rgba(37,99,235,0.35);
+}
+
+.logo-text{
+    color:white;
+    font-size:18px;
+    font-weight:700;
+    line-height:1.2;
+}
+
+.logo-text small{
+    display:block;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+/* MENU */
+.menu{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.menu li{
+    margin-bottom:10px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    text-decoration:none;
+    padding:13px 16px;
+    border-radius:14px;
+    color:#cbd5e1;
+    transition:.25s;
+    font-size:14px;
+    font-weight:600;
+}
+
+.menu a i{
+    font-size:18px;
+}
+
+.menu a:hover{
+    background:rgba(255,255,255,0.08);
+    color:white;
+    transform:translateX(4px);
+}
+
+.menu a.active{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+    box-shadow:0 10px 25px rgba(37,99,235,0.35);
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+    margin-left:270px;
+    width:calc(100% - 270px);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.topbar{
+    height:75px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.04);
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+.topbar-title{
+    font-size:22px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+/* USER */
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:700;
+    font-size:17px;
+    box-shadow:0 8px 20px rgba(37,99,235,0.25);
+}
+
+.user-info strong{
+    display:block;
+    color:#0f172a;
+    font-size:14px;
+}
+
+.user-info small{
+    color:#64748b;
+    font-size:12px;
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content{
+    padding:20px;
+    flex:1;
+    width:100%;
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media (max-width: 992px){
+
     .sidebar{
-        width:270px;
-        height:100vh;
-        background:linear-gradient(
-            180deg,
-            #0f172a 0%,
-            #111827 100%
-        );
-        position:fixed;
-        left:0;
-        top:0;
-        padding:25px 18px;
-        overflow-y:auto;
-        box-shadow:
-            8px 0 30px rgba(0,0,0,0.12);
-        z-index:1000;
+        display:none;
     }
-    /* SCROLL */
-    .sidebar::-webkit-scrollbar{
-        width:6px;
-    }
-    .sidebar::-webkit-scrollbar-thumb{
-        background:#334155;
-        border-radius:20px;
-    }
-    /* LOGO */
-    .logo-box{
-        display:flex;
-        align-items:center;
-        gap:14px;
-        margin-bottom:40px;
-        padding-bottom:22px;
-        border-bottom:
-            1px solid rgba(255,255,255,0.08);
-    }
-    .logo-icon{
-        width:48px;
-        height:48px;
-        border-radius:14px;
-        background:
-            linear-gradient(
-                135deg,
-                #2563eb,
-                #1d4ed8
-            );
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:22px;
-        color:white;
-        box-shadow:
-            0 8px 18px rgba(37,99,235,0.35);
-    }
-    .logo-text{
-        color:white;
-        font-size:18px;
-        font-weight:700;
-        line-height:1.2;
-    }
-    .logo-text small{
-        display:block;
-        color:#94a3b8;
-        font-size:12px;
-        font-weight:500;
-    }
-    /* MENU */
-    .menu{
-        list-style:none;
-        padding:0;
-        margin:0;
-    }
-    .menu li{
-        margin-bottom:10px;
-    }
-    .menu a{
-        display:flex;
-        align-items:center;
-        gap:14px;
-        text-decoration:none;
-        padding:13px 16px;
-        border-radius:14px;
-        color:#cbd5e1;
-        transition:0.25s ease;
-        font-size:14px;
-        font-weight:600;
-    }
-    .menu a i{
-        font-size:18px;
-    }
-    .menu a:hover{
-        background:rgba(255,255,255,0.08);
-        color:white;
-        transform:translateX(4px);
-    }
-    .menu a.active{
-        background:
-            linear-gradient(
-                135deg,
-                #2563eb,
-                #1d4ed8
-            );
-        color:white;
-        box-shadow:
-            0 10px 25px rgba(37,99,235,0.35);
-    }
-    /* =====================================================
-       MAIN
-    ===================================================== */
+
     .main{
-        margin-left:270px;
-        width:calc(100% - 270px);
-        min-height:100vh;
-        display:flex;
-        flex-direction:column;
-    }
-
-    /* =====================================================
-       TOPBAR
-    ===================================================== */
-    .topbar{
-        height:75px;
-        background:white;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        padding:0 30px;
-        box-shadow:
-            0 4px 18px rgba(0,0,0,0.04);
-        position:sticky;
-        top:0;
-        z-index:999;
-    }
-    .topbar-title{
-        font-size:22px;
-        font-weight:700;
-        color:#0f172a;
-    }
-    /* USER */
-    .user-box{
-        display:flex;
-        align-items:center;
-        gap:12px;
-    }
-    .avatar{
-        width:45px;
-        height:45px;
-        border-radius:50%;
-        background:
-            linear-gradient(
-                135deg,
-                #2563eb,
-                #1d4ed8
-            );
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:white;
-        font-weight:700;
-        font-size:17px;
-        box-shadow:
-            0 8px 20px rgba(37,99,235,0.25);
-    }
-    .user-info strong{
-        display:block;
-        color:#0f172a;
-        font-size:14px;
-    }
-    .user-info small{
-        color:#64748b;
-        font-size:12px;
-    }
-    /* =====================================================
-       CONTENT
-    ===================================================== */
-    .content{
-        padding:20px;
-        flex:1;
+        margin-left:0;
         width:100%;
-        overflow-x:auto;
-    }
-    /* =====================================================
-       RESPONSIVO
-    ===================================================== */
-    @media(max-width:992px){
-        .sidebar{
-            display:none;
-        }
-        .main{
-            margin-left:0;
-        }
-        .topbar{
-            padding:0 18px;
-        }
-        .content{
-            padding:20px;
-        }
     }
 
-    /* MENU MOBILE */
+    .topbar{
+        padding:0 18px;
+    }
+
+    .content{
+        padding:15px;
+    }
+}
+
+/* =====================================================
+   OFFCANVAS MOBILE MENU
+===================================================== */
 
 .offcanvas{
-    background: linear-gradient(180deg,#0f172a,#020617);
-    color: white;
+    background:linear-gradient(180deg,#0f172a,#020617);
+    color:white;
 }
 
 .offcanvas-header{
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
 .offcanvas-title{
-    color: white;
-    font-weight: 700;
+    color:white;
+    font-weight:700;
 }
 
 .offcanvas .btn-close{
-    filter: invert(1);
+    filter:invert(1);
 }
 
+/* MENU MOBILE */
 .offcanvas .menu{
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style:none;
+    padding:0;
+    margin:0;
 }
 
 .offcanvas .menu li{
-    margin-bottom: 8px;
+    margin-bottom:8px;
 }
 
 .offcanvas .menu a{
-    text-decoration: none;
-    color: #cbd5e1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 15px;
-    border-radius: 12px;
-    font-weight: 500;
-    transition: all .25s ease;
+    text-decoration:none;
+    color:#cbd5e1;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 15px;
+    border-radius:12px;
+    font-weight:500;
+    transition:.25s;
 }
 
 .offcanvas .menu a:hover{
-    background: rgba(59,130,246,0.12);
-    color: white;
+    background:rgba(59,130,246,0.12);
+    color:white;
 }
 
 .offcanvas .menu a.active{
-    background: linear-gradient(90deg,#2563eb,#3b82f6);
-    color: white;
-    box-shadow: 0 4px 18px rgba(59,130,246,0.45);
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+    color:white;
+    box-shadow:0 4px 18px rgba(59,130,246,0.45);
 }
 
 .offcanvas .menu a.logout{
-    color: #f87171;
+    color:#f87171;
 }
 
 .offcanvas .menu a.logout:hover{
-    background: rgba(248,113,113,0.1);
+    background:rgba(248,113,113,0.1);
 }
+
 </style>
+
 </head>
 <body>
 <!-- =====================================================
