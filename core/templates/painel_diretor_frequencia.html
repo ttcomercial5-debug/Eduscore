@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+            <h3 class="fw-bold mb-1">Painel de Frequência</h3>
+            <p class="text-muted mb-0">
+                Análise geral de presenças e faltas da escola
+            </p>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <form method="get" class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Turma</label>
+                    <select name="turma" class="form-select">
+                        <option value="">Todas as turmas</option>
+                        {% for t in turmas %}
+                        <option value="{{ t.id }}"
+                            {% if filtros.turma == t.id|stringformat:"s" %}selected{% endif %}>
+                            {{ t.classe }}ª {{ t.identificador }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Disciplina</label>
+                    <select name="disciplina" class="form-select">
+                        <option value="">Todas as disciplinas</option>
+                        {% for d in disciplinas %}
+                        <option value="{{ d.id }}"
+                            {% if filtros.disciplina == d.id|stringformat:"s" %}selected{% endif %}>
+                            {{ d.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Aluno</label>
+                    <select name="aluno" class="form-select">
+                        <option value="">Todos os alunos</option>
+                        {% for a in alunos %}
+                        <option value="{{ a.id }}"
+                            {% if filtros.aluno == a.id|stringformat:"s" %}selected{% endif %}>
+                            {{ a.nome_completo }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- MESES LETIVOS -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Mês letivo</label>
+                    <select name="mes" class="form-select">
+
+                        <option value="">Todos os meses</option>
+
+                        <option value="9"  {% if filtros.mes == "9" %}selected{% endif %}>Setembro</option>
+                        <option value="10" {% if filtros.mes == "10" %}selected{% endif %}>Outubro</option>
+                        <option value="11" {% if filtros.mes == "11" %}selected{% endif %}>Novembro</option>
+                        <option value="12" {% if filtros.mes == "12" %}selected{% endif %}>Dezembro</option>
+                        <option value="1"  {% if filtros.mes == "1" %}selected{% endif %}>Janeiro</option>
+                        <option value="2"  {% if filtros.mes == "2" %}selected{% endif %}>Fevereiro</option>
+                        <option value="3"  {% if filtros.mes == "3" %}selected{% endif %}>Março</option>
+                        <option value="4"  {% if filtros.mes == "4" %}selected{% endif %}>Abril</option>
+                        <option value="5"  {% if filtros.mes == "5" %}selected{% endif %}>Maio</option>
+                        <option value="6"  {% if filtros.mes == "6" %}selected{% endif %}>Junho</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="mt-3 text-end">
+                <button class="btn btn-primary px-4">
+                    Filtrar
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- KPIs -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Total de Faltas</h6>
+                    <h2 class="fw-bold text-danger">{{ total_faltas }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Presenças</h6>
+                    <h2 class="fw-bold text-success">{{ total_presencas }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Taxa de Presença</h6>
+                    <h2 class="fw-bold text-primary">{{ taxa_presenca }}%</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOP ALUNOS -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">Alunos com mais faltas</h5>
+
+            <ul class="list-group list-group-flush">
+
+                {% for a in top_faltas_alunos %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                    <span class="fw-semibold">
+                        {{ a.aluno__usuario__first_name }}
+                        {{ a.aluno__usuario__last_name }}
+                    </span>
+
+                    <span class="badge bg-danger rounded-pill">
+                        {{ a.total }}
+                    </span>
+
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">
+                    Sem dados disponíveis
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- TURMAS -->
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">Frequência por turma</h5>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Turma</th>
+                            <th class="text-success">Presenças</th>
+                            <th class="text-danger">Faltas</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for t in frequencia_por_turma %}
+                        <tr>
+                            <td class="fw-semibold">
+                                {{ t.aluno__turma__classe }}ª {{ t.aluno__turma__identificador }}
+                            </td>
+                            <td class="text-success fw-bold">
+                                {{ t.presencas }}
+                            </td>
+                            <td class="text-danger fw-bold">
+                                {{ t.faltas }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                Sem dados disponíveis
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

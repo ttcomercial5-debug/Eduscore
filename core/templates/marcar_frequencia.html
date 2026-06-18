@@ -26,13 +26,21 @@
     overflow:hidden;
 }
 
-.table thead th{
-    vertical-align:middle;
-}
-
 .presenca-check{
     transform:scale(1.3);
     cursor:pointer;
+}
+
+.justificada-check{
+    transform:scale(1.2);
+    cursor:pointer;
+}
+
+.observacao-input{
+    border-radius:10px;
+    border:1px solid #ddd;
+    padding:6px 10px;
+    width:100%;
 }
 
 .footer-actions{
@@ -57,18 +65,13 @@
 <div class="container-fluid py-4">
 
     <div class="page-header">
-        <h2 class="fw-bold mb-2">
-            Marcação de Frequência
-        </h2>
-        <div>
-            Registe a assiduidade dos alunos de forma rápida e segura.
-        </div>
+        <h2 class="fw-bold mb-2">Marcação de Frequência</h2>
+        <div>Registe a assiduidade dos alunos de forma rápida e segura.</div>
     </div>
 
     {% if hoje.weekday == 5 or hoje.weekday == 6 %}
     <div class="weekend-alert">
-        <strong>Atenção:</strong>
-        Hoje é sábado ou domingo. Normalmente não existem aulas nestes dias.
+        <strong>Atenção:</strong> Hoje é fim de semana.
     </div>
     {% endif %}
 
@@ -105,53 +108,77 @@
                 <table class="table table-hover align-middle mb-0">
 
                     <thead class="table-dark">
-
                         <tr>
-                            <th style="width:80px;">Nº</th>
+                            <th style="width:60px;">Nº</th>
                             <th>Aluno</th>
-                            <th class="text-center" style="width:160px;">
-                                Presente
-                            </th>
+                            <th class="text-center">Presente</th>
+                            <th class="text-center">Falta Justificada</th>
+                            <th>Observação</th>
                         </tr>
-
                     </thead>
 
                     <tbody>
 
-                        {% for aluno in alunos %}
+                    {% for aluno in alunos %}
 
-                        <tr>
+                    <tr>
 
-                            <td>
-                                {{ aluno.numero_na_turma }}
-                            </td>
+                        <td>{{ aluno.numero_na_turma }}</td>
 
-                            <td>
-                                <strong>{{ aluno.nome_completo }}</strong>
-                            </td>
+                        <td>
+                            <strong>{{ aluno.nome_completo }}</strong>
+                        </td>
 
-                            <td class="text-center">
+                        <!-- PRESENÇA -->
+                        <td class="text-center">
 
-                                <input
-                                    class="form-check-input presenca-check"
-                                    type="checkbox"
-                                    name="presente_{{ aluno.id }}"
-                                    checked
-                                >
+                            <input
+                                type="checkbox"
+                                class="form-check-input presenca-check"
+                                name="presente_{{ aluno.id }}"
+                                id="presente_{{ aluno.id }}"
+                                checked
+                                onchange="toggleJustificacao({{ aluno.id }})"
+                            >
 
-                            </td>
+                        </td>
 
-                        </tr>
+                        <!-- JUSTIFICADA -->
+                        <td class="text-center">
 
-                        {% empty %}
+                            <input
+                                type="checkbox"
+                                class="form-check-input justificada-check"
+                                name="justificada_{{ aluno.id }}"
+                                id="justificada_{{ aluno.id }}"
+                                disabled
+                            >
 
-                        <tr>
-                            <td colspan="3" class="text-center py-5">
-                                Nenhum aluno encontrado.
-                            </td>
-                        </tr>
+                        </td>
 
-                        {% endfor %}
+                        <!-- OBSERVAÇÃO -->
+                        <td>
+
+                            <input
+                                type="text"
+                                name="observacao_{{ aluno.id }}"
+                                class="observacao-input"
+                                placeholder="Opcional..."
+                            >
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            Nenhum aluno encontrado.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
 
                     </tbody>
 
@@ -170,23 +197,19 @@
 
             <div>
 
-                <button
-                    type="button"
-                    class="btn btn-outline-primary me-2"
-                    onclick="marcarTodos()">
+                <button type="button"
+                        class="btn btn-outline-primary me-2"
+                        onclick="marcarTodos()">
                     Marcar Todos
                 </button>
 
-                <button
-                    type="button"
-                    class="btn btn-outline-warning me-2"
-                    onclick="desmarcarTodos()">
+                <button type="button"
+                        class="btn btn-outline-warning me-2"
+                        onclick="desmarcarTodos()">
                     Desmarcar Todos
                 </button>
 
-                <button
-                    type="submit"
-                    class="btn btn-success">
+                <button type="submit" class="btn btn-success">
                     Guardar Frequências
                 </button>
 
@@ -199,15 +222,29 @@
 </div>
 
 <script>
+function toggleJustificacao(id) {
+    const presente = document.getElementById("presente_" + id);
+    const justificada = document.getElementById("justificada_" + id);
+
+    if (presente.checked) {
+        justificada.checked = false;
+        justificada.disabled = true;
+    } else {
+        justificada.disabled = false;
+    }
+}
+
 function marcarTodos() {
-    document.querySelectorAll(".presenca-check").forEach(function(el) {
+    document.querySelectorAll(".presenca-check").forEach(el => {
         el.checked = true;
+        el.dispatchEvent(new Event("change"));
     });
 }
 
 function desmarcarTodos() {
-    document.querySelectorAll(".presenca-check").forEach(function(el) {
+    document.querySelectorAll(".presenca-check").forEach(el => {
         el.checked = false;
+        el.dispatchEvent(new Event("change"));
     });
 }
 </script>

@@ -2176,6 +2176,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # PERMISSÃO
     # =====================================================
+
     if request.user.role != "PROFESSOR":
         return redirect("dashboard")
 
@@ -2185,6 +2186,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # TURMA
     # =====================================================
+
     turma = get_object_or_404(
         Turma,
         id=turma_id,
@@ -2194,6 +2196,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # DISCIPLINA
     # =====================================================
+
     disciplina = get_object_or_404(
         Disciplina,
         id=disciplina_id,
@@ -2203,16 +2206,17 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     )
 
     # =====================================================
-    # DATA ATUAL
+    # DATA
     # =====================================================
+
     hoje = timezone.localdate()
 
-    # Não permitir marcação ao sábado (5) e domingo (6)
     if hoje.weekday() in [5, 6]:
         messages.warning(
             request,
             "Não é permitido lançar frequências aos sábados e domingos."
         )
+
         return redirect(
             "alunos_da_turma",
             turma_id=turma.id,
@@ -2221,8 +2225,10 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # ALUNOS
     # =====================================================
+
     alunos = (
-        Aluno.objects.filter(
+        Aluno.objects
+        .filter(
             turma=turma,
             escola=escola,
             ativo=True,
@@ -2233,6 +2239,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # GUARDAR
     # =====================================================
+
     if request.method == "POST":
 
         for aluno in alunos:
@@ -2243,15 +2250,39 @@ def marcar_frequencia(request, turma_id, disciplina_id):
                 ) == "on"
             )
 
+            # Só faz sentido justificar quando existe falta
+            if presente:
+                justificada = False
+            else:
+                justificada = (
+                    request.POST.get(
+                        f"justificada_{aluno.id}"
+                    ) == "on"
+                )
+
+            observacao = (
+                request.POST.get(
+                    f"observacao_{aluno.id}",
+                    ""
+                ).strip()
+            )
+
             Frequencia.objects.update_or_create(
+
                 aluno=aluno,
                 disciplina=disciplina,
                 data=hoje,
+
                 defaults={
+
                     "presente": presente,
-                    "escola": escola,
+                    "justificada": justificada,
+                    "observacao": observacao,
                     "professor": professor,
+                    "escola": escola,
+
                 },
+
             )
 
         messages.success(
@@ -2266,10 +2297,11 @@ def marcar_frequencia(request, turma_id, disciplina_id):
         )
 
     # =====================================================
-    # FREQUÊNCIAS JÁ REGISTADAS
+    # FREQUÊNCIAS EXISTENTES
     # =====================================================
+
     frequencias = {
-        f.aluno_id: f.presente
+        f.aluno_id: f
         for f in Frequencia.objects.filter(
             disciplina=disciplina,
             data=hoje,
@@ -2279,18 +2311,151 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     # =====================================================
     # CONTEXTO
     # =====================================================
+
     context = {
+
         "turma": turma,
         "disciplina": disciplina,
         "alunos": alunos,
         "hoje": hoje,
         "frequencias": frequencias,
+
     }
 
     return render(
         request,
         "marcar_frequencia.html",
         context,
+    )
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.db.models import Count, Q
+from django.utils import timezone
+
+@login_required
+def painel_diretor_frequencia(request):
+
+    if request.user.role != "DIRETOR":
+        return redirect("dashboard")
+
+    escola = request.user.escola
+
+    # ==========================
+    # FILTROS
+    # ==========================
+
+    turma_id = request.GET.get("turma")
+    disciplina_id = request.GET.get("disciplina")
+    aluno_id = request.GET.get("aluno")
+    mes = request.GET.get("mes")
+
+    frequencias = (
+        Frequencia.objects
+        .filter(escola=escola)
+        .select_related(
+            "aluno",
+            "aluno__usuario",
+            "disciplina",
+            "aluno__turma"
+        )
+    )
+
+    if turma_id:
+        frequencias = frequencias.filter(aluno__turma_id=turma_id)
+
+    if disciplina_id:
+        frequencias = frequencias.filter(disciplina_id=disciplina_id)
+
+    if aluno_id:
+        frequencias = frequencias.filter(aluno_id=aluno_id)
+
+    if mes:
+        try:
+            frequencias = frequencias.filter(data__month=int(mes))
+        except (ValueError, TypeError):
+            pass
+
+    # ==========================
+    # KPIs
+    # ==========================
+
+    total_faltas = frequencias.filter(presente=False).count()
+    total_presencas = frequencias.filter(presente=True).count()
+    total_registos = frequencias.count()
+
+    taxa_presenca = (
+        round((total_presencas / total_registos) * 100, 1)
+        if total_registos > 0 else 0
+    )
+
+    # ==========================
+    # TOP ALUNOS COM MAIS FALTAS
+    # ==========================
+
+    top_faltas_alunos = (
+        frequencias
+        .filter(presente=False)
+        .values(
+            "aluno__id",
+            "aluno__usuario__first_name",
+            "aluno__usuario__last_name",
+        )
+        .annotate(total=Count("id"))
+        .order_by("-total")[:10]
+    )
+
+    # ==========================
+    # FREQUÊNCIA POR TURMA (CLASSE + IDENTIFICADOR)
+    # ==========================
+
+    frequencia_por_turma = (
+        frequencias
+        .values(
+            "aluno__turma__id",
+            "aluno__turma__classe",
+            "aluno__turma__identificador"
+        )
+        .annotate(
+            presencas=Count("id", filter=Q(presente=True)),
+            faltas=Count("id", filter=Q(presente=False))
+        )
+        .order_by("aluno__turma__classe", "aluno__turma__identificador")
+    )
+
+    # ==========================
+    # CONTEXTO
+    # ==========================
+
+    context = {
+
+        "frequencias": frequencias,
+
+        "total_faltas": total_faltas,
+        "total_presencas": total_presencas,
+        "taxa_presenca": taxa_presenca,
+
+        "top_faltas_alunos": top_faltas_alunos,
+        "frequencia_por_turma": frequencia_por_turma,
+
+        "turmas": Turma.objects.filter(escola=escola),
+        "disciplinas": Disciplina.objects.filter(escola=escola),
+        "alunos": Aluno.objects.filter(escola=escola).select_related("usuario"),
+
+        "filtros": {
+            "turma": turma_id,
+            "disciplina": disciplina_id,
+            "aluno": aluno_id,
+            "mes": mes,
+        }
+
+    }
+
+    return render(
+        request,
+        "painel_diretor_frequencia.html",
+        context
     )
 
 
@@ -2990,56 +3155,13 @@ def dashboard_aluno(request):
 
     from django.utils import timezone
 
-    # =========================================================
-    # FREQUÊNCIAS
-    # =========================================================
 
-    frequencias = (
-        Frequencia.objects
-        .filter(aluno=aluno)
-        .select_related("disciplina")
-        .order_by("-data", "disciplina__nome")
-    )
-
-    total_aulas = frequencias.count()
-
-    total_presencas = frequencias.filter(
-        presente=True
-    ).count()
-
-    total_faltas = frequencias.filter(
-        presente=False
-    ).count()
-
-    total_faltas_justificadas = frequencias.filter(
-        presente=False,
-        justificada=True
-    ).count()
 
     # =========================================================
     # RESUMO DO MÊS ATUAL
     # =========================================================
 
-    hoje = timezone.localdate()
 
-    frequencias_mes = frequencias.filter(
-        data__year=hoje.year,
-        data__month=hoje.month,
-    )
-
-    total_faltas_mes = frequencias_mes.filter(
-        presente=False
-    ).count()
-
-    total_faltas_justificadas_mes = frequencias_mes.filter(
-        presente=False,
-        justificada=True
-    ).count()
-
-    total_faltas_nao_justificadas_mes = frequencias_mes.filter(
-        presente=False,
-        justificada=False
-    ).count()
 
     # =========================================================
     # CONTEXTO
@@ -3056,14 +3178,7 @@ def dashboard_aluno(request):
         "horario": horario,
         "aulas": aulas,
         "historicos": historicos,
-        "frequencias": frequencias,
-        "total_aulas": total_aulas,
-        "total_presencas": total_presencas,
-        "total_faltas": total_faltas,
-        "total_faltas_justificadas": total_faltas_justificadas,
-        "total_faltas_mes": total_faltas_mes,
-        "total_faltas_justificadas_mes": total_faltas_justificadas_mes,
-        "total_faltas_nao_justificadas_mes": total_faltas_nao_justificadas_mes,
+
 
     }
 
@@ -3074,7 +3189,127 @@ def dashboard_aluno(request):
     )
 
 
+# ==========================================================
+# FREQUÊNCIAS DO ALUNO
+# ==========================================================
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.shortcuts import render, redirect
 
+@login_required
+def frequencia_aluno(request):
+
+    # ==========================================================
+    # PERMISSÃO
+    # ==========================================================
+
+    if getattr(request.user, "role", None) != "ALUNO":
+        return redirect("dashboard")
+
+    # ==========================================================
+    # ALUNO
+    # ==========================================================
+
+    aluno = (
+        Aluno.objects
+        .select_related("turma")
+        .filter(usuario=request.user)
+        .first()
+    )
+
+    if not aluno:
+        return redirect("dashboard")
+
+    # ==========================================================
+    # FILTRO POR MÊS
+    # ==========================================================
+
+    mes = request.GET.get("mes")
+
+    frequencias = (
+        Frequencia.objects
+        .filter(aluno=aluno)
+        .select_related("disciplina")
+    )
+
+    if mes:
+        try:
+            frequencias = frequencias.filter(
+                data__month=int(mes)
+            )
+        except (ValueError, TypeError):
+            mes = None
+
+    frequencias = frequencias.order_by(
+        "-data",
+        "disciplina__nome"
+    )
+
+    # ==========================================================
+    # KPIs
+    # ==========================================================
+
+    total_presencas = frequencias.filter(
+        presente=True
+    ).count()
+
+    total_faltas = frequencias.filter(
+        presente=False
+    ).count()
+
+    total_justificadas = frequencias.filter(
+        presente=False,
+        justificada=True
+    ).count()
+
+    total_registos = frequencias.count()
+
+    percentagem_presencas = 0
+
+    if total_registos > 0:
+        percentagem_presencas = round(
+            (total_presencas / total_registos) * 100,
+            1
+        )
+
+    # ==========================================================
+    # FALTAS POR DISCIPLINA
+    # ==========================================================
+
+    faltas_por_disciplina = (
+        frequencias
+        .filter(presente=False)
+        .values("disciplina__nome")
+        .annotate(
+            total_faltas=Count("id")
+        )
+        .order_by(
+            "-total_faltas",
+            "disciplina__nome"
+        )
+    )
+
+    # ==========================================================
+    # CONTEXT
+    # ==========================================================
+
+    context = {
+        "aluno": aluno,
+        "frequencias": frequencias,
+        "mes_selecionado": mes,
+        "total_presencas": total_presencas,
+        "total_faltas": total_faltas,
+        "total_justificadas": total_justificadas,
+        "total_registos": total_registos,
+        "percentagem_presencas": percentagem_presencas,
+        "faltas_por_disciplina": faltas_por_disciplina,
+    }
+
+    return render(
+        request,
+        "frequencias_aluno.html",
+        context,
+    )
 
 
 # ============================================================

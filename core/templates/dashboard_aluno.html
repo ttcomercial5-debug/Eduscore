@@ -374,94 +374,14 @@
 
         </div>
 
-        <div class="col-md-4">
-            <div class="kpi-card card-red">
-                <div class="kpi-title">
-                    Total de Faltas
-                </div>
-                <div class="kpi-value">
-                    {{ total_faltas }}
-                </div>
-            </div>
-        </div>
+
 
 
     </div>
 
 
 
-    <div class="card card-historico mt-5">
 
-        <div class="card-header bg-white border-0 pt-4 pb-0">
-            <h4 class="fw-bold mb-1">
-                Frequências Recentes
-            </h4>
-            <small class="text-muted">
-                Últimos registos de presença e faltas
-            </small>
-        </div>
-
-        <div class="card-body">
-
-            <div class="table-responsive">
-
-                <table class="table table-hover">
-
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Disciplina</th>
-                            <th>Estado</th>
-                            <th>Justificada</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for f in frequencias %}
-
-                        <tr>
-                            <td>{{ f.data }}</td>
-                            <td>{{ f.disciplina.nome }}</td>
-
-                            <td>
-                                {% if f.presente %}
-                                    <span class="badge bg-success">Presente</span>
-                                {% elif f.justificada %}
-                                    <span class="badge bg-warning text-dark">Falta Justificada</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Falta</span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if f.justificada %}
-                                    <span class="badge bg-info">Sim</span>
-                                {% else %}
-                                    Não
-                                {% endif %}
-                            </td>
-                        </tr>
-
-                        {% empty %}
-
-                        <tr>
-                            <td colspan="4" class="text-center">
-                                Nenhuma frequência registada.
-                            </td>
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
 
 
     <!-- ========================= -->

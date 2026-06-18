@@ -61,6 +61,7 @@ urlpatterns = [
     path('alunos/financeiro/', views.situacao_financeira, name='situacao_financeira'),
     path("aluno/historico/", views.historico_academico, name="historico_academico"),
     path("aluno/calendario/", views.calendario_aluno, name="calendario_aluno"),
+    path("aluno/frequencias/", views.frequencia_aluno, name="frequencia_aluno"),
     path("aluno/boletim/<int:historico_id>/", views.boletim_historico_pdf, name="boletim_historico_pdf"),
 
 
@@ -112,6 +113,7 @@ urlpatterns = [
     path("diretor/alunos/", views.painel_diretor_alunos, name="painel_diretor_alunos"),
     path("professor/eliminar/<int:id>/", views.eliminar_professor, name="eliminar_professor"),
     path("diretor/cursos/", views.cursos, name="cursos"),
+    path("diretor/frequencias/", views.painel_diretor_frequencia, name="painel_diretor_frequencia"),
     path('trimestre/toggle/<int:trimestre_id>/', views.toggle_trimestre, name='toggle_trimestre'),
     path("download-encerramento-pdf/", views.download_pdf_encerramento, name="download_pdf_encerramento"),
 
