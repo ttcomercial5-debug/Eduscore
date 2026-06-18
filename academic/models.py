@@ -14,43 +14,143 @@ import uuid
 # ==========================================================
 
 
+from django.db import models
+from django.core.cache import cache
+from datetime import date
+
+
+# =====================================================
+# UTILIDADE GLOBAL (ANO LETIVO)
+# =====================================================
+def get_ano_letivo_atual():
+    """
+    Ano letivo baseado no calendário escolar:
+    Início em Setembro
+    Ex: 2026/2027
+    """
+    hoje = date.today()
+
+    if hoje.month >= 9:
+        inicio = hoje.year
+        fim = hoje.year + 1
+    else:
+        inicio = hoje.year - 1
+        fim = hoje.year
+
+    return f"{inicio}/{fim}"
+
+
 class Configuracao(models.Model):
-    #  Sistema
+
+    # =========================
+    # SISTEMA
+    # =========================
     nome_sistema = models.CharField(max_length=200, default="Gestão Escolar Pro")
     logo_sistema = models.ImageField(upload_to='logos_sistema/', blank=True, null=True)
     favicon = models.ImageField(upload_to='favicon/', blank=True, null=True)
-    cor_principal = models.CharField(max_length=7, default="#2563eb")  # cor em HEX
+
+    cor_principal = models.CharField(max_length=7, default="#2563eb")
     cor_secundaria = models.CharField(max_length=7, default="#1e40af")
 
-    # Ano letivo
-    ano_letivo_padrao = models.CharField(max_length=20, default="2025/2026")
-    bloquear_alteracao_ano = models.BooleanField(default=False)
+    # =========================
+    # ANO LETIVO
+    # =========================
+    ano_letivo_padrao = models.CharField(
+        max_length=20,
+        default=get_ano_letivo_atual,
+        blank=True,
+        null=True
+    )
 
-    # Gestão de escolas
+    # =========================
+    # ESCOLAS
+    # =========================
     ativar_novas_escolas = models.BooleanField(default=True)
-    limite_alunos_por_escola = models.IntegerField(default=1000)
-    limite_turmas_por_escola = models.IntegerField(default=20)
-    plano_padrao = models.CharField(max_length=20, choices=[('basico', 'Básico'), ('premium', 'Premium')], default='basico')
-    armazenamento_por_escola_mb = models.IntegerField(default=1024)
+    limite_alunos_por_escola = models.PositiveIntegerField(default=1000)
+    limite_turmas_por_escola = models.PositiveIntegerField(default=20)
 
-    # Financeiro global
+    PLANO_CHOICES = [
+        ("basico", "Básico"),
+        ("medio", "Médio"),
+        ("premium", "Premium"),
+    ]
+
+    plano_padrao = models.CharField(
+        max_length=20,
+        choices=PLANO_CHOICES,
+        default="basico"
+    )
+
+    armazenamento_por_escola_mb = models.PositiveIntegerField(default=1024)
+
+    # =========================
+    # FINANCEIRO GLOBAL
+    # =========================
     moeda = models.CharField(max_length=10, default="Kz")
-    valor_mensal_plano_basico = models.DecimalField(max_digits=10, decimal_places=2, default=25000)
-    valor_anual_plano_basico = models.DecimalField(max_digits=10, decimal_places=2, default=250000)
+
+    valor_mensal_plano_basico = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=25000
+    )
+
+    valor_anual_plano_basico = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=250000
+    )
+
     cobranca_automatica = models.BooleanField(default=False)
 
-    # Segurança / acesso
+    # =========================
+    # SEGURANÇA
+    # =========================
     login_ativo = models.BooleanField(default=True)
-    tempo_sessao_minutos = models.IntegerField(default=120)
-    bloqueio_tentativas_login = models.IntegerField(default=5)
+    tempo_sessao_minutos = models.PositiveIntegerField(default=120)
+    bloqueio_tentativas_login = models.PositiveIntegerField(default=5)
     backup_automatico = models.BooleanField(default=True)
 
-    #  Modo manutenção
+    # =========================
+    # MANUTENÇÃO GLOBAL
+    # =========================
     modo_manutencao = models.BooleanField(default=False)
     mensagem_manutencao = models.TextField(blank=True, null=True)
 
+    # =========================
+    # SINGLETON (CACHE GLOBAL)
+    # =========================
+    @classmethod
+    def get_solo(cls):
+        """
+        Retorna configuração global com cache.
+        Garante apenas 1 instância ativa.
+        """
+        cache_key = "configuracao_global"
+
+        obj = cache.get(cache_key)
+        if obj:
+            return obj
+
+        obj = cls.objects.first()
+
+        if not obj:
+            obj = cls.objects.create()
+
+        cache.set(cache_key, obj, 60 * 10)  # 10 minutos
+
+        return obj
+
+    def save(self, *args, **kwargs):
+        """
+        Invalida cache ao atualizar configuração
+        """
+        cache.delete("configuracao_global")
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return "Configurações Globais"
+        return "Configuração Global"
+
+
 # ==========================================================
 # PAGAMENTO DO PLANO SAAS (Escola paga você)
 # ==========================================================

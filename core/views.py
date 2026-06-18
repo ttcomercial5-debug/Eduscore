@@ -7951,21 +7951,46 @@ def gerenciar_pagamentos(request):
     pagamentos = PagamentoPlano.objects.select_related('escola').all()
     return render(request, 'pagamentos_escola.html', {'pagamentos': pagamentos})
 
+
+
+from datetime import date
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
-@staff_member_required  # Apenas SuperAdmin
+
+# ==============================
+# ANO LETIVO AUTOMÁTICO
+# ==============================
+def get_ano_letivo_atual():
+    hoje = date.today()
+    return f"{hoje.year}/{hoje.year + 1}"
+
+
+@staff_member_required
 @transaction.atomic
 def configuracoes(request):
+    """
+    Configurações globais do sistema (Singleton).
+    Apenas SuperAdmin / Staff.
+    """
 
     # ==============================
-    # CONFIG SINGLETON (GLOBAL)
+    # CONFIG GLOBAL (SINGLETON)
     # ==============================
     config, created = Configuracao.objects.get_or_create(pk=1)
 
-    if request.method == 'POST':
+    # =========================================================
+    # GARANTIR ANO LETIVO SEMPRE ATUAL (AUTO-FALLBACK)
+    # =========================================================
+    if not config.ano_letivo_padrao:
+        config.ano_letivo_padrao = get_ano_letivo_atual()
+        config.save(update_fields=["ano_letivo_padrao"])
+
+    if request.method == "POST":
 
         form = ConfiguracaoForm(
             request.POST,
@@ -7975,28 +8000,54 @@ def configuracoes(request):
 
         if form.is_valid():
 
-            config_anterior = Configuracao.objects.get(pk=1)
+            try:
+                with transaction.atomic():
 
-            config = form.save(commit=False)
+                    config_anterior = Configuracao.objects.get(pk=1)
 
-            # =========================================
-            # FUTURO: AQUI ENTRA AUDITORIA (IMPORTANTE)
-            # =========================================
-            # Ex: log de mudanças
-            # AuditLog.objects.create(...)
+                    config = form.save(commit=False)
 
-            config.save()
-            form.save_m2m()
+                    # =================================================
+                    # GARANTIA DE ANO LETIVO (NUNCA FICA VAZIO)
+                    # =================================================
+                    if not config.ano_letivo_padrao:
+                        config.ano_letivo_padrao = get_ano_letivo_atual()
 
-            messages.success(
-                request,
-                "Configurações atualizadas com sucesso."
-            )
+                    # =========================================
+                    # HOOK FUTURO: AUDITORIA / LOG DE ALTERAÇÕES
+                    # =========================================
+                    # AuditLog.objects.create(
+                    #     user=request.user,
+                    #     action="UPDATE_CONFIG",
+                    #     before=serialize(config_anterior),
+                    #     after=serialize(config)
+                    # )
 
-            return redirect('configuracoes')
+                    config.save()
+                    form.save_m2m()
+
+                    # =========================================
+                    # CACHE GLOBAL (FUTURO - PERFORMANCE SaaS)
+                    # =========================================
+                    # cache.set("global_config", config, timeout=None)
+
+                    messages.success(
+                        request,
+                        "Configurações globais atualizadas com sucesso."
+                    )
+
+                    return redirect("configuracoes")
+
+            except ValidationError as e:
+                messages.error(request, f"Erro de validação: {e}")
+
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"Erro inesperado ao salvar configurações: {str(e)}"
+                )
 
         else:
-
             messages.error(
                 request,
                 "Existem erros no formulário. Verifique os campos."
@@ -8005,11 +8056,27 @@ def configuracoes(request):
     else:
         form = ConfiguracaoForm(instance=config)
 
-    return render(request, 'configuracoes.html', {
-        'form': form,
-        'config': config,
-        'created': created
-    })
+    # ==============================
+    # CONTEXTO
+    # ==============================
+    context = {
+        "form": form,
+        "config": config,
+        "created": created,
+
+        # UI GLOBAL
+        "modo_manutencao": config.modo_manutencao,
+        "nome_sistema": config.nome_sistema,
+
+        # IMPORTANTE: ano letivo sempre disponível no template
+        "ano_letivo_atual": config.ano_letivo_padrao or get_ano_letivo_atual(),
+    }
+
+    return render(
+        request,
+        "configuracoes.html",
+        context
+    )
 
 
 
