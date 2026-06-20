@@ -1,10 +1,9 @@
 from django.shortcuts import redirect
 from django.utils import timezone
-from academic.models import Plano
 
 
 # =====================================================
-#  CONTROLE DE ATIVAÇÃO DA ESCOLA
+# CONTROLE DE ATIVAÇÃO DA ESCOLA
 # =====================================================
 
 class EscolaAtivaMiddleware:
@@ -14,11 +13,11 @@ class EscolaAtivaMiddleware:
 
     def __call__(self, request):
 
-        # Permitir páginas livres
+        # Páginas livres
         urls_livres = [
-            '/login/',
-            '/logout/',
-            '/bloqueado/',
+            "/login/",
+            "/logout/",
+            "/bloqueado/",
         ]
 
         if request.path in urls_livres:
@@ -28,30 +27,32 @@ class EscolaAtivaMiddleware:
             return self.get_response(request)
 
         # SUPERADMIN nunca é bloqueado
-        if request.user.role == 'SUPERADMIN':
+        if request.user.role == "SUPERADMIN":
             return self.get_response(request)
 
-        escola = request.user.escola
+        escola = getattr(request.user, "escola", None)
 
-        # Se não tiver escola → volta login
+        # Usuário sem escola
         if not escola:
-            return redirect('login')
+            return redirect("login")
 
         # Escola inativa
         if not escola.ativo:
-            return redirect('bloqueado')
+            return redirect("bloqueado")
 
-        # Verificar plano
-        plano = Plano.objects.filter(escola=escola).first()
+        # Plano associado à escola
+        plano = escola.plano
 
-        # Se não tiver plano → permitir acesso (modo teste)
-        if not plano:
-            return self.get_response(request)
+        # Se existir plano e ele estiver inativo
+        if plano and not plano.ativo:
+            return redirect("bloqueado")
 
-        # Só bloqueia se plano existir e estiver vencido
-        if plano.data_expiracao:
-            if plano.data_expiracao < timezone.now().date():
-                return redirect('bloqueado')
+        # Verificar vencimento da assinatura da escola
+        if (
+            escola.data_expiracao
+            and escola.data_expiracao < timezone.now().date()
+        ):
+            return redirect("bloqueado")
 
         return self.get_response(request)
 
@@ -67,13 +68,13 @@ class AdminRestritoMiddleware:
 
     def __call__(self, request):
 
-        if request.path.startswith('/admin'):
+        if request.path.startswith("/admin"):
 
             if not request.user.is_authenticated:
-                return redirect('login')
+                return redirect("login")
 
-            # Apenas SUPERADMIN pode entrar no admin
-            if request.user.role != 'SUPERADMIN':
-                return redirect('dashboard')
+            # Apenas SUPERADMIN pode entrar
+            if request.user.role != "SUPERADMIN":
+                return redirect("dashboard")
 
         return self.get_response(request)

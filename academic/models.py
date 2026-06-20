@@ -241,24 +241,25 @@ class PagamentoPlano(models.Model):
 
 
 
-
 class Plano(models.Model):
-    escola = models.OneToOneField(
-        'Escola',  # Referência a Escola do app academic
-        on_delete=models.CASCADE,
-        related_name='plano_assinatura',
-        default=1  # Atenção: certifique-se de que existe uma Escola com ID=1
+    nome = models.CharField(
+        max_length=100,
+        unique=True
     )
-    nome = models.CharField(max_length=100)
+
     limite_alunos = models.PositiveIntegerField()
-    valor_mensal = models.DecimalField(max_digits=10, decimal_places=2)
-    data_expiracao = models.DateField(default=timezone.now)
-    ativo = models.BooleanField(default=True)
+
+    valor_mensal = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    ativo = models.BooleanField(
+        default=True
+    )
 
     def __str__(self):
-        if self.escola:
-            return f"{self.escola.nome} - {self.nome}"
-        return f"{self.nome} (sem escola)"
+        return self.nome
 
 
 # ==========================================================

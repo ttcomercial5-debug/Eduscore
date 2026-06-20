@@ -5371,6 +5371,38 @@ def criar_matricula(request):
 
         return redirect("dashboard")
 
+    plano = escola.plano
+
+    if plano is None:
+        messages.error(
+            request,
+            "A escola não possui um plano associado."
+        )
+        return redirect("dashboard")
+
+    if not plano.ativo:
+        messages.error(
+            request,
+            "O plano da escola encontra-se inativo."
+        )
+        return redirect("dashboard")
+
+    total_alunos = Aluno.objects.filter(
+        escola=escola,
+        ativo=True
+    ).count()
+
+    if total_alunos >= plano.limite_alunos:
+        messages.error(
+            request,
+            (
+                f"O limite de {plano.limite_alunos} alunos "
+                f"do Plano {plano.nome} foi atingido. "
+                "Entre em contacto com a ICA Systems para atualizar o plano."
+            )
+        )
+        return redirect("lista_alunos")
+
     escola = request.user.escola
 
     if not escola:
@@ -5705,6 +5737,38 @@ def adicionar_aluno(request):
 
     if request.user.role != "SECRETARIA":
         return redirect("dashboard")
+
+    plano = escola.plano
+
+    if plano is None:
+        messages.error(
+            request,
+            "A escola não possui um plano associado."
+        )
+        return redirect("dashboard")
+
+    if not plano.ativo:
+        messages.error(
+            request,
+            "O plano da escola encontra-se inativo."
+        )
+        return redirect("dashboard")
+
+    total_alunos = Aluno.objects.filter(
+        escola=escola,
+        ativo=True
+    ).count()
+
+    if total_alunos >= plano.limite_alunos:
+        messages.error(
+            request,
+            (
+                f"O limite de {plano.limite_alunos} alunos "
+                f"do Plano {plano.nome} foi atingido. "
+                "Entre em contacto com a ICA Systems para atualizar o plano."
+            )
+        )
+        return redirect("lista_alunos")
 
     ano_letivo = AnoLetivo.objects.filter(
         escola=escola,
