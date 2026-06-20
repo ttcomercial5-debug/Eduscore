@@ -9,7 +9,7 @@
 
         <div>
             <h2 class="fw-bold mb-1">
-                 Editar Plano
+                Editar Plano
             </h2>
             <p class="text-muted mb-0">
                 Atualize os dados do plano de forma segura
@@ -27,7 +27,6 @@
 
         <div class="col-lg-9">
 
-            <!-- CARD PRINCIPAL -->
             <div class="card border-0 shadow-lg rounded-4 fade-card">
 
                 <div class="card-header bg-gradient bg-primary text-white rounded-top-4 p-3">
@@ -39,13 +38,9 @@
                         </h5>
 
                         {% if plano.ativo %}
-                            <span class="badge bg-light text-dark">
-                                Ativo
-                            </span>
+                            <span class="badge bg-light text-dark">Ativo</span>
                         {% else %}
-                            <span class="badge bg-dark">
-                                Inativo
-                            </span>
+                            <span class="badge bg-dark">Inativo</span>
                         {% endif %}
 
                     </div>
@@ -61,9 +56,7 @@
 
                             <!-- NOME -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">
-                                    Nome do Plano
-                                </label>
+                                <label class="form-label fw-semibold">Nome do Plano</label>
                                 <input type="text"
                                        class="form-control form-control-lg shadow-sm"
                                        name="nome"
@@ -71,22 +64,9 @@
                                        required>
                             </div>
 
-                            <!-- ESCOLA (LOCKED) -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">
-                                    Escola
-                                </label>
-                                <input type="text"
-                                       class="form-control form-control-lg bg-light"
-                                       value="{{ plano.escola.nome }}"
-                                       readonly>
-                            </div>
-
                             <!-- LIMITES -->
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">
-                                    Limite Alunos
-                                </label>
+                                <label class="form-label fw-semibold">Limite Alunos</label>
                                 <input type="number"
                                        class="form-control form-control-lg shadow-sm"
                                        name="limite_alunos"
@@ -94,9 +74,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">
-                                    Limite Professores
-                                </label>
+                                <label class="form-label fw-semibold">Limite Professores</label>
                                 <input type="number"
                                        class="form-control form-control-lg shadow-sm"
                                        name="limite_professores"
@@ -104,9 +82,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">
-                                    Limite Turmas
-                                </label>
+                                <label class="form-label fw-semibold">Limite Turmas</label>
                                 <input type="number"
                                        class="form-control form-control-lg shadow-sm"
                                        name="limite_turmas"
@@ -115,9 +91,7 @@
 
                             <!-- VALOR -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">
-                                    Valor Mensal
-                                </label>
+                                <label class="form-label fw-semibold">Valor Mensal</label>
 
                                 <div class="input-group input-group-lg shadow-sm">
 
@@ -135,9 +109,7 @@
 
                             <!-- DATA -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">
-                                    Data de Expiração
-                                </label>
+                                <label class="form-label fw-semibold">Data de Expiração</label>
                                 <input type="date"
                                        class="form-control form-control-lg shadow-sm"
                                        name="data_expiracao"
@@ -170,16 +142,12 @@
 
                             <a href="{% url 'gerenciar_planos' %}"
                                class="btn btn-outline-secondary btn-lg rounded-pill px-4">
-
                                 Cancelar
-
                             </a>
 
                             <button type="submit"
                                     class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
-
-                                 Salvar Alterações
-
+                                Salvar Alterações
                             </button>
 
                         </div>
@@ -196,7 +164,6 @@
 
 </div>
 
-<!-- STYLE PREMIUM -->
 <style>
 
 .fade-card {
@@ -204,14 +171,8 @@
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .form-control:focus {

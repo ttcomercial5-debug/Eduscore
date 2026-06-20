@@ -8006,9 +8006,8 @@ def alterar_senha_aluno(request):
 #  GERENCIAMENTO SUPERADMIN
 #=============================================================
 
-
 def gerenciar_planos(request):
-    planos = Plano.objects.select_related('escola').all()
+    planos = Plano.objects.all()
     return render(request, 'planos.html', {'planos': planos})
 
 def gerenciar_pagamentos(request):
@@ -8148,6 +8147,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
+from academic.models import Plano
+
+
 @staff_member_required
 def editar_plano(request, plano_id):
 
@@ -8164,14 +8166,14 @@ def editar_plano(request, plano_id):
 
             plano.valor_mensal = float(request.POST.get("valor_mensal") or 0)
 
-            plano.data_expiracao = request.POST.get("data_expiracao")
+            plano.data_expiracao = request.POST.get("data_expiracao") or None
 
-            plano.ativo = bool(request.POST.get("ativo"))
+            plano.ativo = True if request.POST.get("ativo") == "on" else False
 
             plano.save()
 
             messages.success(request, "Plano atualizado com sucesso!")
-            return redirect("planos")
+            return redirect("gerenciar_planos")
 
         except Exception as e:
             messages.error(request, f"Erro ao atualizar plano: {str(e)}")

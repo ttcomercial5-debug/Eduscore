@@ -13,10 +13,22 @@
 
             <div class="card-body">
                 <h5 class="card-title">{{ plano.nome }}</h5>
-                <p class="card-text"><strong>Escola:</strong> {{ plano.escola.nome }}</p>
-                <p class="card-text"><strong>Limite de Alunos:</strong> {{ plano.limite_alunos }}</p>
-                <p class="card-text"><strong>Valor Mensal:</strong> Kz {{ plano.valor_mensal }}</p>
-                <p class="card-text"><strong>Expira em:</strong> {{ plano.data_expiracao }}</p>
+
+                <p class="card-text">
+                    <strong>Descrição:</strong>
+                    {{ plano.descricao|default:"Sem descrição" }}
+                </p>
+
+                <p class="card-text">
+                    <strong>Limite de Alunos:</strong>
+                    {{ plano.limite_alunos }}
+                </p>
+
+                <p class="card-text">
+                    <strong>Valor Mensal:</strong>
+                    Kz {{ plano.valor_mensal }}
+                </p>
+
                 <span class="badge"
                       style="
                         background-color: {% if plano.ativo %}#2563eb{% else %}#ef4444{% endif %};
@@ -39,6 +51,7 @@
             </div>
         </div>
     </div>
+
     {% empty %}
     <div class="col-12">
         <div class="alert alert-warning text-center">
@@ -48,7 +61,6 @@
     {% endfor %}
 </div>
 
-<!-- Pequena animação fade-in para os cards -->
 <script>
     const cards = document.querySelectorAll('.card-dashboard');
     cards.forEach((card, index) => {
@@ -57,4 +69,5 @@
         setTimeout(() => { card.style.opacity = 1; }, 100);
     });
 </script>
+
 {% endblock %}
