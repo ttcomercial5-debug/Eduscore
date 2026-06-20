@@ -141,9 +141,7 @@ class Configuracao(models.Model):
         return obj
 
     def save(self, *args, **kwargs):
-        """
-        Invalida cache ao atualizar configuração
-        """
+
         cache.delete("configuracao_global")
         super().save(*args, **kwargs)
 
