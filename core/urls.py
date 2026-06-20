@@ -44,6 +44,8 @@ urlpatterns = [
     path("calendario/novo/", views.criar_evento, name="criar_evento"),
     path("cursos/editar/<int:curso_id>/", views.editar_curso, name="editar_curso"),
     path("cursos/eliminar/<int:curso_id>/", views.eliminar_curso, name="eliminar_curso"),
+    path('pagamentos/editar/<int:pagamento_id>/', views.editar_pagamento, name='editar_pagamento'),
+    path('pagamento/deletar/<int:id>/', views.deletar_pagamento, name='deletar_pagamento'),
 
     # =============================
     # ALUNOS

@@ -1,0 +1,30 @@
+{% extends 'admin.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h3>Confirmar Eliminação</h3>
+
+    <p>Tem certeza que deseja eliminar o pagamento de:</p>
+
+    <p>
+        <strong>{{ pagamento.escola.nome }}</strong> -
+        Kz {{ pagamento.valor }}
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-danger">
+            Sim, eliminar
+        </button>
+
+        <a href="{% url 'gerenciar_pagamentos' %}" class="btn btn-secondary">
+            Cancelar
+        </a>
+    </form>
+
+</div>
+
+{% endblock %}

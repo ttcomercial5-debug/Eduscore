@@ -8010,11 +8010,50 @@ def gerenciar_planos(request):
     planos = Plano.objects.all()
     return render(request, 'planos.html', {'planos': planos})
 
+from django.shortcuts import render
+from academic.models import PagamentoPlano
+
+
 def gerenciar_pagamentos(request):
-    pagamentos = PagamentoPlano.objects.select_related('escola').all()
+    pagamentos = PagamentoPlano.objects.select_related('escola', 'plano').all().order_by('-criado_em')
     return render(request, 'pagamentos_escola.html', {'pagamentos': pagamentos})
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from academic.models import PagamentoPlano
 
+
+def editar_pagamento(request, pagamento_id):
+
+    pagamento = get_object_or_404(PagamentoPlano, id=pagamento_id)
+
+    if request.method == "POST":
+
+        pagamento.mes_referencia = request.POST.get("mes_referencia")
+        pagamento.valor = request.POST.get("valor")
+        pagamento.data_vencimento = request.POST.get("data_vencimento")
+        pagamento.data_pagamento = request.POST.get("data_pagamento") or None
+        pagamento.status = request.POST.get("status")
+
+        pagamento.save()
+
+        messages.success(request, "Pagamento atualizado com sucesso!")
+        return redirect("gerenciar_pagamentos")
+
+    return render(request, "editar_pagamento.html", {
+        "pagamento": pagamento
+    })
+
+def deletar_pagamento(request, id):
+    pagamento = PagamentoPlano.objects.get(id=id)
+
+    if request.method == 'POST':
+        pagamento.delete()
+        return redirect('pagamentos_escolas')
+
+    return render(request, 'confirmar_delete_pagamento.html', {
+        'pagamento': pagamento
+    })
 
 from datetime import date
 

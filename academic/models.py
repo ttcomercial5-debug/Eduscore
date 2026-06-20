@@ -153,91 +153,68 @@ class Configuracao(models.Model):
 # PAGAMENTO DO PLANO SAAS (Escola paga você)
 # ==========================================================
 
+from django.db import models
+from django.utils import timezone
 
 
 class PagamentoPlano(models.Model):
+
     STATUS_PENDENTE = 'PENDENTE'
     STATUS_PAGO = 'PAGO'
     STATUS_ATRASADO = 'ATRASADO'
 
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         (STATUS_PENDENTE, 'Pendente'),
         (STATUS_PAGO, 'Pago'),
         (STATUS_ATRASADO, 'Atrasado'),
-    )
+    ]
 
     escola = models.ForeignKey(
         'academic.Escola',
         on_delete=models.CASCADE,
-        related_name='pagamentos_plano'  # 🔹 único, diferente de Pagamento
+        related_name='pagamentos_planos'
     )
+
+    plano = models.ForeignKey(
+        'academic.Plano',
+        on_delete=models.PROTECT,
+        related_name='pagamentos'
+    )
+
+    mes_referencia = models.CharField(max_length=20)  # Ex: Janeiro 2026
+
     valor = models.DecimalField(max_digits=10, decimal_places=2)
+
     data_vencimento = models.DateField()
+
     data_pagamento = models.DateField(null=True, blank=True)
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default=STATUS_PENDENTE
     )
+
+    observacao = models.TextField(blank=True, null=True)
+
     criado_em = models.DateTimeField(auto_now_add=True)
 
-    # ==========================================================
-    # ATUALIZAR STATUS DA MENSALIDADE
-    # ==========================================================
+    atualizado_em = models.DateTimeField(auto_now=True)
 
     def atualizar_status(self):
 
-        from decimal import Decimal
-        from django.db.models import Sum
-        from django.utils import timezone
-
         hoje = timezone.now().date()
 
-        # ==========================================
-        # TOTAL PAGO
-        # ==========================================
+        if self.data_pagamento:
+            self.status = self.STATUS_PAGO
 
-        total_pago = self.pagamentos.aggregate(
-            total=Sum("valor_pago")
-        )["total"] or Decimal("0.00")
-
-        # ==========================================
-        # SE VALOR FOR ZERO
-        # NÃO PODE FICAR PAGA
-        # ==========================================
-
-        if self.valor <= 0:
-
-            if hoje > self.vencimento:
-                novo_status = "ATRASADA"
-            else:
-                novo_status = "PENDENTE"
-
-        # ==========================================
-        # QUANDO EXISTE VALOR
-        # ==========================================
+        elif hoje > self.data_vencimento:
+            self.status = self.STATUS_ATRASADO
 
         else:
+            self.status = self.STATUS_PENDENTE
 
-            if total_pago >= self.valor:
-
-                novo_status = "PAGA"
-
-            else:
-
-                if hoje > self.vencimento:
-                    novo_status = "ATRASADA"
-                else:
-                    novo_status = "PENDENTE"
-
-        # ==========================================
-        # ATUALIZA SOMENTE SE NECESSÁRIO
-        # ==========================================
-
-        if self.status != novo_status:
-            self.status = novo_status
-
-            self.save(update_fields=["status"])
+        self.save(update_fields=["status"])
 
 
 
