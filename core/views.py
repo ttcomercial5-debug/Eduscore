@@ -5501,7 +5501,7 @@ def adicionar_aluno(request):
                 "Entre em contacto com a ICA Systems para atualizar o plano."
             )
         )
-        return redirect("lista_alunos")
+        return redirect("dashboard")
 
     ano_letivo = AnoLetivo.objects.filter(
         escola=escola,
@@ -5513,7 +5513,7 @@ def adicionar_aluno(request):
             request,
             "Nenhum ano letivo ativo encontrado."
         )
-        return redirect("alunos")
+        return redirect("matricula")
 
     cursos = Curso.objects.filter(
         escola=escola
