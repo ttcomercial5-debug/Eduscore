@@ -2624,7 +2624,7 @@ def lancar_notas(request):
         return redirect("dashboard_professor")
 
     # =====================================================
-    # SAFE TRIMESTRE
+    # HELPERS
     # =====================================================
     def parse_trimestre(value):
         try:
@@ -2632,9 +2632,21 @@ def lancar_notas(request):
         except:
             return None
 
-    # =====================================================
-    # ETAPA FECHADA (FIX DEFINITIVO)
-    # =====================================================
+    def escala_maxima(disciplina):
+        try:
+            classe = int(disciplina.turma.classe)
+        except:
+            return 20
+        return 10 if classe <= 6 else 20
+
+    def limitar_nota(valor, max_nota):
+        if valor in [None, ""]:
+            return None
+        try:
+            return min(float(valor), max_nota)
+        except:
+            return None
+
     def etapa_fechada(disciplina, trimestre, etapa):
         if not disciplina or not trimestre:
             return False
@@ -2653,9 +2665,6 @@ def lancar_notas(request):
     disciplina_id = request.GET.get("disciplina")
     trimestre = parse_trimestre(request.GET.get("trimestre"))
 
-    # =====================================================
-    # BASE QUERY
-    # =====================================================
     disciplinas = Disciplina.objects.filter(
         professor=professor,
         escola=escola,
@@ -2674,7 +2683,7 @@ def lancar_notas(request):
     alunos_com_recurso = []
 
     # =====================================================
-    # CARREGAMENTO (GET)
+    # CARREGAMENTO GET
     # =====================================================
     if disciplina_id:
 
@@ -2693,19 +2702,14 @@ def lancar_notas(request):
             ano_letivo=ano_letivo
         )
 
-        if trimestre:
-            notas = notas.filter(trimestre=trimestre)
-
         notas_existentes = {n.aluno.id: n for n in notas}
 
-        # EXAME (classes finais)
         try:
             classe = int(disciplina.turma.classe)
             mostrar_exame = (classe in [6, 9, 12] and trimestre == 3)
         except:
             mostrar_exame = False
 
-        # RECURSO
         if trimestre == 3:
             mostrar_recurso = True
             alunos_com_recurso = [
@@ -2713,7 +2717,6 @@ def lancar_notas(request):
                 if n.media_final is not None and n.media_final < 10
             ]
 
-        # FECHAMENTO TRIMESTRE
         fechamento = FechamentoTrimestre.objects.filter(
             disciplina=disciplina,
             trimestre=trimestre,
@@ -2749,6 +2752,8 @@ def lancar_notas(request):
             ano_letivo=ano_letivo
         )
 
+        max_nota = escala_maxima(disciplina)
+
         # =================================================
         # SALVAR NOTAS
         # =================================================
@@ -2770,49 +2775,29 @@ def lancar_notas(request):
                     defaults={"escola": escola}
                 )
 
-                # BLOQUEIOS REAIS
-                if etapa_fechada(disciplina, trimestre, "P1") and nota_obj.p1 is not None:
-                    pass
-                if etapa_fechada(disciplina, trimestre, "P2") and nota_obj.p2 is not None:
-                    pass
-                if etapa_fechada(disciplina, trimestre, "EXAME") and nota_obj.exame is not None:
-                    pass
-
                 # P1
                 p1 = request.POST.get(f"p1_{aluno.id}")
-                if p1 not in [None, ""]:
-                    if not etapa_fechada(disciplina, trimestre, "P1"):
-                        nota_obj.p1 = Decimal(p1)
+                if p1 not in [None, ""] and not etapa_fechada(disciplina, trimestre, "P1"):
+                    nota_obj.p1 = Decimal(limitar_nota(p1, max_nota))
 
                 # P2
                 p2 = request.POST.get(f"p2_{aluno.id}")
-                if p2 not in [None, ""]:
-                    if etapa_fechada(disciplina, trimestre, "P1") and not etapa_fechada(disciplina, trimestre, "P2"):
-                        nota_obj.p2 = Decimal(p2)
+                if p2 not in [None, ""] and not etapa_fechada(disciplina, trimestre, "P2"):
+                    nota_obj.p2 = Decimal(limitar_nota(p2, max_nota))
 
                 # EXAME
                 if mostrar_exame:
                     exame = request.POST.get(f"exame_{aluno.id}")
-                    if exame not in [None, ""]:
-                        if not etapa_fechada(disciplina, trimestre, "EXAME"):
-                            nota_obj.exame = Decimal(exame)
+                    if exame not in [None, ""] and not etapa_fechada(disciplina, trimestre, "EXAME"):
+                        nota_obj.exame = Decimal(limitar_nota(exame, max_nota))
                 else:
                     nota_obj.exame = None
 
                 # RECURSO
-                if mostrar_recurso and nota_obj.media_final and nota_obj.media_final < 10:
-
+                if mostrar_recurso:
                     rec = request.POST.get(f"recurso_{aluno.id}")
-
-                    if (
-                            rec not in [None, ""]
-                            and not etapa_fechada(
-                        disciplina,
-                        trimestre,
-                        "RECURSO"
-                    )
-                    ):
-                        nota_obj.recurso = Decimal(rec)
+                    if rec not in [None, ""] and not etapa_fechada(disciplina, trimestre, "RECURSO"):
+                        nota_obj.recurso = Decimal(limitar_nota(rec, max_nota))
 
                 nota_obj.save()
 
@@ -2820,15 +2805,22 @@ def lancar_notas(request):
             return redirect(request.get_full_path())
 
         # =================================================
-        # FECHAR P1
+        # FECHAR P1 / P2 / EXAME / RECURSO / TRIMESTRE
         # =================================================
-        elif acao == "fechar_p1":
+        elif acao in ["fechar_p1", "fechar_p2", "fechar_exame", "fechar_recurso"]:
+
+            etapa_map = {
+                "fechar_p1": "P1",
+                "fechar_p2": "P2",
+                "fechar_exame": "EXAME",
+                "fechar_recurso": "RECURSO",
+            }
 
             FechamentoNota.objects.update_or_create(
                 disciplina=disciplina,
                 trimestre=trimestre,
                 ano_letivo=ano_letivo,
-                etapa="P1",
+                etapa=etapa_map[acao],
                 defaults={
                     "fechado": True,
                     "fechado_por": request.user,
@@ -2836,73 +2828,9 @@ def lancar_notas(request):
                 }
             )
 
-            messages.success(request, "P1 fechado.")
+            messages.success(request, f"{etapa_map[acao]} fechado.")
             return redirect(request.get_full_path())
 
-        # =================================================
-        # FECHAR P2
-        # =================================================
-        elif acao == "fechar_p2":
-
-            FechamentoNota.objects.update_or_create(
-                disciplina=disciplina,
-                trimestre=trimestre,
-                ano_letivo=ano_letivo,
-                etapa="P2",
-                defaults={
-                    "fechado": True,
-                    "fechado_por": request.user,
-                    "data_fechamento": timezone.now()
-                }
-            )
-
-            messages.success(request, "P2 fechado.")
-            return redirect(request.get_full_path())
-
-            # =================================================
-            # FECHAR EXAME
-            # =================================================
-        elif acao == "fechar_exame":
-
-            FechamentoNota.objects.update_or_create(
-                disciplina=disciplina,
-                trimestre=trimestre,
-                ano_letivo=ano_letivo,
-                etapa="EXAME",
-                defaults={
-                    "fechado": True,
-                    "fechado_por": request.user,
-                    "data_fechamento": timezone.now()
-                }
-            )
-
-            messages.success(request, "Exame fechado.")
-            return redirect(request.get_full_path())
-
-
-        # =================================================
-        # FECHAR RECURSO
-        # =================================================
-        elif acao == "fechar_recurso":
-
-            FechamentoNota.objects.update_or_create(
-                disciplina=disciplina,
-                trimestre=trimestre,
-                ano_letivo=ano_letivo,
-                etapa="RECURSO",
-                defaults={
-                    "fechado": True,
-                    "fechado_por": request.user,
-                    "data_fechamento": timezone.now()
-                }
-            )
-
-            messages.success(request, "Recurso fechado.")
-            return redirect(request.get_full_path())
-
-        # =================================================
-        # FECHAR TRIMESTRE
-        # =================================================
         elif acao == "fechar":
 
             if fechamento.fechado:
@@ -2918,7 +2846,7 @@ def lancar_notas(request):
             return redirect(request.get_full_path())
 
     # =====================================================
-    # CONTEXT FINAL
+    # CONTEXT
     # =====================================================
     context = {
         "ano_letivo": ano_letivo,
@@ -5363,28 +5291,27 @@ def gerar_senha():
 @transaction.atomic
 def criar_matricula(request):
 
-    # ======================================================
-    # PERMISSÃO
-    # ======================================================
-
-    if getattr(request.user, "role", None) != "SECRETARIA":
-
+    if request.user.role != "SECRETARIA":
         return redirect("dashboard")
 
-    plano = escola.plano
+    escola = request.user.escola
 
-    if plano is None:
-        messages.error(
-            request,
-            "A escola não possui um plano associado."
-        )
+    if not escola:
+        messages.error(request, "Usuário não vinculado a escola.")
         return redirect("dashboard")
 
-    if not plano.ativo:
-        messages.error(
-            request,
-            "O plano da escola encontra-se inativo."
-        )
+    # ======================================================
+    # PLANO + RESTRIÇÃO DE ALUNOS
+    # ======================================================
+
+    plano = getattr(escola, "plano", None)
+
+    if not plano:
+        messages.error(request, "A escola não possui um plano associado.")
+        return redirect("dashboard")
+
+    if not getattr(plano, "ativo", False):
+        messages.error(request, "O plano da escola encontra-se inativo.")
         return redirect("dashboard")
 
     total_alunos = Aluno.objects.filter(
@@ -5395,320 +5322,126 @@ def criar_matricula(request):
     if total_alunos >= plano.limite_alunos:
         messages.error(
             request,
-            (
-                f"O limite de {plano.limite_alunos} alunos "
+            f"O limite de {plano.limite_alunos} alunos "
                 f"do Plano {plano.nome} foi atingido. "
                 "Entre em contacto com a ICA Systems para atualizar o plano."
-            )
         )
-        return redirect("lista_alunos")
-
-    escola = request.user.escola
-
-    if not escola:
-
-        messages.error(
-            request,
-            "Usuário não vinculado a nenhuma escola."
-        )
-
         return redirect("dashboard")
 
-    # ======================================================
-    # ANO LETIVO
-    # ======================================================
-
+    # Ano letivo ativo
     ano_letivo = AnoLetivo.objects.filter(
         escola=escola,
         ativo=True
     ).first()
 
     if not ano_letivo:
-
-        messages.error(
-            request,
-            "Nenhum ano letivo ativo encontrado."
-        )
-
-        return redirect("dashboard_secretaria")
-
-    # ======================================================
-    # POST
-    # ======================================================
+        messages.error(request, "Nenhum ano letivo ativo.")
+        return redirect("criar_matricula")
 
     if request.method == "POST":
 
-        nome = request.POST.get(
-            "nome",
-            ""
-        ).strip()
+        nome = request.POST.get("nome")
+        email = request.POST.get("email")
+        numero_bi = request.POST.get("numero_bi")
+        data_nascimento = request.POST.get("data_nascimento")
+        sexo = request.POST.get("sexo")
+        turma_id = request.POST.get("turma")
 
-        email = request.POST.get(
-            "email",
-            ""
-        ).strip()
-
-        numero_bi = request.POST.get(
-            "numero_bi",
-            ""
-        ).strip()
-
-        data_nascimento = request.POST.get(
-            "data_nascimento"
-        )
-
-        sexo = request.POST.get(
-            "sexo"
-        )
-
-        turma_id = request.POST.get(
-            "turma"
-        )
-
-        # ==================================================
-        # VALIDAÇÕES
-        # ==================================================
-
-        if not all([
-            nome,
-            numero_bi,
-            data_nascimento,
-            sexo,
-            turma_id
-        ]):
-
-            messages.error(
-                request,
-                "Preencha todos os campos obrigatórios."
-            )
-
+        if not all([nome, numero_bi, data_nascimento, sexo, turma_id]):
+            messages.error(request, "Preencha todos os campos obrigatórios.")
             return redirect("criar_matricula")
 
         turma = get_object_or_404(
-
-            Turma.objects.select_related(
-                "curso"
-            ),
-
+            Turma,
             id=turma_id,
             escola=escola
-
         )
 
-        # ==================================================
-        # BI DUPLICADO
-        # ==================================================
-
-        if Aluno.objects.filter(
-            numero_bi=numero_bi,
-            escola=escola
-        ).exists():
-
-            messages.error(
-                request,
-                "Já existe um aluno com este número de BI."
-            )
-
+        if Aluno.objects.filter(numero_bi=numero_bi, escola=escola).exists():
+            messages.error(request, "Já existe aluno com este BI.")
             return redirect("criar_matricula")
 
-        # ==================================================
-        # EMAIL DUPLICADO
-        # ==================================================
+        senha_gerada = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=8)
+        )
 
-        if email:
+        username = gerar_username_unico(nome)
 
-            if User.objects.filter(
-                email=email
-            ).exists():
-
-                messages.error(
-                    request,
-                    "Este email já está em uso."
-                )
-
-                return redirect("criar_matricula")
-
-        # ==================================================
-        # USERNAME + SENHA
-        # ==================================================
-
-        username = nome
-
-        senha_gerada = gerar_senha()
-
-        # ==================================================
-        # CRIAR USUÁRIO
-        # ==================================================
-
-        usuario = User.objects.create_user(
-
+        user = User.objects.create_user(
             username=username,
-
             password=senha_gerada,
-
             role="ALUNO",
-
             first_name=nome,
-
             email=email if email else "",
-
             escola=escola
-
         )
 
-        # ==================================================
-        # PROCESSO
-        # ==================================================
+        ultimo = Aluno.objects.filter(
+            escola=escola,
+            numero_processo__isnull=False
+        ).order_by("-id").first()
 
-        numero_processo = gerar_numero_processo(
-            escola
-        )
-
-        # ==================================================
-        # NÚMERO TURMA
-        # ==================================================
+        if ultimo and ultimo.numero_processo and ultimo.numero_processo.isdigit():
+            numero_processo = str(int(ultimo.numero_processo) + 1).zfill(6)
+        else:
+            numero_processo = "000001"
 
         numero_na_turma = (
-
             Aluno.objects.filter(
-
                 turma=turma,
-
                 ano_letivo=ano_letivo
-
             ).count() + 1
-
         )
 
-        # ==================================================
-        # MATRÍCULA
-        # ==================================================
-
-        matricula = (
-
-            f"{turma.classe}"
-            f"{turma.identificador}"
-            f"-{numero_na_turma}"
-
-        )
-
-        # ==================================================
-        # CRIAR ALUNO
-        # ==================================================
+        matricula = f"{turma.classe}{turma.identificador}-{numero_na_turma}"
 
         aluno = Aluno.objects.create(
-
-            usuario=usuario,
-
+            usuario=user,
             matricula=matricula,
-
             numero_processo=numero_processo,
-
             numero_bi=numero_bi,
-
             data_nascimento=data_nascimento,
-
             sexo=sexo,
-
             turma=turma,
-
             classe=turma.classe,
-
             ano_letivo=ano_letivo,
-
             numero_na_turma=numero_na_turma,
-
             matricula_confirmada=True,
-
-            ultimo_ano_confirmado=ano_letivo,
-
             escola=escola,
-
         )
 
-        # ==================================================
-        # CONFIGURAÇÃO FINANCEIRA
-        # ==================================================
-
-        config,_= (
-            ConfiguracaoFinanceira.objects.get_or_create(
+        config, created = ConfiguracaoFinanceira.objects.get_or_create(
             escola=escola
-            )
         )
-
-        # ==================================================
-        # GERAR MENSALIDADES
-        # ==================================================
 
         gerar_mensalidades_aluno(
-
             aluno=aluno,
-
             ano_letivo=ano_letivo,
-
             valor=config.valor_mensalidade
-
         )
 
-        # ==================================================
-        # SUCESSO
-        # ==================================================
-
         messages.success(
-
             request,
-
-            (
-                f"Matrícula criada com sucesso! "
-                f"Processo: {numero_processo} | "
-                f"Usuário: {username} | "
-                f"Senha: {senha_gerada}"
-            )
-
+            f"Matrícula criada com sucesso! Usuário: {username} | Senha: {senha_gerada}"
         )
 
         return redirect("criar_matricula")
 
-    # ======================================================
-    # TURMAS
-    # ======================================================
-
     turmas = Turma.objects.filter(
         escola=escola
-    ).select_related(
-        "curso"
-    ).order_by(
+    ).select_related("curso").order_by(
         "classe",
         "identificador"
     )
 
-    # ======================================================
-    # CURSOS
-    # ======================================================
-
     cursos = Curso.objects.filter(
         escola=escola
-    ).order_by("nome")
-
-    # ======================================================
-    # CONTEXT
-    # ======================================================
-
-    context = {
-
-        "turmas": turmas,
-
-        "cursos": cursos,
-
-        "ano_letivo": ano_letivo,
-
-    }
-
-    return render(
-        request,
-        "matricula.html",
-        context
     )
+
+    return render(request, "matricula.html", {
+        "turmas": turmas,
+        "cursos": cursos
+    })
 
 
 

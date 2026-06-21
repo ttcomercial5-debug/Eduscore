@@ -971,6 +971,7 @@ class Aluno(models.Model):
 # ==========================================================
 # NOTA
 # ==========================================================
+
 from decimal import Decimal
 from django.db import models, transaction
 
@@ -1017,7 +1018,18 @@ class Nota(models.Model):
         ordering = ["disciplina", "trimestre"]
 
     # =====================================================
-    # CONTROLO DE FECHO (opcional uso em UI/model)
+    # ESCALA DE NOTAS (10 ou 20)
+    # =====================================================
+    def escala_maxima(self):
+        try:
+            classe = int(self.disciplina.turma.classe)
+        except:
+            return 20
+
+        return 10 if classe <= 6 else 20
+
+    # =====================================================
+    # CONTROLO DE FECHO
     # =====================================================
     def etapa_fechada(self, etapa):
         from academic.models import FechamentoNota
@@ -1031,39 +1043,30 @@ class Nota(models.Model):
         ).exists()
 
     # =====================================================
-    # CÁLCULO MÉDIA
+    # SAVE COM REGRAS
     # =====================================================
-    def calcular_media(self):
-
-        if self.p1 is not None and self.p2 is not None:
-            return round((self.p1 + self.p2) / 2, 2)
-
-        return None
-
-    # =====================================================
-    # CÁLCULO FINAL
-    # =====================================================
-    def calcular_media_final(self, base):
-
-        media = float(base)
-
-        # EXAME
-        if self.exame is not None:
-            media = round((media + float(self.exame)) / 2, 2)
-
-        # RECURSO (apenas se reprovado)
-        if media < 10 and self.recurso is not None:
-            media = round((media + float(self.recurso)) / 2, 2)
-
-        return Decimal(media)
-
     def save(self, *args, **kwargs):
-        from decimal import Decimal
         from django.db import transaction
         from academic.models import FechamentoNota
 
+        max_nota = self.escala_maxima()
+
         # =========================
-        # BLOQUEIO
+        # NORMALIZAR VALORES
+        # =========================
+        def normalizar(valor):
+            if valor is None:
+                return None
+            v = float(valor)
+            return min(v, max_nota)
+
+        p1 = normalizar(self.p1)
+        p2 = normalizar(self.p2)
+        exame = normalizar(self.exame)
+        recurso = normalizar(self.recurso)
+
+        # =========================
+        # BLOQUEIO DE ETAPAS FECHADAS
         # =========================
         if self.pk:
             old = Nota.objects.get(pk=self.pk)
@@ -1076,55 +1079,22 @@ class Nota(models.Model):
             ]:
                 if old_val != new_val:
                     if FechamentoNota.objects.filter(
-                            disciplina=self.disciplina,
-                            trimestre=self.trimestre,
-                            ano_letivo=self.ano_letivo,
-                            etapa=etapa,
-                            fechado=True
+                        disciplina=self.disciplina,
+                        trimestre=self.trimestre,
+                        ano_letivo=self.ano_letivo,
+                        etapa=etapa,
+                        fechado=True
                     ).exists():
                         raise ValueError(f"{etapa} está fechado")
-
-        # =========================
-        # PEGAR SEMPRE DA BASE DE DADOS
-        # =========================
-        db = None
-        if self.pk:
-            db = Nota.objects.get(pk=self.pk)
-
-        p1 = db.p1 if db else self.p1
-        p2 = db.p2 if db else self.p2
-        exame = db.exame if db else self.exame
-        recurso = db.recurso if db else self.recurso
-
-        # sobrescrever apenas se veio no POST
-        if self.p1 is not None:
-            p1 = self.p1
-
-        if self.p2 is not None:
-            p2 = self.p2
-
-        if self.exame is not None:
-            exame = self.exame
-
-        if self.recurso is not None:
-            recurso = self.recurso
-
 
         # =========================
         # MÉDIA BASE
         # =========================
         if p1 is not None and p2 is not None:
-
-            media = Decimal(
-                round((p1 + p2) / 2, 2)
-            )
-
+            media = Decimal(round((p1 + p2) / 2, 2))
         elif p1 is not None:
-
             media = Decimal(p1)
-
         else:
-
             media = None
 
         self.media = media
@@ -1133,29 +1103,22 @@ class Nota(models.Model):
         # MÉDIA FINAL
         # =========================
         if media is not None:
-
             media_base = float(media)
 
-            # EXAME
             if exame is not None:
-                media_base = round(
-                    (media_base + float(exame)) / 2,
-                    2
-                )
+                media_base = round((media_base + float(exame)) / 2, 2)
 
-            # RECURSO (nota seca)
-            if media_base < 10 and recurso is not None:
-
-                recurso_valor = float(recurso)
-
-                if recurso_valor > media_base:
-                    media_base = recurso_valor
+            # RECURSO
+            if media_base < (max_nota / 2) and recurso is not None:
+                if float(recurso) > media_base:
+                    media_base = float(recurso)
 
             self.media_final = Decimal(str(media_base))
 
+            # SITUAÇÃO (ajustada à escala)
             self.situacao = (
                 "APROVADO"
-                if media_base >= 10
+                if media_base >= (max_nota / 2)
                 else "REPROVADO"
             )
 
@@ -1168,10 +1131,9 @@ class Nota(models.Model):
         transaction.on_commit(lambda: self.atualizar_media_aluno())
 
     # =====================================================
-    # MÉDIA GERAL ALUNO
+    # MÉDIA GERAL DO ALUNO
     # =====================================================
     def atualizar_media_aluno(self):
-
         notas = Nota.objects.filter(
             aluno=self.aluno,
             ano_letivo=self.ano_letivo

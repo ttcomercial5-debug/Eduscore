@@ -363,145 +363,259 @@ TABELA PRINCIPAL
 
 <td><strong>{{ aluno.usuario.username }}</strong></td>
 
-<!-- P1 -->
-<td>
+{% with classe=disciplina.turma.classe|add:0 %}
+{% with nota=notas_existentes|get_item:aluno.id %}
 
+<!-- ========================= P1 ========================= -->
+<td>
 {% if p1_fechado %}
 
-<div class="fw-bold
-{% if nota.p1 < 10 %}
-text-danger
-{% elif nota.p1 <= 15 %}
-text-success
-{% else %}
-text-primary
-{% endif %}">
-    {{ nota.p1|default:"-" }}
-</div>
+    {% if nota %}
+        {% with v=nota.p1|default:0 %}
+
+        <div class="fw-bold
+            {% if classe <= 6 %}
+
+                {% if v <= 4 %}
+                    text-danger
+                {% elif v <= 7 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% else %}
+
+                {% if v <= 9 %}
+                    text-danger
+                {% elif v <= 14 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% endif %}
+        ">
+            {{ nota.p1|default:"-" }}
+        </div>
+
+        {% endwith %}
+    {% else %}
+        -
+    {% endif %}
 
 {% else %}
-
-<input
-    type="number"
-    step="0.01"
-    name="p1_{{ aluno.id }}"
-    class="form-control input-nota"
-    value="{% if nota %}{{ nota.p1 }}{% endif %}"
-
-
+<input type="number"
+       step="0.01"
+       name="p1_{{ aluno.id }}"
+       class="form-control input-nota"
+       value="{{ nota.p1|default:'' }}"
+       max="{% if classe <= 6 %}10{% else %}20{% endif %}">
 {% endif %}
-
 </td>
 
-<!-- P2 -->
-<td>
 
+<!-- ========================= P2 ========================= -->
+<td>
 {% if p2_fechado %}
 
-<div class="fw-bold
-{% if nota.p2 < 10 %}
-text-danger
-{% elif nota.p2 <= 15 %}
-text-success
-{% else %}
-text-primary
-{% endif %}">
-    {{ nota.p2|default:"-" }}
-</div>
+    {% if nota %}
+        {% with v=nota.p2|default:0 %}
+
+        <div class="fw-bold
+            {% if classe <= 6 %}
+
+                {% if v <= 4 %}
+                    text-danger
+                {% elif v <= 7 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% else %}
+
+                {% if v <= 9 %}
+                    text-danger
+                {% elif v <= 14 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% endif %}
+        ">
+            {{ nota.p2|default:"-" }}
+        </div>
+
+        {% endwith %}
+    {% else %}
+        -
+    {% endif %}
 
 {% else %}
-
-<input
-    type="number"
-    step="0.01"
-    name="p2_{{ aluno.id }}"
-    class="form-control input-nota"
-    value="{% if nota %}{{ nota.p2 }}{% endif %}"
-    {% if not p1_fechado %}disabled{% endif %}
-
-
+<input type="number"
+       step="0.01"
+       name="p2_{{ aluno.id }}"
+       class="form-control input-nota"
+       value="{{ nota.p2|default:'' }}"
+       max="{% if classe <= 6 %}10{% else %}20{% endif %}"
+       {% if not p1_fechado %}disabled{% endif %}>
 {% endif %}
-
 </td>
 
-<!-- EXAME -->
+
+<!-- ========================= EXAME ========================= -->
 {% if mostrar_exame %}
 <td>
 
 {% if exame_fechado %}
 
-<div class="fw-bold
-{% if nota.exame < 10 %}
-text-danger
-{% elif nota.exame <= 15 %}
-text-success
-{% else %}
-text-primary
-{% endif %}">
-    {{ nota.exame|default:"-" }}
-</div>
+    {% if nota %}
+        {% with v=nota.exame|default:0 %}
+
+        <div class="fw-bold
+            {% if classe <= 6 %}
+
+                {% if v <= 4 %}
+                    text-danger
+                {% elif v <= 7 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% else %}
+
+                {% if v <= 9 %}
+                    text-danger
+                {% elif v <= 14 %}
+                    text-success
+                {% else %}
+                    text-primary
+                {% endif %}
+
+            {% endif %}
+        ">
+            {{ nota.exame|default:"-" }}
+        </div>
+
+        {% endwith %}
+    {% else %}
+        -
+    {% endif %}
 
 {% else %}
-
-<input
-    type="number"
-    step="0.01"
-    name="exame_{{ aluno.id }}"
-    class="form-control input-nota"
-    value="{% if nota %}{{ nota.exame }}{% endif %}"
-
-
+<input type="number"
+       step="0.01"
+       name="exame_{{ aluno.id }}"
+       class="form-control input-nota"
+       value="{{ nota.exame|default:'' }}"
+       max="{% if classe <= 6 %}10{% else %}20{% endif %}">
 {% endif %}
 
 </td>
 {% endif %}
 
 
-
-<!-- RECURSO -->
+<!-- ========================= RECURSO ========================= -->
 {% if mostrar_recurso %}
 <td>
 
-{% if nota and nota.recurso %}
+{% if nota %}
+    {% with media=nota.media_final|default:0 %}
 
-<div class="fw-bold
-{% if nota.recurso < 10 %}
-text-danger
-{% elif nota.recurso <= 15 %}
-text-success
+        {% if classe <= 6 %}
+
+            {% if nota.recurso is not None %}
+
+                {% with r=nota.recurso %}
+
+                <div class="fw-bold
+                    {% if r <= 4 %}
+                        text-danger
+                    {% elif r <= 7 %}
+                        text-success
+                    {% else %}
+                        text-primary
+                    {% endif %}
+                ">
+                    {{ r }}
+                </div>
+
+                {% endwith %}
+
+            {% elif media < 5 %}
+
+                <input type="number"
+                       step="0.01"
+                       name="recurso_{{ aluno.id }}"
+                       class="form-control input-nota"
+                       max="10">
+
+            {% else %}
+                <span class="badge badge-info">Sem Recurso</span>
+            {% endif %}
+
+        {% else %}
+
+            {% if nota.recurso is not None %}
+
+                {% with r=nota.recurso %}
+
+                <div class="fw-bold
+                    {% if r <= 9 %}
+                        text-danger
+                    {% elif r <= 14 %}
+                        text-success
+                    {% else %}
+                        text-primary
+                    {% endif %}
+                ">
+                    {{ r }}
+                </div>
+
+                {% endwith %}
+
+            {% elif media < 10 %}
+
+                <input type="number"
+                       step="0.01"
+                       name="recurso_{{ aluno.id }}"
+                       class="form-control input-nota"
+                       max="20">
+
+            {% else %}
+                <span class="badge badge-info">Sem Recurso</span>
+            {% endif %}
+
+        {% endif %}
+
+    {% endwith %}
 {% else %}
-text-primary
-{% endif %}">
-    {{ nota.recurso }}
-</div>
-
-{% elif aluno.id in alunos_com_recurso %}
-
-<input
-    type="number"
-    step="0.01"
-    name="recurso_{{ aluno.id }}"
-    class="form-control input-nota"
-    value="{% if nota %}{{ nota.recurso }}{% endif %}">
-
-{% else %}
-
-<span class="badge badge-info">
-    Sem Recurso
-</span>
-
+-
 {% endif %}
 
 </td>
 {% endif %}
 
+{% endwith %}
+{% endwith %}
 
-<!-- MÉDIA -->
+
+<!-- ========================= MÉDIA ========================= -->
 <td class="text-center">
+
 {% if nota and nota.media_final %}
-<span class="fw-bold">{{ nota.media_final }}</span>
-{% else %}-{% endif %}
+    <span class="fw-bold">
+        {{ nota.media_final }}
+    </span>
+{% else %}
+    -
+{% endif %}
+
 </td>
+
 
 <!-- SITUAÇÃO -->
 <td class="text-center">
@@ -520,6 +634,7 @@ text-primary
 
 {% endwith %}
 {% endfor %}
+
 
 </tbody>
 
