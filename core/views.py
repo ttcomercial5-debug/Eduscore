@@ -6908,8 +6908,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import redirect, render
-
-
 @login_required
 def configuracao_financeira(request):
 
@@ -6953,9 +6951,69 @@ def configuracao_financeira(request):
 
             with transaction.atomic():
 
-                valor_mensalidade = converter_decimal(
-                    request.POST.get("valor_mensalidade")
+                # -------------------------------
+                # MENSALIDADES POR CLASSE
+                # -------------------------------
+
+                valor_mensalidade_iniciacao = converter_decimal(
+                    request.POST.get("valor_mensalidade_iniciacao")
                 )
+
+                valor_mensalidade_1 = converter_decimal(
+                    request.POST.get("valor_mensalidade_1")
+                )
+
+                valor_mensalidade_2 = converter_decimal(
+                    request.POST.get("valor_mensalidade_2")
+                )
+
+                valor_mensalidade_3 = converter_decimal(
+                    request.POST.get("valor_mensalidade_3")
+                )
+
+                valor_mensalidade_4 = converter_decimal(
+                    request.POST.get("valor_mensalidade_4")
+                )
+
+                valor_mensalidade_5 = converter_decimal(
+                    request.POST.get("valor_mensalidade_5")
+                )
+
+                valor_mensalidade_6 = converter_decimal(
+                    request.POST.get("valor_mensalidade_6")
+                )
+
+                valor_mensalidade_7 = converter_decimal(
+                    request.POST.get("valor_mensalidade_7")
+                )
+
+                valor_mensalidade_8 = converter_decimal(
+                    request.POST.get("valor_mensalidade_8")
+                )
+
+                valor_mensalidade_9 = converter_decimal(
+                    request.POST.get("valor_mensalidade_9")
+                )
+
+                valor_mensalidade_10 = converter_decimal(
+                    request.POST.get("valor_mensalidade_10")
+                )
+
+                valor_mensalidade_11 = converter_decimal(
+                    request.POST.get("valor_mensalidade_11")
+                )
+
+                valor_mensalidade_12 = converter_decimal(
+                    request.POST.get("valor_mensalidade_12")
+                )
+
+                valor_mensalidade_13 = converter_decimal(
+                    request.POST.get("valor_mensalidade_13")
+                )
+
+                # -------------------------------
+                # OUTROS VALORES
+                # -------------------------------
 
                 valor_matricula = converter_decimal(
                     request.POST.get("valor_matricula")
@@ -6991,12 +7049,28 @@ def configuracao_financeira(request):
         # ==========================================================
 
         campos = [
-            valor_mensalidade,
+
+            valor_mensalidade_iniciacao,
+            valor_mensalidade_1,
+            valor_mensalidade_2,
+            valor_mensalidade_3,
+            valor_mensalidade_4,
+            valor_mensalidade_5,
+            valor_mensalidade_6,
+            valor_mensalidade_7,
+            valor_mensalidade_8,
+            valor_mensalidade_9,
+            valor_mensalidade_10,
+            valor_mensalidade_11,
+            valor_mensalidade_12,
+            valor_mensalidade_13,
+
             valor_matricula,
             valor_declaracao,
             valor_exame,
             valor_multa_mensalidade,
             valor_multa_matricula,
+
         ]
 
         if any(valor < 0 for valor in campos):
@@ -7012,7 +7086,21 @@ def configuracao_financeira(request):
         # SALVAR
         # ==========================================================
 
-        config.valor_mensalidade = valor_mensalidade
+        config.valor_mensalidade_iniciacao = valor_mensalidade_iniciacao
+        config.valor_mensalidade_1 = valor_mensalidade_1
+        config.valor_mensalidade_2 = valor_mensalidade_2
+        config.valor_mensalidade_3 = valor_mensalidade_3
+        config.valor_mensalidade_4 = valor_mensalidade_4
+        config.valor_mensalidade_5 = valor_mensalidade_5
+        config.valor_mensalidade_6 = valor_mensalidade_6
+        config.valor_mensalidade_7 = valor_mensalidade_7
+        config.valor_mensalidade_8 = valor_mensalidade_8
+        config.valor_mensalidade_9 = valor_mensalidade_9
+        config.valor_mensalidade_10 = valor_mensalidade_10
+        config.valor_mensalidade_11 = valor_mensalidade_11
+        config.valor_mensalidade_12 = valor_mensalidade_12
+        config.valor_mensalidade_13 = valor_mensalidade_13
+
         config.valor_matricula = valor_matricula
         config.valor_declaracao = valor_declaracao
         config.valor_exame = valor_exame
@@ -7022,19 +7110,21 @@ def configuracao_financeira(request):
         config.save()
 
         # ==========================================================
-        # ATUALIZAR MENSALIDADES COM VALOR ZERO
+        # ATUALIZAR MENSALIDADES SEM VALOR
         # ==========================================================
 
         mensalidades_sem_valor = Mensalidade.objects.filter(
             aluno__escola=escola,
             valor__lte=0
-        )
+        ).select_related("aluno__turma")
 
         mensalidades_atualizadas = 0
 
         for mensalidade in mensalidades_sem_valor:
 
-            mensalidade.valor = valor_mensalidade
+            classe = mensalidade.aluno.turma.classe
+
+            mensalidade.valor = config.obter_valor_mensalidade(classe)
 
             mensalidade.save(update_fields=["valor"])
 
@@ -7051,10 +7141,10 @@ def configuracao_financeira(request):
             f"""
 Configuração financeira salva com sucesso.
 
-Mensalidade: {valor_mensalidade} Kz
-Matrícula: {valor_matricula} Kz
-Declaração: {valor_declaracao} Kz
-Exame: {valor_exame} Kz
+Mensalidades por classe atualizadas.
+Valor da matrícula: {valor_matricula} Kz
+Valor da declaração: {valor_declaracao} Kz
+Valor do exame: {valor_exame} Kz
 
 Mensalidades corrigidas: {mensalidades_atualizadas}
 """
@@ -7075,7 +7165,6 @@ Mensalidades corrigidas: {mensalidades_atualizadas}
         "configuracao_financeira.html",
         context
     )
-
 
 
 

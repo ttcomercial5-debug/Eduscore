@@ -1875,12 +1875,152 @@ class ConfiguracaoFinanceira(models.Model):
         on_delete=models.CASCADE
     )
 
-    valor_mensalidade = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    valor_multa_mensalidade = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    valor_matricula = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    valor_multa_matricula = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    valor_declaracao = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    valor_exame = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # ======================================================
+    # MENSALIDADES POR CLASSE
+    # ======================================================
+
+    valor_mensalidade_iniciacao = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_1 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_2 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_3 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_4 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_5 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_6 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_7 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_8 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_9 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_10 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_11 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_12 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_mensalidade_13 = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    # ======================================================
+    # OUTROS VALORES
+    # ======================================================
+
+    valor_multa_mensalidade = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_matricula = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_multa_matricula = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_declaracao = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_exame = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    # ======================================================
+    # OBTÉM A MENSALIDADE DA CLASSE
+    # ======================================================
+
+    def obter_valor_mensalidade(self, classe):
+
+        mapa = {
+            0: self.valor_mensalidade_iniciacao,
+            1: self.valor_mensalidade_1,
+            2: self.valor_mensalidade_2,
+            3: self.valor_mensalidade_3,
+            4: self.valor_mensalidade_4,
+            5: self.valor_mensalidade_5,
+            6: self.valor_mensalidade_6,
+            7: self.valor_mensalidade_7,
+            8: self.valor_mensalidade_8,
+            9: self.valor_mensalidade_9,
+            10: self.valor_mensalidade_10,
+            11: self.valor_mensalidade_11,
+            12: self.valor_mensalidade_12,
+            13: self.valor_mensalidade_13,
+        }
+
+        return mapa.get(classe, 0)
 
     def __str__(self):
         return f"Financeiro - {self.escola.nome}"
