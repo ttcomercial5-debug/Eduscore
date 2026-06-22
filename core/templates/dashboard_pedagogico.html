@@ -1,0 +1,289 @@
+
+{% extends "base_diretor_pedagogico.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ================= CABEÇALHO ================= -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold text-dark">
+            <i class="bi bi-mortarboard-fill text-primary"></i>
+            Painel do Diretor Pedagógico
+        </h2>
+
+        <p class="text-muted mb-0">
+            Gestão académica da instituição de ensino.
+        </p>
+
+    </div>
+
+    <!-- ================= CARDS ================= -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Professores
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+                                {{ total_professores }}
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-person-workspace fs-1 text-primary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Turmas
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+                                {{ total_turmas }}
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-easel fs-1 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Disciplinas
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+                                {{ total_disciplinas }}
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-book-half fs-1 text-warning"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Alunos
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+                                {{ total_alunos }}
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-people-fill fs-1 text-danger"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================= SEGUNDA LINHA ================= -->
+
+    <div class="row g-4">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow rounded-4">
+
+                <div class="card-header bg-white border-0 py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-lightning-charge-fill text-primary"></i>
+                        Acesso Rápido
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-grid gap-3">
+
+                        <a href="{% url 'adicionar_professor' %}"
+                           class="btn btn-outline-primary btn-lg">
+
+                            <i class="bi bi-person-plus-fill"></i>
+                            Cadastrar Professor
+
+                        </a>
+
+                        <a href="{% url 'adicionar_turma' %}"
+                           class="btn btn-outline-success btn-lg">
+
+                            <i class="bi bi-plus-square"></i>
+                            Criar Turma
+
+                        </a>
+
+                        <a href="{% url 'adicionar_disciplina' %}"
+                           class="btn btn-outline-warning btn-lg">
+
+                            <i class="bi bi-book"></i>
+                            Criar Disciplina
+
+                        </a>
+
+                        <a href="{% url 'cursos' %}"
+                           class="btn btn-outline-info btn-lg">
+
+                            <i class="bi bi-mortarboard"></i>
+                            Gerir Cursos
+
+                        </a>
+
+                        <a href="{% url 'horarios_turma' %}"
+                           class="btn btn-outline-dark btn-lg">
+
+                            <i class="bi bi-clock-history"></i>
+                            Gerir Horários
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-header bg-white border-0 py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-info-circle-fill text-success"></i>
+                        Resumo Académico
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-borderless align-middle">
+
+                        <tr>
+                            <td>Total de Cursos</td>
+                            <td class="fw-bold text-end">
+                                {{ total_cursos }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Total de Horários</td>
+                            <td class="fw-bold text-end">
+                                {{ total_horarios }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Total de Professores</td>
+                            <td class="fw-bold text-end">
+                                {{ total_professores }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Total de Turmas</td>
+                            <td class="fw-bold text-end">
+                                {{ total_turmas }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Total de Disciplinas</td>
+                            <td class="fw-bold text-end">
+                                {{ total_disciplinas }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Total de Alunos</td>
+                            <td class="fw-bold text-end">
+                                {{ total_alunos }}
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

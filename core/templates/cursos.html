@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends base_template %}
 {% block content %}
 
 <style>
@@ -147,12 +147,14 @@
         <h4 class="fw-bold mb-1">Gestão de Cursos</h4>
         <small>Organização académica da instituição</small>
     </div>
+    {% if request.user.role|upper == "DIRETOR_PEDAGOGICO" %}
     <button class="btn btn-light"
             data-bs-toggle="modal"
             data-bs-target="#novoCursoModal">
         <i class="bi bi-plus-circle"></i>
         Novo Curso
     </button>
+    {% endif %}
 </div>
 <!-- MESSAGES -->
 {% if messages %}

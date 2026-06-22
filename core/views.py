@@ -324,6 +324,9 @@ def redirect_user_by_role(user):
     if user.role == 'DIRETOR':
         return redirect('dashboard')
 
+    if user.role == 'DIRETOR_PEDAGOGICO':
+        return redirect('dashboard_diretor_pedagogico')
+
     if user.role == 'PROFESSOR':
         return redirect('dashboard_professor')
 
@@ -727,6 +730,7 @@ from django.db.models.functions import Lower
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+
 @login_required
 def lista_alunos(request):
 
@@ -737,9 +741,24 @@ def lista_alunos(request):
 
     user = request.user
 
-    if user.role not in ["DIRETOR", "PROFESSOR"]:
+    # ======================================================
+    # BASE TEMPLATE DINÂMICO (SISTEMA SaaS)
+    # ======================================================
+    if user.role == "DIRETOR_PEDAGOGICO":
+        base_template = "base_diretor_pedagogico.html"
+
+    elif user.role == "DIRETOR":
+        base_template = "base.html"
+
+    elif user.role == "PROFESSOR":
+        base_template = "base_professor.html"
+
+    else:
         return redirect("dashboard")
 
+    # ======================================================
+    # QUERY BASE
+    # ======================================================
     alunos = (
         Aluno.objects
         .filter(escola=escola)
@@ -751,15 +770,17 @@ def lista_alunos(request):
         )
     )
 
+    # ======================================================
+    # PERMISSÕES
+    # ======================================================
     if user.role == "PROFESSOR":
         alunos = alunos.filter(
             turma__professores__usuario=user
         )
 
-    # ===============================
+    # ======================================================
     # ESTATÍSTICAS
-    # ===============================
-
+    # ======================================================
     total_alunos = alunos.count()
 
     alunos_ativos = alunos.filter(
@@ -775,18 +796,15 @@ def lista_alunos(request):
     ).count()
 
     total_turmas = (
-        alunos.exclude(
-            turma__isnull=True
-        )
+        alunos.exclude(turma__isnull=True)
         .values("turma")
         .distinct()
         .count()
     )
 
-    # ===============================
+    # ======================================================
     # BUSCA
-    # ===============================
-
+    # ======================================================
     buscar = request.GET.get("buscar")
 
     if buscar:
@@ -797,27 +815,28 @@ def lista_alunos(request):
             Q(numero_processo__icontains=buscar)
         )
 
-    # ===============================
-    # TURMA
-    # ===============================
-
+    # ======================================================
+    # FILTRO TURMA
+    # ======================================================
     turma_id = request.GET.get("turma")
 
     if turma_id:
-        alunos = alunos.filter(
-            turma_id=turma_id
-        )
+        alunos = alunos.filter(turma_id=turma_id)
 
+    # ======================================================
+    # ORDER + PAGINAÇÃO
+    # ======================================================
     alunos = alunos.order_by(
         Lower("usuario__first_name")
     )
 
     paginator = Paginator(alunos, 15)
-
     page_number = request.GET.get("page")
-
     page_obj = paginator.get_page(page_number)
 
+    # ======================================================
+    # TURMAS
+    # ======================================================
     if user.role == "PROFESSOR":
 
         turmas = (
@@ -827,10 +846,7 @@ def lista_alunos(request):
                 escola=escola
             )
             .distinct()
-            .order_by(
-                "classe",
-                "identificador"
-            )
+            .order_by("classe", "identificador")
         )
 
     else:
@@ -838,47 +854,65 @@ def lista_alunos(request):
         turmas = (
             Turma.objects
             .filter(escola=escola)
-            .order_by(
-                "classe",
-                "identificador"
-            )
+            .order_by("classe", "identificador")
         )
 
-    return render(
-        request,
-        "alunos.html",
-        {
-            "alunos": page_obj,
-            "turmas": turmas,
-            "buscar": buscar,
-            "turma_id": turma_id,
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+    return render(request, "alunos.html", {
+        "alunos": page_obj,
+        "turmas": turmas,
+        "buscar": buscar,
+        "turma_id": turma_id,
 
-            "total_alunos": total_alunos,
-            "alunos_ativos": alunos_ativos,
-            "alunos_bloqueados": alunos_bloqueados,
-            "alunos_sem_turma": alunos_sem_turma,
-            "total_turmas": total_turmas,
-        }
-    )
+        "total_alunos": total_alunos,
+        "alunos_ativos": alunos_ativos,
+        "alunos_bloqueados": alunos_bloqueados,
+        "alunos_sem_turma": alunos_sem_turma,
+        "total_turmas": total_turmas,
+
+        "base_template": base_template,
+    })
 
 
 
 # =====================================================
 # PROFESSORES
 # =====================================================
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Prefetch
 from django.shortcuts import render, redirect
 
+
+
 @login_required
 def lista_professores(request):
+
+    # ======================================================
+    # PERMISSÃO (DIRETOR + DIRETOR_PEDAGOGICO)
+    # ======================================================
+    if request.user.role not in ["DIRETOR", "DIRETOR_PEDAGOGICO"]:
+        return redirect("dashboard")
 
     escola = get_escola(request)
 
     if not escola:
         return redirect("dashboard")
 
+    # ======================================================
+    # BASE TEMPLATE DINÂMICO
+    # ======================================================
+    if request.user.role == "DIRETOR_PEDAGOGICO":
+        base_template = "base_diretor_pedagogico.html"
+    elif request.user.role == "DIRETOR":
+        base_template = "base.html"
+    else:
+        base_template = "base.html"
+
+    # ======================================================
+    # QUERY PROFESSORES
+    # ======================================================
     professores = User.objects.filter(
         role="PROFESSOR",
         escola=escola
@@ -900,19 +934,24 @@ def lista_professores(request):
 
     total_professores = professores.count()
 
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
     return render(request, "professores.html", {
         "professores": professores,
         "total_professores": total_professores,
+        "base_template": base_template,
     })
 
 
 # =====================================================
 # TURMAS
 # =====================================================
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.db.models import Count
+
+
 
 @login_required
 def lista_turmas(request):
@@ -924,10 +963,21 @@ def lista_turmas(request):
 
     user = request.user
 
+    # =====================================================
+    # BASE TEMPLATE DINÂMICO
+    # =====================================================
+    if user.role == "DIRETOR_PEDAGOGICO":
+        base_template = "base_diretor_pedagogico.html"
+    elif user.role == "DIRETOR":
+        base_template = "base.html"
+    elif user.role == "PROFESSOR":
+        base_template = "base_professor.html"
+    else:
+        base_template = "base.html"
+
     # =====================================
     # Filtro por ano letivo
     # =====================================
-
     ano_id = request.GET.get("ano")
 
     anos_letivos = AnoLetivo.objects.filter(
@@ -942,7 +992,8 @@ def lista_turmas(request):
         )
 
         ano_selecionado = AnoLetivo.objects.filter(
-            id=ano_id
+            id=ano_id,
+            escola=escola
         ).first()
 
     else:
@@ -958,22 +1009,20 @@ def lista_turmas(request):
         )
 
     # =====================================
-    # Professor
+    # PERMISSÃO POR ROLE
     # =====================================
-
     if user.role == "PROFESSOR":
 
         turmas = turmas.filter(
             professores__usuario=user
         )
 
-    elif user.role != "DIRETOR":
+    elif user.role not in ["DIRETOR", "DIRETOR_PEDAGOGICO"]:
         return redirect("dashboard")
 
     # =====================================
-    # Estatísticas
+    # ESTATÍSTICAS
     # =====================================
-
     turmas = (
         turmas
         .select_related(
@@ -989,12 +1038,14 @@ def lista_turmas(request):
         )
     )
 
-
-
+    # =====================================
+    # CONTEXTO
+    # =====================================
     return render(request, "turmas.html", {
         "turmas": turmas,
         "anos_letivos": anos_letivos,
         "ano_selecionado": ano_selecionado,
+        "base_template": base_template,
     })
 
 
@@ -1118,7 +1169,7 @@ def selecionar_escola(request, escola_id):
 def adicionar_professor(request):
 
 
-    if getattr(request.user, "role", None) != "DIRETOR":
+    if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
 
@@ -1190,7 +1241,7 @@ def adicionar_professor(request):
 @login_required
 def adicionar_turma(request):
 
-    if request.user.role != "DIRETOR":
+    if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
@@ -1321,6 +1372,8 @@ def adicionar_turma(request):
 # =====================================================
 # DISCIPLINAS
 # =====================================================
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 @login_required
 def lista_disciplinas(request):
@@ -1329,6 +1382,26 @@ def lista_disciplinas(request):
 
     if not escola:
         return redirect('dashboard')
+
+    user = request.user
+
+    # =====================================
+    # BASE TEMPLATE DINÂMICO (SEGURO)
+    # =====================================
+    if user.role == "DIRETOR_PEDAGOGICO":
+        base_template = "base_diretor_pedagogico.html"
+
+    elif user.role == "DIRETOR":
+        base_template = "base.html"
+
+    elif user.role == "PROFESSOR":
+        base_template = "base_professor.html"
+
+    elif user.role == "SECRETARIA":
+        base_template = "base_secretaria.html"
+
+    else:
+        base_template = "base.html"
 
     # =====================================
     # ANO LETIVO ATIVO
@@ -1346,17 +1419,17 @@ def lista_disciplinas(request):
     # =====================================
     # BASE QUERYSET
     # =====================================
-    if request.user.role == "DIRETOR":
+    if user.role in ["DIRETOR", "DIRETOR_PEDAGOGICO"]:
 
         disciplinas = Disciplina.objects.filter(
             escola=escola
         )
 
-    elif request.user.role == "PROFESSOR":
+    elif user.role == "PROFESSOR":
 
         disciplinas = Disciplina.objects.filter(
             escola=escola,
-            professor=request.user
+            professor=user
         )
 
     else:
@@ -1384,18 +1457,22 @@ def lista_disciplinas(request):
         escola=escola
     ).order_by("-nome")
 
+    # =====================================
+    # CONTEXTO
+    # =====================================
     return render(request, "disciplinas.html", {
         "disciplinas": disciplinas,
         "anos": anos,
         "ano_selecionado": ano_id,
-        "ano_ativo": ano_ativo
+        "ano_ativo": ano_ativo,
+        "base_template": base_template,
     })
 
 
 @login_required
 def adicionar_disciplina(request):
 
-    if request.user.role != "DIRETOR":
+    if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
@@ -1521,7 +1598,7 @@ def adicionar_disciplina(request):
 @login_required
 def editar_disciplina(request, pk):
 
-    if request.user.role != "DIRETOR":
+    if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     disciplina = get_object_or_404(
@@ -2337,7 +2414,7 @@ from django.utils import timezone
 @login_required
 def painel_diretor_frequencia(request):
 
-    if request.user.role != "DIRETOR":
+    if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
@@ -3935,17 +4012,21 @@ def dashboard_secretaria(request):
     )
 
 
+
 @login_required
 def cadastrar_secretaria(request):
 
-    # Apenas Diretor pode cadastrar
+    # Apenas Diretor pode cadastrar funcionários
     if getattr(request.user, "role", None) != "DIRETOR":
         return redirect("dashboard")
 
     escola = getattr(request.user, "escola", None)
 
     if not escola:
-        messages.error(request, "Diretor precisa estar vinculado a uma escola.")
+        messages.error(
+            request,
+            "Diretor precisa estar vinculado a uma escola."
+        )
         return redirect("dashboard")
 
     if request.method == "POST":
@@ -3953,7 +4034,7 @@ def cadastrar_secretaria(request):
         nome = request.POST.get("nome", "").strip()
         username = request.POST.get("username", "").strip()
         senha = request.POST.get("senha", "").strip()
-        role = request.POST.get("role")
+        role = request.POST.get("role", "").strip()
 
         # =====================
         # VALIDAÇÕES
@@ -3963,12 +4044,19 @@ def cadastrar_secretaria(request):
             messages.error(request, "Preencha todos os campos.")
             return redirect("cadastrar_secretaria")
 
-        if role not in ["SECRETARIA", "FINANCEIRO"]:
+        if role not in [
+            "DIRETOR_PEDAGOGICO",
+            "SECRETARIA",
+            "FINANCEIRO",
+        ]:
             messages.error(request, "Função inválida.")
             return redirect("cadastrar_secretaria")
 
         if len(senha) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
+            messages.error(
+                request,
+                "A senha deve ter pelo menos 6 caracteres."
+            )
             return redirect("cadastrar_secretaria")
 
         if User.objects.filter(username=username).exists():
@@ -3984,27 +4072,117 @@ def cadastrar_secretaria(request):
                     password=senha,
                     first_name=nome,
                     role=role,
-                    escola=escola
+                    escola=escola,
                 )
 
                 user.is_active = True
                 user.save()
 
-            if role == "SECRETARIA":
-                messages.success(request, "Secretaria cadastrada com sucesso.")
-            else:
-                messages.success(request, "Usuário financeiro cadastrado com sucesso.")
+            if role == "DIRETOR_PEDAGOGICO":
+                messages.success(
+                    request,
+                    "Diretor Pedagógico cadastrado com sucesso."
+                )
+
+            elif role == "SECRETARIA":
+                messages.success(
+                    request,
+                    "Secretaria cadastrada com sucesso."
+                )
+
+            elif role == "FINANCEIRO":
+                messages.success(
+                    request,
+                    "Utilizador financeiro cadastrado com sucesso."
+                )
 
             return redirect("dashboard")
 
         except Exception as e:
 
-            messages.error(request, f"Erro ao cadastrar: {str(e)}")
+            messages.error(
+                request,
+                f"Erro ao cadastrar: {str(e)}"
+            )
+
             return redirect("cadastrar_secretaria")
 
     return render(request, "cadastrar_secretaria.html")
 
 
+# ======================================================
+    # DASHBOARD DIRETOR PEDAGOGICO
+# ======================================================
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+from academic.models import (
+    Turma,
+    Professor,
+    Disciplina,
+    Curso,
+    Horario,
+    Aluno
+)
+
+
+@login_required
+def dashboard_diretor_pedagogico(request):
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+    if request.user.role != "DIRETOR_PEDAGOGICO":
+        messages.error(request, "Acesso negado.")
+        return redirect("dashboard")
+
+    escola = request.user.escola
+
+    if not escola:
+        messages.error(request, "Usuário não está vinculado a uma escola.")
+        return redirect("dashboard")
+
+    # ======================================================
+    # ESTATÍSTICAS DO PAINEL
+    # ======================================================
+    total_turmas = Turma.objects.filter(escola=escola).count()
+
+    total_professores = Professor.objects.filter(
+        escola=escola
+    ).count()
+
+    total_disciplinas = Disciplina.objects.filter(
+        escola=escola
+    ).count()
+
+    total_cursos = Curso.objects.filter(
+        escola=escola
+    ).count()
+
+    total_horarios = Horario.objects.filter(
+        turma__escola=escola
+    ).count()
+
+
+    total_alunos = Aluno.objects.filter(
+        escola=escola
+    ).count()
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+    context = {
+        "escola": escola,
+        "total_turmas": total_turmas,
+        "total_professores": total_professores,
+        "total_disciplinas": total_disciplinas,
+        "total_cursos": total_cursos,
+        "total_horarios": total_horarios,
+        "total_alunos": total_alunos,
+    }
+
+    return render(request, "dashboard_pedagogico.html", context)
 
 
 # =========================================================
@@ -6554,7 +6732,7 @@ def download_pdf_encerramento(request):
 @login_required
 def horarios(request):
 
-    if getattr(request.user, "role", None) != "DIRETOR":
+    if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
@@ -6576,7 +6754,7 @@ from collections import defaultdict
 def horarios_turma(request):
 
     # Apenas diretor
-    if getattr(request.user, "role", None) != "DIRETOR":
+    if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
@@ -7405,29 +7583,52 @@ def situacao_financeira(request):
 
 
 
-from django.contrib import messages
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 @login_required
 def cursos(request):
 
-    escola = request.user.escola
+    escola = get_escola(request)
 
+    if not escola:
+        return redirect("dashboard")
+
+    user = request.user
+
+    # =====================================================
+    # BASE TEMPLATE DINÂMICO
+    # =====================================================
+    if user.role == "DIRETOR_PEDAGOGICO":
+        base_template = "base_diretor_pedagogico.html"
+    elif user.role == "DIRETOR":
+        base_template = "base.html"
+    else:
+        return redirect("dashboard")
+
+    # =====================================================
+    # LISTA DE CURSOS
+    # =====================================================
     cursos = Curso.objects.filter(
         escola=escola
     ).order_by("nome")
 
+    # =====================================================
+    # CRIAÇÃO DE CURSO (APENAS DIRETOR PEDAGÓGICO)
+    # =====================================================
     if request.method == "POST":
+
+        if user.role != "DIRETOR_PEDAGOGICO":
+            messages.error(request, "Sem permissão para criar cursos.")
+            return redirect("cursos")
 
         nome = request.POST.get("nome", "").strip()
         descricao = request.POST.get("descricao", "").strip()
 
         if not nome:
-            messages.error(
-                request,
-                "Informe o nome do curso."
-            )
+            messages.error(request, "Informe o nome do curso.")
             return redirect("cursos")
 
         if Curso.objects.filter(
@@ -7439,7 +7640,6 @@ def cursos(request):
                 request,
                 "Já existe um curso com este nome."
             )
-
             return redirect("cursos")
 
         Curso.objects.create(
@@ -7455,9 +7655,13 @@ def cursos(request):
 
         return redirect("cursos")
 
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
     context = {
         "cursos": cursos,
         "total_cursos": cursos.count(),
+        "base_template": base_template,
     }
 
     return render(
@@ -8700,7 +8904,7 @@ def criar_evento(request):
     # APENAS DIRETOR
     # =================================================
 
-    if request.user.role != "DIRETOR":
+    if request.user.role != "DIRETOR_PEDAGOGICO":
 
         messages.error(
             request,

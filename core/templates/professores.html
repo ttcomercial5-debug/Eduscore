@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 
 {% block content %}
 
@@ -21,7 +21,7 @@
             </p>
         </div>
 
-        {% if request.user.role == "DIRETOR" %}
+        {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
         <a href="{% url 'adicionar_professor' %}"
            class="btn btn-success shadow-sm rounded-3 px-4">
 

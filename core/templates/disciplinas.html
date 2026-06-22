@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends base_template %}
 {% block content %}
 
 <div class="container-fluid mt-4">
@@ -15,7 +15,7 @@
         </small>
     </div>
 
-    {% if user.role == "DIRETOR" %}
+    {% if user.role == "DIRETOR_PEDAGOGICO" %}
     <a href="{% url 'adicionar_disciplina' %}"
        class="btn btn-primary shadow-sm rounded-pill px-4">
 
@@ -148,7 +148,7 @@
             <!-- FOOTER -->
             <div class="card-footer bg-white border-0">
 
-                {% if disciplina.turma.ano_letivo.ativo %}
+                {% if request.user.role|upper == "DIRETOR_PEDAGOGICO" and disciplina.turma.ano_letivo.ativo %}
 
                     <a href="{% url 'editar_disciplina' disciplina.id %}"
                        class="btn btn-outline-primary btn-sm w-100 rounded-pill">

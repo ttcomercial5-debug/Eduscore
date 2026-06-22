@@ -57,6 +57,7 @@ class User(AbstractUser):
     ROLE_CHOICES = (
         ('SUPERADMIN', 'Super Admin'),
         ('DIRETOR', 'Diretor'),
+        ('DIRETOR_PEDAGOGICO', 'Diretor Pedagogico'),
         ('PROFESSOR', 'Professor'),
         ('ALUNO', 'Aluno'),
         ('FINANCEIRO', 'Financeiro'),

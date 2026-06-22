@@ -178,6 +178,8 @@
             EdusCel
         </div>
 
+
+
         <!-- MENU -->
 
         <ul class="menu">
@@ -197,18 +199,7 @@
 
             </li>
 
-            <li class="menu-item">
 
-                <a href="{% url 'painel_diretor_frequencia' %}"
-                   class="menu-link {% if request.resolver_match.url_name == 'painel_diretor_frequencia' %}active{% endif %}">
-
-                    <i class="bi bi-clipboard-check"></i>
-
-                    Frequências
-
-                </a>
-
-            </li>
 
             <!-- ALUNOS -->
 
@@ -270,20 +261,7 @@
 
             </li>
 
-            <!-- HORÁRIOS -->
 
-            <li class="menu-item">
-
-                <a href="{% url 'horarios_turma' %}"
-                   class="menu-link {% if request.resolver_match.url_name == 'horarios_turma' %}active{% endif %}">
-
-                    <i class="bi bi-clock-history"></i>
-
-                    Horários
-
-                </a>
-
-            </li>
 
             <!-- DISCIPLINAS -->
 
@@ -302,18 +280,7 @@
 
             <!-- CALENDÁRIO ESCOLAR -->
 
-            <li class="menu-item">
 
-                <a href="{% url 'calendario_escolar' %}"
-                   class="menu-link {% if request.resolver_match.url_name == 'calendario_escolar' %}active{% endif %}">
-
-                    <i class="bi bi-calendar-event"></i>
-
-                    Calendário Escolar
-
-                </a>
-
-            </li>
 
             <!-- FUNCIONÁRIOS -->
 
