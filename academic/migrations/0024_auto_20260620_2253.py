@@ -9,7 +9,7 @@ def criar_planos(apps, schema_editor):
         nome="Básico",
         defaults={
             "limite_alunos": 300,
-            "valor_mensal": 25000,
+            "valor_mensal": 50000,
             "ativo": True,
         },
     )
@@ -18,7 +18,7 @@ def criar_planos(apps, schema_editor):
         nome="Profissional",
         defaults={
             "limite_alunos": 800,
-            "valor_mensal": 60000,
+            "valor_mensal": 85000,
             "ativo": True,
         },
     )
@@ -27,7 +27,7 @@ def criar_planos(apps, schema_editor):
         nome="Premium",
         defaults={
             "limite_alunos": 999999,
-            "valor_mensal": 120000,
+            "valor_mensal": 150000,
             "ativo": True,
         },
     )

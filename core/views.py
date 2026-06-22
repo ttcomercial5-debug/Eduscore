@@ -5414,10 +5414,12 @@ def criar_matricula(request):
             escola=escola
         )
 
+        valor_mensalidade = config.obter_valor_mensalidade(aluno.classe)
+
         gerar_mensalidades_aluno(
             aluno=aluno,
             ano_letivo=ano_letivo,
-            valor=config.valor_mensalidade
+            valor=valor_mensalidade
         )
 
         messages.success(
@@ -5685,17 +5687,16 @@ def adicionar_aluno(request):
                 # ==========================
                 # Geração mensalidades
                 # ==========================
-                config, _ = (
-                    ConfiguracaoFinanceira.objects
-                    .get_or_create(
-                        escola=escola
-                    )
+                config, created = ConfiguracaoFinanceira.objects.get_or_create(
+                    escola=escola
                 )
+
+                valor_mensalidade = config.obter_valor_mensalidade(aluno.classe)
 
                 gerar_mensalidades_aluno(
                     aluno=aluno,
                     ano_letivo=ano_letivo,
-                    valor=config.valor_mensalidade
+                    valor=valor_mensalidade
                 )
 
             messages.success(
@@ -6955,21 +6956,7 @@ def configuracao_financeira(request):
                 # MENSALIDADES POR CLASSE
                 # -------------------------------
 
-                valor_mensalidade_iniciacao = converter_decimal(
-                    request.POST.get("valor_mensalidade_iniciacao")
-                )
 
-                valor_mensalidade_1 = converter_decimal(
-                    request.POST.get("valor_mensalidade_1")
-                )
-
-                valor_mensalidade_2 = converter_decimal(
-                    request.POST.get("valor_mensalidade_2")
-                )
-
-                valor_mensalidade_3 = converter_decimal(
-                    request.POST.get("valor_mensalidade_3")
-                )
 
                 valor_mensalidade_4 = converter_decimal(
                     request.POST.get("valor_mensalidade_4")
@@ -7050,10 +7037,7 @@ def configuracao_financeira(request):
 
         campos = [
 
-            valor_mensalidade_iniciacao,
-            valor_mensalidade_1,
-            valor_mensalidade_2,
-            valor_mensalidade_3,
+
             valor_mensalidade_4,
             valor_mensalidade_5,
             valor_mensalidade_6,
@@ -7086,10 +7070,7 @@ def configuracao_financeira(request):
         # SALVAR
         # ==========================================================
 
-        config.valor_mensalidade_iniciacao = valor_mensalidade_iniciacao
-        config.valor_mensalidade_1 = valor_mensalidade_1
-        config.valor_mensalidade_2 = valor_mensalidade_2
-        config.valor_mensalidade_3 = valor_mensalidade_3
+
         config.valor_mensalidade_4 = valor_mensalidade_4
         config.valor_mensalidade_5 = valor_mensalidade_5
         config.valor_mensalidade_6 = valor_mensalidade_6
