@@ -1705,7 +1705,7 @@ class HistoricoMatricula(models.Model):
 
     class Meta:
         ordering = ["-ano_letivo", "classe", "numero_na_turma"]
-        unique_together = ("aluno", "ano_letivo")  # 🔥 evita duplicados
+        unique_together = ("aluno", "ano_letivo")  #
 
     def __str__(self):
         return f"{self.aluno} - {self.ano_letivo} - {self.classe}"

@@ -1,0 +1,382 @@
+{% extends "base_diretor_pedagogico.html" %}
+
+{% block content %}
+
+<style>
+
+/* =========================
+   CARD PAUTA
+========================= */
+
+.card-pauta{
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.08);
+    background: #fff;
+}
+
+/* =========================
+   TABELA
+========================= */
+
+.table-pauta{
+    font-size: 12.5px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-pauta th{
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    background: #f8f9fa;
+    font-weight: 700;
+    border: 1px solid #dee2e6;
+}
+
+.table-pauta td{
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #eee;
+    padding: 6px 8px;
+}
+
+/* =========================
+   CABEÇALHO OFICIAL
+========================= */
+
+.cabecalho-pauta{
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.cabecalho-pauta h4{
+    font-weight: 800;
+}
+
+.cabecalho-pauta h5{
+    font-weight: 600;
+    color: #444;
+}
+
+/* =========================
+   ALUNO
+========================= */
+
+.nome-aluno{
+    text-align: left !important;
+    min-width: 260px;
+    font-weight: 600;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status-aprovado{
+    background: #d1e7dd;
+    color: #0f5132;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-recurso{
+    background: #fff3cd;
+    color: #664d03;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-reprovado{
+    background: #f8d7da;
+    color: #842029;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* =========================
+   BOTÕES (SÓ VISUAL)
+========================= */
+
+.no-print{
+    display: block;
+}
+
+/* =========================
+   PRINT OFICIAL MINED
+========================= */
+
+@media print {
+
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+
+    /* ❌ REMOVE TUDO DO SISTEMA */
+    .navbar,
+    .sidebar,
+    form,
+    .btn,
+    .info-card,
+    .no-print,
+    .row,
+    .alert,
+    .breadcrumb,
+    h1, h2, h3, h6,
+    .welcome,
+    .dashboard,
+    .container-fluid > .card:not(.card-pauta) {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .container-fluid {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 🔥 SÓ PAUTA */
+    .card-pauta {
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    /* 🔥 COMPRIMIR PARA CABER NA FOLHA */
+    .table-pauta {
+        width: 100% !important;
+        table-layout: fixed !important;
+        font-size: 9px !important;
+    }
+
+    .table-pauta th,
+    .table-pauta td {
+        padding: 2px 3px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+
+    .nome-aluno {
+        min-width: 120px !important;
+    }
+
+    .disciplina-header {
+        font-size: 9px !important;
+    }
+
+    .cabecalho-pauta h4 {
+        font-size: 14px !important;
+    }
+
+    .cabecalho-pauta h5 {
+        font-size: 11px !important;
+    }
+}
+
+</style>
+
+<div class="container-fluid">
+
+<!-- =========================
+     FILTROS (NÃO PRINTA)
+========================= -->
+
+<div class="card card-pauta p-4 mb-4 no-print">
+
+    <h4 class="mb-4 fw-bold">Pauta Final do Ano</h4>
+
+    <form method="GET" class="row g-3">
+
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Ano Letivo</label>
+            <select name="ano_letivo" class="form-select">
+
+                <option value="">Selecione</option>
+
+                {% for ano in anos_letivos %}
+                <option value="{{ ano.id }}"
+                    {% if ano.id|stringformat:"s" == ano_letivo_id %}selected{% endif %}>
+                    {{ ano.nome }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Turma</label>
+            <select name="turma" class="form-select">
+
+                <option value="">Selecione</option>
+
+                {% for t in turmas %}
+                <option value="{{ t.id }}"
+                    {% if t.id|stringformat:"s" == turma_id %}selected{% endif %}>
+                    {{ t.nome_completo }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-primary fw-semibold">
+                Gerar Pauta
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+{% if pauta %}
+
+<!-- =========================
+     PAUTA OFICIAL (SÓ ISTO IMPRIME)
+========================= -->
+
+<div class="card card-pauta p-4">
+
+    <div class="cabecalho-pauta">
+
+        <h5>REPÚBLICA DE ANGOLA</h5>
+        <h5>MINISTÉRIO DA EDUCAÇÃO</h5>
+
+        <h4>{{ request.user.escola.nome }}</h4>
+
+        <h5>PAUTA FINAL DO ANO LETIVO</h5>
+
+        <p class="mb-0">
+            <strong>Turma:</strong> {{ turma.nome_completo }}
+        </p>
+
+    </div>
+
+    <div class="mb-3 no-print">
+        <button onclick="window.print()" class="btn btn-success">
+            Imprimir Pauta
+        </button>
+    </div>
+
+    <!-- =========================
+         TABELA
+    ========================= -->
+
+    <div class="table-responsive">
+
+        <table class="table table-pauta">
+
+            <thead>
+
+                <tr>
+                    <th rowspan="2">Nº</th>
+                    <th rowspan="2">Nome Completo</th>
+                    <th rowspan="2">Sexo</th>
+
+                    {% for disciplina in disciplinas %}
+                    <th colspan="4" class="disciplina-header">
+                        {{ disciplina.nome }}
+                    </th>
+                    {% endfor %}
+
+                    <th rowspan="2">Neg.</th>
+                    <th rowspan="2">Média</th>
+                    <th rowspan="2">Pos.</th>
+                    <th rowspan="2">Recurso</th>
+                    <th rowspan="2">Observação</th>
+                </tr>
+
+                <tr>
+                    {% for disciplina in disciplinas %}
+                    <th>M1</th>
+                    <th>M2</th>
+                    <th>M3</th>
+                    <th>MF</th>
+                    {% endfor %}
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for linha in pauta %}
+
+                <tr>
+
+                    <td>{{ linha.aluno.numero_na_turma }}</td>
+
+                    <td class="nome-aluno">
+                        {{ linha.aluno.nome_completo }}
+                    </td>
+
+                    <td>{{ linha.aluno.sexo|default:"-" }}</td>
+
+                    {% for d in linha.disciplinas %}
+                        <td>{{ d.m1|default:"-" }}</td>
+                        <td>{{ d.m2|default:"-" }}</td>
+                        <td>{{ d.m3|default:"-" }}</td>
+                        <td><strong>{{ d.mf|default:"-" }}</strong></td>
+                    {% endfor %}
+
+                    <td>{{ linha.negativas }}</td>
+
+                    <td><strong>{{ linha.media_geral }}</strong></td>
+
+                    <td>{{ linha.posicao }}</td>
+
+                    <!-- RECURSO -->
+                    <td class="text-start">
+                        {% if linha.disciplinas_recurso %}
+                            {{ linha.disciplinas_recurso|join:", " }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <!-- STATUS -->
+                    <td>
+                        {% if linha.situacao == "APROVADO" %}
+                            <span class="status-aprovado">APROVADO</span>
+
+                        {% elif linha.situacao == "RECURSO" %}
+                            <span class="status-recurso">RECURSO</span>
+
+                        {% else %}
+                            <span class="status-reprovado">REPROVADO</span>
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}
