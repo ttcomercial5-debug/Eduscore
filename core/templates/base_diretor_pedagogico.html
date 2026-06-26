@@ -207,6 +207,7 @@
         <div class="collapse submenu" id="sistema">
             <a href="{% url 'horarios_turma' %}">Horários</a>
             <a href="{% url 'calendario_escolar' %}">Calendário</a>
+            <a href="{% url 'notificacoes' %}">Notificações</a>
         </div>
 
     </div>
@@ -232,11 +233,13 @@
                 Bem-vindo, {{ request.user.first_name|default:request.user.username }}
             </h4>
             <small>Painel de Gestão Pedagógica</small>
+
         </div>
 
         <span class="badge-role">
             Diretor Pedagógico
         </span>
+
 
     </div>
 
@@ -246,6 +249,51 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const socket = new WebSocket("ws://" + window.location.host + "/ws/notificacoes/");
+
+socket.onmessage = function(event){
+    const data = JSON.parse(event.data);
+
+    // badge do sino
+    let badge = document.querySelector(".notif-badge");
+
+    if(badge){
+        badge.innerText = parseInt(badge.innerText || 0) + 1;
+    }
+
+    // toast simples
+    showToast(data.titulo, data.mensagem);
+};
+
+function showToast(title, message){
+
+    const toast = document.createElement("div");
+
+    toast.innerHTML = `
+        <div style="
+            position:fixed;
+            top:20px;
+            right:20px;
+            background:#111827;
+            color:white;
+            padding:12px 16px;
+            border-radius:10px;
+            z-index:9999;
+            margin-top:10px;
+            box-shadow:0 10px 30px rgba(0,0,0,.2);
+        ">
+            <strong>${title}</strong><br>
+            <small>${message}</small>
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 5000);
+}
+</script>
 
 </body>
 </html>

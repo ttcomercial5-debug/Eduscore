@@ -4185,6 +4185,50 @@ def dashboard_diretor_pedagogico(request):
     return render(request, "dashboard_pedagogico.html", context)
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from academic.models import Notificacao
+
+def notificacoes(request):
+
+    notificacoes = Notificacao.objects.filter(
+        usuario=request.user
+    ).order_by("-criada_em")
+
+    nao_lidas = notificacoes.filter(lida=False).count()
+
+    return render(request, "notificacoes.html", {
+        "notificacoes": notificacoes,
+        "nao_lidas": nao_lidas
+    })
+
+
+from django.http import JsonResponse
+
+def marcar_notificacao_lida(request, id):
+
+    notif = get_object_or_404(Notificacao, id=id, usuario=request.user)
+    notif.lida = True
+    notif.save()
+
+    return JsonResponse({"success": True})
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+def enviar_notificacao_realtime(notificacao):
+
+    channel_layer = get_channel_layer()
+
+    async_to_sync(channel_layer.group_send)(
+        "notificacoes_global",
+        {
+            "type": "send_notification",
+            "titulo": notificacao.titulo,
+            "mensagem": notificacao.mensagem,
+            "tipo": notificacao.tipo,
+        }
+    )
+
 # =========================================================
 # REGISTRAR PAGAMENTO
 # =========================================================

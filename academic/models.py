@@ -2532,3 +2532,22 @@ class MiniPauta(models.Model):
 
 
 
+
+class Notificacao(models.Model):
+
+    TIPO_CHOICES = [
+        ("danger", "Erro"),
+        ("success", "Sucesso"),
+        ("info", "Info"),
+        ("warning", "Aviso"),
+    ]
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=255)
+    mensagem = models.TextField()
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default="info")
+    lida = models.BooleanField(default=False)
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titulo

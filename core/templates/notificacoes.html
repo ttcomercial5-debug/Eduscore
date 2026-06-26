@@ -1,0 +1,133 @@
+{% extends "base_diretor_pedagogico.html" %}
+{% load static %}
+
+{% block title %}Notificações | EdusCel{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h3 class="fw-bold mb-1">
+            Notificações
+            <span class="badge bg-danger">{{ nao_lidas }}</span>
+        </h3>
+        <small class="text-muted">Gestão de alertas e mensagens do sistema</small>
+    </div>
+
+    <div>
+        <button class="btn btn-sm btn-outline-primary"
+                onclick="marcarComoLida({{ n.id }}, this)"
+                {% if n.lida %}disabled{% endif %}>
+            Marcar como lida
+        </button>
+    </div>
+
+</div>
+
+<!-- LISTA -->
+<div class="row g-3">
+
+{% for n in notificacoes %}
+
+<div class="col-12">
+
+    <div class="card border-start border-4 border-{{ n.tipo }} shadow-sm notification-card {% if not n.lida %}unread{% endif %}">
+
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div class="d-flex gap-3 align-items-start">
+
+                <div class="fs-3 text-{{ n.tipo }}">
+                    {% if n.tipo == "danger" %}
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    {% elif n.tipo == "success" %}
+                        <i class="bi bi-check-circle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill"></i>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h6 class="mb-1 fw-bold">{{ n.titulo }}</h6>
+                    <small class="text-muted">{{ n.mensagem }}</small>
+                </div>
+
+            </div>
+
+            <div class="text-end">
+                {% if n.lida %}
+                    <span class="badge bg-secondary">Lida</span>
+                {% else %}
+                    <span class="badge bg-danger">Nova</span>
+                {% endif %}
+
+                <div class="mt-2">
+                    <small class="text-muted">{{ n.data }}</small>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<style>
+
+.notification-card{
+    transition:.2s;
+    cursor:pointer;
+}
+
+.notification-card:hover{
+    transform: translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.notification-card.unread{
+    background:#fff7ed;
+}
+
+</style>
+
+<script>
+
+function marcarComoLida(id, btn){
+
+    fetch(`/notificacoes/lida/${id}/`, {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.success){
+
+            btn.innerText = "Lida";
+            btn.classList.remove("btn-outline-primary");
+            btn.classList.add("btn-success");
+            btn.disabled = true;
+
+            // opcional: atualizar badge
+            location.reload();
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

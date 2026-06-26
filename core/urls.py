@@ -120,6 +120,9 @@ urlpatterns = [
     path('trimestre/toggle/<int:trimestre_id>/', views.toggle_trimestre, name='toggle_trimestre'),
     path("download-encerramento-pdf/", views.download_pdf_encerramento, name="download_pdf_encerramento"),
     path("pauta-final/", views.pauta_final_ano, name="pauta_final_ano"),
+    path('notificacoes/', views.notificacoes, name='notificacoes'),
+    path("notificacoes/lida/<int:id>/", views.marcar_notificacao_lida, name="notificacao_lida"),
+
 
 
     # =============================

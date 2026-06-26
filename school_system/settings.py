@@ -42,9 +42,18 @@ INSTALLED_APPS = [
     'users',
     'academic',
     'finance',
+    'channels',
 
 
 ]
+
+ASGI_APPLICATION = "school_system.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # =====================================================
 # BANCO DE DADOS
