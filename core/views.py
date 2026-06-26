@@ -6872,11 +6872,19 @@ def horarios_turma(request):
 
 
 
+from datetime import datetime
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 @login_required
 def adicionar_aula(request, horario_id):
 
-    if getattr(request.user, "role", None) != "DIRETOR":
+    # =========================
+    # PERMISSÃO
+    # =========================
+    if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         messages.error(request, "Sem permissão para esta ação.")
         return redirect("dashboard")
 
@@ -6888,6 +6896,9 @@ def adicionar_aula(request, horario_id):
         escola=escola
     )
 
+    # =========================
+    # POST
+    # =========================
     if request.method == "POST":
 
         dia = request.POST.get("dia")
@@ -6897,21 +6908,26 @@ def adicionar_aula(request, horario_id):
         disciplina_id = request.POST.get("disciplina")
         toda_semana = request.POST.get("toda_semana") == "on"
 
+        # =========================
+        # VALIDAÇÃO DE HORAS
+        # =========================
         try:
             inicio = datetime.strptime(hora_inicio, "%H:%M").time()
             fim = datetime.strptime(hora_fim, "%H:%M").time()
-        except ValueError:
+        except (ValueError, TypeError):
             messages.error(request, "Formato de hora inválido.")
             return redirect(f"/horarios/?turma={horario.turma.id}")
 
         if inicio >= fim:
-            messages.error(request, "Hora final deve ser maior que a inicial.")
+            messages.error(request, "A hora final deve ser maior que a inicial.")
             return redirect(f"/horarios/?turma={horario.turma.id}")
 
+        # =========================
+        # DISCIPLINA (CASO AULA)
+        # =========================
         disciplina = None
 
         if tipo == "AULA":
-
             if not disciplina_id:
                 messages.error(request, "Selecione uma disciplina.")
                 return redirect(f"/horarios/?turma={horario.turma.id}")
@@ -6922,9 +6938,21 @@ def adicionar_aula(request, horario_id):
                 escola=escola
             )
 
-        DIAS_UTEIS = [d for d, _ in AulaHorario.DIAS_SEMANA if d != "SAB"]
+        # =========================
+        # DIAS ÚTEIS
+        # =========================
+        DIAS_UTEIS = [
+            d for d, _ in AulaHorario.DIAS_SEMANA
+            if d != "SAB"
+        ]
 
         dias_uso = DIAS_UTEIS if toda_semana else [dia]
+
+        # =========================
+        # CRIAÇÃO COM VERIFICAÇÃO DE CONFLITO
+        # =========================
+        criadas = 0
+        ignoradas = 0
 
         for d in dias_uso:
 
@@ -6937,6 +6965,7 @@ def adicionar_aula(request, horario_id):
             ).exists()
 
             if conflito:
+                ignoradas += 1
                 continue
 
             AulaHorario.objects.create(
@@ -6948,7 +6977,22 @@ def adicionar_aula(request, horario_id):
                 disciplina=disciplina
             )
 
-        messages.success(request, "Aula adicionada com sucesso!")
+            criadas += 1
+
+        # =========================
+        # FEEDBACK INTELIGENTE
+        # =========================
+        if criadas > 0:
+            messages.success(
+                request,
+                f"{criadas} aula(s) adicionada(s) com sucesso!"
+            )
+
+        if ignoradas > 0:
+            messages.warning(
+                request,
+                f"{ignoradas} conflito(s) ignorado(s) por sobreposição de horário."
+            )
 
         return redirect(f"/horarios/?turma={horario.turma.id}")
 
