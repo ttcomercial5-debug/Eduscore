@@ -1350,7 +1350,34 @@ new Date().getFullYear();
 
 </script>
 
+<script>
+let timer;
+let warningTimer;
 
+function resetTimer() {
+    clearTimeout(timer);
+    clearTimeout(warningTimer);
+
+    // aviso antes de sair (opcional: 10 segundos antes)
+    warningTimer = setTimeout(() => {
+        console.log("Sessão vai expirar em 10 segundos por inatividade.");
+    }, 290000); // 4min50s
+
+    // logout após 5 minutos
+    timer = setTimeout(() => {
+        window.location.href = "{% url 'logout' %}";
+    }, 300000); // 5 minutos
+}
+
+// eventos de atividade
+document.addEventListener("mousemove", resetTimer);
+document.addEventListener("keypress", resetTimer);
+document.addEventListener("click", resetTimer);
+document.addEventListener("scroll", resetTimer);
+
+// inicia timer
+resetTimer();
+</script>
 
 </body>
 
