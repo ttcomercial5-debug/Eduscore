@@ -446,6 +446,10 @@ class AnoLetivo(models.Model):
 class Turma(models.Model):
 
     CLASSE_CHOICES = [
+        ('0', 'Iniciação'),
+        ('1', '1ª Classe'),
+        ('2', '2ª Classe'),
+        ('3', '3ª Classe'),
         ('4', '4ª Classe'),
         ('5', '5ª Classe'),
         ('6', '6ª Classe'),

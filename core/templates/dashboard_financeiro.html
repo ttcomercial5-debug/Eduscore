@@ -3,128 +3,1148 @@
 
 {% block content %}
 
-<h3 class="dashboard-title">Dashboard Financeiro</h3>
+<style>
 
-<!-- CARDS -->
-<div class="dashboard-cards">
+/* =====================================================
+   DASHBOARD FINANCEIRO PREMIUM
+===================================================== */
 
-<div class="card">
-<div class="card-title">Total Entradas</div>
-<div class="card-value">{{ total_entradas|intcomma }} Kz</div>
-<i class="bi bi-arrow-up-circle card-icon"></i>
+.financeiro-wrapper{
+    padding: 10px 0;
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.dashboard-header{
+    margin-bottom: 30px;
+}
+
+.dashboard-header h3{
+    font-weight: 800;
+    color: #1e293b;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p{
+    color: #64748b;
+    font-size: 15px;
+}
+
+
+
+/* =====================================================
+   CARDS KPI
+===================================================== */
+
+.kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:22px;
+    margin-bottom:30px;
+}
+
+
+.kpi-card{
+
+    background:#ffffff;
+    border-radius:20px;
+    padding:24px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:
+        0 10px 30px rgba(15,23,42,.08);
+
+    border:1px solid #f1f5f9;
+
+    transition:.3s ease;
+
+}
+
+
+.kpi-card:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:
+        0 18px 40px rgba(15,23,42,.12);
+
+}
+
+
+.kpi-content{
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+
+.kpi-title{
+
+    font-size:14px;
+    color:#64748b;
+    font-weight:600;
+    margin-bottom:8px;
+
+}
+
+
+.kpi-value{
+
+    font-size:26px;
+    font-weight:800;
+    color:#0f172a;
+
+}
+
+
+
+.kpi-icon{
+
+    width:55px;
+    height:55px;
+
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:25px;
+
+}
+
+
+
+/* CORES DOS ÍCONES */
+
+.icon-entrada{
+
+    background:#dcfce7;
+    color:#16a34a;
+
+}
+
+
+.icon-saida{
+
+    background:#fee2e2;
+    color:#dc2626;
+
+}
+
+
+.icon-saldo{
+
+    background:#dbeafe;
+    color:#2563eb;
+
+}
+
+
+.icon-divida{
+
+    background:#fef3c7;
+    color:#d97706;
+
+}
+
+
+
+/* =====================================================
+   BOTÃO ALTERAR SENHA
+===================================================== */
+
+
+.password-card{
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color:white;
+
+    border-radius:20px;
+
+    padding:22px 28px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    text-decoration:none;
+
+    margin-bottom:35px;
+
+    box-shadow:
+    0 12px 30px rgba(37,99,235,.25);
+
+    transition:.3s ease;
+
+}
+
+
+.password-card:hover{
+
+    color:white;
+
+    transform:translateY(-3px);
+
+}
+
+
+.password-card h5{
+
+    font-weight:800;
+    margin-bottom:5px;
+
+}
+
+
+.password-card p{
+
+    margin:0;
+    opacity:.85;
+
+}
+
+
+.password-card i{
+
+    font-size:35px;
+
+}
+
+
+
+/* =====================================================
+   SEÇÕES
+===================================================== */
+
+
+.section-title{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    color:#1e293b;
+
+    margin-bottom:20px;
+
+}
+
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+
+@media(max-width:768px){
+
+    .dashboard-header h3{
+
+        font-size:22px;
+
+    }
+
+
+    .kpi-value{
+
+        font-size:22px;
+
+    }
+
+
+    .password-card{
+
+        padding:18px;
+
+    }
+
+}
+
+</style>
+
+
+<div class="container-fluid financeiro-wrapper">
+
+
+<!-- =====================================================
+     CABEÇALHO
+===================================================== -->
+
+<div class="dashboard-header">
+
+    <h3>
+        Dashboard Financeiro
+    </h3>
+
+    <p>
+        Gestão financeira da instituição em tempo real
+    </p>
+
 </div>
 
-<div class="card">
-<div class="card-title">Total Saídas</div>
-<div class="card-value">{{ total_saidas|intcomma }} Kz</div>
-<i class="bi bi-arrow-down-circle card-icon"></i>
+
+
+<!-- =====================================================
+     INDICADORES PRINCIPAIS
+===================================================== -->
+
+
+<div class="kpi-grid">
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Total Entradas
+            </span>
+
+            <span class="kpi-value">
+                {{ total_entradas|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-entrada">
+
+            <i class="bi bi-arrow-up-circle-fill"></i>
+
+        </div>
+
+    </div>
+
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Total Saídas
+            </span>
+
+            <span class="kpi-value">
+                {{ total_saidas|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-saida">
+
+            <i class="bi bi-arrow-down-circle-fill"></i>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Saldo Atual
+            </span>
+
+            <span class="kpi-value">
+                {{ saldo|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-saldo">
+
+            <i class="bi bi-wallet2"></i>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Total em Dívida
+            </span>
+
+            <span class="kpi-value">
+                {{ total_divida|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-divida">
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+        </div>
+
+    </div>
+
+
 </div>
 
-<div class="card">
-<div class="card-title">Saldo Atual</div>
-<div class="card-value">{{ saldo|intcomma }} Kz</div>
-<i class="bi bi-cash-stack card-icon"></i>
-</div>
-
-<div class="card">
-<div class="card-title">Total em Dívida</div>
-<div class="card-value">{{ total_divida|intcomma }} Kz</div>
-<i class="bi bi-exclamation-triangle card-icon"></i>
-</div>
-
-</div>
 
 
-<!-- ALTERAR SENHA -->
+<!-- =====================================================
+     ALTERAR SENHA
+===================================================== -->
+
+
 <a href="{% url 'alterar_senha_financeiro' %}"
-class="card card-password-financeiro w-100 mb-4"
-style="display:flex;justify-content:space-between;align-items:center;padding:8px;font-weight:600;">
+   class="password-card">
 
-<div>
-<div style="font-size:20px;">Alterar Senha</div>
-<div style="font-size:15px;opacity:0.85;">
-Atualize sua senha do painel financeiro
-</div>
-</div>
 
-<i class="bi bi-key-fill" style="font-size:28px;"></i>
+    <div>
+
+        <h5>
+            Alterar Senha
+        </h5>
+
+
+        <p>
+            Atualize a segurança do seu painel financeiro
+        </p>
+
+    </div>
+
+
+    <i class="bi bi-key-fill"></i>
+
 
 </a>
 
+<!-- =====================================================
+     RESUMO DA SECRETARIA
+===================================================== -->
 
 
-<!-- RESUMO SECRETARIA -->
-<h5 class="section-title mt-4">Resumo da Secretaria</h5>
+<h5 class="section-title">
+    Resumo da Secretaria
+</h5>
 
-<div class="dashboard-cards">
 
-<div class="card">
-<div class="card-title">Total Recebido</div>
-<div class="card-value">{{ total_recebido|intcomma }} Kz</div>
-<i class="bi bi-cash-stack card-icon"></i>
+
+<div class="kpi-grid">
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Total Recebido
+            </span>
+
+
+            <span class="kpi-value">
+                {{ total_recebido|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-entrada">
+
+            <i class="bi bi-cash-stack"></i>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Total em Dívida
+            </span>
+
+
+            <span class="kpi-value">
+                {{ total_divida|intcomma }} Kz
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-divida">
+
+            <i class="bi bi-exclamation-circle-fill"></i>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="kpi-card">
+
+        <div class="kpi-content">
+
+            <span class="kpi-title">
+                Alunos Devedores
+            </span>
+
+
+            <span class="kpi-value">
+                {{ alunos_devedores }}
+            </span>
+
+        </div>
+
+
+        <div class="kpi-icon icon-saida">
+
+            <i class="bi bi-person-x-fill"></i>
+
+        </div>
+
+
+    </div>
+
+
+
 </div>
 
-<div class="card">
-<div class="card-title">Total em Dívida</div>
-<div class="card-value">{{ total_divida|intcomma }} Kz</div>
-<i class="bi bi-exclamation-triangle card-icon"></i>
+
+
+
+
+<!-- =====================================================
+     GRÁFICO FINANCEIRO
+===================================================== -->
+
+
+<div class="row g-4 mt-2">
+
+
+    <div class="col-12">
+
+
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Evolução Financeira
+                    </h5>
+
+
+                    <small class="text-muted">
+                        Comparação mensal entre entradas e despesas
+                    </small>
+
+
+                </div>
+
+
+                <div>
+
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                        Ano Atual
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div style="height:350px;">
+
+
+                <canvas id="financialChart"></canvas>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
 </div>
 
-<div class="card">
-<div class="card-title">Alunos Devedores</div>
-<div class="card-value">{{ alunos_devedores }}</div>
-<i class="bi bi-person-x card-icon"></i>
-</div>
+
+
+
+
+<!-- =====================================================
+     ÚLTIMOS MOVIMENTOS
+===================================================== -->
+
+
+<div class="row g-4 mt-4">
+
+
+
+    <!-- PAGAMENTOS -->
+
+    <div class="col-lg-6">
+
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+
+            <div class="card-header bg-white border-0 p-4">
+
+
+                <h5 class="fw-bold mb-0">
+
+                    Últimos Pagamentos
+
+                </h5>
+
+
+            </div>
+
+
+
+            <div class="table-responsive">
+
+
+                <table class="table align-middle mb-0">
+
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Aluno</th>
+
+                            <th>Valor</th>
+
+                            <th>Data</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for pagamento in pagamentos %}
+
+
+                        <tr>
+
+
+                            <td class="fw-semibold">
+
+                                {{ pagamento.aluno.nome_completo }}
+
+                            </td>
+
+
+
+                            <td class="text-success fw-bold">
+
+                                {{ pagamento.valor_pago|intcomma }} Kz
+
+                            </td>
+
+
+
+                            <td>
+
+                                {{ pagamento.data_pagamento|date:"d/m/Y" }}
+
+                            </td>
+
+
+
+                        </tr>
+
+
+                    {% empty %}
+
+
+                        <tr>
+
+                            <td colspan="3"
+                                class="text-center text-muted py-4">
+
+                                Nenhum pagamento registado.
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- DESPESAS -->
+
+    <div class="col-lg-6">
+
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+
+            <div class="card-header bg-white border-0 p-4">
+
+
+                <h5 class="fw-bold mb-0">
+
+                    Últimas Despesas
+
+                </h5>
+
+
+            </div>
+
+
+
+            <div class="table-responsive">
+
+
+                <table class="table align-middle mb-0">
+
+
+                    <thead class="table-light">
+
+
+                        <tr>
+
+                            <th>Descrição</th>
+
+                            <th>Valor</th>
+
+                            <th>Data</th>
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                    {% for despesa in despesas %}
+
+
+                        <tr>
+
+
+                            <td class="fw-semibold">
+
+                                {{ despesa.descricao }}
+
+                            </td>
+
+
+
+                            <td class="text-danger fw-bold">
+
+                                {{ despesa.valor|intcomma }} Kz
+
+                            </td>
+
+
+
+                            <td>
+
+                                {{ despesa.data|date:"d/m/Y" }}
+
+                            </td>
+
+
+
+                        </tr>
+
+
+                    {% empty %}
+
+
+                        <tr>
+
+                            <td colspan="3"
+                                class="text-center text-muted py-4">
+
+                                Nenhuma despesa registada.
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
 
 </div>
 
-<!-- CHART JS -->
+<!-- =====================================================
+     CHART JS
+===================================================== -->
+
+
 <script>
 
-const ctx = document.getElementById('financialChart').getContext('2d');
 
-new Chart(ctx, {
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
 
-type: 'line',
 
-data: {
+        const canvas = document.getElementById(
+            "financialChart"
+        );
 
-labels: {{ meses|safe }},
 
-datasets: [
+        if(canvas){
 
-{
-label:'Entradas',
-data:{{ entradas_mensais|safe }},
-borderColor:'#2563eb',
-backgroundColor:'rgba(37,99,235,0.1)',
-tension:0.3
-},
 
-{
-label:'Despesas',
-data:{{ despesas_mensais|safe }},
-borderColor:'#f87171',
-backgroundColor:'rgba(248,113,113,0.1)',
-tension:0.3
-}
+            const ctx = canvas.getContext(
+                "2d"
+            );
 
-]
 
-},
 
-options: {
-responsive:true,
-plugins:{
-legend:{position:'top'}
-},
-scales:{
-y:{beginAtZero:true}
-}
-}
+            new Chart(
+                ctx,
+                {
 
-});
+
+                    type: "line",
+
+
+
+                    data:{
+
+
+                        labels: {{ meses|safe }},
+
+
+
+                        datasets:[
+
+
+                            {
+
+
+                                label: "Entradas",
+
+
+                                data: {{ entradas_mensais|safe }},
+
+
+                                borderColor: "#2563eb",
+
+
+                                backgroundColor:
+                                "rgba(37,99,235,0.12)",
+
+
+                                borderWidth: 3,
+
+
+                                pointRadius: 4,
+
+
+                                pointHoverRadius: 6,
+
+
+                                tension: 0.4,
+
+
+                                fill: true
+
+
+                            },
+
+
+
+
+                            {
+
+
+                                label: "Despesas",
+
+
+                                data: {{ despesas_mensais|safe }},
+
+
+                                borderColor: "#dc2626",
+
+
+                                backgroundColor:
+                                "rgba(220,38,38,0.10)",
+
+
+                                borderWidth: 3,
+
+
+                                pointRadius: 4,
+
+
+                                pointHoverRadius: 6,
+
+
+                                tension: 0.4,
+
+
+                                fill: true
+
+
+                            }
+
+
+
+                        ]
+
+
+                    },
+
+
+
+                    options:{
+
+
+                        responsive:true,
+
+
+                        maintainAspectRatio:false,
+
+
+
+                        interaction:{
+
+
+                            intersect:false,
+
+
+                            mode:"index"
+
+
+                        },
+
+
+
+                        plugins:{
+
+
+                            legend:{
+
+
+                                position:"top",
+
+
+                                labels:{
+
+
+                                    font:{
+
+
+                                        size:13,
+
+
+                                        weight:"600"
+
+
+                                    }
+
+
+                                }
+
+
+                            },
+
+
+
+                            tooltip:{
+
+
+                                callbacks:{
+
+
+                                    label:function(context){
+
+
+                                        return context.dataset.label +
+                                        ": " +
+                                        context.parsed.y.toLocaleString(
+                                            "pt-PT"
+                                        )
+                                        +
+                                        " Kz";
+
+
+                                    }
+
+
+                                }
+
+
+                            }
+
+
+
+                        },
+
+
+
+
+                        scales:{
+
+
+
+                            y:{
+
+
+                                beginAtZero:true,
+
+
+
+                                ticks:{
+
+
+                                    callback:function(value){
+
+
+                                        return value.toLocaleString(
+                                            "pt-PT"
+                                        )
+                                        +
+                                        " Kz";
+
+
+                                    }
+
+
+                                }
+
+
+                            },
+
+
+
+                            x:{
+
+
+                                grid:{
+
+
+                                    display:false
+
+
+                                }
+
+
+                            }
+
+
+
+                        }
+
+
+
+                    }
+
+
+
+                }
+
+            );
+
+
+        }
+
+
+
+    }
+
+);
+
+
 
 </script>
+
+
 
 {% endblock %}

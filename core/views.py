@@ -596,7 +596,7 @@ def dashboard(request):
                 if taxa_negativa >= 40:
 
                     alertas.append(
-                        f"⚠️ Turma {turma.classe}ª {turma.identificador} está em risco."
+                        f" Turma {turma.classe}ª {turma.identificador} está em risco."
                     )
 
         # DISCIPLINAS CRÍTICAS
@@ -6013,37 +6013,88 @@ def buscar_aluno_por_processo(request):
 @login_required
 def lista_secretarias(request):
     """
-    Lista todos os usuários com papel Secretaria ou Financeiro.
+    Lista os utilizadores administrativos da escola
+    (Diretor Pedagógico, Secretaria e Financeiro).
     """
-    # Filtrando secretarias e financeiros
-    secretarias = User.objects.filter(role__in=['SECRETARIA', 'FINANCEIRO'])
 
-    return render(request, 'lista_secretarias.html', {
-        'secretarias': secretarias
-    })
+    if request.user.role == "SUPERADMIN":
+        secretarias = User.objects.filter(
+            role__in=[
+                "DIRETOR_PEDAGOGICO",
+                "SECRETARIA",
+                "FINANCEIRO",
+            ]
+        ).order_by("first_name", "last_name")
+
+    else:
+        secretarias = User.objects.filter(
+            escola=request.user.escola,
+            role__in=[
+                "DIRETOR_PEDAGOGICO",
+                "SECRETARIA",
+                "FINANCEIRO",
+            ]
+        ).order_by("first_name", "last_name")
+
+    return render(
+        request,
+        "lista_secretarias.html",
+        {
+            "secretarias": secretarias,
+        },
+    )
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
 
 @login_required
 def eliminar_secretaria(request, id):
     """
-    Permite ao Diretor eliminar Secretarias ou Financeiros.
+    Permite ao Diretor eliminar Diretores Pedagógicos,
+    Secretarias e Financeiros da sua escola.
     """
+
     if request.user.role != "DIRETOR":
         messages.error(request, "Você não tem permissão para esta ação.")
-        return redirect("dashboard_financeiro" if request.user.role == "FINANCEIRO" else "dashboard")
+        return redirect("dashboard")
 
-    # Apenas Secretarias ou Financeiros podem ser eliminados
-    secretaria = get_object_or_404(User, id=id, role__in=["SECRETARIA", "FINANCEIRO"])
+    utilizador = get_object_or_404(
+        User,
+        id=id,
+        escola=request.user.escola,
+        role__in=[
+            "DIRETOR_PEDAGOGICO",
+            "SECRETARIA",
+            "FINANCEIRO",
+        ],
+    )
 
-    if request.method == "POST":
-        nome = secretaria.get_full_name
-        secretaria.delete()
-        messages.success(request, f"{nome} eliminada(o) com sucesso.")
+    # Impede eliminar a própria conta
+    if utilizador.id == request.user.id:
+        messages.error(request, "Não é permitido eliminar a sua própria conta.")
         return redirect("lista_secretarias")
 
-    return render(request, "eliminar_secretaria.html", {
-        "secretaria": secretaria
-    })
+    if request.method == "POST":
+        nome = utilizador.get_full_name() or utilizador.username
+        utilizador.delete()
+
+        messages.success(
+            request,
+            f'O utilizador "{nome}" foi eliminado com sucesso.'
+        )
+
+        return redirect("lista_secretarias")
+
+    return render(
+        request,
+        "eliminar_secretaria.html",
+        {
+            "secretaria": utilizador,
+        },
+    )
 
 
 def imprimir_lista_turma(request, turma_id):
@@ -8332,31 +8383,72 @@ def excluir_plano(request, plano_id):
 #===========================================================
 
 
+from decimal import Decimal
+import json
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+from django.shortcuts import redirect, render
+
 from .services import dados_financeiros_da_secretaria
 
 
 @login_required
 def dashboard_financeiro(request):
+    """
+    Dashboard do Financeiro.
+    Apresenta indicadores financeiros, gráfico mensal e últimos movimentos.
+    """
 
     if getattr(request.user, "role", None) != "FINANCEIRO":
         return redirect("dashboard")
 
     escola = getattr(request.user, "escola", None)
 
-    if not escola:
+    if escola is None:
         return redirect("dashboard")
 
-    pagamentos = Pagamento.objects.filter(aluno__escola=escola)
-    despesas = Despesa.objects.filter(escola=escola)
+    # =====================================================
+    # CONSULTAS
+    # =====================================================
 
-    total_entradas = pagamentos.aggregate(total=Sum("valor_pago"))["total"] or 0
-    total_saidas = despesas.aggregate(total=Sum("valor"))["total"] or 0
+    pagamentos = (
+        Pagamento.objects
+        .filter(aluno__escola=escola)
+    )
+
+    despesas = (
+        Despesa.objects
+        .filter(escola=escola)
+    )
+
+    # =====================================================
+    # TOTAIS
+    # =====================================================
+
+    total_entradas = (
+        pagamentos.aggregate(total=Sum("valor_pago"))["total"]
+        or Decimal("0.00")
+    )
+
+    total_saidas = (
+        despesas.aggregate(total=Sum("valor"))["total"]
+        or Decimal("0.00")
+    )
 
     saldo = total_entradas - total_saidas
 
-    # ================================
+    # =====================================================
+    # ÚLTIMOS MOVIMENTOS
+    # =====================================================
+
+    ultimos_pagamentos = pagamentos.order_by("-data_pagamento")[:10]
+    ultimas_despesas = despesas.order_by("-data")[:10]
+
+    # =====================================================
     # RELATÓRIO MENSAL
-    # ================================
+    # =====================================================
 
     pagamentos_mensais = (
         pagamentos
@@ -8374,36 +8466,69 @@ def dashboard_financeiro(request):
         .order_by("mes")
     )
 
+    dados_por_mes = {}
+
+    for item in pagamentos_mensais:
+        chave = item["mes"]
+        dados_por_mes.setdefault(
+            chave,
+            {
+                "entradas": 0,
+                "despesas": 0,
+            },
+        )
+        dados_por_mes[chave]["entradas"] = float(item["total"])
+
+    for item in despesas_mensais:
+        chave = item["mes"]
+        dados_por_mes.setdefault(
+            chave,
+            {
+                "entradas": 0,
+                "despesas": 0,
+            },
+        )
+        dados_por_mes[chave]["despesas"] = float(item["total"])
+
     meses = []
     entradas_chart = []
     despesas_chart = []
 
-    for p in pagamentos_mensais:
-        meses.append(p["mes"].strftime("%b"))
-        entradas_chart.append(float(p["total"]))
+    for mes in sorted(dados_por_mes.keys()):
+        meses.append(mes.strftime("%b"))
+        entradas_chart.append(dados_por_mes[mes]["entradas"])
+        despesas_chart.append(dados_por_mes[mes]["despesas"])
 
-    for d in despesas_mensais:
-        despesas_chart.append(float(d["total"]))
+    # =====================================================
+    # DADOS DA SECRETARIA
+    # =====================================================
 
-    # dados da secretaria
     dados_secretaria = dados_financeiros_da_secretaria(escola)
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
 
     context = {
         "total_entradas": total_entradas,
         "total_saidas": total_saidas,
         "saldo": saldo,
 
-        "pagamentos": pagamentos.order_by("-data_pagamento")[:10],
-        "despesas": despesas.order_by("-data")[:10],
+        "pagamentos": ultimos_pagamentos,
+        "despesas": ultimas_despesas,
 
         "meses": json.dumps(meses),
         "entradas_mensais": json.dumps(entradas_chart),
         "despesas_mensais": json.dumps(despesas_chart),
 
-        **dados_secretaria
+        **dados_secretaria,
     }
 
-    return render(request, "dashboard_financeiro.html", context)
+    return render(
+        request,
+        "dashboard_financeiro.html",
+        context,
+    )
 
 
 @login_required
@@ -9930,8 +10055,6 @@ def mini_pauta_pdf(request, pk):
     return HttpResponse(html)
 
 
-
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -9967,11 +10090,16 @@ def pauta_final_ano(request):
     ano_letivo_id = request.GET.get("ano_letivo")
     turma_id = request.GET.get("turma")
 
-    anos_letivos = AnoLetivo.objects.filter(escola=escola).order_by("-nome")
+    anos_letivos = AnoLetivo.objects.filter(
+        escola=escola
+    ).order_by("-nome")
 
-    turmas = Turma.objects.filter(escola=escola).select_related(
+    turmas = Turma.objects.filter(
+        escola=escola
+    ).select_related(
         "curso",
-        "ano_letivo"
+        "ano_letivo",
+
     )
 
     pauta = []
@@ -9988,37 +10116,63 @@ def pauta_final_ano(request):
         ano_letivo = get_object_or_404(
             AnoLetivo,
             id=ano_letivo_id,
-            escola=escola
+            escola=escola,
         )
 
         turma = get_object_or_404(
             Turma,
             id=turma_id,
-            escola=escola
+            escola=escola,
         )
+
+        # =====================================================
+        # NOTA MÍNIMA DA CLASSE
+        # =====================================================
+
+        try:
+            if hasattr(turma.classe, "ordem") and turma.classe.ordem is not None:
+                numero_classe = int(turma.classe.ordem)
+            else:
+                numero_classe = int(
+                    "".join(filter(str.isdigit, turma.classe.nome))
+                )
+        except (ValueError, TypeError, AttributeError):
+            numero_classe = 7
+
+        nota_minima = 5 if numero_classe <= 6 else 10
+
+        # =====================================================
 
         disciplinas = list(
-            Disciplina.objects.filter(turma=turma).order_by("nome")
+            Disciplina.objects.filter(
+                turma=turma
+            ).order_by("nome")
         )
 
-        alunos = Aluno.objects.filter(
-            turma=turma,
-            ativo=True
-        ).select_related("usuario").order_by(
-            "numero_na_turma",
-            "usuario__first_name"
+        alunos = (
+            Aluno.objects.filter(
+                turma=turma,
+                ativo=True,
+            )
+            .select_related("usuario")
+            .order_by(
+                "numero_na_turma",
+                "usuario__first_name",
+            )
         )
 
         notas = Nota.objects.filter(
             aluno__in=alunos,
             disciplina__in=disciplinas,
-            ano_letivo=ano_letivo
+            ano_letivo=ano_letivo,
         )
 
         notas_map = {}
 
         for nota in notas:
-            notas_map[(nota.aluno_id, nota.disciplina_id, nota.trimestre)] = nota
+            notas_map[
+                (nota.aluno_id, nota.disciplina_id, nota.trimestre)
+            ] = nota
 
         # =====================================================
         # ESTATÍSTICAS
@@ -10041,7 +10195,6 @@ def pauta_final_ano(request):
                 "disciplinas_recurso": [],
                 "media_geral": 0,
                 "situacao": "",
-                "estado": ""
             }
 
             medias_finais = []
@@ -10052,9 +10205,9 @@ def pauta_final_ano(request):
                 n2 = notas_map.get((aluno.id, disciplina.id, 2))
                 n3 = notas_map.get((aluno.id, disciplina.id, 3))
 
-                # =================================================
-                # REGRA: ausência = 0
-                # =================================================
+                # =============================================
+                # AUSÊNCIA DE NOTA = 0
+                # =============================================
 
                 m1 = float(n1.media_final) if n1 and n1.media_final is not None else 0
                 m2 = float(n2.media_final) if n2 and n2.media_final is not None else 0
@@ -10064,13 +10217,15 @@ def pauta_final_ano(request):
 
                 medias_finais.append(mf)
 
-                # =================================================
-                # NEGATIVAS + RECURSO
-                # =================================================
+                # =============================================
+                # NEGATIVAS
+                # =============================================
 
-                if mf < 10:
+                if mf < nota_minima:
                     linha["negativas"] += 1
-                    linha["disciplinas_recurso"].append(disciplina.nome)
+                    linha["disciplinas_recurso"].append(
+                        disciplina.nome
+                    )
 
                 linha["disciplinas"].append({
                     "disciplina": disciplina,
@@ -10084,10 +10239,13 @@ def pauta_final_ano(request):
             # MÉDIA GERAL
             # =====================================================
 
-            linha["media_geral"] = round(
-                sum(medias_finais) / len(medias_finais),
-                1
-            ) if medias_finais else 0
+            if medias_finais:
+                linha["media_geral"] = round(
+                    sum(medias_finais) / len(medias_finais),
+                    1,
+                )
+            else:
+                linha["media_geral"] = 0
 
             # =====================================================
             # SITUAÇÃO FINAL
@@ -10095,17 +10253,14 @@ def pauta_final_ano(request):
 
             if linha["negativas"] == 0:
                 linha["situacao"] = "APROVADO"
-                linha["estado"] = "NORMAL"
                 total_aprovados += 1
 
-            elif 1 <= linha["negativas"] <= 3:
+            elif linha["negativas"] <= 3:
                 linha["situacao"] = "RECURSO"
-                linha["estado"] = "EM RECURSO"
                 total_recurso += 1
 
             else:
                 linha["situacao"] = "REPROVADO"
-                linha["estado"] = "REPROVAÇÃO"
                 total_reprovados += 1
 
             pauta.append(linha)
@@ -10114,10 +10269,16 @@ def pauta_final_ano(request):
         # RANKING
         # =====================================================
 
-        pauta.sort(key=lambda x: x["media_geral"], reverse=True)
+        pauta.sort(
+            key=lambda x: x["media_geral"],
+            reverse=True,
+        )
 
-        for pos, linha in enumerate(pauta, start=1):
-            linha["posicao"] = pos
+        for posicao, linha in enumerate(
+            pauta,
+            start=1,
+        ):
+            linha["posicao"] = posicao
 
         # =====================================================
         # ESTATÍSTICAS
@@ -10132,21 +10293,26 @@ def pauta_final_ano(request):
             "reprovados": total_reprovados,
             "percentual_aprovacao": round(
                 (total_aprovados / total_alunos) * 100,
-                2
+                2,
             ) if total_alunos else 0,
+            "nota_minima": nota_minima,
         }
 
     # =====================================================
     # CONTEXT
     # =====================================================
 
-    return render(request, "pauta_final_ano.html", {
-        "anos_letivos": anos_letivos,
-        "turmas": turmas,
-        "turma": turma,
-        "disciplinas": disciplinas,
-        "pauta": pauta,
-        "estatisticas": estatisticas,
-        "ano_letivo_id": ano_letivo_id,
-        "turma_id": turma_id,
-    })
+    return render(
+        request,
+        "pauta_final_ano.html",
+        {
+            "anos_letivos": anos_letivos,
+            "turmas": turmas,
+            "turma": turma,
+            "disciplinas": disciplinas,
+            "pauta": pauta,
+            "estatisticas": estatisticas,
+            "ano_letivo_id": ano_letivo_id,
+            "turma_id": turma_id,
+        },
+    )
