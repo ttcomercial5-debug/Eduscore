@@ -230,7 +230,7 @@
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <label class="form-label">
                             Email
                         </label>
@@ -243,6 +243,26 @@
                     </div>
 
                     <div class="col-md-3">
+
+                        <label class="form-label">
+                            Telefone *
+                        </label>
+
+                        <input
+                            type="text"
+                            name="telefone"
+                            class="form-control"
+                            value="{{ request.POST.telefone }}"
+                            placeholder="923 000 000"
+                            required>
+
+                        <small class="text-muted">
+                            Utilizado para recuperação da senha.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-4">
                         <label class="form-label">
                             Data de Nascimento *
                         </label>
@@ -335,11 +355,31 @@
                     </h6>
 
                     <ul>
-                        <li>Username será o Nome Completo.</li>
-                        <li>Senha será gerada automaticamente pelo sistema.</li>
-                        <li>Matrícula será confirmada automaticamente.</li>
-                        <li>Mensalidades serão geradas automaticamente.</li>
-                        <li>O aluno ficará apto para confirmação nos próximos anos letivos.</li>
+
+                        <li>
+                            O <strong>Número de Processo</strong> será gerado automaticamente e utilizado como Username.
+                        </li>
+
+                        <li>
+                            A senha inicial será gerada automaticamente pelo sistema.
+                        </li>
+
+                        <li>
+                            O telefone será utilizado para recuperação da senha através de código OTP.
+                        </li>
+
+                        <li>
+                            A matrícula será confirmada automaticamente.
+                        </li>
+
+                        <li>
+                            As mensalidades serão geradas automaticamente.
+                        </li>
+
+                        <li>
+                            O aluno ficará apto para confirmação nos próximos anos letivos.
+                        </li>
+
                     </ul>
 
                 </div>
@@ -358,8 +398,8 @@
                         type="submit"
                         class="btn btn-salvar">
 
-                        <i class="bi bi-save"></i>
-                        Registrar Matrícula
+                        <i class="bi bi-person-check-fill me-2"></i>
+                        Concluir Matrícula
 
                     </button>
 
@@ -401,6 +441,14 @@ curso.addEventListener("change", function(){
             option.style.display = "none";
         }
     }
+
+});
+
+const telefone = document.querySelector('input[name="telefone"]');
+
+telefone.addEventListener("input", function () {
+
+    this.value = this.value.replace(/[^\d]/g, "");
 
 });
 

@@ -17,6 +17,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('recuperar-senha/', views.esqueci_senha, name='esqueci_senha'),
+    path("recuperar/confirmar-otp/", views.confirmar_otp_recuperacao, name="confirmar_otp_recuperacao"),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('bloqueado/', views.bloqueado, name='bloqueado'),
     path("alterar-senha/", views.alterar_senha, name="alterar_senha"),

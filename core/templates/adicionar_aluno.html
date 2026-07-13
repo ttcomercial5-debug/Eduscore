@@ -109,10 +109,17 @@
 
             <div class="info-box">
 
-                <strong>Informação:</strong>
+                <strong>Informação:</strong><br>
 
-                O nome será utilizado como utilizador do aluno.
-                A senha será gerada automaticamente pelo sistema.
+                O <strong>Número de Processo</strong> será utilizado como nome de utilizador (Username) para acesso ao sistema.
+
+                <br><br>
+
+                O <strong>Telefone</strong> será utilizado para recuperação segura da senha através de código OTP.
+
+                <br><br>
+
+                A senha inicial será gerada automaticamente pelo sistema.
 
             </div>
 
@@ -141,7 +148,7 @@
                                 required>
 
                             <small class="text-muted">
-                                Será utilizado como username.
+                                Nome Completo do Aluno.
                             </small>
 
                         </div>
@@ -206,6 +213,26 @@
                                 class="form-control">
                         </div>
 
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Telefone *
+                            </label>
+
+                            <input
+                                type="text"
+                                name="telefone"
+                                class="form-control"
+                                placeholder="923 000 000"
+                                required>
+
+                            <small class="text-muted">
+                                Utilizado para recuperação da senha.
+                            </small>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -230,6 +257,10 @@
                                 name="numero_processo"
                                 class="form-control"
                                 required>
+
+                            <small class="text-muted">
+                                Será utilizado como Username para iniciar sessão.
+                            </small>
 
 
 

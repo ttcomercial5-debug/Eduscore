@@ -6,18 +6,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recuperar Senha | EdusCel</title>
+<title>Confirmar OTP | EdusCel</title>
 
 
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+<link 
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
 rel="stylesheet">
 
 
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+<link 
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
 rel="stylesheet">
-
 
 
 <style>
@@ -31,13 +30,11 @@ body {
 
     display:flex;
 
-    align-items:center;
-
     justify-content:center;
 
-    font-family:"Inter", system-ui, sans-serif;
+    align-items:center;
 
-    padding:20px;
+    font-family:"Inter", system-ui, sans-serif;
 
 }
 
@@ -45,9 +42,7 @@ body {
 
 .card-recovery {
 
-    width:100%;
-
-    max-width:430px;
+    width:420px;
 
     padding:35px;
 
@@ -68,9 +63,9 @@ body {
 
 .logo {
 
-    width:75px;
+    width:70px;
 
-    height:75px;
+    height:70px;
 
     border-radius:50%;
 
@@ -87,7 +82,7 @@ body {
 
     color:white;
 
-    font-size:34px;
+    font-size:32px;
 
 }
 
@@ -120,8 +115,6 @@ h4 {
     color:#e2e8f0;
 
     font-weight:600;
-
-    font-size:14px;
 
 }
 
@@ -157,8 +150,21 @@ h4 {
 
     color:white;
 
-    box-shadow:
-    0 0 0 2px rgba(37,99,235,.4);
+    box-shadow:0 0 0 2px rgba(37,99,235,.4);
+
+}
+
+
+
+.otp-input {
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    letter-spacing:8px;
 
 }
 
@@ -223,7 +229,6 @@ h4 {
 
 </style>
 
-
 </head>
 
 
@@ -241,28 +246,29 @@ h4 {
 
 <div class="logo">
 
-<i class="bi bi-shield-lock"></i>
+<i class="bi bi-shield-check"></i>
 
 </div>
 
 
 
 <h4 class="mt-3">
-Recuperar Senha
+
+Confirmar Código OTP
+
 </h4>
 
 
 
 <p class="subtitle">
 
-Informe os dados associados à sua conta.
-Enviaremos um código OTP para o telefone registado.
+Digite o código enviado para o seu telefone
+e defina uma nova senha de acesso.
 
 </p>
 
 
 </div>
-
 
 
 
@@ -284,52 +290,92 @@ Enviaremos um código OTP para o telefone registado.
 
 
 
-
 <form method="POST">
+
 
 {% csrf_token %}
 
 
 
-
-
 <div class="mb-3">
 
-<label class="form-label">
-Código da Escola
-</label>
-
-
-<input
-type="text"
-name="codigo_escola"
-class="form-control"
-placeholder="Código da Escola (exceto Superadmin)"
-autocomplete="organization">
-
-</div>
-
-
-
-
-
-<div class="mb-3">
 
 <label class="form-label">
+
 Nome de Utilizador
+
 </label>
 
 
-<input
+<input 
 type="text"
 name="username"
 class="form-control"
-placeholder="Digite o username"
-autocomplete="username"
-required>
+placeholder="Digite o seu username"
+required
+
+
 
 </div>
 
+
+
+
+<div class="mb-3">
+
+
+<label class="form-label">
+
+Código OTP
+
+</label>
+
+
+<input 
+type="text"
+name="otp_codigo"
+class="form-control otp-input"
+placeholder="000000"
+maxlength="6"
+autocomplete="one-time-code"
+required
+
+
+
+<small class="text-light opacity-75">
+
+O código expira após 5 minutos.
+
+</small>
+
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+
+<label class="form-label">
+
+Nova Senha
+
+</label>
+
+
+
+<input 
+type="password"
+name="nova_senha"
+class="form-control"
+placeholder="Digite a nova senha"
+required
+
+
+
+
+</div>
 
 
 
@@ -337,18 +383,24 @@ required>
 
 <div class="mb-4">
 
+
 <label class="form-label">
-Telefone associado
+
+Confirmar Nova Senha
+
 </label>
 
 
-<input
-type="text"
-name="telefone"
+
+<input 
+type="password"
+name="confirmar_senha"
 class="form-control"
-placeholder="Ex: 923000000"
-autocomplete="tel"
-required>
+placeholder="Repita a nova senha"
+required
+
+
+
 
 </div>
 
@@ -356,18 +408,18 @@ required>
 
 
 
-
-<button
+<button 
 type="submit"
 class="btn btn-primary w-100">
 
 
-<i class="bi bi-send me-2"></i>
+<i class="bi bi-check-circle me-2"></i>
 
-Enviar Código OTP
+Alterar Senha
 
 
 </button>
+
 
 
 
@@ -377,17 +429,17 @@ Enviar Código OTP
 
 
 
-
-
 <div class="text-center mt-4">
 
 
-<a href="{% url 'login' %}" class="link">
+<a 
+href="{% url 'esqueci_senha' %}"
+class="link">
 
 
 <i class="bi bi-arrow-left me-1"></i>
 
-Voltar ao login
+Solicitar novo código
 
 
 </a>
@@ -397,8 +449,8 @@ Voltar ao login
 
 
 
-
 </div>
+
 
 
 

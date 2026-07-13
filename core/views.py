@@ -254,62 +254,553 @@ def login_view(request):
 #==================================================
 #   RECUPERAR SENHA
 #==================================================
-from django.contrib.auth.hashers import make_password
+import random
+
+from datetime import timedelta
+
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from django.utils import timezone
+
+import secrets
+
+from datetime import timedelta
+
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from django.utils import timezone
+
+from academic.models import Escola
+
+from core.service.sms_service import enviar_sms
+
 
 
 User = get_user_model()
 
+
+
+
 def esqueci_senha(request):
-    nova_senha = None
-    error = None
+
 
     if request.method == "POST":
-        codigo_escola = request.POST.get("codigo_escola")
-        username = request.POST.get("username")
 
-        # Campos obrigatórios
+
+        codigo_escola = request.POST.get(
+            "codigo_escola",
+            ""
+        ).strip()
+
+
+        username = request.POST.get(
+            "username",
+            ""
+        ).strip()
+
+
+        telefone = request.POST.get(
+            "telefone",
+            ""
+        ).strip()
+
+
+
+        # =====================================
+        # VALIDAÇÕES INICIAIS
+        # =====================================
+
+
         if not username:
-            error = "Informe o nome de usuário."
-            return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
 
-        # SUPERADMIN não precisa de escola
+
+            messages.error(
+                request,
+                "Informe o nome de utilizador."
+            )
+
+
+            return render(
+                request,
+                "recuperar_senha.html"
+            )
+
+
+
+        if not telefone:
+
+
+            messages.error(
+                request,
+                "Informe o telefone associado à conta."
+            )
+
+
+            return render(
+                request,
+                "recuperar_senha.html"
+            )
+
+
+
+
+
+        user = None
+
+
+
+
+        # =====================================
+        # SUPERADMIN
+        # =====================================
+
+
         try:
-            user = User.objects.get(username=username, is_superuser=True)
-            # Gerar senha aleatória
-            nova_senha = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-            user.password = make_password(nova_senha)
-            user.save()
-            return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
+
+
+            user = User.objects.get(
+                username=username,
+                is_superuser=True
+            )
+
+
+            # Confirma telefone do superadmin
+
+            if user.telefone != telefone:
+
+                user = None
+
+
+
         except User.DoesNotExist:
-            pass  # continua fluxo normal
 
-        # Para todos os outros perfis, código da escola é obrigatório
-        if not codigo_escola:
-            error = "Preencha o Código da Escola."
-            return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
 
-        # Verifica se a escola existe
+            user = None
+
+
+
+
+
+        # =====================================
+        # UTILIZADORES NORMAIS
+        # =====================================
+
+
+        if not user:
+
+
+
+            if not codigo_escola:
+
+
+                messages.error(
+                    request,
+                    "Informe o código da escola."
+                )
+
+
+                return render(
+                    request,
+                    "recuperar_senha.html"
+                )
+
+
+
+
+            try:
+
+
+                escola = Escola.objects.get(
+                    codigo=codigo_escola
+                )
+
+
+            except Escola.DoesNotExist:
+
+
+                messages.error(
+                    request,
+                    "Dados inválidos."
+                )
+
+
+                return render(
+                    request,
+                    "recuperar_senha.html"
+                )
+
+
+
+
+
+            try:
+
+
+                user = User.objects.get(
+                    username=username,
+                    telefone=telefone,
+                    escola=escola
+                )
+
+
+            except User.DoesNotExist:
+
+
+
+                messages.error(
+                    request,
+                    "Dados inválidos."
+                )
+
+
+                return render(
+                    request,
+                    "recuperar_senha.html"
+                )
+
+
+
+
+
+
+        # =====================================
+        # GERAR OTP SEGURO
+        # =====================================
+
+
+        otp = str(
+            secrets.randbelow(900000) + 100000
+        )
+
+
+
+        expiracao = (
+            timezone.now()
+            +
+            timedelta(minutes=5)
+        )
+
+
+
+        user.otp_codigo = otp
+
+        user.otp_expira_em = expiracao
+
+
+
+        user.save(
+            update_fields=[
+                "otp_codigo",
+                "otp_expira_em"
+            ]
+        )
+
+
+
+
+
+        # =====================================
+        # ENVIO SMS
+        # =====================================
+
+
+        mensagem = (
+
+            f"EdusCel: Seu código de recuperação "
+            f"é {otp}. "
+            "Válido por 5 minutos."
+
+        )
+
+
+
+        enviado = enviar_sms(
+            user.telefone,
+            mensagem
+        )
+
+
+
+
+        if not enviado:
+
+
+
+            messages.error(
+                request,
+                "Não foi possível enviar o código."
+            )
+
+
+            return render(
+                request,
+                "recuperar_senha.html"
+            )
+
+
+
+
+
+        # =====================================
+        # SUCESSO
+        # =====================================
+
+
+        messages.success(
+            request,
+            "Código OTP enviado para o telefone associado."
+        )
+
+
+
+        return render(
+            request,
+            "recuperar_senha.html"
+        )
+
+
+
+
+
+    return render(
+        request,
+        "recuperar_senha.html"
+    )
+
+
+
+from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils import timezone
+
+
+User = get_user_model()
+
+
+
+def confirmar_otp_recuperacao(request):
+
+    if request.method == "POST":
+
+
+        username = request.POST.get(
+            "username",
+            ""
+        ).strip()
+
+
+        otp_codigo = request.POST.get(
+            "otp_codigo",
+            ""
+        ).strip()
+
+
+        nova_senha = request.POST.get(
+            "nova_senha",
+            ""
+        ).strip()
+
+
+        confirmar_senha = request.POST.get(
+            "confirmar_senha",
+            ""
+        ).strip()
+
+
+
+        # =====================================
+        # VALIDAÇÕES INICIAIS
+        # =====================================
+
+
+        if not username:
+
+            messages.error(
+                request,
+                "Informe o nome de utilizador."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if not otp_codigo:
+
+            messages.error(
+                request,
+                "Informe o código OTP recebido."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if not nova_senha or not confirmar_senha:
+
+            messages.error(
+                request,
+                "Informe e confirme a nova senha."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if nova_senha != confirmar_senha:
+
+            messages.error(
+                request,
+                "As senhas não coincidem."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if len(nova_senha) < 6:
+
+            messages.error(
+                request,
+                "A senha deve possuir pelo menos 6 caracteres."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        # =====================================
+        # BUSCAR UTILIZADOR
+        # =====================================
+
+
         try:
-            escola = Escola.objects.get(codigo=codigo_escola)
-        except Escola.DoesNotExist:
-            error = "Código da escola inválido."
-            return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
 
-        # Verifica se usuário existe e pertence à escola
-        try:
-            user = User.objects.get(username=username, escola=escola)
+            user = User.objects.get(
+                username=username
+            )
+
+
         except User.DoesNotExist:
-            error = "Usuário não encontrado para esta escola."
-            return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
 
-        # Gerar senha aleatória
-        nova_senha = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-        user.password = make_password(nova_senha)
+
+            messages.error(
+                request,
+                "Utilizador não encontrado."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        # =====================================
+        # VALIDAR OTP
+        # =====================================
+
+
+        if not user.otp_codigo:
+
+            messages.error(
+                request,
+                "Nenhum código OTP solicitado."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if user.otp_codigo != otp_codigo:
+
+            messages.error(
+                request,
+                "Código OTP inválido."
+            )
+
+            return redirect(
+                "confirmar_otp_recuperacao"
+            )
+
+
+
+        if (
+            user.otp_expira_em
+            and
+            timezone.now() > user.otp_expira_em
+        ):
+
+            messages.error(
+                request,
+                "O código OTP expirou. Solicite um novo código."
+            )
+
+            user.otp_codigo = None
+            user.otp_expira_em = None
+
+            user.save(
+                update_fields=[
+                    "otp_codigo",
+                    "otp_expira_em"
+                ]
+            )
+
+            return redirect(
+                "esqueci_senha"
+            )
+
+
+
+        # =====================================
+        # ALTERAR SENHA
+        # =====================================
+
+
+        user.set_password(
+            nova_senha
+        )
+
+
+        # Limpar OTP após utilização
+
+        user.otp_codigo = None
+
+        user.otp_expira_em = None
+
+
         user.save()
 
-    return render(request, "recuperar_senha.html", {"nova_senha": nova_senha, "error": error})
 
 
+        messages.success(
+            request,
+            "Senha alterada com sucesso. Já pode iniciar sessão."
+        )
+
+
+        return redirect(
+            "login"
+        )
+
+
+
+    return render(
+        request,
+        "confirmar_otp_recuperacao.html"
+    )
 
 # ==================================================
 #  Função centralizada de redirecionamento
@@ -1168,71 +1659,120 @@ def selecionar_escola(request, escola_id):
 @transaction.atomic
 def adicionar_professor(request):
 
-
     if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
-
     if not request.user.escola:
-        messages.error(request, "Usuário não está vinculado a nenhuma escola.")
+        messages.error(
+            request,
+            "Usuário não está vinculado a nenhuma escola."
+        )
         return redirect("dashboard")
 
     escola = request.user.escola
 
-
-    turmas = Turma.objects.filter(
-        escola=escola
-    ).order_by("classe", "identificador")
+    turmas = (
+        Turma.objects.filter(escola=escola)
+        .order_by("classe", "identificador")
+    )
 
     if request.method == "POST":
 
         username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "").strip()
+        email = request.POST.get("email", "").strip().lower()
+        telefone = request.POST.get("telefone", "").strip()
         password = request.POST.get("password", "").strip()
+
         disciplina = request.POST.get("disciplina", "").strip()
         classes = request.POST.get("classes", "").strip()
+
         turmas_ids = request.POST.getlist("turmas")
 
+        # ==========================================
+        # VALIDAÇÕES
+        # ==========================================
 
-        if not all([username, password, disciplina, classes]):
-            messages.error(request, "Preencha todos os campos obrigatórios.")
+        if not all([
+            username,
+            telefone,
+            password,
+            disciplina,
+            classes,
+        ]):
+            messages.error(
+                request,
+                "Preencha todos os campos obrigatórios."
+            )
             return redirect("adicionar_professor")
 
         if not turmas_ids:
-            messages.error(request, "Selecione pelo menos uma turma.")
+            messages.error(
+                request,
+                "Selecione pelo menos uma turma."
+            )
             return redirect("adicionar_professor")
-
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username já existe.")
+            messages.error(
+                request,
+                "Este nome de utilizador já existe."
+            )
             return redirect("adicionar_professor")
 
+        if User.objects.filter(telefone=telefone).exists():
+            messages.error(
+                request,
+                "Este telefone já está associado a outro utilizador."
+            )
+            return redirect("adicionar_professor")
+
+        if email and User.objects.filter(email=email).exists():
+            messages.error(
+                request,
+                "Este e-mail já está associado a outro utilizador."
+            )
+            return redirect("adicionar_professor")
+
+        # ==========================================
+        # CRIAR UTILIZADOR
+        # ==========================================
 
         user = User.objects.create_user(
             username=username,
             email=email,
+            telefone=telefone,
             password=password,
             role="PROFESSOR",
-            escola=escola
+            escola=escola,
         )
 
+        # ==========================================
+        # CRIAR PROFESSOR
+        # ==========================================
 
         professor = Professor.objects.create(
             usuario=user,
             escola=escola,
             disciplina=disciplina,
-            classes=classes
+            classes=classes,
         )
-
 
         professor.turmas.set(turmas_ids)
 
-        messages.success(request, "Professor criado com sucesso!")
+        messages.success(
+            request,
+            "Professor criado com sucesso!"
+        )
+
         return redirect("professores")
 
-    return render(request, "adicionar_professor.html", {
-        "turmas": turmas
-    })
+    return render(
+        request,
+        "adicionar_professor.html",
+        {
+            "turmas": turmas,
+        },
+    )
 
 
 # ==========================================
@@ -4016,7 +4556,10 @@ def dashboard_secretaria(request):
 @login_required
 def cadastrar_secretaria(request):
 
-    # Apenas Diretor pode cadastrar funcionários
+    # =====================================================
+    # PERMISSÃO
+    # =====================================================
+
     if getattr(request.user, "role", None) != "DIRETOR":
         return redirect("dashboard")
 
@@ -4025,7 +4568,7 @@ def cadastrar_secretaria(request):
     if not escola:
         messages.error(
             request,
-            "Diretor precisa estar vinculado a uma escola."
+            "O Diretor precisa estar vinculado a uma escola."
         )
         return redirect("dashboard")
 
@@ -4033,15 +4576,26 @@ def cadastrar_secretaria(request):
 
         nome = request.POST.get("nome", "").strip()
         username = request.POST.get("username", "").strip()
+        telefone = request.POST.get("telefone", "").strip()
+        email = request.POST.get("email", "").strip().lower()
         senha = request.POST.get("senha", "").strip()
         role = request.POST.get("role", "").strip()
 
-        # =====================
+        # =====================================================
         # VALIDAÇÕES
-        # =====================
+        # =====================================================
 
-        if not nome or not username or not senha or not role:
-            messages.error(request, "Preencha todos os campos.")
+        if not all([
+            nome,
+            username,
+            telefone,
+            senha,
+            role,
+        ]):
+            messages.error(
+                request,
+                "Preencha todos os campos obrigatórios."
+            )
             return redirect("cadastrar_secretaria")
 
         if role not in [
@@ -4049,19 +4603,43 @@ def cadastrar_secretaria(request):
             "SECRETARIA",
             "FINANCEIRO",
         ]:
-            messages.error(request, "Função inválida.")
+            messages.error(
+                request,
+                "Função inválida."
+            )
             return redirect("cadastrar_secretaria")
 
         if len(senha) < 6:
             messages.error(
                 request,
-                "A senha deve ter pelo menos 6 caracteres."
+                "A senha deve possuir pelo menos 6 caracteres."
             )
             return redirect("cadastrar_secretaria")
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username já existe.")
+            messages.error(
+                request,
+                "Este nome de utilizador já existe."
+            )
             return redirect("cadastrar_secretaria")
+
+        if User.objects.filter(telefone=telefone).exists():
+            messages.error(
+                request,
+                "Este telefone já está associado a outro utilizador."
+            )
+            return redirect("cadastrar_secretaria")
+
+        if email and User.objects.filter(email=email).exists():
+            messages.error(
+                request,
+                "Este e-mail já está associado a outro utilizador."
+            )
+            return redirect("cadastrar_secretaria")
+
+        # =====================================================
+        # CRIAR UTILIZADOR
+        # =====================================================
 
         try:
 
@@ -4069,6 +4647,8 @@ def cadastrar_secretaria(request):
 
                 user = User.objects.create_user(
                     username=username,
+                    email=email,
+                    telefone=telefone,
                     password=senha,
                     first_name=nome,
                     role=role,
@@ -4076,25 +4656,18 @@ def cadastrar_secretaria(request):
                 )
 
                 user.is_active = True
-                user.save()
+                user.save(update_fields=["is_active"])
 
-            if role == "DIRETOR_PEDAGOGICO":
-                messages.success(
-                    request,
-                    "Diretor Pedagógico cadastrado com sucesso."
-                )
+            mensagens = {
+                "DIRETOR_PEDAGOGICO": "Diretor Pedagógico cadastrado com sucesso.",
+                "SECRETARIA": "Secretária cadastrada com sucesso.",
+                "FINANCEIRO": "Utilizador do setor financeiro cadastrado com sucesso.",
+            }
 
-            elif role == "SECRETARIA":
-                messages.success(
-                    request,
-                    "Secretaria cadastrada com sucesso."
-                )
-
-            elif role == "FINANCEIRO":
-                messages.success(
-                    request,
-                    "Utilizador financeiro cadastrado com sucesso."
-                )
+            messages.success(
+                request,
+                mensagens.get(role, "Utilizador cadastrado com sucesso.")
+            )
 
             return redirect("dashboard")
 
@@ -4102,12 +4675,15 @@ def cadastrar_secretaria(request):
 
             messages.error(
                 request,
-                f"Erro ao cadastrar: {str(e)}"
+                f"Erro ao cadastrar utilizador: {str(e)}"
             )
 
             return redirect("cadastrar_secretaria")
 
-    return render(request, "cadastrar_secretaria.html")
+    return render(
+        request,
+        "cadastrar_secretaria.html"
+    )
 
 
 # ======================================================
@@ -5564,12 +6140,13 @@ def criar_matricula(request):
 
         nome = request.POST.get("nome")
         email = request.POST.get("email")
+        telefone = request.POST.get("telefone", "").strip()
         numero_bi = request.POST.get("numero_bi")
         data_nascimento = request.POST.get("data_nascimento")
         sexo = request.POST.get("sexo")
         turma_id = request.POST.get("turma")
 
-        if not all([nome, numero_bi, data_nascimento, sexo, turma_id]):
+        if not all([nome, telefone, numero_bi, data_nascimento, sexo, turma_id]):
             messages.error(request, "Preencha todos os campos obrigatórios.")
             return redirect("criar_matricula")
 
@@ -5583,19 +6160,15 @@ def criar_matricula(request):
             messages.error(request, "Já existe aluno com este BI.")
             return redirect("criar_matricula")
 
+        if User.objects.filter(telefone=telefone).exists():
+            messages.error(
+                request,
+                "Já existe um utilizador com este telefone."
+            )
+            return redirect("criar_matricula")
+
         senha_gerada = ''.join(
             random.choices(string.ascii_letters + string.digits, k=8)
-        )
-
-        username = gerar_username_unico(nome)
-
-        user = User.objects.create_user(
-            username=username,
-            password=senha_gerada,
-            role="ALUNO",
-            first_name=nome,
-            email=email if email else "",
-            escola=escola
         )
 
         ultimo = Aluno.objects.filter(
@@ -5607,6 +6180,20 @@ def criar_matricula(request):
             numero_processo = str(int(ultimo.numero_processo) + 1).zfill(6)
         else:
             numero_processo = "000001"
+
+
+
+        user = User.objects.create_user(
+            username=numero_processo,
+            password=senha_gerada,
+            role="ALUNO",
+            first_name=nome,
+            email=email if email else "",
+            telefone=telefone,
+            escola=escola
+        )
+
+
 
         numero_na_turma = (
             Aluno.objects.filter(
@@ -5646,7 +6233,11 @@ def criar_matricula(request):
 
         messages.success(
             request,
-            f"Matrícula criada com sucesso! Usuário: {username} | Senha: {senha_gerada}"
+            (
+                "Matrícula criada com sucesso!\n"
+                f"Username: {numero_processo}\n"
+                f"Senha inicial: {senha_gerada}"
+            )
         )
 
         return redirect("criar_matricula")
@@ -5754,6 +6345,10 @@ def adicionar_aluno(request):
 
         nome = request.POST.get("nome", "").strip()
         email = request.POST.get("email", "").strip()
+        telefone = request.POST.get(
+            "telefone",
+            ""
+        ).strip()
         numero_processo = request.POST.get(
             "numero_processo",
             ""
@@ -5803,6 +6398,13 @@ def adicionar_aluno(request):
             messages.error(request, "Sexo obrigatório.")
             return redirect("adicionar_aluno")
 
+        if not telefone:
+            messages.error(
+                request,
+                "Telefone obrigatório."
+            )
+            return redirect("adicionar_aluno")
+
         if not turma_id:
             messages.error(request, "Selecione a turma.")
             return redirect("adicionar_aluno")
@@ -5837,9 +6439,18 @@ def adicionar_aluno(request):
             )
             return redirect("adicionar_aluno")
 
+        if User.objects.filter(
+                telefone=telefone
+        ).exists():
+            messages.error(
+                request,
+                "Já existe um utilizador com este telefone."
+            )
+            return redirect("adicionar_aluno")
+
         # Username = Nome
         if User.objects.filter(
-            username=nome
+            username=numero_processo
         ).exists():
 
             messages.error(
@@ -5860,8 +6471,9 @@ def adicionar_aluno(request):
                 )
 
                 user = User.objects.create_user(
-                    username=nome,
+                    username=numero_processo,
                     email=email,
+                    telefone=telefone,
                     password=senha_gerada,
                     first_name=nome,
                     role="ALUNO",
@@ -5925,7 +6537,7 @@ def adicionar_aluno(request):
                 request,
                 (
                     f"Aluno cadastrado com sucesso. "
-                    f"Username: {nome} | "
+                    f"Username: {numero_processo} | "
                     f"Senha inicial: {senha_gerada}"
                 )
             )

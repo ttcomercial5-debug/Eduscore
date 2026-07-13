@@ -201,3 +201,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+
+# =====================================
+# KAMBAS SMS CONFIGURATION
+# =====================================
+
+
+KAMBAS_SMS_URL = ""
+
+KAMBAS_SMS_TOKEN = ""
+
+KAMBAS_SMS_SENDER = "EdusCel"
