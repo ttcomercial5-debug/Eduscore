@@ -12,24 +12,99 @@ from academic.models import (
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
 
-    fieldsets = UserAdmin.fieldsets + (
-        ('Perfil', {'fields': ('role', 'ativo', 'escola')}),
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (
+            'Informação pessoal',
+            {
+                'fields': (
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'telefone',
+                )
+            },
+        ),
+        (
+            'Perfil',
+            {
+                'fields': (
+                    'role',
+                    'ativo',
+                    'escola',
+                )
+            },
+        ),
+        (
+            'Permissões',
+            {
+                'fields': (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'groups',
+                    'user_permissions',
+                )
+            },
+        ),
+        (
+            'Datas importantes',
+            {
+                'fields': (
+                    'last_login',
+                    'date_joined',
+                )
+            },
+        ),
+    )
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                'classes': ('wide',),
+                'fields': (
+                    'username',
+                    'password1',
+                    'password2',
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'telefone',
+                    'role',
+                    'ativo',
+                    'escola',
+                ),
+            },
+        ),
     )
 
     list_display = (
         'username',
         'email',
+        'telefone',
         'role',
         'escola',
         'ativo',
-        'is_staff'
+        'is_staff',
     )
 
     list_filter = (
         'role',
         'ativo',
-        'is_staff'
+        'is_staff',
+        'escola',
     )
+
+    search_fields = (
+        'username',
+        'first_name',
+        'last_name',
+        'email',
+        'telefone',
+    )
+
+    ordering = ('username',)
 
 
 # ==========================================================

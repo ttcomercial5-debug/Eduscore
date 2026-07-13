@@ -45,7 +45,7 @@ class Configuracao(models.Model):
     # =========================
     # SISTEMA
     # =========================
-    nome_sistema = models.CharField(max_length=200, default="Gestão Escolar Pro")
+    nome_sistema = models.CharField(max_length=200, default="EdusCel")
     logo_sistema = models.ImageField(upload_to='logos_sistema/', blank=True, null=True)
     favicon = models.ImageField(upload_to='favicon/', blank=True, null=True)
 
