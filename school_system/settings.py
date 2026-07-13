@@ -59,22 +59,10 @@ CHANNEL_LAYERS = {
 # BANCO DE DADOS
 # =====================================================
 
-# O projeto suporta automaticamente:
-# - Desenvolvimento: SQLite
-# - Produção: PostgreSQL
-#
-# Para utilizar PostgreSQL basta definir:
-#
-# USE_POSTGRES=True
-# POSTGRES_DB=eduscore
-# POSTGRES_USER=eduscore_user
-# POSTGRES_PASSWORD=********
-# POSTGRES_HOST=localhost
-# POSTGRES_PORT=5432
-# Produção - PostgreSQL
-# Desenvolvimento - SQLite
-
-USE_POSTGRES = True
+USE_POSTGRES = os.getenv(
+    "USE_POSTGRES",
+    "False"
+) == "True"
 
 
 if USE_POSTGRES:
@@ -82,15 +70,31 @@ if USE_POSTGRES:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "eduscore",
-            "USER": "eduscore_user",
-            "PASSWORD": "ManoChaba2018G",
-            "HOST": "localhost",
-            "PORT": "5432",
+            "NAME": os.getenv(
+                "POSTGRES_DB",
+                "eduscore"
+            ),
+            "USER": os.getenv(
+                "POSTGRES_USER",
+                "eduscore_user"
+            ),
+            "PASSWORD": os.getenv(
+                "POSTGRES_PASSWORD",
+                ""
+            ),
+            "HOST": os.getenv(
+                "POSTGRES_HOST",
+                "localhost"
+            ),
+            "PORT": os.getenv(
+                "POSTGRES_PORT",
+                "5432"
+            ),
             "CONN_MAX_AGE": 600,
             "CONN_HEALTH_CHECKS": True,
         }
     }
+
 
 else:
 
