@@ -59,31 +59,45 @@ CHANNEL_LAYERS = {
 # BANCO DE DADOS
 # =====================================================
 
-# IMPORTANTE:
-# Para produção SaaS use PostgreSQL
-# Exemplo já preparado abaixo
+# O projeto suporta automaticamente:
+# - Desenvolvimento: SQLite
+# - Produção: PostgreSQL
+#
+# Para utilizar PostgreSQL basta definir:
+#
+# USE_POSTGRES=True
+# POSTGRES_DB=eduscore
+# POSTGRES_USER=eduscore_user
+# POSTGRES_PASSWORD=********
+# POSTGRES_HOST=localhost
+# POSTGRES_PORT=5432
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Trocar para PostgreSQL em produção
-        'NAME': BASE_DIR / 'db.sqlite3',
+USE_POSTGRES = os.getenv("USE_POSTGRES", "False").lower() == "true"
+
+if USE_POSTGRES:
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("eduscore"),
+            "USER": os.getenv("eduscore_user"),
+            "PASSWORD": os.getenv("ManoChaba2018G"),
+            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+            "CONN_MAX_AGE": 600,
+            "CONN_HEALTH_CHECKS": True,
+        }
     }
-}
 
-"""
-# EXEMPLO PRODUÇÃO POSTGRESQL
+else:
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eduscore',
-        'USER': 'eduscore_user',
-        'PASSWORD': 'ManoChaba2018G',
-        'HOST': 'localhost',
-        'PORT': '5432',
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
-"""
+
 
 # =====================================================
 # USER MODEL CUSTOM
