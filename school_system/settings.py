@@ -71,19 +71,22 @@ CHANNEL_LAYERS = {
 # POSTGRES_PASSWORD=********
 # POSTGRES_HOST=localhost
 # POSTGRES_PORT=5432
+# Produção - PostgreSQL
+# Desenvolvimento - SQLite
 
-USE_POSTGRES = os.getenv("USE_POSTGRES", "False").lower() == "true"
+USE_POSTGRES = True
+
 
 if USE_POSTGRES:
 
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("eduscore"),
-            "USER": os.getenv("eduscore_user"),
-            "PASSWORD": os.getenv("ManoChaba2018G"),
-            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+            "NAME": "eduscore",
+            "USER": "eduscore_user",
+            "PASSWORD": "ManoChaba2018G",
+            "HOST": "localhost",
+            "PORT": "5432",
             "CONN_MAX_AGE": 600,
             "CONN_HEALTH_CHECKS": True,
         }
@@ -97,7 +100,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 
 # =====================================================
 # USER MODEL CUSTOM
