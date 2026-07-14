@@ -8802,16 +8802,48 @@ def editar_pagamento(request, pagamento_id):
         "pagamento": pagamento
     })
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+
+
 def deletar_pagamento(request, id):
-    pagamento = PagamentoPlano.objects.get(id=id)
 
-    if request.method == 'POST':
+
+    pagamento = get_object_or_404(
+        PagamentoPlano,
+        id=id
+    )
+
+
+
+    if request.method == "POST":
+
+
         pagamento.delete()
-        return redirect('pagamentos_escolas')
 
-    return render(request, 'confirmar_delete_pagamento.html', {
-        'pagamento': pagamento
-    })
+
+
+        messages.success(
+            request,
+            "Pagamento eliminado com sucesso."
+        )
+
+
+
+        return redirect(
+            "pagamentos_escolas"
+        )
+
+
+
+
+    return render(
+        request,
+        "confirmar_delete_pagamento.html",
+        {
+            "pagamento": pagamento
+        }
+    )
 
 from datetime import date
 
@@ -8830,112 +8862,307 @@ def get_ano_letivo_atual():
     return f"{hoje.year}/{hoje.year + 1}"
 
 
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.shortcuts import render, redirect
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+
+
 @staff_member_required
 @transaction.atomic
 def configuracoes(request):
     """
-    Configurações globais do sistema (Singleton).
-    Apenas SuperAdmin / Staff.
+    Painel de Configurações Globais EdusCel.
+
+    Regras:
+    - Apenas Staff/SuperAdmin
+    - Configuração única (Singleton)
+    - Controle central do SaaS
     """
 
-    # ==============================
-    # CONFIG GLOBAL (SINGLETON)
-    # ==============================
-    config, created = Configuracao.objects.get_or_create(pk=1)
 
-    # =========================================================
-    # GARANTIR ANO LETIVO SEMPRE ATUAL (AUTO-FALLBACK)
-    # =========================================================
+
+    # =====================================================
+    # CONFIGURAÇÃO GLOBAL SINGLETON
+    # =====================================================
+
+    config, created = Configuracao.objects.get_or_create(
+        pk=1
+    )
+
+
+
+    # =====================================================
+    # GARANTIR ANO LETIVO PADRÃO
+    # =====================================================
+
     if not config.ano_letivo_padrao:
-        config.ano_letivo_padrao = get_ano_letivo_atual()
-        config.save(update_fields=["ano_letivo_padrao"])
+
+
+        config.ano_letivo_padrao = (
+            get_ano_letivo_atual()
+        )
+
+
+        config.save(
+            update_fields=[
+                "ano_letivo_padrao"
+            ]
+        )
+
+
+
+
+
+    # =====================================================
+    # PROCESSAMENTO DO FORMULÁRIO
+    # =====================================================
 
     if request.method == "POST":
 
+
         form = ConfiguracaoForm(
+
             request.POST,
+
             request.FILES,
+
             instance=config
+
         )
+
+
 
         if form.is_valid():
 
+
             try:
+
+
                 with transaction.atomic():
 
-                    config_anterior = Configuracao.objects.get(pk=1)
 
-                    config = form.save(commit=False)
 
-                    # =================================================
-                    # GARANTIA DE ANO LETIVO (NUNCA FICA VAZIO)
-                    # =================================================
-                    if not config.ano_letivo_padrao:
-                        config.ano_letivo_padrao = get_ano_letivo_atual()
+                    # =====================================
+                    # ESTADO ANTERIOR
+                    # (Preparação para auditoria)
+                    # =====================================
 
-                    # =========================================
-                    # HOOK FUTURO: AUDITORIA / LOG DE ALTERAÇÕES
-                    # =========================================
-                    # AuditLog.objects.create(
-                    #     user=request.user,
-                    #     action="UPDATE_CONFIG",
-                    #     before=serialize(config_anterior),
-                    #     after=serialize(config)
-                    # )
-
-                    config.save()
-                    form.save_m2m()
-
-                    # =========================================
-                    # CACHE GLOBAL (FUTURO - PERFORMANCE SaaS)
-                    # =========================================
-                    # cache.set("global_config", config, timeout=None)
-
-                    messages.success(
-                        request,
-                        "Configurações globais atualizadas com sucesso."
+                    config_anterior = (
+                        Configuracao.objects
+                        .select_for_update()
+                        .get(pk=1)
                     )
 
-                    return redirect("configuracoes")
 
-            except ValidationError as e:
-                messages.error(request, f"Erro de validação: {e}")
 
-            except Exception as e:
-                messages.error(
-                    request,
-                    f"Erro inesperado ao salvar configurações: {str(e)}"
+
+
+                    config = form.save(
+                        commit=False
+                    )
+
+
+
+
+
+                    # =====================================
+                    # GARANTIA DE SEGURANÇA
+                    # =====================================
+
+                    if not config.ano_letivo_padrao:
+
+                        config.ano_letivo_padrao = (
+                            get_ano_letivo_atual()
+                        )
+
+
+
+
+
+                    # =====================================
+                    # ATUALIZAÇÃO
+                    # =====================================
+
+                    config.save()
+
+
+                    form.save_m2m()
+
+
+
+
+
+                    # =====================================
+                    # FUTURO:
+                    # AUDITORIA DO SISTEMA
+                    # =====================================
+
+                    """
+                    AuditLog.objects.create(
+                        usuario=request.user,
+                        modulo="CONFIGURACAO",
+                        acao="ALTERACAO",
+                        descricao=
+                        "Configurações globais atualizadas"
+                    )
+                    """
+
+
+
+
+
+                    messages.success(
+
+                        request,
+
+                        "Configurações globais atualizadas com sucesso."
+
+                    )
+
+
+
+                    return redirect(
+                        "configuracoes"
+                    )
+
+
+
+
+
+            except ValidationError as error:
+
+
+                logger.warning(
+                    f"Erro validação configuração: {error}"
                 )
 
+
+                messages.error(
+
+                    request,
+
+                    f"Erro de validação: {error}"
+
+                )
+
+
+
+
+
+            except Exception as error:
+
+
+                logger.exception(
+                    "Erro ao atualizar configurações globais"
+                )
+
+
+                messages.error(
+
+                    request,
+
+                    "Ocorreu um erro inesperado ao salvar as configurações."
+
+                )
+
+
+
+
+
+
         else:
-            messages.error(
+
+
+            messages.warning(
+
                 request,
-                "Existem erros no formulário. Verifique os campos."
+
+                "Existem campos inválidos. Verifique o formulário."
+
             )
 
-    else:
-        form = ConfiguracaoForm(instance=config)
 
-    # ==============================
-    # CONTEXTO
-    # ==============================
+
+
+
+    else:
+
+
+        form = ConfiguracaoForm(
+            instance=config
+        )
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO GLOBAL
+    # =====================================================
+
     context = {
+
+
         "form": form,
+
+
         "config": config,
+
+
         "created": created,
 
-        # UI GLOBAL
-        "modo_manutencao": config.modo_manutencao,
-        "nome_sistema": config.nome_sistema,
 
-        # IMPORTANTE: ano letivo sempre disponível no template
-        "ano_letivo_atual": config.ano_letivo_padrao or get_ano_letivo_atual(),
+
+        # STATUS GLOBAL
+
+        "modo_manutencao":
+            config.modo_manutencao,
+
+
+
+        "nome_sistema":
+            config.nome_sistema,
+
+
+
+        # ANO LETIVO
+
+        "ano_letivo_atual":
+            (
+                config.ano_letivo_padrao
+                or
+                get_ano_letivo_atual()
+            ),
+
+
+
+        # INFORMAÇÕES PARA DASHBOARD FUTURO
+
+        "sistema_ativo":
+            not config.modo_manutencao,
+
     }
 
+
+
+
+
     return render(
+
         request,
+
         "configuracoes.html",
+
         context
+
     )
 
 
@@ -10928,3 +11155,4 @@ def pauta_final_ano(request):
             "turma_id": turma_id,
         },
     )
+

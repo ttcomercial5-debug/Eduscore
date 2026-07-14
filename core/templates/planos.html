@@ -1,73 +1,1025 @@
 {% extends 'admin.html' %}
 
 {% block content %}
-<h1 class="mb-4">Gerenciar Planos</h1>
 
-<div class="row g-4">
-    {% for plano in planos %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card card-dashboard p-3 border-0 shadow-sm h-100"
-             style="transition: transform 0.3s; cursor: pointer;"
-             onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1)'">
 
-            <div class="card-body">
-                <h5 class="card-title">{{ plano.nome }}</h5>
+<div class="container-fluid planos-page">
 
-                <p class="card-text">
-                    <strong>Descrição:</strong>
-                    {{ plano.descricao|default:"Sem descrição" }}
-                </p>
 
-                <p class="card-text">
-                    <strong>Limite de Alunos:</strong>
-                    {{ plano.limite_alunos }}
-                </p>
+    <!-- HEADER -->
 
-                <p class="card-text">
-                    <strong>Valor Mensal:</strong>
-                    Kz {{ plano.valor_mensal }}
-                </p>
+    <div class="plan-header shadow-sm">
 
-                <span class="badge"
-                      style="
-                        background-color: {% if plano.ativo %}#2563eb{% else %}#ef4444{% endif %};
-                        color: white;
-                        font-size: 0.9rem;
-                        padding: 0.5em 0.8em;
-                        border-radius: 12px;
-                      ">
-                      {% if plano.ativo %}Ativo{% else %}Inativo{% endif %}
-                </span>
+
+        <div class="brand-area">
+
+
+            <div class="icon-header">
+
+                <i class="bi bi-box-seam"></i>
+
             </div>
 
-            <div class="card-footer bg-transparent border-0 mt-2 d-flex justify-content-end">
-                <a href="{% url 'editar_plano' plano.id %}" class="btn btn-sm btn-primary me-2">
-                    Editar
-                </a>
-                <a href="{% url 'excluir_plano' plano.id %}" class="btn btn-sm btn-danger">
-                    Excluir
-                </a>
+
+            <div>
+
+                <h1>
+                    Gerenciar Planos
+                </h1>
+
+
+                <p>
+                    Controle dos planos comerciais do EdusCel SaaS
+                </p>
+
             </div>
+
+
         </div>
+
+
+
+
+
+
+
+
+
     </div>
+
+
+
+
+
+
+
+
+    <!-- LISTAGEM -->
+
+    <div class="row g-4 mt-4">
+
+
+
+    {% for plano in planos %}
+
+
+
+        <div class="col-xl-4 col-lg-6 col-md-6">
+
+
+
+            <div class="plan-card">
+
+
+
+
+
+                <div class="plan-top">
+
+
+
+                    <div class="plan-icon">
+
+
+                        <i class="bi bi-gem"></i>
+
+
+                    </div>
+
+
+
+
+                    {% if plano.ativo %}
+
+
+                    <span class="status-active">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Ativo
+
+                    </span>
+
+
+
+                    {% else %}
+
+
+                    <span class="status-inactive">
+
+                        <i class="bi bi-x-circle-fill"></i>
+
+                        Inativo
+
+                    </span>
+
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="card-body p-4">
+
+
+
+
+
+                    <h3 class="plan-name">
+
+                        {{ plano.nome }}
+
+                    </h3>
+
+
+
+
+
+                    <p class="description">
+
+                        {{ plano.descricao|default:"Plano sem descrição cadastrada." }}
+
+                    </p>
+
+
+
+
+
+
+
+                    <div class="price-box">
+
+
+                        <small>
+                            Valor mensal
+                        </small>
+
+
+                        <h2>
+
+                            Kz {{ plano.valor_mensal }}
+
+                        </h2>
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <div class="features">
+
+
+
+                        <div>
+
+
+                            <i class="bi bi-people-fill"></i>
+
+
+                            <span>
+
+                                Até
+
+                                <strong>
+                                    {{ plano.limite_alunos }}
+                                </strong>
+
+                                alunos
+
+                            </span>
+
+
+                        </div>
+
+
+
+
+
+                        <div>
+
+
+                            <i class="bi bi-shield-check"></i>
+
+
+                            <span>
+
+                                Gestão completa EdusCel
+
+                            </span>
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="plan-footer">
+
+
+                    <a href="{% url 'editar_plano' plano.id %}"
+
+                       class="btn btn-primary flex-grow-1">
+
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Editar
+
+
+                    </a>
+
+
+
+
+
+                    <a href="{% url 'excluir_plano' plano.id %}"
+
+                       class="btn btn-outline-danger">
+
+
+                        <i class="bi bi-trash"></i>
+
+
+                    </a>
+
+
+
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
 
     {% empty %}
-    <div class="col-12">
-        <div class="alert alert-warning text-center">
-            Nenhum plano encontrado.
+
+
+
+        <div class="col-12">
+
+
+            <div class="empty-state">
+
+
+                <i class="bi bi-box-seam"></i>
+
+
+                <h4>
+                    Nenhum plano encontrado
+                </h4>
+
+
+                <p>
+                    Crie planos comerciais para as escolas utilizarem o EdusCel.
+                </p>
+
+
+            </div>
+
+
         </div>
-    </div>
+
+
+
     {% endfor %}
+
+
+
+
+    </div>
+
+
+
+
 </div>
 
+
+
+
+
+
+
+
+
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+
+.planos-page{
+
+
+    font-family:'Inter', sans-serif;
+
+
+    position:relative;
+
+
+    min-height:90vh;
+
+
+    padding:20px;
+
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+
+/* FUNDO ICA MARCA DE AGUA */
+
+
+.planos-page::before{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    background:
+
+
+    linear-gradient(
+
+        rgba(255,255,255,.82),
+
+        rgba(255,255,255,.82)
+
+    ),
+
+
+    url("/media/ica.png");
+
+
+
+    background-repeat:no-repeat;
+
+
+    background-position:center;
+
+
+    background-size:650px;
+
+
+    z-index:-1;
+
+
+
+}
+
+
+
+
+
+
+
+.plan-header{
+
+
+    background:
+
+    rgba(255,255,255,.88);
+
+
+    backdrop-filter:blur(12px);
+
+
+    border-radius:25px;
+
+
+    padding:30px 40px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+    border:1px solid rgba(255,255,255,.7);
+
+
+}
+
+
+
+
+
+
+
+.brand-area{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+.icon-header{
+
+
+    width:70px;
+
+
+    height:70px;
+
+
+    border-radius:20px;
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #20c997
+    );
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    color:white;
+
+
+    font-size:32px;
+
+
+}
+
+
+
+
+
+
+
+.brand-area h1{
+
+
+    font-size:32px;
+
+
+    font-weight:800;
+
+
+    margin:0;
+
+
+    color:#1e293b;
+
+
+}
+
+
+
+
+
+.brand-area p{
+
+
+    margin:0;
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+
+.btn-create{
+
+
+    border-radius:15px;
+
+
+    padding:15px 28px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+
+
+/* CARDS */
+
+
+.plan-card{
+
+
+    background:
+
+
+    rgba(255,255,255,.90);
+
+
+    backdrop-filter:blur(12px);
+
+
+    border-radius:25px;
+
+
+    overflow:hidden;
+
+
+    border:1px solid rgba(255,255,255,.8);
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(0,0,0,.10);
+
+
+    transition:.35s;
+
+
+}
+
+
+
+
+
+.plan-card:hover{
+
+
+    transform:translateY(-10px);
+
+
+    box-shadow:
+
+
+    0 25px 60px rgba(13,110,253,.25);
+
+
+}
+
+
+
+
+
+
+
+.plan-top{
+
+
+    padding:25px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        rgba(13,110,253,.10),
+
+        rgba(32,201,151,.10)
+
+    );
+
+
+}
+
+
+
+
+
+.plan-icon{
+
+
+    width:60px;
+
+
+    height:60px;
+
+
+    border-radius:18px;
+
+
+    background:#0d6efd;
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:28px;
+
+
+}
+
+
+
+
+
+
+
+.status-active,
+.status-inactive{
+
+
+    padding:10px 15px;
+
+
+    border-radius:14px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+.status-active{
+
+
+    background:#d1e7dd;
+
+
+    color:#198754;
+
+
+}
+
+
+
+
+
+.status-inactive{
+
+
+    background:#f8d7da;
+
+
+    color:#dc3545;
+
+
+}
+
+
+
+
+
+
+
+.plan-name{
+
+
+    font-weight:800;
+
+
+    color:#1e293b;
+
+
+}
+
+
+
+
+
+
+.description{
+
+
+    color:#64748b;
+
+
+    min-height:50px;
+
+
+}
+
+
+
+
+
+
+
+.price-box{
+
+
+    background:#f8fafc;
+
+
+    padding:20px;
+
+
+    border-radius:18px;
+
+
+    margin:25px 0;
+
+
+}
+
+
+
+
+
+.price-box small{
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+.price-box h2{
+
+
+    margin:5px 0 0;
+
+
+    font-size:32px;
+
+
+    font-weight:800;
+
+
+    color:#0d6efd;
+
+
+}
+
+
+
+
+
+
+
+.features div{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    margin-bottom:14px;
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+.features i{
+
+
+    color:#0d6efd;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+
+
+
+.plan-footer{
+
+
+    padding:20px;
+
+
+    display:flex;
+
+
+    gap:10px;
+
+
+}
+
+
+
+
+
+
+
+.empty-state{
+
+
+    background:white;
+
+
+    border-radius:25px;
+
+
+    padding:70px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+
+.empty-state i{
+
+
+    font-size:60px;
+
+
+    color:#0d6efd;
+
+
+}
+
+
+
+
+
+@media(max-width:768px){
+
+
+.plan-header{
+
+
+    flex-direction:column;
+
+
+    align-items:stretch;
+
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
+
 <script>
-    const cards = document.querySelectorAll('.card-dashboard');
-    cards.forEach((card, index) => {
-        card.style.opacity = 0;
-        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.3s ease`;
-        setTimeout(() => { card.style.opacity = 1; }, 100);
-    });
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+const cards=document.querySelectorAll(".plan-card");
+
+
+cards.forEach(
+(card,index)=>{
+
+
+card.style.opacity="0";
+
+
+card.style.transform="translateY(20px)";
+
+
+setTimeout(()=>{
+
+
+card.style.transition=".6s";
+
+
+card.style.opacity="1";
+
+
+card.style.transform="translateY(0)";
+
+
+},100 + index*120);
+
+
+
+});
+
+
+});
+
+
 </script>
+
+
 
 {% endblock %}

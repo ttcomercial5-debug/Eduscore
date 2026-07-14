@@ -1,92 +1,911 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-<div class="container mt-4">
 
-    <h2 class="mb-4">Editar Pagamento</h2>
 
-    <form method="POST" action="{% url 'editar_pagamento' pagamento.id %}">
-        {% csrf_token %}
 
-        <div class="row">
+<div class="container-fluid editar-pagamento-page">
 
-            <!-- MÊS -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Mês de Referência</label>
-                <input type="text"
-                       name="mes_referencia"
-                       class="form-control"
-                       value="{{ pagamento.mes_referencia }}">
+
+
+
+
+    <div class="edit-card shadow-lg">
+
+
+
+
+
+        <!-- HEADER -->
+
+
+        <div class="edit-header">
+
+
+            <div class="header-icon">
+
+
+                <i class="bi bi-pencil-square"></i>
+
+
             </div>
 
-            <!-- VALOR -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Valor</label>
-                <input type="number"
-                       step="0.01"
-                       name="valor"
-                       class="form-control"
-                       value="{{ pagamento.valor }}">
+
+
+            <div>
+
+
+                <h2>
+                    Editar Pagamento
+                </h2>
+
+
+                <p>
+                    Atualize os dados financeiros da escola no sistema EdusCel.
+                </p>
+
+
             </div>
 
-            <!-- DATA VENCIMENTO -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data de Vencimento</label>
-                <input type="date"
-                       name="data_vencimento"
-                       class="form-control"
-                       value="{{ pagamento.data_vencimento|date:'Y-m-d' }}">
-            </div>
 
-            <!-- DATA PAGAMENTO -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Data de Pagamento</label>
-                <input type="date"
-                       name="data_pagamento"
-                       class="form-control"
-                       value="{{ pagamento.data_pagamento|date:'Y-m-d' }}">
-            </div>
-
-            <!-- STATUS -->
-            <div class="col-md-12 mb-3">
-                <label class="form-label">Status</label>
-
-                <select name="status" class="form-control">
-
-                    <option value="PAGO"
-                        {% if pagamento.status == "PAGO" %}selected{% endif %}>
-                        Pago
-                    </option>
-
-                    <option value="PENDENTE"
-                        {% if pagamento.status == "PENDENTE" %}selected{% endif %}>
-                        Pendente
-                    </option>
-
-                    <option value="ATRASADO"
-                        {% if pagamento.status == "ATRASADO" %}selected{% endif %}>
-                        Atrasado
-                    </option>
-
-                </select>
-            </div>
 
         </div>
 
-        <!-- BOTÕES -->
-        <div class="mt-3">
 
-            <button type="submit" class="btn btn-primary">
-                Guardar Alterações
-            </button>
 
-            <a href="{% url 'gerenciar_pagamentos' %}" class="btn btn-secondary">
-                Cancelar
-            </a>
+
+
+
+
+
+        <!-- FORMULÁRIO -->
+
+
+        <div class="edit-body">
+
+
+
+            <form method="POST"
+                  action="{% url 'editar_pagamento' pagamento.id %}">
+
+
+                {% csrf_token %}
+
+
+
+
+
+                <div class="row g-4">
+
+
+
+
+
+                    <!-- MÊS -->
+
+
+                    <div class="col-md-6">
+
+
+                        <label class="form-label">
+
+                            <i class="bi bi-calendar3 me-2"></i>
+
+                            Mês de Referência
+
+                        </label>
+
+
+                        <input type="text"
+                               name="mes_referencia"
+                               class="form-control"
+                               value="{{ pagamento.mes_referencia }}">
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- VALOR -->
+
+
+                    <div class="col-md-6">
+
+
+                        <label class="form-label">
+
+
+                            <i class="bi bi-cash-coin me-2"></i>
+
+                            Valor
+
+
+                        </label>
+
+
+
+                        <input type="number"
+                               step="0.01"
+                               name="valor"
+                               class="form-control"
+                               value="{{ pagamento.valor }}">
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <!-- VENCIMENTO -->
+
+
+                    <div class="col-md-6">
+
+
+                        <label class="form-label">
+
+
+                            <i class="bi bi-calendar-event me-2"></i>
+
+                            Data de Vencimento
+
+
+                        </label>
+
+
+
+                        <input type="date"
+                               name="data_vencimento"
+                               class="form-control"
+                               value="{{ pagamento.data_vencimento|date:'Y-m-d' }}">
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- PAGAMENTO -->
+
+
+                    <div class="col-md-6">
+
+
+                        <label class="form-label">
+
+
+                            <i class="bi bi-calendar-check me-2"></i>
+
+                            Data de Pagamento
+
+
+                        </label>
+
+
+
+                        <input type="date"
+                               name="data_pagamento"
+                               class="form-control"
+                               value="{{ pagamento.data_pagamento|date:'Y-m-d' }}">
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <!-- STATUS -->
+
+
+                    <div class="col-md-12">
+
+
+                        <label class="form-label">
+
+
+                            <i class="bi bi-info-circle me-2"></i>
+
+                            Estado do Pagamento
+
+
+                        </label>
+
+
+
+                        <select name="status"
+                                class="form-select">
+
+
+
+                            <option value="PAGO"
+                            {% if pagamento.status == "PAGO" %}
+
+                            selected
+
+                            {% endif %}>
+
+                                Pago
+
+                            </option>
+
+
+
+
+
+                            <option value="PENDENTE"
+                            {% if pagamento.status == "PENDENTE" %}
+
+                            selected
+
+                            {% endif %}>
+
+                                Pendente
+
+                            </option>
+
+
+
+
+
+                            <option value="ATRASADO"
+                            {% if pagamento.status == "ATRASADO" %}
+
+                            selected
+
+                            {% endif %}>
+
+                                Atrasado
+
+                            </option>
+
+
+
+                        </select>
+
+
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- RESUMO -->
+
+
+                <div class="payment-preview mt-4">
+
+
+                    <div>
+
+
+                        <small>
+                            Escola
+                        </small>
+
+
+                        <strong>
+                            {{ pagamento.escola.nome }}
+                        </strong>
+
+
+                    </div>
+
+
+
+
+                    <div>
+
+
+                        <small>
+                            Plano
+                        </small>
+
+
+                        <strong>
+                            {{ pagamento.plano.nome }}
+                        </strong>
+
+
+                    </div>
+
+
+
+
+
+                    <div>
+
+
+                        <small>
+                            Valor atual
+                        </small>
+
+
+                        <strong class="value">
+
+
+                            Kz {{ pagamento.valor }}
+
+
+                        </strong>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <!-- BOTÕES -->
+
+
+                <div class="form-actions mt-4">
+
+
+                    <button type="submit"
+                            class="btn btn-primary btn-lg">
+
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Guardar Alterações
+
+
+                    </button>
+
+
+
+
+
+                    <a href="{% url 'gerenciar_pagamentos' %}"
+                       class="btn btn-outline-secondary btn-lg">
+
+
+                        <i class="bi bi-arrow-left me-2"></i>
+
+                        Cancelar
+
+
+                    </a>
+
+
+
+                </div>
+
+
+
+
+            </form>
+
+
+
 
         </div>
 
-    </form>
+
+
+
+    </div>
+
+
+
+
 
 </div>
+
+
+
+
+
+
+
+
+
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+
+
+.editar-pagamento-page{
+
+
+    min-height:90vh;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    padding:30px;
+
+
+    font-family:'Inter',sans-serif;
+
+
+    position:relative;
+
+
+}
+
+
+
+
+
+
+
+/* FUNDO MARCA DE ÁGUA ICA */
+
+
+.editar-pagamento-page::before{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    background:
+
+
+    linear-gradient(
+
+        rgba(255,255,255,.88),
+
+        rgba(255,255,255,.88)
+
+    ),
+
+
+    url("/media/ica.png");
+
+
+
+    background-repeat:no-repeat;
+
+
+    background-position:center;
+
+
+    background-size:650px;
+
+
+    z-index:-1;
+
+
+}
+
+
+
+
+
+
+
+
+
+.edit-card{
+
+
+    width:100%;
+
+
+    max-width:900px;
+
+
+    background:
+
+
+    rgba(255,255,255,.92);
+
+
+    backdrop-filter:blur(15px);
+
+
+    border-radius:30px;
+
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+
+
+
+
+.edit-header{
+
+
+    padding:35px;
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #0d6efd,
+
+        #20c997
+
+    );
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:25px;
+
+
+}
+
+
+
+
+
+
+
+
+.header-icon{
+
+
+    width:80px;
+
+
+    height:80px;
+
+
+    border-radius:25px;
+
+
+    background:rgba(255,255,255,.2);
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:38px;
+
+
+}
+
+
+
+
+
+.edit-header h2{
+
+
+    margin:0;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+.edit-header p{
+
+
+    margin:5px 0 0;
+
+
+    opacity:.9;
+
+
+}
+
+
+
+
+
+
+
+
+.edit-body{
+
+
+    padding:40px;
+
+
+}
+
+
+
+
+
+
+
+.form-label{
+
+
+    font-weight:700;
+
+
+    color:#334155;
+
+
+}
+
+
+
+
+
+
+.form-control,
+.form-select{
+
+
+    border-radius:15px;
+
+
+    padding:14px 18px;
+
+
+    border:1px solid #dbe3ef;
+
+
+}
+
+
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+
+    border-color:#0d6efd;
+
+
+    box-shadow:0 0 0 .25rem rgba(13,110,253,.15);
+
+
+}
+
+
+
+
+
+
+
+.payment-preview{
+
+
+    background:#f8fafc;
+
+
+    border-radius:20px;
+
+
+    padding:25px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+.payment-preview div{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+
+
+.payment-preview small{
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+.payment-preview strong{
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+.payment-preview .value{
+
+
+    color:#198754;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+
+
+
+.form-actions{
+
+
+    display:flex;
+
+
+    justify-content:flex-end;
+
+
+    gap:15px;
+
+
+}
+
+
+
+
+
+
+.form-actions button,
+.form-actions a{
+
+
+    border-radius:15px;
+
+
+    padding:14px 25px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+
+
+@media(max-width:768px){
+
+
+
+.edit-header{
+
+
+    flex-direction:column;
+
+
+    text-align:center;
+
+
+}
+
+
+
+.payment-preview{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.form-actions{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
+
+
 {% endblock %}

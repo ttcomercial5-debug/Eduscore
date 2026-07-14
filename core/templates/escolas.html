@@ -1,125 +1,1284 @@
 {% extends 'admin.html' %}
 
+
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-5">
-    <h1 class="fw-bold text-primary">Gerenciar Escolas</h1>
-    <a href="/admin/academic/escola/add/" class="btn btn-lg btn-primary shadow-sm">
-        <i class="bi bi-plus-lg me-2"></i> Nova Escola
-    </a>
-</div>
 
-<div class="row g-4">
-    {% for escola in escolas %}
-    <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm hover-shadow transition-shadow">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title fw-semibold text-dark mb-1">
-                    {{ escola.nome }}
-                </h5>
-
-                <span class="badge bg-dark mb-2">
-                    Código: {{ escola.codigo }}
-                </span>
+<div class="container-fluid escolas-page">
 
 
-                <p class="card-text text-muted mb-2">
-                    <i class="bi bi-geo-alt me-2"></i>
-                    {{ escola.endereco|default:"Endereço não informado" }}
+    <!-- HEADER PREMIUM -->
+
+    <div class="dashboard-header shadow-sm">
+
+
+        <div class="brand-area">
+
+
+            <div class="header-icon">
+                <i class="bi bi-buildings-fill"></i>
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Gestão de Escolas
+                </h2>
+
+                <p>
+                    Administração EdusCel
                 </p>
-
-                {% if escola.provincia %}
-                <p class="card-text text-muted mb-2">
-                    <i class="bi bi-map me-2"></i>
-                    <strong>Província:</strong> {{ escola.provincia }}
-                </p>
-                {% endif %}
-
-                {% if escola.municipio %}
-                <p class="card-text text-muted mb-2">
-                    <i class="bi bi-building me-2"></i>
-                    <strong>Município:</strong> {{ escola.municipio }}
-                </p>
-                {% endif %}
-
-                {% if escola.telefone %}
-                <p class="card-text text-muted mb-2">
-                    <i class="bi bi-telephone me-2"></i>{{ escola.telefone }}
-                </p>
-                {% endif %}
-
-                {% if escola.email %}
-                <p class="card-text text-muted mb-2">
-                    <i class="bi bi-envelope me-2"></i>{{ escola.email }}
-                </p>
-                {% endif %}
-
-                {% if escola.nif %}
-                <p class="card-text text-muted mb-3">
-                    <i class="bi bi-card-text me-2"></i>NIF: {{ escola.nif }}
-                </p>
-                {% endif %}
-
-                {% comment %} Status do plano {% endcomment %}
-                {% if escola.plano %}
-                    {% if escola.esta_ativa %}
-                    <span class="badge bg-success mb-3" data-bs-toggle="tooltip" title="Plano ativo até {{ escola.data_expiracao }}">
-                        {{ escola.plano.nome }}
-                    </span>
-                    {% else %}
-                    <span class="badge bg-danger mb-3" data-bs-toggle="tooltip" title="Plano expirado em {{ escola.data_expiracao }}">
-                        {{ escola.plano.nome }} (Expirado)
-                    </span>
-                    {% endif %}
-                {% else %}
-                    <span class="badge bg-secondary mb-3">Sem plano</span>
-                {% endif %}
-
-                <div class="mt-auto d-flex gap-2">
-                    <a href="{% url 'selecionar_escola' escola.id %}"
-                       class="btn btn-outline-primary flex-grow-1 fw-medium shadow-sm">
-                       Entrar <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-                    <form method="POST" action="{% url 'eliminar_escola' escola.id %}" onsubmit="return confirm('Tem certeza que deseja eliminar esta escola?');">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger flex-grow-1 fw-medium shadow-sm">
-                            <i class="bi bi-trash me-1"></i> Eliminar
-                        </button>
-                    </form>
-                </div>
 
             </div>
+
+
         </div>
+
+
+
+
+        <div class="dashboard-actions">
+
+
+            <div class="stat-card">
+
+
+                <div class="icon-box">
+
+                    <i class="bi bi-buildings"></i>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        Total de Escolas
+                    </small>
+
+
+                    <h3>
+                        {{ escolas|length }}
+                    </h3>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <a href="/admin/academic/escola/add/"
+               class="btn btn-primary btn-lg btn-new-school">
+
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                Nova Escola
+
+
+            </a>
+
+
+
+        </div>
+
+
+
     </div>
+
+
+
+
+
+
+
+    <!-- LISTAGEM -->
+
+    <div class="row g-4 mt-4">
+
+
+    {% for escola in escolas %}
+
+
+
+
+        <div class="col-xl-4 col-lg-6 col-md-6">
+
+
+            <div class="school-card">
+
+
+
+                <!-- TOPO CARD -->
+
+
+                <div class="school-cover">
+
+
+                    {% if escola.logo %}
+
+
+                    <img src="{{ escola.logo.url }}"
+                         class="school-logo">
+
+
+                    {% else %}
+
+
+                    <div class="default-logo">
+
+                        <i class="bi bi-building"></i>
+
+                    </div>
+
+
+                    {% endif %}
+
+
+
+                </div>
+
+
+
+
+
+
+                <div class="p-4">
+
+
+
+                    <div class="school-title">
+
+
+                        <h4>
+                            {{ escola.nome }}
+                        </h4>
+
+
+                        <span class="badge bg-dark">
+
+                            <i class="bi bi-key me-1"></i>
+
+                            {{ escola.codigo }}
+
+                        </span>
+
+
+                    </div>
+
+
+
+
+                    <hr>
+
+
+
+
+                    <div class="school-details">
+
+
+                        {% if escola.endereco %}
+
+                        <div>
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                            {{ escola.endereco }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                        {% if escola.provincia %}
+
+                        <div>
+
+                            <i class="bi bi-map-fill"></i>
+
+                            {{ escola.provincia }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                        {% if escola.municipio %}
+
+                        <div>
+
+                            <i class="bi bi-buildings-fill"></i>
+
+                            {{ escola.municipio }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                        {% if escola.telefone %}
+
+                        <div>
+
+                            <i class="bi bi-telephone-fill"></i>
+
+                            {{ escola.telefone }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+
+                        {% if escola.email %}
+
+                        <div>
+
+                            <i class="bi bi-envelope-fill"></i>
+
+                            {{ escola.email }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+                    </div>
+
+
+
+
+
+
+
+                    <!-- PLANO -->
+
+
+                    <div class="mt-4">
+
+
+                    {% if escola.plano %}
+
+
+                        {% if escola.esta_ativa %}
+
+
+                        <span class="status-active">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            {{ escola.plano.nome }}
+
+                        </span>
+
+
+                        {% else %}
+
+
+                        <span class="status-danger">
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                            Plano expirado
+
+                        </span>
+
+
+                        {% endif %}
+
+
+
+                    {% else %}
+
+
+                        <span class="status-neutral">
+
+                            Sem plano
+
+                        </span>
+
+
+
+                    {% endif %}
+
+
+                    </div>
+
+
+
+
+
+
+                    <!-- BOTÕES -->
+
+
+                    <div class="school-actions mt-4">
+
+
+                        <a href="{% url 'selecionar_escola' escola.id %}"
+
+                           class="btn btn-primary flex-grow-1">
+
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+
+                            Entrar
+
+
+                        </a>
+
+
+
+
+
+                        <form method="POST"
+                              action="{% url 'eliminar_escola' escola.id %}"
+                              onsubmit="return confirm('Deseja eliminar esta escola?');">
+
+
+                            {% csrf_token %}
+
+
+                            <button class="btn btn-outline-danger">
+
+
+                                <i class="bi bi-trash"></i>
+
+
+                            </button>
+
+
+                        </form>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
     {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info text-center py-4 fs-5">
-            Nenhuma escola cadastrada ainda.
+
+
+
+        <div class="col-12">
+
+
+            <div class="empty-state">
+
+
+                <i class="bi bi-building-x"></i>
+
+
+                <h4>
+                    Nenhuma escola cadastrada
+                </h4>
+
+
+                <p>
+                    Adicione a primeira instituição ao EdusCel.
+                </p>
+
+
+
+            </div>
+
+
         </div>
-    </div>
+
+
     {% endfor %}
+
+
+
+
+    </div>
+
+
+
 </div>
 
+
+
+
+
+
+
+
+
 <style>
-    /* Transição suave e sombra ao passar o mouse nas cards */
-    .hover-shadow:hover {
-        box-shadow: 0 0.75rem 1.5rem rgba(0, 123, 255, 0.25) !important;
-        transform: translateY(-4px);
-        transition: all 0.3s ease;
-    }
-    .transition-shadow {
-        transition: all 0.3s ease;
-    }
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+
+.escolas-page{
+
+
+    font-family:'Inter', sans-serif;
+
+
+    position:relative;
+
+
+    min-height:90vh;
+
+
+    padding:10px;
+
+
+    overflow:hidden;
+
+
+}
+
+
+/* =====================================================
+   FUNDO PREMIUM ICA SYSTEMS
+===================================================== */
+
+
+.escolas-page::before{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    background-image:
+
+
+    linear-gradient(
+        rgba(255,255,255,.78),
+        rgba(255,255,255,.78)
+    ),
+
+
+    url("/media/ica.png");
+
+
+    background-repeat:no-repeat;
+
+
+    background-position:center 45%;
+
+
+    background-size:650px;
+
+
+    z-index:-1;
+
+
+
+}
+
+
+
+
+.escolas-page::after{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:700px;
+
+
+    height:700px;
+
+
+    top:50%;
+
+
+    left:50%;
+
+
+    transform:translate(-50%,-45%);
+
+
+    background:
+
+    radial-gradient(
+        circle,
+        rgba(13,110,253,.15),
+        transparent 65%
+    );
+
+
+    z-index:-2;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+
+.dashboard-header{
+
+
+    background:
+
+    rgba(255,255,255,.88);
+
+
+    backdrop-filter:blur(12px);
+
+
+    border-radius:24px;
+
+
+    padding:25px 35px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+    border:1px solid rgba(255,255,255,.8);
+
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+.brand-area{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+.brand-logo{
+
+
+    width:90px;
+
+
+    height:90px;
+
+
+    object-fit:contain;
+
+
+    filter:
+
+    drop-shadow(
+        0 8px 15px rgba(0,0,0,.18)
+    );
+
+
+}
+
+
+
+
+.brand-area h2{
+
+
+    font-weight:800;
+
+
+    margin:0;
+
+
+    color:#1e293b;
+
+
+}
+
+
+
+
+.brand-area p{
+
+
+    color:#64748b;
+
+
+    margin:0;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   AÇÕES SUPERIORES
+===================================================== */
+
+
+.dashboard-actions{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+
+.stat-card{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:15px;
+
+
+    padding:14px 22px;
+
+
+    border-radius:18px;
+
+
+    background:
+
+    rgba(248,249,250,.90);
+
+
+    box-shadow:
+
+    inset 0 0 0 1px rgba(0,0,0,.04);
+
+
+}
+
+
+
+
+
+.icon-box{
+
+
+    width:48px;
+
+
+    height:48px;
+
+
+    border-radius:14px;
+
+
+    background:#0d6efd;
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:22px;
+
+
+}
+
+
+
+
+
+.stat-card h3{
+
+
+    margin:0;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+
+.btn-new-school{
+
+
+    border-radius:16px;
+
+
+    padding:14px 28px;
+
+
+    font-weight:700;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(13,110,253,.25);
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   CARDS DAS ESCOLAS
+===================================================== */
+
+
+.school-card{
+
+
+    background:
+
+    rgba(255,255,255,.90);
+
+
+    backdrop-filter:blur(10px);
+
+
+    border-radius:24px;
+
+
+    overflow:hidden;
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(0,0,0,.10);
+
+
+    transition:.35s;
+
+
+    border:
+
+    1px solid rgba(255,255,255,.7);
+
+
+}
+
+
+
+
+
+.school-card:hover{
+
+
+    transform:
+
+    translateY(-10px);
+
+
+    box-shadow:
+
+
+    0 25px 60px rgba(13,110,253,.22);
+
+
+}
+
+
+
+
+
+
+.school-cover{
+
+
+    height:130px;
+
+
+    background:
+
+
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #20c997
+    );
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+}
+
+
+
+
+
+
+.school-logo,
+.default-logo{
+
+
+    width:105px;
+
+
+    height:105px;
+
+
+    border-radius:50%;
+
+
+    border:6px solid white;
+
+
+    background:white;
+
+
+    box-shadow:
+
+
+    0 10px 25px rgba(0,0,0,.20);
+
+
+}
+
+
+
+
+
+.school-logo{
+
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+
+.default-logo{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:42px;
+
+
+    color:#0d6efd;
+
+
+}
+
+
+
+
+
+
+
+.school-title{
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+}
+
+
+
+
+.school-title h4{
+
+
+    font-weight:800;
+
+
+    margin:0;
+
+
+    color:#1e293b;
+
+
+}
+
+
+
+
+
+
+
+.school-details div{
+
+
+    margin-bottom:12px;
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+.school-details i{
+
+
+    color:#0d6efd;
+
+
+    width:25px;
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   STATUS PLANO
+===================================================== */
+
+
+.status-active,
+.status-danger,
+.status-neutral{
+
+
+    padding:11px 16px;
+
+
+    border-radius:14px;
+
+
+    font-weight:700;
+
+
+    display:inline-block;
+
+
+}
+
+
+
+
+
+.status-active{
+
+
+    background:#d1e7dd;
+
+
+    color:#198754;
+
+
+}
+
+
+
+
+
+.status-danger{
+
+
+    background:#f8d7da;
+
+
+    color:#dc3545;
+
+
+}
+
+
+
+
+
+.status-neutral{
+
+
+    background:#e9ecef;
+
+
+    color:#6c757d;
+
+
+}
+
+
+
+
+
+
+
+
+.school-actions{
+
+
+    display:flex;
+
+
+    gap:10px;
+
+
+}
+
+
+
+
+
+
+
+.empty-state{
+
+
+    background:
+
+    rgba(255,255,255,.90);
+
+
+    backdrop-filter:blur(10px);
+
+
+    border-radius:24px;
+
+
+    padding:60px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+
+.empty-state i{
+
+
+    font-size:60px;
+
+
+    color:#0d6efd;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+
+@media(max-width:768px){
+
+
+.dashboard-header{
+
+
+    flex-direction:column;
+
+
+    align-items:stretch;
+
+
+}
+
+
+
+.dashboard-actions{
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.escolas-page::before{
+
+
+    background-size:400px;
+
+
+}
+
+
+
+}
+
+/* ÍCONE DO HEADER - GESTÃO DE ESCOLAS */
+
+.header-icon {
+
+    width: 75px;
+    height: 75px;
+
+    border-radius: 22px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #20c997
+    );
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 36px;
+
+    box-shadow:
+    0 10px 25px rgba(13,110,253,.25);
+
+    transition: all .3s ease;
+
+}
+
+
+/* EFEITO AO PASSAR O MOUSE */
+
+.header-icon:hover {
+
+    transform: translateY(-5px) scale(1.05);
+
+    box-shadow:
+    0 15px 35px rgba(13,110,253,.35);
+
+}
+
+
+
+/* ÍCONE INTERNO */
+
+.header-icon i {
+
+    line-height: 1;
+
+}
+
+
+
 </style>
 
-<script>
-    // Ativa tooltips do Bootstrap
-    document.addEventListener('DOMContentLoaded', function () {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
-    });
-</script>
+
+
 
 {% endblock %}

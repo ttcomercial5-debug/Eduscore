@@ -1,248 +1,975 @@
 {% extends 'admin.html' %}
+
 {% block content %}
 
-<div class="container-fluid py-4">
+<div class="container-fluid settings-page py-4">
 
-    <!-- HEADER -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body">
-            <h2 class="fw-bold mb-1">Configurações Globais</h2>
-            <small class="text-muted">
-                Controle central do sistema escolar e parâmetros do SaaS
-            </small>
+
+    <!-- HEADER PREMIUM -->
+
+    <div class="settings-header shadow-sm mb-4">
+
+
+        <div class="d-flex align-items-center gap-4">
+
+
+            <div class="header-icon">
+
+                <i class="bi bi-gear-wide-connected"></i>
+
+            </div>
+
+
+            <div>
+
+                <h1>
+                    Configurações Globais
+                </h1>
+
+
+                <p>
+                    Controle central do sistema EdusCel SaaS Multi-Escolas
+                </p>
+
+            </div>
+
+
         </div>
+
+
     </div>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
 
-        <div class="row g-4">
 
-            <!-- ================= SISTEMA ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-primary text-white fw-semibold">
-                        Identidade do Sistema
-                    </div>
-                    <div class="card-body">
 
-                        <div class="mb-3">
-                            <label class="form-label">Nome do Sistema</label>
-                            {{ form.nome_sistema }}
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Logo</label>
-                            {{ form.logo_sistema }}
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Favicon</label>
-                            {{ form.favicon }}
-                        </div>
+<form method="POST" enctype="multipart/form-data">
 
-                        <div class="row g-3">
-                            <div class="col">
-                                <label class="form-label">Cor Principal</label>
-                                {{ form.cor_principal }}
-                            </div>
+{% csrf_token %}
 
-                            <div class="col">
-                                <label class="form-label">Cor Secundária</label>
-                                {{ form.cor_secundaria }}
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
 
-            <!-- ================= ANO LETIVO ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-success text-white fw-semibold">
-                        Ano Letivo
-                    </div>
+<div class="row g-4">
 
-                    <div class="card-body">
 
-                        <!-- VALOR ATUAL -->
-                        <div class="mb-3">
-                            <label class="form-label">Ano letivo atual do sistema</label>
 
-                            <input
-                                type="text"
-                                class="form-control"
-                                value="{{ config.ano_letivo_padrao }}"
-                                readonly>
+<!-- IDENTIDADE -->
 
-                            <small class="text-muted">
-                                Gerado automaticamente com base no ano atual ({{ ano_letivo_atual }})
-                            </small>
-                        </div>
+<div class="col-xl-6">
 
-                        <!-- CAMPO EDITÁVEL (ADMIN PODE ALTERAR) -->
-                        <div class="mb-3">
-                            <label class="form-label">Definir manualmente (opcional)</label>
-                            {{ form.ano_letivo_padrao }}
-                        </div>
 
-                        <!-- SWITCH BLOQUEIO -->
-                        <div class="form-check form-switch">
-                            {{ form.bloquear_alteracao_ano }}
-                            <label class="form-check-label">
-                                Bloquear alteração global do ano letivo
-                            </label>
-                        </div>
+<div class="settings-card">
 
-                    </div>
-                </div>
-            </div>
 
-            <!-- ================= ESCOLAS ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-warning fw-semibold">
-                        Gestão de Escolas
-                    </div>
-                    <div class="card-body">
+<div class="card-title-box bg-primary">
 
-                        <div class="form-check form-switch mb-3">
-                            {{ form.ativar_novas_escolas }}
-                            <label class="form-check-label">
-                                Permitir novas escolas
-                            </label>
-                        </div>
+<i class="bi bi-brush-fill"></i>
 
-                        <div class="mb-3">
-                            <label class="form-label">Limite de alunos por escola</label>
-                            {{ form.limite_alunos_por_escola }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Limite de turmas por escola</label>
-                            {{ form.limite_turmas_por_escola }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Plano padrão</label>
-                            {{ form.plano_padrao }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Armazenamento (MB)</label>
-                            {{ form.armazenamento_por_escola_mb }}
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= FINANCEIRO ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-info text-white fw-semibold">
-                        Financeiro
-                    </div>
-                    <div class="card-body">
-
-                        <div class="mb-3">
-                            <label class="form-label">Moeda</label>
-                            {{ form.moeda }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Plano básico mensal</label>
-                            {{ form.valor_mensal_plano_basico }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Plano básico anual</label>
-                            {{ form.valor_anual_plano_basico }}
-                        </div>
-
-                        <div class="form-check form-switch">
-                            {{ form.cobranca_automatica }}
-                            <label class="form-check-label">
-                                Cobrança automática
-                            </label>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= SEGURANÇA ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-dark text-white fw-semibold">
-                        Segurança
-                    </div>
-                    <div class="card-body">
-
-                        <div class="form-check form-switch mb-3">
-                            {{ form.login_ativo }}
-                            <label class="form-check-label">
-                                Login ativo
-                            </label>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Sessão (minutos)</label>
-                            {{ form.tempo_sessao_minutos }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Tentativas de login</label>
-                            {{ form.bloqueio_tentativas_login }}
-                        </div>
-
-                        <div class="form-check form-switch">
-                            {{ form.backup_automatico }}
-                            <label class="form-check-label">
-                                Backup automático
-                            </label>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= MANUTENÇÃO ================= -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4 h-100 border-danger">
-                    <div class="card-header bg-danger text-white fw-semibold">
-                        Modo Manutenção
-                    </div>
-                    <div class="card-body">
-
-                        <div class="form-check form-switch mb-3">
-                            {{ form.modo_manutencao }}
-                            <label class="form-check-label">
-                                Ativar manutenção global
-                            </label>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Mensagem de manutenção</label>
-                            {{ form.mensagem_manutencao }}
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- BOTÃO FIXO -->
-        <div class="position-sticky bottom-0 bg-white p-3 mt-4 border shadow-sm rounded-4">
-            <button type="submit" class="btn btn-success w-100 fw-semibold py-2">
-                Salvar Configurações Globais
-            </button>
-        </div>
-
-    </form>
+Identidade do Sistema
 
 </div>
+
+
+
+<div class="card-body p-4">
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Nome do Sistema
+</label>
+
+{{ form.nome_sistema }}
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Logo do Sistema
+</label>
+
+{{ form.logo_sistema }}
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Favicon
+</label>
+
+{{ form.favicon }}
+
+</div>
+
+
+
+
+
+<div class="row g-3">
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+Cor Principal
+</label>
+
+{{ form.cor_principal }}
+
+</div>
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+Cor Secundária
+</label>
+
+{{ form.cor_secundaria }}
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ANO LETIVO -->
+
+<div class="col-xl-6">
+
+
+<div class="settings-card">
+
+
+<div class="card-title-box bg-success">
+
+<i class="bi bi-calendar3"></i>
+
+Ano Letivo
+
+</div>
+
+
+
+<div class="card-body p-4">
+
+
+
+<label class="form-label">
+Ano letivo atual
+</label>
+
+
+<input type="text"
+class="form-control mb-2"
+value="{{ config.ano_letivo_padrao }}"
+readonly>
+
+
+<small class="text-muted">
+
+Ano automático:
+{{ ano_letivo_atual }}
+
+</small>
+
+
+
+
+<div class="mt-3">
+
+<label class="form-label">
+Definir manualmente
+</label>
+
+{{ form.ano_letivo_padrao }}
+
+</div>
+
+
+
+
+
+<div class="form-check form-switch mt-4">
+
+{{ form.bloquear_alteracao_ano }}
+
+<label class="form-check-label">
+
+Bloquear alteração global
+
+</label>
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ESCOLAS -->
+
+<div class="col-xl-6">
+
+
+<div class="settings-card">
+
+
+<div class="card-title-box bg-warning text-dark">
+
+<i class="bi bi-buildings-fill"></i>
+
+Gestão de Escolas
+
+</div>
+
+
+
+
+<div class="card-body p-4">
+
+
+
+<div class="form-check form-switch mb-3">
+
+{{ form.ativar_novas_escolas }}
+
+<label class="form-check-label">
+
+Permitir novas escolas
+
+</label>
+
+</div>
+
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Limite de alunos por escola
+
+</label>
+
+{{ form.limite_alunos_por_escola }}
+
+</div>
+
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Limite de turmas por escola
+
+</label>
+
+{{ form.limite_turmas_por_escola }}
+
+</div>
+
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Plano padrão
+
+</label>
+
+{{ form.plano_padrao }}
+
+</div>
+
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Armazenamento por escola (MB)
+
+</label>
+
+{{ form.armazenamento_por_escola_mb }}
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- FINANCEIRO -->
+
+<div class="col-xl-6">
+
+
+<div class="settings-card">
+
+
+<div class="card-title-box bg-info text-white">
+
+<i class="bi bi-cash-stack"></i>
+
+Financeiro
+
+</div>
+
+
+
+
+<div class="card-body p-4">
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Moeda
+</label>
+
+{{ form.moeda }}
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Plano básico mensal
+</label>
+
+{{ form.valor_mensal_plano_basico }}
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+Plano básico anual
+</label>
+
+{{ form.valor_anual_plano_basico }}
+
+</div>
+
+
+
+
+<div class="form-check form-switch">
+
+{{ form.cobranca_automatica }}
+
+<label class="form-check-label">
+
+Cobrança automática
+
+</label>
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- SEGURANÇA -->
+
+<div class="col-xl-6">
+
+
+<div class="settings-card">
+
+
+<div class="card-title-box bg-dark text-white">
+
+<i class="bi bi-shield-lock-fill"></i>
+
+Segurança
+
+</div>
+
+
+
+<div class="card-body p-4">
+
+
+<div class="form-check form-switch mb-3">
+
+{{ form.login_ativo }}
+
+<label class="form-check-label">
+
+Login ativo
+
+</label>
+
+</div>
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Tempo de sessão (minutos)
+
+</label>
+
+{{ form.tempo_sessao_minutos }}
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Tentativas de login
+
+</label>
+
+{{ form.bloqueio_tentativas_login }}
+
+</div>
+
+
+
+
+<div class="form-check form-switch">
+
+{{ form.backup_automatico }}
+
+<label class="form-check-label">
+
+Backup automático
+
+</label>
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MANUTENÇÃO -->
+
+<div class="col-xl-6">
+
+
+<div class="settings-card maintenance">
+
+
+<div class="card-title-box bg-danger text-white">
+
+<i class="bi bi-tools"></i>
+
+Modo Manutenção
+
+</div>
+
+
+
+
+<div class="card-body p-4">
+
+
+<div class="form-check form-switch mb-3">
+
+{{ form.modo_manutencao }}
+
+<label class="form-check-label">
+
+Ativar manutenção global
+
+</label>
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Mensagem
+
+</label>
+
+{{ form.mensagem_manutencao }}
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- BOTÃO -->
+
+<div class="save-area mt-5">
+
+
+<button type="submit"
+class="btn-save">
+
+<i class="bi bi-check-circle-fill me-2"></i>
+
+Salvar Configurações Globais
+
+</button>
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+
+.settings-page{
+
+font-family:'Inter',sans-serif;
+
+position:relative;
+
+min-height:90vh;
+
+overflow:hidden;
+
+}
+
+
+
+
+.settings-page:before{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+
+background:
+
+linear-gradient(
+rgba(255,255,255,.88),
+rgba(255,255,255,.88)
+),
+
+url("/media/ica.png");
+
+
+background-repeat:no-repeat;
+
+background-position:center;
+
+background-size:650px;
+
+
+z-index:-1;
+
+}
+
+
+
+
+
+.settings-header{
+
+
+background:rgba(255,255,255,.85);
+
+backdrop-filter:blur(12px);
+
+border-radius:25px;
+
+padding:30px;
+
+}
+
+
+
+
+
+.header-icon{
+
+width:80px;
+
+height:80px;
+
+border-radius:22px;
+
+
+background:
+linear-gradient(
+135deg,
+#0d6efd,
+#20c997
+);
+
+
+color:white;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:38px;
+
+box-shadow:
+0 15px 35px rgba(13,110,253,.25);
+
+}
+
+
+
+.settings-header h1{
+
+font-weight:800;
+
+margin:0;
+
+color:#1e293b;
+
+}
+
+
+
+.settings-header p{
+
+margin:5px 0 0;
+
+color:#64748b;
+
+}
+
+
+
+
+
+
+.settings-card{
+
+
+background:rgba(255,255,255,.90);
+
+backdrop-filter:blur(12px);
+
+border-radius:25px;
+
+overflow:hidden;
+
+box-shadow:
+0 15px 40px rgba(0,0,0,.08);
+
+height:100%;
+
+transition:.3s;
+
+}
+
+
+
+.settings-card:hover{
+
+transform:translateY(-5px);
+
+box-shadow:
+0 25px 55px rgba(0,0,0,.12);
+
+}
+
+
+
+
+.card-title-box{
+
+
+padding:18px 25px;
+
+font-size:18px;
+
+font-weight:700;
+
+
+}
+
+
+
+.card-title-box i{
+
+margin-right:10px;
+
+}
+
+
+
+
+.form-label{
+
+font-weight:600;
+
+color:#334155;
+
+}
+
+
+
+
+.form-control,
+.form-select{
+
+
+border-radius:12px;
+
+padding:12px;
+
+border:1px solid #dee2e6;
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+box-shadow:
+0 0 0 .2rem rgba(13,110,253,.15);
+
+}
+
+
+
+
+
+.save-area{
+
+
+position:sticky;
+
+bottom:20px;
+
+z-index:10;
+
+}
+
+
+
+
+.btn-save{
+
+
+width:100%;
+
+padding:16px;
+
+border:none;
+
+border-radius:18px;
+
+
+background:
+linear-gradient(
+135deg,
+#198754,
+#20c997
+);
+
+
+color:white;
+
+font-weight:700;
+
+font-size:17px;
+
+
+box-shadow:
+0 15px 35px rgba(25,135,84,.25);
+
+
+transition:.3s;
+
+
+}
+
+
+
+
+.btn-save:hover{
+
+
+transform:translateY(-3px);
+
+}
+
+
+
+
+@media(max-width:768px){
+
+
+.settings-header{
+
+padding:20px;
+
+}
+
+
+.header-icon{
+
+width:60px;
+
+height:60px;
+
+font-size:28px;
+
+}
+
+
+}
+
+
+</style>
+
 
 {% endblock %}

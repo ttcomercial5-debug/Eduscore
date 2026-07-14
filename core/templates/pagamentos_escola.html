@@ -1,118 +1,1001 @@
 {% extends 'admin.html' %}
 
+
 {% block content %}
 
-<h1 class="mb-4">Gerenciar Pagamentos</h1>
 
-<div class="row g-4">
+<div class="container-fluid pagamentos-page">
 
-    {% for pagamento in pagamentos %}
-    <div class="col-md-6 col-lg-4">
 
-        <div class="card card-dashboard shadow-sm p-4 border-0 mb-3"
-             style="transition: transform 0.3s;"
-             onmouseover="this.style.transform='scale(1.03)'"
-             onmouseout="this.style.transform='scale(1)'">
 
-            <!-- HEADER -->
-            <div class="d-flex justify-content-between align-items-center mb-2">
+    <!-- HEADER -->
 
-                <h5 class="card-title mb-0">
-                    {{ pagamento.escola.nome }}
-                </h5>
+    <div class="payment-header shadow-sm">
 
-                <span class="fw-bold text-primary">
-                    Kz {{ pagamento.valor }}
-                </span>
+
+        <div class="brand-area">
+
+
+            <div class="header-icon">
+
+                <i class="bi bi-credit-card-2-front-fill"></i>
 
             </div>
 
-            <!-- PLANO -->
-            <p class="mb-1">
-                <strong>Plano:</strong> {{ pagamento.plano.nome }}
-            </p>
 
-            <!-- MÊS -->
-            <p class="mb-1">
-                <strong>Mês:</strong> {{ pagamento.mes_referencia }}
-            </p>
+            <div>
 
-            <!-- DATAS -->
-            <p class="mb-1">
-                <i class="bi bi-calendar-event me-2"></i>
-                Vencimento: {{ pagamento.data_vencimento }}
-            </p>
+                <h1>
+                    Gestão de Pagamentos
+                </h1>
 
-            <p class="mb-1">
-                <i class="bi bi-calendar-check me-2"></i>
-                Pagamento: {{ pagamento.data_pagamento|default:"-" }}
-            </p>
 
-            <!-- STATUS -->
-            <div class="mb-2">
-
-                {% if pagamento.status == 'PAGO' %}
-                    <span class="badge bg-success w-100 py-2 fs-6">Pago</span>
-
-                {% elif pagamento.status == 'PENDENTE' %}
-                    <span class="badge bg-warning text-dark w-100 py-2 fs-6">Pendente</span>
-
-                {% else %}
-                    <span class="badge bg-danger w-100 py-2 fs-6">Atrasado</span>
-                {% endif %}
+                <p>
+                    Controle financeiro das escolas e planos EdusCel
+                </p>
 
             </div>
 
-            <!-- CRIADO EM -->
-            <small class="text-muted d-block">
-                Criado em: {{ pagamento.criado_em|date:"d/m/Y H:i" }}
-            </small>
-
-            <!-- AÇÕES -->
-            <div class="mt-3 d-flex justify-content-between">
-
-                <a href="{% url 'editar_pagamento' pagamento.id %}"
-                   class="btn btn-sm btn-primary">
-                    Editar
-                </a>
-
-                <a href="{% url 'deletar_pagamento' pagamento.id %}"
-                   class="btn btn-sm btn-outline-danger">
-                    Excluir
-                </a>
-
-            </div>
 
         </div>
 
+
+
+
+
+        <div class="summary-card">
+
+
+            <div class="summary-icon">
+
+                <i class="bi bi-wallet2"></i>
+
+            </div>
+
+
+            <div>
+
+                <small>
+                    Total de Registos
+                </small>
+
+
+                <h3>
+                    {{ pagamentos|length }}
+                </h3>
+
+
+            </div>
+
+
+        </div>
+
+
     </div>
+
+
+
+
+
+
+
+
+    <!-- LISTAGEM -->
+
+
+    <div class="row g-4 mt-4">
+
+
+    {% for pagamento in pagamentos %}
+
+
+        <div class="col-xl-4 col-lg-6 col-md-6">
+
+
+            <div class="payment-card">
+
+
+
+
+
+                <div class="payment-top">
+
+
+                    <div>
+
+
+                        <h4>
+                            {{ pagamento.escola.nome }}
+                        </h4>
+
+
+                        <span class="plan-badge">
+
+                            <i class="bi bi-gem"></i>
+
+                            {{ pagamento.plano.nome }}
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <div class="payment-value">
+
+                        Kz {{ pagamento.valor }}
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+                <div class="payment-content">
+
+
+
+
+
+                    <div class="info-item">
+
+                        <i class="bi bi-calendar3"></i>
+
+                        <div>
+
+                            <small>
+                                Mês referência
+                            </small>
+
+                            <strong>
+                                {{ pagamento.mes_referencia }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="info-item">
+
+                        <i class="bi bi-calendar-event"></i>
+
+                        <div>
+
+                            <small>
+                                Vencimento
+                            </small>
+
+                            <strong>
+                                {{ pagamento.data_vencimento }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+                    <div class="info-item">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                        <div>
+
+                            <small>
+                                Pagamento
+                            </small>
+
+                            <strong>
+                                {{ pagamento.data_pagamento|default:"Não pago" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <div class="status-area">
+
+
+                    {% if pagamento.status == 'PAGO' %}
+
+                        <span class="status-paid">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Pago
+
+                        </span>
+
+
+
+                    {% elif pagamento.status == 'PENDENTE' %}
+
+
+                        <span class="status-pending">
+
+                            <i class="bi bi-clock-fill"></i>
+
+                            Pendente
+
+                        </span>
+
+
+
+                    {% else %}
+
+
+                        <span class="status-late">
+
+                            <i class="bi bi-exclamation-circle-fill"></i>
+
+                            Atrasado
+
+                        </span>
+
+
+                    {% endif %}
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <div class="created-date">
+
+                        <i class="bi bi-clock-history"></i>
+
+                        {{ pagamento.criado_em|date:"d/m/Y H:i" }}
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+                <!-- BOTÕES -->
+
+
+                <div class="payment-actions">
+
+
+
+                    <a href="{% url 'editar_pagamento' pagamento.id %}"
+                       class="btn btn-edit">
+
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Editar
+
+
+                    </a>
+
+
+
+
+
+
+
+                    <form method="POST"
+                          action="{% url 'deletar_pagamento' pagamento.id %}"
+                          class="delete-form">
+
+
+                        {% csrf_token %}
+
+
+                        <button type="submit"
+                                class="btn btn-delete"
+                                onclick="return confirm('Deseja eliminar este pagamento?');">
+
+
+                            <i class="bi bi-trash3"></i>
+
+                            Excluir
+
+
+                        </button>
+
+
+                    </form>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+
+
+
+
 
     {% empty %}
 
-    <div class="col-12">
-        <div class="alert alert-info text-center">
-            Nenhum pagamento encontrado.
+
+        <div class="col-12">
+
+
+            <div class="empty-state">
+
+
+                <i class="bi bi-credit-card"></i>
+
+
+                <h4>
+                    Nenhum pagamento encontrado
+                </h4>
+
+
+                <p>
+                    Os pagamentos das escolas aparecerão aqui.
+                </p>
+
+
+            </div>
+
+
         </div>
-    </div>
+
+
 
     {% endfor %}
 
+
+
+    </div>
+
+
+
 </div>
 
-<!-- ANIMAÇÃO -->
-<script>
 
-document.querySelectorAll('.card-dashboard').forEach((card, index) => {
-    card.style.opacity = 0;
-    card.style.transform = 'translateY(20px)';
 
-    setTimeout(() => {
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        card.style.opacity = 1;
-        card.style.transform = 'translateY(0)';
-    }, index * 100);
-});
 
-</script>
+
+
+
+
+
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
+
+.pagamentos-page{
+
+
+    font-family:'Inter',sans-serif;
+
+    position:relative;
+
+    min-height:90vh;
+
+    padding:25px;
+
+
+}
+
+
+
+.pagamentos-page::before{
+
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+
+    background:
+
+    linear-gradient(
+        rgba(255,255,255,.90),
+        rgba(255,255,255,.90)
+    ),
+
+    url("/media/ica.png");
+
+
+    background-repeat:no-repeat;
+
+    background-position:center;
+
+    background-size:550px;
+
+    z-index:-1;
+
+
+}
+
+
+
+
+
+.payment-header{
+
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:30px 40px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+
+}
+
+
+
+
+
+
+.brand-area{
+
+
+    display:flex;
+
+    gap:20px;
+
+    align-items:center;
+
+
+}
+
+
+
+.header-icon{
+
+
+    width:75px;
+
+    height:75px;
+
+    border-radius:22px;
+
+    background:linear-gradient(
+        135deg,
+        #0d6efd,
+        #20c997
+    );
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:35px;
+
+
+}
+
+
+
+
+.brand-area h1{
+
+
+    margin:0;
+
+    font-weight:800;
+
+
+}
+
+
+
+.brand-area p{
+
+
+    margin:0;
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+
+.summary-card{
+
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    padding:15px 25px;
+
+    background:#f8fafc;
+
+    border-radius:20px;
+
+
+}
+
+
+
+.summary-icon{
+
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:15px;
+
+    background:#0d6efd;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+}
+
+
+
+
+
+
+.summary-card h3{
+
+
+    margin:0;
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+
+.payment-card{
+
+
+    background:white;
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+
+}
+
+
+
+
+.payment-card:hover{
+
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+
+
+}
+
+
+
+
+
+
+
+.payment-top{
+
+
+    padding:25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    background:#f8fafc;
+
+
+}
+
+
+
+.payment-top h4{
+
+
+    font-weight:800;
+
+    margin-bottom:12px;
+
+
+}
+
+
+
+
+
+
+.plan-badge{
+
+
+    background:#0d6efd;
+
+    color:white;
+
+    padding:8px 14px;
+
+    border-radius:12px;
+
+
+}
+
+
+
+
+
+
+.payment-value{
+
+
+    color:#198754;
+
+    font-size:22px;
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+
+.payment-content{
+
+
+    padding:25px;
+
+
+}
+
+
+
+
+
+.info-item{
+
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:18px;
+
+
+}
+
+
+
+
+.info-item i{
+
+
+    width:45px;
+
+    height:45px;
+
+    background:#e7f1ff;
+
+    color:#0d6efd;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+}
+
+
+
+
+.info-item small{
+
+
+    display:block;
+
+    color:#64748b;
+
+
+}
+
+
+
+
+.status-paid,
+.status-pending,
+.status-late{
+
+
+    display:block;
+
+    text-align:center;
+
+    padding:12px;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+
+}
+
+
+
+.status-paid{
+
+background:#d1e7dd;
+
+color:#198754;
+
+}
+
+
+
+.status-pending{
+
+background:#fff3cd;
+
+color:#856404;
+
+}
+
+
+
+.status-late{
+
+background:#f8d7da;
+
+color:#dc3545;
+
+}
+
+
+
+
+
+.created-date{
+
+
+    margin-top:20px;
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+.payment-actions{
+
+
+    padding:20px;
+
+    display:flex;
+
+    gap:12px;
+
+
+}
+
+
+
+
+
+
+.payment-actions .btn{
+
+
+    flex:1;
+
+    border-radius:14px;
+
+    padding:12px;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    border:none;
+
+}
+
+
+
+
+
+.btn-edit{
+
+
+    background:#0d6efd;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.btn-edit:hover{
+
+
+    background:#0b5ed7;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.btn-delete{
+
+
+    background:#dc3545;
+
+    color:white;
+
+
+}
+
+
+
+
+.btn-delete:hover{
+
+
+    background:#bb2d3b;
+
+    color:white;
+
+
+}
+
+
+
+
+
+.delete-form{
+
+    flex:1;
+
+}
+
+
+
+
+
+.empty-state{
+
+
+    background:white;
+
+    padding:60px;
+
+    border-radius:25px;
+
+    text-align:center;
+
+
+}
+
+
+
+
+
+@media(max-width:768px){
+
+
+.payment-header{
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+
+.payment-actions{
+
+flex-direction:column;
+
+}
+
+
+}
+
+
+
+</style>
+
+
+
+
 
 {% endblock %}
