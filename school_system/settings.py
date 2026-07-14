@@ -575,26 +575,15 @@ EMAIL_HOST_PASSWORD = os.getenv(
 
 
 
-# =====================================================
-# KAMBAS SMS CONFIGURATION
-# =====================================================
+# =====================================
+# INFOBIP
+# =====================================
 
-KAMBAS_SMS_URL = os.getenv(
-    "KAMBAS_SMS_URL",
-    ""
-)
+INFOBIP_API_KEY = "a44269a299f88328c5d03b993c3f4dc5-882088fd-def7-4d69-9353-00289e0e87a2"
 
+INFOBIP_BASE_URL = "nd1y15.api.infobip.com"
 
-KAMBAS_SMS_TOKEN = os.getenv(
-    "KAMBAS_SMS_TOKEN",
-    ""
-)
-
-
-KAMBAS_SMS_SENDER = os.getenv(
-    "KAMBAS_SMS_SENDER",
-    "EdusCel"
-)
+INFOBIP_SENDER = "EdusCel"
 
 
 

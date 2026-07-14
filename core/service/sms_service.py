@@ -2,202 +2,168 @@
 Serviço SMS do EdusCel.
 
 Fornecedor:
-- KambasSMS
+- Infobip
 
 Responsável por:
 - Enviar OTP de recuperação de senha.
 - Futuramente enviar notificações SMS do sistema.
 
-A view nunca chama diretamente a API.
-Toda comunicação passa por este serviço.
+Todas as views do sistema devem utilizar apenas a função
+enviar_sms(), sem comunicar diretamente com a API.
 """
-
 
 import requests
 
 from django.conf import settings
 
 
-
-
-
 def enviar_sms(telefone, mensagem):
-
     """
-    Envia SMS através do KambasSMS.
+    Envia SMS através da Infobip.
 
     Args:
-        telefone:
+        telefone (str):
             Número do destinatário.
 
-        mensagem:
+        mensagem (str):
             Texto da mensagem.
 
     Returns:
-        True:
-            SMS enviado com sucesso.
-
-        False:
-            Falha no envio.
+        bool:
+            True se enviado com sucesso.
+            False caso ocorra algum erro.
     """
 
+    # =====================================
+    # CONFIGURAÇÕES
+    # =====================================
 
-
-    # ======================================
-    # CONFIGURAÇÃO KAMBAS SMS
-    # ======================================
-
-    url = getattr(
+    api_key = getattr(
         settings,
-        "KAMBAS_SMS_URL",
+        "INFOBIP_API_KEY",
         None
     )
 
-
-    token = getattr(
+    base_url = getattr(
         settings,
-        "KAMBAS_SMS_TOKEN",
+        "INFOBIP_BASE_URL",
         None
     )
-
 
     remetente = getattr(
         settings,
-        "KAMBAS_SMS_SENDER",
+        "INFOBIP_SENDER",
         "EdusCel"
     )
 
+    # =====================================
+    # MODO TESTE
+    # =====================================
 
-
-
-    # ======================================
-    # MODO DESENVOLVIMENTO
-    # Caso ainda não exista API configurada
-    # ======================================
-
-    if not url or not token:
-
+    if not api_key or not base_url:
 
         print("\n")
         print("=" * 60)
-        print("EDUSCEL - SMS TESTE")
+        print("EDUSCEL - SMS (MODO TESTE)")
         print("=" * 60)
-
-        print(
-            f"Telefone: {telefone}"
-        )
-
-        print(
-            "\nMensagem:"
-        )
-
-        print(
-            mensagem
-        )
-
+        print(f"Telefone : {telefone}")
+        print(f"Mensagem : {mensagem}")
         print("=" * 60)
         print("\n")
-
 
         return True
 
+    # =====================================
+    # FORMATA O TELEFONE
+    # =====================================
 
+    telefone = telefone.replace("+", "").replace(" ", "")
 
+    if telefone.startswith("0"):
+        telefone = telefone[1:]
 
+    if not telefone.startswith("244"):
+        telefone = "244" + telefone
 
-    # ======================================
-    # ENVIO REAL KAMBAS SMS
-    # ======================================
+    # =====================================
+    # ENDPOINT
+    # =====================================
 
+    url = f"https://{base_url}/sms/2/text/advanced"
+
+    # =====================================
+    # CABEÇALHOS
+    # =====================================
 
     headers = {
-
-        "Authorization":
-        f"Bearer {token}",
-
-
-        "Content-Type":
-        "application/json"
-
+        "Authorization": f"App {api_key}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
     }
 
-
-
+    # =====================================
+    # PAYLOAD
+    # =====================================
 
     payload = {
-
-
-        "sender":
-
-        remetente,
-
-
-        "to":
-
-        telefone,
-
-
-        "message":
-
-        mensagem
-
+        "messages": [
+            {
+                "from": remetente,
+                "destinations": [
+                    {
+                        "to": telefone
+                    }
+                ],
+                "text": mensagem
+            }
+        ]
     }
 
-
-
+    # =====================================
+    # ENVIO
+    # =====================================
 
     try:
 
-
         response = requests.post(
-
             url,
-
-            json=payload,
-
             headers=headers,
-
-            timeout=10
-
+            json=payload,
+            timeout=15
         )
-
-
 
         if response.status_code in [200, 201]:
 
+            try:
 
-            return True
+                resposta = response.json()
 
+                print("\n===== INFOBIP =====")
+                print(resposta)
+                print("===================\n")
 
+                return True
 
+            except Exception:
+
+                print(response.text)
+
+                return True
 
         print(
-            "Erro KambasSMS:"
+            f"Erro HTTP: {response.status_code}"
         )
 
-
-        print(
-            response.text
-        )
-
+        print(response.text)
 
         return False
 
-
-
-
-
     except requests.exceptions.RequestException as erro:
 
-
         print(
-            "Falha na conexão KambasSMS:"
+            "Falha ao comunicar com a Infobip:"
         )
 
-
-        print(
-            erro
-        )
-
+        print(erro)
 
         return False

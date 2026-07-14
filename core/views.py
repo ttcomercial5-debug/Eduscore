@@ -251,191 +251,130 @@ def login_view(request):
 
 
 
-#==================================================
-#   RECUPERAR SENHA
-#==================================================
-import random
-
-from datetime import timedelta
-
-from django.contrib.auth import get_user_model
-from django.shortcuts import render
-from django.utils import timezone
+# ==================================================
+# RECUPERAR SENHA
+# ==================================================
 
 import secrets
-
 from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from academic.models import Escola
-
 from core.service.sms_service import enviar_sms
-
 
 
 User = get_user_model()
 
 
-
-
 def esqueci_senha(request):
 
-
     if request.method == "POST":
-
 
         codigo_escola = request.POST.get(
             "codigo_escola",
             ""
         ).strip()
 
-
         username = request.POST.get(
             "username",
             ""
         ).strip()
-
 
         telefone = request.POST.get(
             "telefone",
             ""
         ).strip()
 
-
-
         # =====================================
-        # VALIDAÇÕES INICIAIS
+        # VALIDAÇÕES
         # =====================================
-
 
         if not username:
-
 
             messages.error(
                 request,
                 "Informe o nome de utilizador."
             )
 
-
             return render(
                 request,
                 "recuperar_senha.html"
             )
 
-
-
         if not telefone:
-
 
             messages.error(
                 request,
                 "Informe o telefone associado à conta."
             )
 
-
             return render(
                 request,
                 "recuperar_senha.html"
             )
 
-
-
-
-
         user = None
-
-
-
 
         # =====================================
         # SUPERADMIN
         # =====================================
 
-
         try:
 
-
-            user = User.objects.get(
+            superadmin = User.objects.get(
                 username=username,
                 is_superuser=True
             )
 
+            if superadmin.telefone == telefone:
 
-            # Confirma telefone do superadmin
-
-            if user.telefone != telefone:
-
-                user = None
-
-
+                user = superadmin
 
         except User.DoesNotExist:
 
-
-            user = None
-
-
-
-
+            pass
 
         # =====================================
         # UTILIZADORES NORMAIS
         # =====================================
 
-
-        if not user:
-
-
+        if user is None:
 
             if not codigo_escola:
-
 
                 messages.error(
                     request,
                     "Informe o código da escola."
                 )
 
-
                 return render(
                     request,
                     "recuperar_senha.html"
                 )
 
-
-
-
             try:
-
 
                 escola = Escola.objects.get(
                     codigo=codigo_escola
                 )
 
-
             except Escola.DoesNotExist:
-
 
                 messages.error(
                     request,
                     "Dados inválidos."
                 )
 
-
                 return render(
                     request,
                     "recuperar_senha.html"
                 )
 
-
-
-
-
             try:
-
 
                 user = User.objects.get(
                     username=username,
@@ -443,51 +382,33 @@ def esqueci_senha(request):
                     escola=escola
                 )
 
-
             except User.DoesNotExist:
-
-
 
                 messages.error(
                     request,
                     "Dados inválidos."
                 )
 
-
                 return render(
                     request,
                     "recuperar_senha.html"
                 )
 
-
-
-
-
-
         # =====================================
-        # GERAR OTP SEGURO
+        # GERAR OTP
         # =====================================
-
 
         otp = str(
             secrets.randbelow(900000) + 100000
         )
 
+        user.otp_codigo = otp
 
-
-        expiracao = (
+        user.otp_expira_em = (
             timezone.now()
             +
             timedelta(minutes=5)
         )
-
-
-
-        user.otp_codigo = otp
-
-        user.otp_expira_em = expiracao
-
-
 
         user.save(
             update_fields=[
@@ -496,72 +417,51 @@ def esqueci_senha(request):
             ]
         )
 
-
-
-
-
         # =====================================
-        # ENVIO SMS
+        # ENVIAR SMS
         # =====================================
-
 
         mensagem = (
-
-            f"EdusCel: Seu código de recuperação "
-            f"é {otp}. "
+            f"EdusCel: O seu código de recuperação é "
+            f"{otp}. "
             "Válido por 5 minutos."
-
         )
-
-
 
         enviado = enviar_sms(
             user.telefone,
             mensagem
         )
 
-
-
-
         if not enviado:
-
-
 
             messages.error(
                 request,
-                "Não foi possível enviar o código."
+                "Não foi possível enviar o código OTP. Tente novamente."
             )
-
 
             return render(
                 request,
                 "recuperar_senha.html"
             )
 
+        # =====================================
+        # GUARDAR DADOS NA SESSÃO
+        # =====================================
 
-
-
+        request.session["recuperacao_username"] = user.username
 
         # =====================================
         # SUCESSO
         # =====================================
 
-
         messages.success(
             request,
-            "Código OTP enviado para o telefone associado."
+            "Código OTP enviado com sucesso para o telefone associado."
         )
 
-
-
-        return render(
-            request,
-            "recuperar_senha.html"
+        return redirect(
+            "confirmar_otp_recuperacao"
         )
-
-
-
-
 
     return render(
         request,
