@@ -1665,7 +1665,7 @@ def adicionar_professor(request):
     if not request.user.escola:
         messages.error(
             request,
-            "Usuário não está vinculado a nenhuma escola."
+            "O utilizador não está associado a nenhuma escola."
         )
         return redirect("dashboard")
 
@@ -1678,100 +1678,182 @@ def adicionar_professor(request):
 
     if request.method == "POST":
 
-        username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "").strip().lower()
-        telefone = request.POST.get("telefone", "").strip()
-        password = request.POST.get("password", "").strip()
+        # ==========================
+        # DADOS PESSOAIS
+        # ==========================
 
-        disciplina = request.POST.get("disciplina", "").strip()
-        classes = request.POST.get("classes", "").strip()
+        nome_completo = request.POST.get(
+            "nome_completo", ""
+        ).strip()
 
-        turmas_ids = request.POST.getlist("turmas")
+        username = request.POST.get(
+            "username", ""
+        ).strip()
 
-        # ==========================================
+        email = request.POST.get(
+            "email", ""
+        ).strip().lower()
+
+        telefone = request.POST.get(
+            "telefone", ""
+        ).strip()
+
+        password = request.POST.get(
+            "password", ""
+        ).strip()
+
+        # ==========================
+        # DADOS ACADÉMICOS
+        # ==========================
+
+        disciplina = request.POST.get(
+            "disciplina", ""
+        ).strip()
+
+        classes = request.POST.get(
+            "classes", ""
+        ).strip()
+
+        turmas_ids = request.POST.getlist(
+            "turmas"
+        )
+
+        # ==========================
         # VALIDAÇÕES
-        # ==========================================
+        # ==========================
 
         if not all([
+            nome_completo,
             username,
             telefone,
             password,
             disciplina,
             classes,
         ]):
+
             messages.error(
                 request,
                 "Preencha todos os campos obrigatórios."
             )
-            return redirect("adicionar_professor")
+
+            return redirect(
+                "adicionar_professor"
+            )
 
         if not turmas_ids:
+
             messages.error(
                 request,
                 "Selecione pelo menos uma turma."
             )
-            return redirect("adicionar_professor")
 
-        if User.objects.filter(username=username).exists():
+            return redirect(
+                "adicionar_professor"
+            )
+
+        if User.objects.filter(
+            username=username
+        ).exists():
+
             messages.error(
                 request,
                 "Este nome de utilizador já existe."
             )
-            return redirect("adicionar_professor")
 
-        if User.objects.filter(telefone=telefone).exists():
+            return redirect(
+                "adicionar_professor"
+            )
+
+        if User.objects.filter(
+            telefone=telefone
+        ).exists():
+
             messages.error(
                 request,
                 "Este telefone já está associado a outro utilizador."
             )
-            return redirect("adicionar_professor")
 
-        if email and User.objects.filter(email=email).exists():
+            return redirect(
+                "adicionar_professor"
+            )
+
+        if email and User.objects.filter(
+            email=email
+        ).exists():
+
             messages.error(
                 request,
                 "Este e-mail já está associado a outro utilizador."
             )
-            return redirect("adicionar_professor")
 
-        # ==========================================
+            return redirect(
+                "adicionar_professor"
+            )
+
+        # ==========================
         # CRIAR UTILIZADOR
-        # ==========================================
+        # ==========================
 
         user = User.objects.create_user(
+
             username=username,
+
+            first_name=nome_completo,
+
             email=email,
+
             telefone=telefone,
+
             password=password,
+
             role="PROFESSOR",
+
             escola=escola,
+
         )
 
-        # ==========================================
+        # ==========================
         # CRIAR PROFESSOR
-        # ==========================================
+        # ==========================
 
         professor = Professor.objects.create(
+
             usuario=user,
+
             escola=escola,
+
             disciplina=disciplina,
+
             classes=classes,
+
         )
 
-        professor.turmas.set(turmas_ids)
+        professor.turmas.set(
+            turmas_ids
+        )
 
         messages.success(
+
             request,
-            "Professor criado com sucesso!"
+
+            f"Professor '{nome_completo}' criado com sucesso."
+
         )
 
-        return redirect("professores")
+        return redirect(
+            "professores"
+        )
 
     return render(
+
         request,
+
         "adicionar_professor.html",
+
         {
             "turmas": turmas,
         },
+
     )
 
 

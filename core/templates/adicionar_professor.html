@@ -4,361 +4,2040 @@
 {% block content %}
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
 :root{
+
     --primary:#0d6efd;
     --primary-dark:#0b5ed7;
-    --success:#198754;
-    --light:#f8f9fa;
+
+    --dark:#1f2937;
+    --gray:#6b7280;
+
+    --border:#e5e7eb;
+
+    --shadow:
+        0 15px 40px rgba(0,0,0,.08);
+
 }
+
+
+
+body{
+
+    font-family:'Inter',sans-serif;
+
+    background:#f4f7fb;
+
+}
+
+
+
+/* ==========================
+        PÁGINA
+========================== */
+
+
+.professor-page{
+
+    position:relative;
+
+    min-height:100vh;
+
+    padding:30px;
+
+    overflow:hidden;
+
+}
+
+
+
+
+.professor-page::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+
+    background:
+
+        linear-gradient(
+            rgba(255,255,255,.94),
+            rgba(255,255,255,.94)
+        ),
+
+        url("/media/ica.png");
+
+
+    background-repeat:no-repeat;
+
+    background-position:center;
+
+    background-size:650px;
+
+
+    opacity:.18;
+
+    z-index:-1;
+
+}
+
+
+
+
+
+/* ==========================
+        HEADER
+========================== */
+
 
 .page-header{
-    background:linear-gradient(135deg,#0d6efd,#4f8dfd);
-    color:#fff;
-    border-radius:20px;
-    padding:30px;
+
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #0d6efd,
+            #4285f4
+        );
+
+
+    border-radius:28px;
+
+
+    padding:32px 38px;
+
+
+    color:white;
+
+
+    box-shadow:
+
+        0 20px 55px rgba(13,110,253,.20);
+
+
     margin-bottom:30px;
-    box-shadow:0 15px 35px rgba(13,110,253,.15);
+
+
 }
+
+
+
+
+.page-title{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:18px;
+
+
+}
+
+
+
+
+.page-icon{
+
+
+    width:72px;
+
+
+    height:72px;
+
+
+    border-radius:20px;
+
+
+    background:
+
+        rgba(255,255,255,.18);
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:32px;
+
+
+}
+
+
+
+
 
 .page-header h2{
-    font-weight:700;
+
+
     margin:0;
+
+
+    font-size:32px;
+
+
+    font-weight:800;
+
+
 }
+
+
+
 
 .page-header p{
-    margin:8px 0 0;
-    opacity:.9;
+
+
+    margin:
+
+        8px 0 0;
+
+
+    font-size:15px;
+
+
+    opacity:.95;
+
+
 }
+
+
+
+
+
+/* ==========================
+        BOTÃO HEADER
+========================== */
+
+
+.btn-header{
+
+
+    background:white;
+
+
+    color:#0d6efd;
+
+
+    border-radius:14px;
+
+
+    padding:12px 22px;
+
+
+    font-weight:700;
+
+
+    border:none;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.btn-header:hover{
+
+
+    background:#eef5ff;
+
+
+    transform:translateY(-2px);
+
+
+}
+
+
+
+
+
+/* ==========================
+        CARD PRINCIPAL
+========================== */
+
 
 .card-premium{
+
+
     border:none;
-    border-radius:22px;
+
+
+    border-radius:28px;
+
+
+    background:white;
+
+
+    box-shadow:
+
+        var(--shadow);
+
+
     overflow:hidden;
-    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+
 }
+
+
+
 
 .card-header-premium{
-    background:#fff;
-    border-bottom:1px solid #eef2f7;
-    padding:25px 30px;
+
+
+    padding:28px 35px;
+
+
+    border-bottom:
+
+        1px solid var(--border);
+
+
 }
+
+
+
 
 .card-header-premium h4{
+
+
     margin:0;
-    font-weight:700;
-    color:#343a40;
+
+
+    color:var(--dark);
+
+
+    font-weight:800;
+
+
 }
+
+
+
+
 
 .card-body{
+
+
     padding:35px;
+
+
 }
 
+
+
+
+
+/* ==========================
+        CAMPOS
+========================== */
+
+
 .form-label{
-    font-weight:600;
-    color:#495057;
+
+
+    font-weight:700;
+
+
+    color:#374151;
+
+
     margin-bottom:8px;
+
+
 }
+
+
 
 .form-control,
 .form-select{
-    border-radius:12px;
-    min-height:48px;
-    border:1px solid #dfe5ec;
-    transition:.3s;
+
+
+    min-height:50px;
+
+
+    border-radius:14px;
+
+
+    border:
+
+        1px solid #dce3eb;
+
+
+    font-size:15px;
+
+
 }
+
+
+
 
 .form-control:focus,
 .form-select:focus{
+
+
     border-color:#0d6efd;
-    box-shadow:0 0 0 .2rem rgba(13,110,253,.15);
+
+
+    box-shadow:
+
+        0 0 0 .18rem rgba(13,110,253,.14);
+
+
 }
 
-select[multiple]{
-    min-height:220px;
-}
 
-.info-box{
-    background:#f8fbff;
-    border-left:4px solid #0d6efd;
-    padding:15px;
-    border-radius:12px;
-    margin-top:10px;
-    font-size:.92rem;
-}
 
-.btn{
-    border-radius:12px;
-    padding:10px 22px;
-    font-weight:600;
-}
-
-.btn-primary{
-    background:#0d6efd;
-    border:none;
-}
-
-.btn-primary:hover{
-    background:#0b5ed7;
-}
-
-.btn-light{
-    border:1px solid #dee2e6;
-}
-
-.section-title{
-    font-weight:700;
-    color:#0d6efd;
-    margin-bottom:20px;
-    border-bottom:1px solid #edf2f7;
-    padding-bottom:10px;
-}
 
 .input-group-text{
-    background:#f8f9fa;
-    border-radius:12px 0 0 12px;
+
+
+    border-radius:
+
+        14px 0 0 14px;
+
+
+    background:#f8fafc;
+
+
+    border-color:#dce3eb;
+
+
 }
 
-@media(max-width:768px){
+
+
+
+
+/* ==========================
+        CARDS INTERNOS
+========================== */
+
+
+.profile-card,
+.section-card{
+
+
+    background:white;
+
+
+    border-radius:22px;
+
+
+    border:
+
+        1px solid #edf2f7;
+
+
+    padding:25px;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.profile-card:hover,
+.section-card:hover{
+
+
+    transform:translateY(-2px);
+
+
+}
+
+
+
+
+
+.photo-circle{
+
+
+    width:110px;
+
+
+    height:110px;
+
+
+    border-radius:50%;
+
+
+    background:#eef5ff;
+
+
+    color:#0d6efd;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    margin:auto;
+
+
+    font-size:45px;
+
+
+}
+
+
+
+
+/* ==========================
+        SECÇÕES
+========================== */
+
+
+.section-header{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    margin-bottom:25px;
+
+
+    padding-bottom:15px;
+
+
+    border-bottom:
+
+        1px solid #edf2f7;
+
+
+}
+
+
+
+.section-header h5{
+
+
+    font-size:18px;
+
+
+    font-weight:800;
+
+
+    color:#1f2937;
+
+
+}
+
+
+
+
+
+.info-box{
+
+
+    background:#f8fafc;
+
+
+    border-radius:16px;
+
+
+    padding:18px;
+
+
+    border:
+
+        1px solid #e5e7eb;
+
+
+}
+
+
+
+
+
+.summary-card{
+
+
+    background:#f8fafc;
+
+
+    border-radius:22px;
+
+
+    padding:25px;
+
+
+    border:
+
+        1px solid #edf2f7;
+
+
+}
+
+
+
+
+
+.summary-item{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:15px;
+
+
+    padding:15px;
+
+
+}
+
+
+
+
+.summary-item i{
+
+
+    width:45px;
+
+
+    height:45px;
+
+
+    border-radius:14px;
+
+
+    background:#eaf3ff;
+
+
+    color:#0d6efd;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+.footer-buttons{
+
+
+    margin-top:30px;
+
+
+    padding-top:25px;
+
+
+    border-top:
+
+        1px solid #edf2f7;
+
+
+}
+
+
+
+
+
+.btn-primary,
+.btn-outline-secondary,
+.btn-light{
+
+
+    border-radius:14px;
+
+
+    padding:12px 22px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+@media(max-width:992px){
+
+
+    .professor-page{
+
+
+        padding:20px;
+
+
+    }
+
+
 
     .card-body{
-        padding:20px;
+
+
+        padding:22px;
+
+
     }
 
-    .page-header{
-        padding:20px;
+
+
+    .page-title{
+
+
+        flex-direction:column;
+
+
+        align-items:flex-start;
+
+
     }
+
 
 }
+
+
+
 </style>
 
-<div class="container-fluid">
 
-    <!-- Cabeçalho -->
 
-    <div class="page-header">
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
 
-            <div>
-                <h2>
-                    <i class="bi bi-person-plus-fill me-2"></i>
-                    Novo Professor
-                </h2>
+<div class="container-fluid professor-page">
 
-                <p>
-                    Cadastre professores e associe-os às turmas da escola.
-                </p>
-            </div>
 
-            <div>
-                <a href="{% url 'professores' %}" class="btn btn-light">
-                    <i class="bi bi-arrow-left"></i>
-                    Voltar
-                </a>
-            </div>
 
-        </div>
 
-    </div>
 
-    <div class="card card-premium">
+<!-- HEADER -->
 
-        <div class="card-header-premium">
-            <h4>
-                <i class="bi bi-person-vcard me-2 text-primary"></i>
-                Dados do Professor
-            </h4>
-        </div>
 
-        <div class="card-body">
+<div class="page-header">
 
-            <form method="POST">
 
-                {% csrf_token %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-                <h5 class="section-title">
-                    Informações da Conta
-                </h5>
 
-                <div class="row">
 
-                    <div class="col-lg-6 mb-4">
+<div class="page-title">
 
-                        <label class="form-label">
-                            Nome de Utilizador *
-                        </label>
 
-                        <input
-                            type="text"
-                            name="username"
-                            class="form-control"
-                            placeholder="Ex.: joao.silva"
-                            required>
 
-                    </div>
+<div class="page-icon">
 
-                    <div class="col-lg-6 mb-4">
 
-                        <label class="form-label">
-                            Email
-                        </label>
+<i class="bi bi-person-workspace"></i>
 
-                        <input
-                            type="email"
-                            name="email"
-                            class="form-control"
-                            placeholder="professor@escola.ao">
-
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <label class="form-label">
-                            Telefone *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="telefone"
-                            class="form-control"
-                            placeholder="923 000 000"
-                            required>
-
-                        <small class="text-muted">
-                            Será utilizado para recuperação da senha por OTP.
-                        </small>
-
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <label class="form-label">
-                            Palavra-passe *
-                        </label>
-
-                        <input
-                            type="password"
-                            name="password"
-                            class="form-control"
-                            placeholder="******"
-                            required>
-
-                    </div>
-
-                </div>
-
-                <h5 class="section-title mt-3">
-                    Informações Académicas
-                </h5>
-
-                <div class="row">
-
-                    <div class="col-lg-6 mb-4">
-
-                        <label class="form-label">
-                            Disciplina *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="disciplina"
-                            class="form-control"
-                            placeholder="Ex.: Matemática"
-                            required>
-
-                    </div>
-
-                    <div class="col-lg-6 mb-4">
-
-                        <label class="form-label">
-                            Classes Lecionadas *
-                        </label>
-
-                        <input
-                            type="text"
-                            name="classes"
-                            class="form-control"
-                            placeholder="Ex.: 7ª, 8ª e 9ª"
-                            required>
-
-                    </div>
-
-                    <div class="col-12 mb-4">
-
-                        <label class="form-label">
-                            Turmas *
-                        </label>
-
-                        <select
-                            name="turmas"
-                            class="form-select"
-                            multiple
-                            required>
-
-                            {% for turma in turmas %}
-
-                                <option value="{{ turma.id }}">
-                                    {{ turma }}
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-                        <div class="info-box">
-
-                            <strong>
-                                <i class="bi bi-info-circle-fill me-1"></i>
-                                Dica
-                            </strong>
-
-                            <br>
-
-                            Utilize <strong>CTRL</strong> (Windows) ou
-                            <strong>CMD</strong> (Mac) para selecionar várias turmas.
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <hr class="my-4">
-
-                <div class="d-flex justify-content-end gap-2">
-
-                    <a href="{% url 'professores' %}" class="btn btn-light">
-
-                        <i class="bi bi-x-circle me-1"></i>
-
-                        Cancelar
-
-                    </a>
-
-                    <button type="reset" class="btn btn-outline-secondary">
-
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-
-                        Limpar
-
-                    </button>
-
-                    <button type="submit" class="btn btn-primary">
-
-                        <i class="bi bi-check-circle-fill me-1"></i>
-
-                        Guardar Professor
-
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
 
 </div>
+
+
+
+
+<div>
+
+
+<h2>
+
+Registo de Professor
+
+</h2>
+
+
+
+<p>
+
+Preencha os dados para criar um novo professor.
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div>
+
+
+<a href="{% url 'professores' %}"
+
+class="btn btn-header">
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+Voltar
+
+
+</a>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- CARD -->
+
+
+<div class="card card-premium">
+
+
+
+<div class="card-header-premium">
+
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+
+<div>
+
+
+<h4>
+
+Dados do Professor
+
+</h4>
+
+
+
+<small class="text-muted">
+
+Preencha os campos obrigatórios.
+
+</small>
+
+
+</div>
+
+
+
+
+<span class="badge bg-primary rounded-pill">
+
+Novo
+
+</span>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card-body">
+
+
+
+<!-- FORM CORRIGIDO -->
+
+<form method="POST" action="{% url 'adicionar_professor' %}">
+
+
+{% csrf_token %}
+
+
+
+
+
+
+<div class="row">
+
+
+
+
+
+<!-- COLUNA ESQUERDA -->
+
+
+<div class="col-xl-3 col-lg-4 mb-4">
+
+
+
+<div class="profile-card text-center">
+
+
+
+
+
+<div class="photo-circle">
+
+
+<i class="bi bi-person-fill"></i>
+
+
+</div>
+
+
+
+
+
+<h5 class="mt-3 fw-bold">
+
+Fotografia
+
+</h5>
+
+
+
+<p class="text-muted small">
+
+Opcional em versões futuras.
+
+</p>
+
+
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-primary w-100"
+
+disabled>
+
+
+<i class="bi bi-camera me-2"></i>
+
+
+Carregar
+
+
+</button>
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+<div class="text-start small text-muted">
+
+
+
+<div class="d-flex mb-3">
+
+
+<i class="bi bi-building text-primary me-2"></i>
+
+
+
+<span>
+
+Escola associada automaticamente.
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="d-flex mb-3">
+
+
+<i class="bi bi-person-badge text-success me-2"></i>
+
+
+
+<span>
+
+Perfil: Professor.
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="d-flex">
+
+
+<i class="bi bi-phone text-warning me-2"></i>
+
+
+
+<span>
+
+Recuperação via telefone.
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<!-- COLUNA DIREITA -->
+
+
+<div class="col-xl-9 col-lg-8">
+
+
+
+
+
+<!-- DADOS PESSOAIS -->
+
+
+<div class="section-card">
+
+
+
+<div class="section-header">
+
+
+<h5 class="mb-0">
+
+
+<i class="bi bi-person-vcard text-primary me-2"></i>
+
+
+Dados Pessoais
+
+
+</h5>
+
+
+
+</div>
+
+
+
+
+
+<div class="row">
+
+
+
+
+
+
+<!-- NOME COMPLETO -->
+
+
+<div class="col-md-12 mb-4">
+
+
+<label class="form-label">
+
+Nome Completo *
+
+</label>
+
+
+
+
+<input
+
+type="text"
+
+name="nome_completo"
+
+class="form-control"
+
+placeholder="Ex.: João Manuel António"
+
+required>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- USERNAME -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+Nome de Utilizador *
+
+</label>
+
+
+
+
+<input
+
+type="text"
+
+name="username"
+
+class="form-control"
+
+placeholder="Ex.: joao.silva"
+
+required>
+
+
+
+
+</div>
+
+
+
+
+
+
+<!-- EMAIL -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+E-mail
+
+</label>
+
+
+
+
+<input
+
+type="email"
+
+name="email"
+
+class="form-control"
+
+placeholder="professor@escola.ao">
+
+
+
+
+
+</div>
+
+<!-- TELEFONE -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+Telefone *
+
+</label>
+
+
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
++244
+
+</span>
+
+
+
+
+<input
+
+type="text"
+
+name="telefone"
+
+class="form-control"
+
+placeholder="923 000 000"
+
+required>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- PASSWORD -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+Palavra-passe *
+
+</label>
+
+
+
+
+<input
+
+type="password"
+
+name="password"
+
+class="form-control"
+
+placeholder="********"
+
+required>
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- DADOS ACADÉMICOS -->
+
+
+<div class="section-card mt-4">
+
+
+
+<div class="section-header">
+
+
+<h5 class="mb-0">
+
+
+<i class="bi bi-mortarboard text-primary me-2"></i>
+
+
+Dados Académicos
+
+
+</h5>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="row">
+
+
+
+
+
+
+
+<!-- DISCIPLINA -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+Disciplina *
+
+</label>
+
+
+
+
+<input
+
+type="text"
+
+name="disciplina"
+
+class="form-control"
+
+placeholder="Ex.: Matemática"
+
+required>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- CLASSES -->
+
+<!-- CAMPO ADICIONADO PARA COMPATIBILIDADE COM A VIEW -->
+
+
+<div class="col-md-6 mb-4">
+
+
+<label class="form-label">
+
+Classe *
+
+</label>
+
+
+
+
+<input
+
+type="text"
+
+name="classes"
+
+class="form-control"
+
+placeholder="Ex.: 10ª Classe"
+
+required>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
+
+<div class="col-12 mb-4">
+
+
+<label class="form-label">
+
+Turmas Associadas *
+
+</label>
+
+
+
+
+
+<select
+
+name="turmas"
+
+class="form-select"
+
+multiple
+
+required>
+
+
+
+
+
+{% for turma in turmas %}
+
+
+
+
+<option value="{{ turma.id }}">
+
+
+{{ turma }}
+
+
+</option>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</select>
+
+
+
+
+
+
+
+<small class="text-muted d-block mt-2">
+
+
+Selecione uma ou mais turmas atribuídas ao professor.
+
+
+</small>
+
+
+
+
+
+
+
+<div class="info-box mt-3">
+
+
+
+
+
+<div class="d-flex align-items-center">
+
+
+
+
+
+<i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+
+
+
+
+
+
+
+<div>
+
+
+
+<strong>
+
+
+Associação de Turmas
+
+
+</strong>
+
+
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Use CTRL (Windows) ou CMD (Mac) para selecionar várias turmas.
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+<!-- RESUMO DO REGISTO -->
+
+
+<div class="summary-card mt-4">
+
+
+
+<div class="row">
+
+
+
+
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="summary-item">
+
+
+
+<i class="bi bi-person-check-fill"></i>
+
+
+
+
+<div>
+
+
+<strong>
+
+Perfil
+
+</strong>
+
+
+
+<small>
+
+Professor
+
+</small>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="summary-item">
+
+
+
+<i class="bi bi-building"></i>
+
+
+
+
+<div>
+
+
+<strong>
+
+Escola
+
+</strong>
+
+
+
+<small>
+
+{{ request.user.escola.nome }}
+
+</small>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="summary-item">
+
+
+
+<i class="bi bi-shield-lock-fill"></i>
+
+
+
+
+<div>
+
+
+<strong>
+
+Acesso
+
+</strong>
+
+
+
+<small>
+
+Utilizador e senha
+
+</small>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- BOTÕES -->
+
+
+
+<div class="footer-buttons">
+
+
+
+
+
+<div class="row align-items-center">
+
+
+
+
+
+<div class="col-lg-7 mb-3 mb-lg-0">
+
+
+
+
+
+<div class="d-flex align-items-start">
+
+
+
+
+
+
+<div class="me-3">
+
+
+<i class="bi bi-info-circle-fill text-primary fs-4"></i>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div>
+
+
+<h6 class="fw-bold mb-2">
+
+Observação
+
+</h6>
+
+
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Após guardar o registo, o professor poderá iniciar sessão utilizando o nome de utilizador e a palavra-passe definidos.
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-lg-5">
+
+
+
+
+
+<div class="d-flex justify-content-lg-end gap-2 flex-wrap">
+
+
+
+
+
+
+
+<a href="{% url 'professores' %}"
+
+class="btn btn-outline-secondary">
+
+
+
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+
+
+Voltar
+
+
+
+
+
+</a>
+
+
+
+
+
+
+
+
+
+<button
+
+type="reset"
+
+class="btn btn-light border">
+
+
+
+
+
+<i class="bi bi-arrow-clockwise me-2"></i>
+
+
+
+
+Limpar
+
+
+
+
+
+</button>
+
+
+
+
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary">
+
+
+
+
+
+<i class="bi bi-check-lg me-2"></i>
+
+
+
+
+Guardar Professor
+
+
+
+
+
+</button>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+<!-- FIM COLUNA DIREITA -->
+
+
+
+
+
+</div>
+
+
+<!-- FIM ROW -->
+
+
+
+</form>
+
+
+
+
+
+</div>
+
+<!-- FIM CARD BODY -->
+
+
+</div>
+
+<!-- FIM CARD PRINCIPAL -->
+
+
+</div>
+
+<!-- FIM CONTAINER -->
+
+
+
+
 
 {% endblock %}
