@@ -175,7 +175,7 @@ if USE_POSTGRES:
 
             "PASSWORD":
                 os.getenv(
-                    "ManoChaba2018G",
+                    "POSTGRES_PASSWORD",
                     ""
                 ),
 
