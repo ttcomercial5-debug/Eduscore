@@ -11381,250 +11381,874 @@ from academic.models import (
 @login_required
 def pauta_final_ano(request):
 
-    # =====================================================
+    # ==========================================================
     # PERMISSÕES
-    # =====================================================
+    # ==========================================================
 
-    if request.user.role not in [
+    if getattr(request.user, "role", None) not in (
+        "SUPERADMIN",
         "DIRETOR",
         "DIRETOR_PEDAGOGICO",
-        "SUPERADMIN",
-    ]:
+    ):
         return redirect("dashboard")
 
-    escola = request.user.escola
 
-    # =====================================================
+    escola = getattr(request.user, "escola", None)
+
+
+    if escola is None:
+        return redirect("dashboard")
+
+
+
+    # ==========================================================
     # FILTROS
-    # =====================================================
+    # ==========================================================
 
-    ano_letivo_id = request.GET.get("ano_letivo")
-    turma_id = request.GET.get("turma")
-
-    anos_letivos = AnoLetivo.objects.filter(
-        escola=escola
-    ).order_by("-nome")
-
-    turmas = Turma.objects.filter(
-        escola=escola
-    ).select_related(
-        "curso",
+    ano_letivo_id = request.GET.get(
         "ano_letivo",
+        ""
+    ).strip()
 
+
+    turma_id = request.GET.get(
+        "turma",
+        ""
+    ).strip()
+
+
+
+    anos_letivos = (
+        AnoLetivo.objects
+        .filter(
+            escola=escola
+        )
+        .order_by(
+            "-nome"
+        )
     )
 
+
+
+    turmas = (
+        Turma.objects
+        .filter(
+            escola=escola
+        )
+        .select_related(
+            "curso",
+            "ano_letivo",
+            "professor",
+        )
+        .order_by(
+            "classe",
+            "identificador",
+            "turno",
+        )
+    )
+
+
+
     pauta = []
+
     disciplinas = []
+
     turma = None
+
     estatisticas = None
 
-    # =====================================================
+
+    curso = None
+
+    classe = None
+
+    turno = None
+
+    identificador = None
+
+    ano_letivo_nome = None
+
+    numero_classe = None
+
+    nota_minima = None
+
+
+
+    # ==========================================================
     # GERAR PAUTA
-    # =====================================================
+    # ==========================================================
+
 
     if ano_letivo_id and turma_id:
 
+
+
         ano_letivo = get_object_or_404(
             AnoLetivo,
-            id=ano_letivo_id,
+            pk=ano_letivo_id,
             escola=escola,
         )
+
+
 
         turma = get_object_or_404(
-            Turma,
-            id=turma_id,
+            Turma.objects.select_related(
+                "curso",
+                "ano_letivo",
+                "professor",
+            ),
+            pk=turma_id,
             escola=escola,
         )
 
-        # =====================================================
-        # NOTA MÍNIMA DA CLASSE
-        # =====================================================
 
-        try:
-            if hasattr(turma.classe, "ordem") and turma.classe.ordem is not None:
-                numero_classe = int(turma.classe.ordem)
-            else:
-                numero_classe = int(
-                    "".join(filter(str.isdigit, turma.classe.nome))
-                )
-        except (ValueError, TypeError, AttributeError):
-            numero_classe = 7
 
-        nota_minima = 5 if numero_classe <= 6 else 10
+        # ======================================================
+        # IDENTIFICAÇÃO
+        # ======================================================
 
-        # =====================================================
 
-        disciplinas = list(
-            Disciplina.objects.filter(
-                turma=turma
-            ).order_by("nome")
+        curso = turma.curso
+
+
+        classe = turma.get_classe_display()
+
+
+        turno = turma.get_turno_display()
+
+
+        identificador = turma.identificador
+
+
+        ano_letivo_nome = str(
+            ano_letivo
         )
 
+
+
+        try:
+
+            numero_classe = int(
+                turma.classe
+            )
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            numero_classe = 7
+
+
+
+        # ======================================================
+        # NOTA MÍNIMA
+        # ======================================================
+
+
+        nota_minima = (
+            5
+            if numero_classe <= 6
+            else 10
+        )
+
+        # ======================================================
+        # DISCIPLINAS
+        # ======================================================
+
+
+        disciplinas = list(
+
+            Disciplina.objects.filter(
+                turma=turma,
+                escola=escola,
+            )
+            .order_by(
+                "nome"
+            )
+
+        )
+
+
+
+        # ======================================================
+        # ALUNOS
+        # ======================================================
+
+
         alunos = (
+
             Aluno.objects.filter(
                 turma=turma,
                 ativo=True,
             )
-            .select_related("usuario")
+            .select_related(
+                "usuario"
+            )
             .order_by(
                 "numero_na_turma",
                 "usuario__first_name",
+                "usuario__last_name",
             )
+
         )
 
-        notas = Nota.objects.filter(
-            aluno__in=alunos,
-            disciplina__in=disciplinas,
-            ano_letivo=ano_letivo,
+
+
+        # ======================================================
+        # NOTAS
+        # ======================================================
+
+
+        notas = (
+
+            Nota.objects.filter(
+                aluno__in=alunos,
+                disciplina__in=disciplinas,
+                ano_letivo=ano_letivo,
+            )
+            .select_related(
+                "aluno",
+                "disciplina",
+            )
+
         )
+
+
 
         notas_map = {}
 
+
+
         for nota in notas:
+
             notas_map[
-                (nota.aluno_id, nota.disciplina_id, nota.trimestre)
+
+                (
+                    nota.aluno_id,
+                    nota.disciplina_id,
+                    nota.trimestre,
+                )
+
             ] = nota
 
-        # =====================================================
-        # ESTATÍSTICAS
-        # =====================================================
+
+
+
+
+        # ======================================================
+        # CONTADORES
+        # ======================================================
+
 
         total_aprovados = 0
+
         total_recurso = 0
+
         total_reprovados = 0
 
-        # =====================================================
-        # MONTAR PAUTA
-        # =====================================================
+
+
+
+        # ======================================================
+        # CONSTRUÇÃO DA PAUTA
+        # ======================================================
+
 
         for aluno in alunos:
 
+
+
             linha = {
+
+
                 "aluno": aluno,
+
+
                 "disciplinas": [],
-                "negativas": 0,
-                "disciplinas_recurso": [],
+
+
                 "media_geral": 0,
+
+
+                "negativas": 0,
+
+
+                "disciplinas_recurso": [],
+
+
                 "situacao": "",
+
+
+                "posicao": 0,
+
+
             }
+
+
 
             medias_finais = []
 
+
+
+
             for disciplina in disciplinas:
 
-                n1 = notas_map.get((aluno.id, disciplina.id, 1))
-                n2 = notas_map.get((aluno.id, disciplina.id, 2))
-                n3 = notas_map.get((aluno.id, disciplina.id, 3))
 
-                # =============================================
-                # AUSÊNCIA DE NOTA = 0
-                # =============================================
 
-                m1 = float(n1.media_final) if n1 and n1.media_final is not None else 0
-                m2 = float(n2.media_final) if n2 and n2.media_final is not None else 0
-                m3 = float(n3.media_final) if n3 and n3.media_final is not None else 0
+                nota_t1 = notas_map.get(
 
-                mf = round((m1 + m2 + m3) / 3, 1)
-
-                medias_finais.append(mf)
-
-                # =============================================
-                # NEGATIVAS
-                # =============================================
-
-                if mf < nota_minima:
-                    linha["negativas"] += 1
-                    linha["disciplinas_recurso"].append(
-                        disciplina.nome
+                    (
+                        aluno.id,
+                        disciplina.id,
+                        1
                     )
 
-                linha["disciplinas"].append({
-                    "disciplina": disciplina,
-                    "m1": m1,
-                    "m2": m2,
-                    "m3": m3,
-                    "mf": mf,
-                })
+                )
 
-            # =====================================================
-            # MÉDIA GERAL
-            # =====================================================
+
+
+                nota_t2 = notas_map.get(
+
+                    (
+                        aluno.id,
+                        disciplina.id,
+                        2
+                    )
+
+                )
+
+
+
+                nota_t3 = notas_map.get(
+
+                    (
+                        aluno.id,
+                        disciplina.id,
+                        3
+                    )
+
+                )
+
+
+
+
+
+                m1 = (
+
+                    float(
+                        nota_t1.media_final
+                    )
+
+                    if nota_t1
+                    and nota_t1.media_final is not None
+
+                    else 0
+
+                )
+
+
+
+                m2 = (
+
+                    float(
+                        nota_t2.media_final
+                    )
+
+                    if nota_t2
+                    and nota_t2.media_final is not None
+
+                    else 0
+
+                )
+
+
+
+                m3 = (
+
+                    float(
+                        nota_t3.media_final
+                    )
+
+                    if nota_t3
+                    and nota_t3.media_final is not None
+
+                    else 0
+
+                )
+
+
+
+
+                # ==================================================
+                # MÉDIA FINAL DA DISCIPLINA
+                # ==================================================
+
+
+                mfd = round(
+
+                    (
+                        m1 +
+                        m2 +
+                        m3
+
+                    ) / 3,
+
+                    1
+
+                )
+
+
+
+                medias_finais.append(
+                    mfd
+                )
+
+
+
+
+                # ==================================================
+                # VERIFICA NEGATIVA
+                # ==================================================
+
+
+                if mfd < nota_minima:
+
+
+                    linha["negativas"] += 1
+
+
+                    linha["disciplinas_recurso"].append(
+
+                        disciplina.nome
+
+                    )
+
+
+
+
+
+                linha["disciplinas"].append(
+
+                    {
+
+                        "disciplina": disciplina,
+
+
+                        "mf1t": m1,
+
+
+                        "mf2t": m2,
+
+
+                        "mf3t": m3,
+
+
+                        "mfd": mfd,
+
+
+                    }
+
+                )
+
+
+
+
+
+            # ======================================================
+            # MÉDIA GERAL DO ALUNO
+            # ======================================================
+
 
             if medias_finais:
-                linha["media_geral"] = round(
-                    sum(medias_finais) / len(medias_finais),
-                    1,
-                )
-            else:
-                linha["media_geral"] = 0
 
-            # =====================================================
+
+                linha["media_geral"] = round(
+
+                    sum(
+                        medias_finais
+                    )
+                    /
+                    len(
+                        medias_finais
+                    ),
+
+                    1
+
+                )
+
+
+
+
+
+            # ======================================================
             # SITUAÇÃO FINAL
-            # =====================================================
+            # ======================================================
+
 
             if linha["negativas"] == 0:
+
+
                 linha["situacao"] = "APROVADO"
+
+
                 total_aprovados += 1
 
+
+
+
             elif linha["negativas"] <= 3:
+
+
                 linha["situacao"] = "RECURSO"
+
+
                 total_recurso += 1
 
+
+
+
             else:
+
+
                 linha["situacao"] = "REPROVADO"
+
+
                 total_reprovados += 1
 
-            pauta.append(linha)
 
-        # =====================================================
+
+
+            pauta.append(
+                linha
+            )
+
+        # ======================================================
         # RANKING
-        # =====================================================
+        # ======================================================
+
 
         pauta.sort(
-            key=lambda x: x["media_geral"],
-            reverse=True,
+
+            key=lambda x: (
+
+                -x["media_geral"],
+
+                x["negativas"],
+
+                x["aluno"].numero_na_turma or 9999,
+
+            )
+
         )
 
-        for posicao, linha in enumerate(
-            pauta,
-            start=1,
-        ):
+
+
+        ultima_media = None
+
+        ultima_negativa = None
+
+        ranking = 0
+
+        posicao = 0
+
+
+
+        for linha in pauta:
+
+
+            ranking += 1
+
+
+
+            if (
+
+                linha["media_geral"] != ultima_media
+
+                or
+
+                linha["negativas"] != ultima_negativa
+
+            ):
+
+                posicao = ranking
+
+
+
             linha["posicao"] = posicao
 
-        # =====================================================
-        # ESTATÍSTICAS
-        # =====================================================
 
-        total_alunos = len(pauta)
+
+            ultima_media = linha["media_geral"]
+
+            ultima_negativa = linha["negativas"]
+
+
+
+
+
+
+        # ======================================================
+        # ESTATÍSTICAS DA TURMA
+        # ======================================================
+
+
+        total_alunos = len(
+            pauta
+        )
+
+
+
+        media_turma = round(
+
+            sum(
+
+                aluno["media_geral"]
+
+                for aluno in pauta
+
+            )
+            /
+            total_alunos,
+
+            1
+
+        ) if total_alunos else 0
+
+
+
+
+
+        maior_media = max(
+
+            (
+
+                aluno["media_geral"]
+
+                for aluno in pauta
+
+            ),
+
+            default=0
+
+        )
+
+
+
+
+        menor_media = min(
+
+            (
+
+                aluno["media_geral"]
+
+                for aluno in pauta
+
+            ),
+
+            default=0
+
+        )
+
+
+
+
+
+
+        percentual_aprovacao = round(
+
+            (
+                total_aprovados * 100
+            )
+            /
+            total_alunos,
+
+            2
+
+        ) if total_alunos else 0
+
+
+
+
+
+        percentual_recurso = round(
+
+            (
+                total_recurso * 100
+            )
+            /
+            total_alunos,
+
+            2
+
+        ) if total_alunos else 0
+
+
+
+
+
+        percentual_reprovacao = round(
+
+            (
+                total_reprovados * 100
+            )
+            /
+            total_alunos,
+
+            2
+
+        ) if total_alunos else 0
+
+
+
+
+
 
         estatisticas = {
-            "total_alunos": total_alunos,
-            "aprovados": total_aprovados,
-            "recurso": total_recurso,
-            "reprovados": total_reprovados,
-            "percentual_aprovacao": round(
-                (total_aprovados / total_alunos) * 100,
-                2,
-            ) if total_alunos else 0,
-            "nota_minima": nota_minima,
+
+
+            "total_alunos":
+                total_alunos,
+
+
+            "aprovados":
+                total_aprovados,
+
+
+            "recurso":
+                total_recurso,
+
+
+            "reprovados":
+                total_reprovados,
+
+
+            "percentual_aprovacao":
+                percentual_aprovacao,
+
+
+            "percentual_recurso":
+                percentual_recurso,
+
+
+            "percentual_reprovacao":
+                percentual_reprovacao,
+
+
+            "media_turma":
+                media_turma,
+
+
+            "maior_media":
+                maior_media,
+
+
+            "menor_media":
+                menor_media,
+
+
+            "nota_minima":
+                nota_minima,
+
         }
 
-    # =====================================================
-    # CONTEXT
-    # =====================================================
+
+
+
+
+
+    # ==========================================================
+    # CONTEXTO
+    # ==========================================================
+
+
+    context = {
+
+
+        "anos_letivos":
+            anos_letivos,
+
+
+        "turmas":
+            turmas,
+
+
+
+        "ano_letivo_id":
+            ano_letivo_id,
+
+
+
+        "turma_id":
+            turma_id,
+
+
+
+        "turma":
+            turma,
+
+
+
+        "disciplinas":
+            disciplinas,
+
+
+
+        "pauta":
+            pauta,
+
+
+
+        "estatisticas":
+            estatisticas,
+
+
+
+        "curso":
+            curso,
+
+
+
+        "classe":
+            classe,
+
+
+
+        "numero_classe":
+            numero_classe,
+
+
+
+        "turno":
+            turno,
+
+
+
+        "identificador":
+            identificador,
+
+
+
+        "ano_letivo":
+            ano_letivo_nome,
+
+
+
+        "nota_minima":
+            nota_minima,
+
+    }
+
+
+
+
 
     return render(
-        request,
-        "pauta_final_ano.html",
-        {
-            "anos_letivos": anos_letivos,
-            "turmas": turmas,
-            "turma": turma,
-            "disciplinas": disciplinas,
-            "pauta": pauta,
-            "estatisticas": estatisticas,
-            "ano_letivo_id": ano_letivo_id,
-            "turma_id": turma_id,
-        },
-    )
 
+        request,
+
+        "pauta_final_ano.html",
+
+        context,
+
+    )

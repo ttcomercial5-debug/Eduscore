@@ -1,387 +1,2801 @@
 {% extends "base_diretor_pedagogico.html" %}
+{% load static %}
 
 {% block content %}
 
 <style>
 
-/* =========================
-   CARD PAUTA
-========================= */
+/*=========================================================
+        PAUTA FINAL DO ANO LECTIVO
+        MODELO MINED ANGOLA
+        VERSÃO HORIZONTAL FINAL
+==========================================================*/
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+
+body{
+
+    font-family:Arial, Helvetica, sans-serif;
+    background:#eef1f5;
+    color:#000;
+
+}
+
+
+
+/*=========================================================
+                    CARD PRINCIPAL
+==========================================================*/
+
 
 .card-pauta{
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.08);
-    background: #fff;
+
+    background:#fff;
+    border:none;
+    border-radius:8px;
+    padding:25px;
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.08);
+
 }
 
-/* =========================
-   TABELA
-========================= */
+
+
+/*=========================================================
+                    FILTROS
+==========================================================*/
+
+
+.filtro-title{
+
+    font-size:22px;
+    font-weight:900;
+    color:#0d47a1;
+    margin-bottom:20px;
+
+}
+
+
+
+.form-label{
+
+    font-size:14px;
+    font-weight:700;
+
+}
+
+
+
+
+
+/*=========================================================
+                    ÁREA IMPRESSÃO
+==========================================================*/
+
+
+.area-impressao{
+
+    width:100%;
+
+}
+
+
+
+
+
+/*=========================================================
+                    CABEÇALHO OFICIAL
+==========================================================*/
+
+
+.cabecalho-oficial{
+
+    text-align:center;
+    margin-bottom:20px;
+
+}
+
+
+
+.cabecalho-oficial img{
+
+    width:85px;
+    height:auto;
+    margin-bottom:8px;
+
+}
+
+
+
+.cabecalho-oficial h5{
+
+    font-size:13px;
+    font-weight:800;
+    margin:2px;
+
+}
+
+
+
+.cabecalho-oficial h3{
+
+    font-size:21px;
+    font-weight:900;
+    margin:8px 0;
+
+}
+
+
+
+.cabecalho-oficial p{
+
+    font-size:12px;
+    margin:3px;
+
+}
+
+
+
+
+.titulo-pauta{
+
+    margin-top:12px;
+    font-size:17px;
+    font-weight:900;
+    text-transform:uppercase;
+
+}
+
+
+
+
+
+/*=========================================================
+                IDENTIFICAÇÃO TURMA
+==========================================================*/
+
+
+.info-turma{
+
+    border:1px solid #000;
+    padding:10px;
+    margin-bottom:15px;
+
+}
+
+
+
+.info-turma table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+
+
+.info-turma td{
+
+    font-size:12px;
+    padding:4px;
+
+}
+
+
+
+.info-turma strong{
+
+    font-weight:900;
+
+}
+
+
+
+
+
+/*=========================================================
+                TABELA PRINCIPAL
+==========================================================*/
+
+
+.table-container{
+
+    width:100%;
+    overflow-x:auto;
+
+}
+
+
 
 .table-pauta{
-    font-size: 12.5px;
-    border-collapse: separate;
-    border-spacing: 0;
+
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+
 }
+
+
 
 .table-pauta th{
-    white-space: nowrap;
-    text-align: center;
-    vertical-align: middle;
-    background: #f8f9fa;
-    font-weight: 700;
-    border: 1px solid #dee2e6;
+
+    border:1px solid #000;
+
+    background:#f2f2f2;
+
+    text-align:center;
+
+    vertical-align:middle;
+
+    padding:3px;
+
+    font-size:10px;
+
+    font-weight:900;
+
 }
+
+
 
 .table-pauta td{
-    white-space: nowrap;
-    text-align: center;
-    vertical-align: middle;
-    border: 1px solid #eee;
-    padding: 6px 8px;
+
+    border:1px solid #000;
+
+    text-align:center;
+
+    vertical-align:middle;
+
+    padding:3px;
+
+    font-size:10px;
+
 }
 
-/* =========================
-   CABEÇALHO OFICIAL
-========================= */
 
-.cabecalho-pauta{
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #eee;
+
+
+
+/*=========================================================
+                COLUNAS FIXAS
+==========================================================*/
+
+
+.col-numero{
+
+    width:35px;
+
 }
 
-.cabecalho-pauta h4{
-    font-weight: 800;
+
+
+.col-nome{
+
+    width:220px;
+
+    text-align:left!important;
+
+    padding-left:6px!important;
+
 }
 
-.cabecalho-pauta h5{
-    font-weight: 600;
-    color: #444;
+
+
+.col-sexo{
+
+    width:40px;
+
 }
 
-/* =========================
-   ALUNO
-========================= */
 
-.nome-aluno{
-    text-align: left !important;
-    min-width: 260px;
-    font-weight: 600;
+
+.col-media-final{
+
+    width:45px;
+
 }
 
-/* =========================
-   STATUS
-========================= */
 
-.status-aprovado{
-    background: #d1e7dd;
-    color: #0f5132;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
+
+.col-observacao{
+
+    width:120px;
+
 }
 
-.status-recurso{
-    background: #fff3cd;
-    color: #664d03;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
+
+
+.col-situacao{
+
+    width:90px;
+
 }
 
-.status-reprovado{
-    background: #f8d7da;
-    color: #842029;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 6px;
+
+
+
+
+/*=========================================================
+        DISCIPLINAS
+==========================================================*/
+
+
+.disciplina-titulo{
+
+    font-size:10px;
+
+    font-weight:900;
+
+    text-transform:uppercase;
+
+    white-space:nowrap;
+
 }
 
-/* =========================
-   BOTÕES (SÓ VISUAL)
-========================= */
 
-.no-print{
-    display: block;
+
+.media-header{
+
+    font-size:9px!important;
+
+    background:#fafafa!important;
+
+    font-weight:900;
+
 }
 
-/* =========================
-   PRINT OFICIAL MINED
-========================= */
 
-@media print {
 
-    @page {
-        size: A4 landscape;
-        margin: 10mm;
-    }
+.media-celula{
 
-    /* ❌ REMOVE TUDO DO SISTEMA */
-    .navbar,
-    .sidebar,
-    form,
-    .btn,
-    .info-card,
-    .no-print,
-    .row,
-    .alert,
-    .breadcrumb,
-    h1, h2, h3, h6,
-    .welcome,
-    .dashboard,
-    .container-fluid > .card:not(.card-pauta) {
-        display: none !important;
-    }
+    font-size:10px;
 
-    body {
-        background: white !important;
-    }
-
-    .container-fluid {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* 🔥 SÓ PAUTA */
-    .card-pauta {
-        box-shadow: none !important;
-        border: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .table-responsive {
-        overflow: visible !important;
-    }
-
-    /* 🔥 COMPRIMIR PARA CABER NA FOLHA */
-    .table-pauta {
-        width: 100% !important;
-        table-layout: fixed !important;
-        font-size: 9px !important;
-    }
-
-    .table-pauta th,
-    .table-pauta td {
-        padding: 2px 3px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis;
-    }
-
-    .nome-aluno {
-        min-width: 120px !important;
-    }
-
-    .disciplina-header {
-        font-size: 9px !important;
-    }
-
-    .cabecalho-pauta h4 {
-        font-size: 14px !important;
-    }
-
-    .cabecalho-pauta h5 {
-        font-size: 11px !important;
-    }
 }
+
+
+
+
+
+/*=========================================================
+                CORES RESULTADOS
+==========================================================*/
+
+
+.nota-aprovada{
+
+    color:#0d47a1;
+
+    font-weight:900;
+
+}
+
+
+
+
+
+.nota-reprovada{
+
+    color:#b71c1c;
+
+    font-weight:900;
+
+}
+
+
+
+.situacao-transita{
+
+    color:#0d47a1;
+
+    font-weight:900;
+
+}
+
+
+
+.situacao-recurso{
+
+    color:#008000;
+
+    font-weight:900;
+
+}
+
+
+
+.situacao-nao-transita{
+
+    color:#b71c1c;
+
+    font-weight:900;
+
+}
+
+
+
+
+
+/*=========================================================
+                    ASSINATURAS
+==========================================================*/
+
+
+.assinaturas{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:25px;
+
+    margin-top:50px;
+
+    page-break-inside:avoid;
+
+}
+
+
+
+.assinatura-item{
+
+    flex:1;
+
+    text-align:center;
+
+}
+
+
+
+.assinatura-item hr{
+
+    border:none;
+
+    border-top:1px solid #000;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.assinatura-item strong{
+
+    display:block;
+
+    font-size:11px;
+
+}
+
+
+
+.assinatura-item span{
+
+    display:block;
+
+    font-size:11px;
+
+}
+
+
+
+
+/*=========================================================
+                    IMPRESSÃO
+==========================================================*/
+
+
+@page{
+
+    size:A3 landscape;
+
+    margin:8mm;
+
+}
+
+
+
+@media print{
+
+
+body *{
+
+    visibility:hidden;
+
+}
+
+
+
+.area-impressao,
+.area-impressao *{
+
+    visibility:visible;
+
+}
+
+
+
+.area-impressao{
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+}
+
+
+
+.no-print,
+.btn,
+form,
+.estatisticas-turma,
+.resumo-pedagogico,
+.observacoes-sistema{
+
+    display:none!important;
+
+}
+
+
+
+.card-pauta{
+
+    box-shadow:none!important;
+
+    border:none!important;
+
+    padding:0!important;
+
+}
+
+
+
+.table-container{
+
+    overflow:visible!important;
+
+}
+
+
+
+.table-pauta th,
+.table-pauta td{
+
+    font-size:8px;
+
+    padding:1px;
+
+}
+
+
+
+.disciplina-titulo{
+
+    font-size:8px;
+
+}
+
+
+
+.assinaturas{
+
+    display:flex!important;
+
+}
+
+
+
+.cabecalho-oficial h3{
+
+    font-size:16px;
+
+}
+
+
+
+.info-turma td{
+
+    font-size:9px;
+
+}
+
+
+}
+
 
 </style>
 
+
 <div class="container-fluid">
 
-<!-- =========================
-     FILTROS (NÃO PRINTA)
-========================= -->
 
-<div class="card card-pauta p-4 mb-4 no-print">
+<!-- =====================================================
+                    FILTROS
+====================================================== -->
 
-    <h4 class="mb-4 fw-bold">Pauta Final do Ano</h4>
 
-    <form method="GET" class="row g-3">
+<div class="card card-pauta mb-4 no-print">
 
-        <div class="col-md-5">
-            <label class="form-label fw-semibold">Ano Letivo</label>
-            <select name="ano_letivo" class="form-select">
 
-                <option value="">Selecione</option>
+<div class="filtro-title">
 
-                {% for ano in anos_letivos %}
-                <option value="{{ ano.id }}"
-                    {% if ano.id|stringformat:"s" == ano_letivo_id %}selected{% endif %}>
-                    {{ ano.nome }}
-                </option>
-                {% endfor %}
-
-            </select>
-        </div>
-
-        <div class="col-md-5">
-            <label class="form-label fw-semibold">Turma</label>
-            <select name="turma" class="form-select">
-
-                <option value="">Selecione</option>
-
-                {% for t in turmas %}
-                <option value="{{ t.id }}"
-                    {% if t.id|stringformat:"s" == turma_id %}selected{% endif %}>
-                    {{ t.nome_completo }}
-                </option>
-                {% endfor %}
-
-            </select>
-        </div>
-
-        <div class="col-md-2 d-grid">
-            <label class="form-label">&nbsp;</label>
-            <button class="btn btn-primary fw-semibold">
-                Gerar Pauta
-            </button>
-        </div>
-
-    </form>
+Pauta Final do Ano Lectivo
 
 </div>
 
-{% if pauta %}
 
-<!-- =========================
-     PAUTA OFICIAL (SÓ ISTO IMPRIME)
-========================= -->
 
-<div class="card card-pauta p-4">
+<form method="GET">
 
-    <div class="cabecalho-pauta">
 
-        <h5>REPÚBLICA DE ANGOLA</h5>
-        <h5>MINISTÉRIO DA EDUCAÇÃO</h5>
+<div class="row g-3">
 
-        <h4>{{ request.user.escola.nome }}</h4>
 
-        <h5>PAUTA FINAL DO ANO LETIVO</h5>
 
-        <p class="mb-0">
-            <strong>Turma:</strong> {{ turma.nome_completo }}
-        </p>
+<div class="col-md-5">
 
-        <p class="mb-0">
-            <strong>Nota mínima de aprovação:</strong>
-            {{ estatisticas.nota_minima }} valores
-        </p>
+<label class="form-label">
 
-    </div>
+Ano Lectivo
 
-    <div class="mb-3 no-print">
-        <button onclick="window.print()" class="btn btn-success">
-            Imprimir Pauta
-        </button>
-    </div>
+</label>
 
-    <!-- =========================
-         TABELA
-    ========================= -->
 
-    <div class="table-responsive">
+<select name="ano_letivo" class="form-select">
 
-        <table class="table table-pauta">
 
-            <thead>
+<option value="">
 
-                <tr>
-                    <th rowspan="2">Nº</th>
-                    <th rowspan="2">Nome Completo</th>
-                    <th rowspan="2">Sexo</th>
+Seleccione o ano lectivo
 
-                    {% for disciplina in disciplinas %}
-                    <th colspan="4" class="disciplina-header">
-                        {{ disciplina.nome }}
-                    </th>
-                    {% endfor %}
+</option>
 
-                    <th rowspan="2">Neg.</th>
-                    <th rowspan="2">Média</th>
-                    <th rowspan="2">Pos.</th>
-                    <th rowspan="2">Recurso</th>
-                    <th rowspan="2">Observação</th>
-                </tr>
 
-                <tr>
-                    {% for disciplina in disciplinas %}
-                    <th>M1</th>
-                    <th>M2</th>
-                    <th>M3</th>
-                    <th>MF</th>
-                    {% endfor %}
-                </tr>
+{% for ano in anos_letivos %}
 
-            </thead>
 
-            <tbody>
+<option
 
-                {% for linha in pauta %}
+value="{{ ano.id }}"
 
-                <tr>
+{% if ano.id|stringformat:"s" == ano_letivo_id %}
 
-                    <td>{{ linha.aluno.numero_na_turma }}</td>
-
-                    <td class="nome-aluno">
-                        {{ linha.aluno.nome_completo }}
-                    </td>
-
-                    <td>{{ linha.aluno.sexo|default:"-" }}</td>
-
-                    {% for d in linha.disciplinas %}
-                        <td>{{ d.m1|default:"-" }}</td>
-                        <td>{{ d.m2|default:"-" }}</td>
-                        <td>{{ d.m3|default:"-" }}</td>
-                        <td><strong>{{ d.mf|default:"-" }}</strong></td>
-                    {% endfor %}
-
-                    <td>{{ linha.negativas }}</td>
-
-                    <td><strong>{{ linha.media_geral }}</strong></td>
-
-                    <td>{{ linha.posicao }}</td>
-
-                    <!-- RECURSO -->
-                    <td class="text-start">
-                        {% if linha.disciplinas_recurso %}
-                            {{ linha.disciplinas_recurso|join:", " }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-
-                    <!-- STATUS -->
-                    <td>
-                        {% if linha.situacao == "APROVADO" %}
-                            <span class="status-aprovado">APROVADO</span>
-
-                        {% elif linha.situacao == "RECURSO" %}
-                            <span class="status-recurso">RECURSO</span>
-
-                        {% else %}
-                            <span class="status-reprovado">REPROVADO</span>
-                        {% endif %}
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
+selected
 
 {% endif %}
 
+>
+
+{{ ano.nome }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
 </div>
+<div class="col-md-5">
+
+<label class="form-label">
+
+Turma
+
+</label>
+
+
+<select
+
+name="turma"
+
+class="form-select">
+
+
+<option value="">
+
+Seleccione a turma
+
+</option>
+
+
+
+{% for t in turmas %}
+
+
+<option
+
+value="{{ t.id }}"
+
+{% if t.id|stringformat:"s" == turma_id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ t.nome_completo|default:t.identificador }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-2 d-grid">
+
+
+<label>
+
+&nbsp;
+
+</label>
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary">
+
+
+Gerar Pauta
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+{% if pauta %}
+
+
+
+
+
+<!-- =====================================================
+              ÁREA OFICIAL DE IMPRESSÃO
+====================================================== -->
+
+
+<div class="area-impressao">
+
+
+
+<div class="card card-pauta">
+
+
+
+
+
+<!-- =====================================================
+                    BOTÃO
+====================================================== -->
+
+
+<div class="no-print mb-4">
+
+
+<button
+
+onclick="window.print()"
+
+class="btn btn-success">
+
+
+Imprimir Pauta
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<!-- =====================================================
+                    CABEÇALHO OFICIAL
+====================================================== -->
+
+<div class="cabecalho-oficial">
+
+
+
+<!-- =====================================================
+        INSÍGNIA DA REPÚBLICA DE ANGOLA
+====================================================== -->
+
+
+<img
+
+src="{% static 'imagens/insignia_angola.png' %}"
+
+alt="Insígnia da República de Angola">
+
+
+
+
+
+
+<!-- =====================================================
+        LOGOTIPO DA ESCOLA (OPCIONAL)
+====================================================== -->
+
+
+{% if request.user.escola.logotipo %}
+
+
+<img
+
+src="{{ request.user.escola.logotipo.url }}"
+
+alt="Logotipo da Escola">
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+<h5>
+
+REPÚBLICA DE ANGOLA
+
+</h5>
+
+
+
+<h5>
+
+MINISTÉRIO DA EDUCAÇÃO
+
+</h5>
+
+
+
+
+
+
+
+<h3>
+
+{{ request.user.escola.nome }}
+
+</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="titulo-pauta">
+
+
+PAUTA FINAL DO ANO LECTIVO
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+<!-- =====================================================
+                IDENTIFICAÇÃO DA TURMA
+====================================================== -->
+
+
+<div class="info-turma">
+
+
+
+
+
+<table>
+
+
+
+
+
+
+<tr>
+
+
+
+
+
+<td width="25%">
+
+
+<strong>
+
+Curso:
+
+</strong>
+
+
+
+{% if curso %}
+
+{{ curso.nome }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td width="25%">
+
+
+<strong>
+
+Classe:
+
+</strong>
+
+
+
+{% if classe %}
+
+{{ classe }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td width="25%">
+
+
+<strong>
+
+Turma:
+
+</strong>
+
+
+
+{% if identificador %}
+
+{{ identificador }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td width="25%">
+
+
+<strong>
+
+Turno:
+
+</strong>
+
+
+
+{% if turno %}
+
+{{ turno }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+Ano Lectivo:
+
+</strong>
+
+
+
+{% if ano_letivo %}
+
+{{ ano_letivo }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+Sala:
+
+</strong>
+
+
+
+{% if turma.sala %}
+
+{{ turma.sala }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+Nº de Alunos:
+
+</strong>
+
+
+
+{{ estatisticas.total_alunos }}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+Nota Mínima:
+
+</strong>
+
+
+
+{{ estatisticas.nota_minima }}
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+</table>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+              TABELA OFICIAL DA PAUTA
+====================================================== -->
+
+
+
+<div class="table-container">
+
+
+
+
+
+<table class="table-pauta">
+
+
+
+<thead>
+
+
+
+
+
+<tr>
+
+
+
+
+
+<th rowspan="2" class="col-numero">
+
+Nº
+
+</th>
+
+
+
+
+
+
+<th rowspan="2" class="col-nome">
+
+Nome Completo
+
+</th>
+
+
+
+
+
+
+<th rowspan="2" class="col-sexo">
+
+Sexo
+
+</th>
+
+
+
+
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+
+
+<th colspan="4">
+
+
+
+<div class="disciplina-titulo">
+
+
+{{ disciplina.nome }}
+
+
+</div>
+
+
+
+</th>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+<th rowspan="2" class="col-media-final">
+
+
+MF
+
+</th>
+
+
+
+
+
+
+<th rowspan="2" class="col-observacao">
+
+Observação
+
+</th>
+
+
+
+
+
+
+<th rowspan="2" class="col-situacao">
+
+Situação
+
+</th>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+
+
+
+<th class="media-header">
+
+MF1T
+
+</th>
+
+
+
+
+
+
+
+<th class="media-header">
+
+MF2T
+
+</th>
+
+
+
+
+
+
+
+<th class="media-header">
+
+MF3T
+
+</th>
+
+
+
+
+
+
+
+<th class="media-header">
+
+MFD
+
+</th>
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+{% for linha in pauta %}
+
+
+
+<tr>
+
+
+
+
+<td class="col-numero">
+
+
+{{ linha.aluno.numero_na_turma|default:"-" }}
+
+
+</td>
+
+
+
+
+
+<td class="col-nome">
+
+
+
+
+{% if linha.aluno.nome_completo %}
+
+
+
+{{ linha.aluno.nome_completo }}
+
+
+
+{% else %}
+
+
+
+{{ linha.aluno.usuario.get_full_name }}
+
+
+
+{% endif %}
+
+
+
+
+</td>
+
+
+
+
+
+<td class="col-sexo">
+
+
+{{ linha.aluno.sexo|default:"-" }}
+
+
+</td>
+{% for d in linha.disciplinas %}
+
+
+
+<td class="media-celula">
+
+
+{% if d.mf1t != None %}
+
+
+<span
+
+{% if classe|add:0 >= 7 and d.mf1t >= 10 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 >= 7 and d.mf1t < 10 %}
+
+class="nota-reprovada"
+
+{% elif classe|add:0 <= 6 and d.mf1t >= 5 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 <= 6 and d.mf1t < 5 %}
+
+class="nota-reprovada"
+
+{% endif %}
+
+>
+
+{{ d.mf1t|floatformat:1 }}
+
+</span>
+
+
+{% else %}
+
+-
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+<td class="media-celula">
+
+
+{% if d.mf2t != None %}
+
+
+<span
+
+{% if classe|add:0 >= 7 and d.mf2t >= 10 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 >= 7 and d.mf2t < 10 %}
+
+class="nota-reprovada"
+
+{% elif classe|add:0 <= 6 and d.mf2t >= 5 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 <= 6 and d.mf2t < 5 %}
+
+class="nota-reprovada"
+
+{% endif %}
+
+>
+
+{{ d.mf2t|floatformat:1 }}
+
+</span>
+
+
+{% else %}
+
+-
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+<td class="media-celula">
+
+
+{% if d.mf3t != None %}
+
+
+<span
+
+{% if classe|add:0 >= 7 and d.mf3t >= 10 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 >= 7 and d.mf3t < 10 %}
+
+class="nota-reprovada"
+
+{% elif classe|add:0 <= 6 and d.mf3t >= 5 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 <= 6 and d.mf3t < 5 %}
+
+class="nota-reprovada"
+
+{% endif %}
+
+>
+
+{{ d.mf3t|floatformat:1 }}
+
+</span>
+
+
+{% else %}
+
+-
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+
+<td class="media-celula">
+
+
+<strong>
+
+
+{% if d.mfd != None %}
+
+
+<span
+
+{% if classe|add:0 >= 7 and d.mfd >= 10 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 >= 7 and d.mfd < 10 %}
+
+class="nota-reprovada"
+
+{% elif classe|add:0 <= 6 and d.mfd >= 5 %}
+
+class="nota-aprovada"
+
+{% elif classe|add:0 <= 6 and d.mfd < 5 %}
+
+class="nota-reprovada"
+
+{% endif %}
+
+>
+
+{{ d.mfd|floatformat:1 }}
+
+</span>
+
+
+{% else %}
+
+-
+
+{% endif %}
+
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+<!-- =====================================================
+              MÉDIA GERAL DO ALUNO
+====================================================== -->
+
+
+<td>
+
+
+<strong>
+
+
+{{ linha.media_geral|floatformat:1 }}
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+<!-- =====================================================
+              OBSERVAÇÃO
+====================================================== -->
+
+
+<td class="resultado col-observacao">
+
+
+
+{% if linha.disciplinas_recurso %}
+
+
+{% for disciplina in linha.disciplinas_recurso %}
+
+
+{{ disciplina }}
+
+
+{% if not forloop.last %}
+
+<br>
+
+{% endif %}
+
+
+{% endfor %}
+
+
+
+{% else %}
+
+
+—
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<!-- =====================================================
+              SITUAÇÃO FINAL
+====================================================== -->
+
+
+<td class="resultado col-situacao">
+
+
+
+
+
+{% if linha.situacao == "APROVADO" %}
+
+
+
+<span class="situacao-transita">
+
+
+TRANSITA
+
+
+</span>
+
+
+
+
+{% elif linha.situacao == "RECURSO" %}
+
+
+
+
+<span class="situacao-recurso">
+
+
+RECURSO
+
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+
+<span class="situacao-nao-transita">
+
+
+NÃO TRANSITA
+
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+
+
+</td>
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+</table>
+
+
+
+</div>
+<!-- =====================================================
+        ESTATÍSTICAS DA TURMA
+        SOMENTE VISUALIZAÇÃO NO SISTEMA
+        NÃO IMPRIME
+====================================================== -->
+
+
+<div class="row mt-4 no-print estatisticas-turma">
+
+
+<div class="col-md-12">
+
+
+
+
+
+<table class="table table-bordered">
+
+
+
+
+
+<tr>
+
+
+<th width="25%">
+
+Total de Alunos
+
+</th>
+
+
+<td width="25%">
+
+{{ estatisticas.total_alunos }}
+
+</td>
+
+
+
+
+
+<th width="25%">
+
+Aprovados
+
+</th>
+
+
+<td width="25%">
+
+{{ estatisticas.aprovados }}
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+<th>
+
+Recurso
+
+</th>
+
+
+<td>
+
+{{ estatisticas.recurso }}
+
+</td>
+
+
+
+
+
+
+
+<th>
+
+Reprovados
+
+</th>
+
+
+<td>
+
+{{ estatisticas.reprovados }}
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+<th>
+
+Percentagem de Aprovação
+
+</th>
+
+
+<td>
+
+{{ estatisticas.percentual_aprovacao }} %
+
+</td>
+
+
+
+
+
+
+
+<th>
+
+Percentagem em Recurso
+
+</th>
+
+
+<td>
+
+{{ estatisticas.percentual_recurso }} %
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+<th>
+
+Percentagem de Reprovação
+
+</th>
+
+
+<td>
+
+{{ estatisticas.percentual_reprovacao }} %
+
+</td>
+
+
+
+
+
+
+
+<th>
+
+Média Geral da Turma
+
+</th>
+
+
+<td>
+
+{{ estatisticas.media_turma|floatformat:1 }}
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+<th>
+
+Maior Média
+
+</th>
+
+
+<td>
+
+{{ estatisticas.maior_media|floatformat:1 }}
+
+</td>
+
+
+
+
+
+
+
+<th>
+
+Menor Média
+
+</th>
+
+
+<td>
+
+{{ estatisticas.menor_media|floatformat:1 }}
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+</table>
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+              RESUMO PEDAGÓGICO
+              SOMENTE SISTEMA
+              NÃO IMPRIME
+====================================================== -->
+
+
+
+<div class="mt-4 no-print resumo-pedagogico">
+
+
+
+
+
+
+<table class="table table-bordered text-center">
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Situação
+
+</th>
+
+
+
+
+<th>
+
+Quantidade
+
+</th>
+
+
+
+
+<th>
+
+Percentagem
+
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+
+<tr>
+
+
+
+<td>
+
+TRANSITA
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.aprovados }}
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.percentual_aprovacao }} %
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+
+<td>
+
+RECURSO
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.recurso }}
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.percentual_recurso }} %
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+
+<td>
+
+NÃO TRANSITA
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.reprovados }}
+
+</td>
+
+
+
+
+<td>
+
+{{ estatisticas.percentual_reprovacao }} %
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+
+</tbody>
+
+
+
+
+
+</table>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+                    OBSERVAÇÕES SISTEMA
+                    NÃO IMPRIME
+====================================================== -->
+
+
+
+<div class="mt-4 no-print observacoes-sistema">
+
+
+
+
+
+<table class="table table-bordered">
+
+
+
+
+
+<tr>
+
+
+<th width="20%">
+
+Observações
+
+</th>
+
+
+
+
+
+<td>
+
+
+
+A presente pauta apresenta os resultados finais dos alunos
+referentes ao ano lectivo seleccionado, conforme os critérios
+de avaliação definidos pela instituição.
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+</table>
+
+
+
+
+
+
+</div>
+<!-- =====================================================
+                    ASSINATURAS OFICIAIS
+====================================================== -->
+
+
+<div class="assinaturas">
+
+
+
+
+
+
+
+<!-- ================= DIRECTOR DA ESCOLA ================= -->
+
+
+
+<div class="assinatura-item">
+
+
+
+<br><br><br>
+
+
+
+<hr>
+
+
+
+
+
+<strong>
+
+
+
+{% if diretor %}
+
+
+
+{{ diretor.get_full_name }}
+
+
+
+{% else %}
+
+
+
+________________________________
+
+
+
+{% endif %}
+
+
+
+</strong>
+
+
+
+
+
+
+
+<span>
+
+
+Director da Escola
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= DIRECTOR PEDAGÓGICO ================= -->
+
+
+
+<div class="assinatura-item">
+
+
+
+<br><br><br>
+
+
+
+<hr>
+
+
+
+
+
+<strong>
+
+
+
+{% if diretor_pedagogico %}
+
+
+
+{{ diretor_pedagogico.get_full_name }}
+
+
+
+{% else %}
+
+
+
+________________________________
+
+
+
+{% endif %}
+
+
+
+</strong>
+
+
+
+
+
+
+
+<span>
+
+
+Director Pedagógico
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= DIRECTOR DE TURMA ================= -->
+
+
+
+<div class="assinatura-item">
+
+
+
+<br><br><br>
+
+
+
+<hr>
+
+
+
+
+
+<strong>
+
+
+
+
+
+{% if turma.professor %}
+
+
+
+
+
+{{ turma.professor.get_full_name }}
+
+
+
+
+
+{% else %}
+
+
+
+
+
+________________________________
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+</strong>
+
+
+
+
+
+
+
+
+<span>
+
+
+Director de Turma
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+                    RODAPÉ OFICIAL
+====================================================== -->
+
+
+
+<div class="rodape-oficial text-center mt-5">
+
+
+
+
+
+
+
+<p>
+
+
+<strong>
+
+
+{{ request.user.escola.nome }}
+
+
+</strong>
+
+
+
+</p>
+
+
+
+
+
+
+
+
+
+
+
+<p>
+
+
+Emitida em:
+
+{% now "d/m/Y" %}
+
+
+</p>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div> <!-- fim card-pauta -->
+
+
+
+
+
+
+</div> <!-- fim area-impressao -->
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+</div> <!-- fim container-fluid -->
+
+
+
+
+
 
 {% endblock %}
