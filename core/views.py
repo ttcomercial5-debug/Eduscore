@@ -5015,49 +5015,265 @@ def dashboard_diretor_pedagogico(request):
     return render(request, "dashboard_pedagogico.html", context)
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from academic.models import Notificacao
-
-def notificacoes(request):
-
-    notificacoes = Notificacao.objects.filter(
-        usuario=request.user
-    ).order_by("-criada_em")
-
-    nao_lidas = notificacoes.filter(lida=False).count()
-
-    return render(request, "notificacoes.html", {
-        "notificacoes": notificacoes,
-        "nao_lidas": nao_lidas
-    })
-
-
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
-def marcar_notificacao_lida(request, id):
-
-    notif = get_object_or_404(Notificacao, id=id, usuario=request.user)
-    notif.lida = True
-    notif.save()
-
-    return JsonResponse({"success": True})
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.http import require_POST
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
+from academic.models import Notificacao
+
+
+
+
+
+# ==========================================================
+# LISTAR NOTIFICAÇÕES DO UTILIZADOR
+# ==========================================================
+
+
+@login_required
+def notificacoes(request):
+
+
+    notificacoes = (
+
+        Notificacao.objects
+
+        .filter(
+            usuario=request.user
+        )
+
+        .select_related(
+            "usuario"
+        )
+
+        .order_by(
+            "-criada_em"
+        )
+
+    )
+
+
+
+    nao_lidas = (
+
+        notificacoes
+
+        .filter(
+            lida=False
+        )
+
+        .count()
+
+    )
+
+
+
+    return render(
+
+        request,
+
+        "notificacoes.html",
+
+        {
+
+            "notificacoes":
+                notificacoes,
+
+
+            "nao_lidas":
+                nao_lidas,
+
+        }
+
+    )
+
+
+
+
+
+
+
+# ==========================================================
+# MARCAR NOTIFICAÇÃO COMO LIDA
+# ==========================================================
+
+
+@login_required
+@require_POST
+def marcar_notificacao_lida(request, id):
+
+
+    notificacao = get_object_or_404(
+
+        Notificacao,
+
+        id=id,
+
+        usuario=request.user
+
+    )
+
+
+
+    if not notificacao.lida:
+
+
+        notificacao.lida = True
+
+
+        notificacao.save(
+
+            update_fields=[
+                "lida"
+            ]
+
+        )
+
+
+
+    return JsonResponse(
+
+        {
+
+            "success": True,
+
+            "message":
+                "Notificação marcada como lida."
+
+        }
+
+    )
+
+
+
+
+
+
+
+
+# ==========================================================
+# MARCAR TODAS COMO LIDAS
+# ==========================================================
+
+
+@login_required
+@require_POST
+def marcar_todas_notificacoes_lidas(request):
+
+
+    atualizadas = (
+
+        Notificacao.objects
+
+        .filter(
+
+            usuario=request.user,
+
+            lida=False
+
+        )
+
+        .update(
+
+            lida=True
+
+        )
+
+    )
+
+
+
+    return JsonResponse(
+
+        {
+
+            "success": True,
+
+            "total":
+                atualizadas
+
+        }
+
+    )
+
+
+
+
+
+
+
+
+# ==========================================================
+# ENVIO DE NOTIFICAÇÃO EM TEMPO REAL
+# ==========================================================
+
+
 def enviar_notificacao_realtime(notificacao):
+
 
     channel_layer = get_channel_layer()
 
-    async_to_sync(channel_layer.group_send)(
+
+
+    if not channel_layer:
+
+
+        return False
+
+
+
+
+
+    async_to_sync(
+
+        channel_layer.group_send
+
+    )(
+
+
         "notificacoes_global",
+
+
         {
-            "type": "send_notification",
-            "titulo": notificacao.titulo,
-            "mensagem": notificacao.mensagem,
-            "tipo": notificacao.tipo,
+
+
+            "type":
+                "send_notification",
+
+
+
+            "titulo":
+                notificacao.titulo,
+
+
+
+            "mensagem":
+                notificacao.mensagem,
+
+
+
+            "tipo":
+                notificacao.tipo,
+
+
+
+            "usuario_id":
+                notificacao.usuario.id,
+
+
+
         }
+
+
     )
+
+
+
+    return True
 
 # =========================================================
 # REGISTRAR PAGAMENTO
