@@ -74,6 +74,8 @@ class User(AbstractUser):
         ("SECRETARIA", "Secretaria"),
     )
 
+
+
     role = models.CharField(
         max_length=25,
         choices=ROLE_CHOICES,

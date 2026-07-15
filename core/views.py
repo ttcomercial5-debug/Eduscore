@@ -1116,155 +1116,427 @@ def dashboard(request):
 # =====================================================
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.db.models.functions import Lower
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.db.models.functions import Lower
+from django.shortcuts import render, redirect
+
+
 
 
 @login_required
 def lista_alunos(request):
 
+    """
+    Lista e gestão de alunos.
+
+    Permissões:
+
+    DIRETOR:
+        - Visualiza todos os alunos da escola.
+
+    DIRETOR_PEDAGOGICO:
+        - Visualiza todos os alunos da escola.
+
+    PROFESSOR:
+        - Visualiza apenas alunos das suas turmas.
+    """
+
+
+    # ======================================================
+    # ESCOLA DO UTILIZADOR
+    # ======================================================
+
     escola = get_escola(request)
 
+
     if not escola:
+
         return redirect("escolas")
+
+
 
     user = request.user
 
+
+
     # ======================================================
-    # BASE TEMPLATE DINÂMICO (SISTEMA SaaS)
+    # TEMPLATE DINÂMICO SaaS
     # ======================================================
-    if user.role == "DIRETOR_PEDAGOGICO":
-        base_template = "base_diretor_pedagogico.html"
 
-    elif user.role == "DIRETOR":
-        base_template = "base.html"
+    templates = {
 
-    elif user.role == "PROFESSOR":
-        base_template = "base_professor.html"
+        "DIRETOR_PEDAGOGICO":
+            "base_diretor_pedagogico.html",
 
-    else:
+        "DIRETOR":
+            "base.html",
+
+        "PROFESSOR":
+            "base_professor.html",
+
+    }
+
+
+    base_template = templates.get(
+        getattr(user, "role", None)
+    )
+
+
+    if not base_template:
+
         return redirect("dashboard")
 
+
+
     # ======================================================
-    # QUERY BASE
+    # QUERY PRINCIPAL
     # ======================================================
+
     alunos = (
         Aluno.objects
-        .filter(escola=escola)
+
+        .filter(
+            escola=escola
+        )
+
         .select_related(
             "usuario",
             "turma",
             "turma__curso",
-            "ano_letivo"
+            "ano_letivo",
+        )
+
+        .only(
+
+            "id",
+            "numero_bi",
+            "numero_processo",
+            "turma",
+            "ano_letivo",
+
+            "usuario__id",
+            "usuario__first_name",
+            "usuario__last_name",
+            "usuario__email",
+            "usuario__is_active",
+
+            "turma__id",
+            "turma__classe",
+            "turma__identificador",
+
+            "turma__curso__nome",
+
         )
     )
 
+
+
     # ======================================================
-    # PERMISSÕES
+    # RESTRIÇÃO DO PROFESSOR
     # ======================================================
+
     if user.role == "PROFESSOR":
-        alunos = alunos.filter(
-            turma__professores__usuario=user
+
+
+        alunos = (
+            alunos
+
+            .filter(
+                turma__professores__usuario=user
+            )
+
+            .distinct()
         )
+
+
 
     # ======================================================
     # ESTATÍSTICAS
     # ======================================================
+
     total_alunos = alunos.count()
 
-    alunos_ativos = alunos.filter(
-        usuario__is_active=True
-    ).count()
 
-    alunos_bloqueados = alunos.filter(
-        usuario__is_active=False
-    ).count()
+    alunos_ativos = (
+        alunos
 
-    alunos_sem_turma = alunos.filter(
-        turma__isnull=True
-    ).count()
+        .filter(
+            usuario__is_active=True
+        )
 
-    total_turmas = (
-        alunos.exclude(turma__isnull=True)
-        .values("turma")
-        .distinct()
         .count()
     )
 
-    # ======================================================
-    # BUSCA
-    # ======================================================
-    buscar = request.GET.get("buscar")
 
-    if buscar:
-        alunos = alunos.filter(
-            Q(usuario__first_name__icontains=buscar) |
-            Q(usuario__last_name__icontains=buscar) |
-            Q(numero_bi__icontains=buscar) |
-            Q(numero_processo__icontains=buscar)
+    alunos_bloqueados = (
+        alunos
+
+        .filter(
+            usuario__is_active=False
         )
 
-    # ======================================================
-    # FILTRO TURMA
-    # ======================================================
-    turma_id = request.GET.get("turma")
-
-    if turma_id:
-        alunos = alunos.filter(turma_id=turma_id)
-
-    # ======================================================
-    # ORDER + PAGINAÇÃO
-    # ======================================================
-    alunos = alunos.order_by(
-        Lower("usuario__first_name")
+        .count()
     )
 
-    paginator = Paginator(alunos, 15)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+
+    alunos_sem_turma = (
+        alunos
+
+        .filter(
+            turma__isnull=True
+        )
+
+        .count()
+    )
+
+
+    total_turmas = (
+        alunos
+
+        .exclude(
+            turma__isnull=True
+        )
+
+        .values(
+            "turma"
+        )
+
+        .distinct()
+
+        .count()
+    )
+
+
 
     # ======================================================
-    # TURMAS
+    # FILTRO DE PESQUISA
     # ======================================================
+
+    buscar = request.GET.get(
+        "buscar",
+        ""
+    ).strip()
+
+
+
+    if buscar:
+
+
+        alunos = alunos.filter(
+
+            Q(
+                usuario__first_name__icontains=buscar
+            )
+
+            |
+
+            Q(
+                usuario__last_name__icontains=buscar
+            )
+
+            |
+
+            Q(
+                numero_bi__icontains=buscar
+            )
+
+            |
+
+            Q(
+                numero_processo__icontains=buscar
+            )
+
+        )
+
+
+
+    # ======================================================
+    # FILTRO POR TURMA
+    # ======================================================
+
+    turma_id = request.GET.get(
+        "turma",
+        ""
+    )
+
+
+
+    if turma_id:
+
+
+        alunos = alunos.filter(
+            turma_id=turma_id
+        )
+
+
+
+    # ======================================================
+    # ORDENAÇÃO
+    # ======================================================
+
+    alunos = alunos.order_by(
+
+        Lower(
+            "usuario__first_name"
+        ),
+
+        Lower(
+            "usuario__last_name"
+        )
+
+    )
+
+
+
+    # ======================================================
+    # PAGINAÇÃO
+    # ======================================================
+
+    paginator = Paginator(
+        alunos,
+        15
+    )
+
+
+    page_number = request.GET.get(
+        "page"
+    )
+
+
+    page_obj = paginator.get_page(
+        page_number
+    )
+
+
+
+    # ======================================================
+    # TURMAS DISPONÍVEIS NO FILTRO
+    # ======================================================
+
+    turmas = (
+        Turma.objects
+
+        .filter(
+            escola=escola
+        )
+
+        .select_related(
+            "curso"
+        )
+    )
+
+
+
     if user.role == "PROFESSOR":
 
+
         turmas = (
-            Turma.objects
+            turmas
+
             .filter(
-                professores__usuario=user,
-                escola=escola
+                professores__usuario=user
             )
+
             .distinct()
-            .order_by("classe", "identificador")
         )
 
-    else:
 
-        turmas = (
-            Turma.objects
-            .filter(escola=escola)
-            .order_by("classe", "identificador")
+
+    turmas = turmas.order_by(
+
+        "classe",
+
+        "identificador"
+
+    )
+
+
+
+    # ======================================================
+    # MANTER FILTROS NA PAGINAÇÃO
+    # ======================================================
+
+    query_params = request.GET.copy()
+
+
+    if "page" in query_params:
+
+        query_params.pop(
+            "page"
         )
 
-    # ======================================================
-    # CONTEXTO
-    # ======================================================
-    return render(request, "alunos.html", {
-        "alunos": page_obj,
-        "turmas": turmas,
-        "buscar": buscar,
-        "turma_id": turma_id,
 
-        "total_alunos": total_alunos,
-        "alunos_ativos": alunos_ativos,
-        "alunos_bloqueados": alunos_bloqueados,
-        "alunos_sem_turma": alunos_sem_turma,
-        "total_turmas": total_turmas,
+    query_string = query_params.urlencode()
 
-        "base_template": base_template,
-    })
+
+
+    # ======================================================
+    # CONTEXTO FINAL
+    # ======================================================
+
+    context = {
+
+
+        "base_template":
+            base_template,
+
+
+        "alunos":
+            page_obj,
+
+
+        "turmas":
+            turmas,
+
+
+        "buscar":
+            buscar,
+
+
+        "turma_id":
+            turma_id,
+
+
+
+        "total_alunos":
+            total_alunos,
+
+
+        "alunos_ativos":
+            alunos_ativos,
+
+
+        "alunos_bloqueados":
+            alunos_bloqueados,
+
+
+        "alunos_sem_turma":
+            alunos_sem_turma,
+
+
+        "total_turmas":
+            total_turmas,
+
+
+
+        "query_string":
+            query_string,
+
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "alunos.html",
+
+        context
+
+    )
 
 
 
@@ -6216,8 +6488,8 @@ def criar_matricula(request):
         messages.success(
             request,
             (
-                "Matrícula criada com sucesso!\n"
-                f"Username: {numero_processo}\n"
+                f"Aluno '{nome}' matriculado com sucesso.\n"
+                f"Utilizador: {numero_processo}\n"
                 f"Senha inicial: {senha_gerada}"
             )
         )
@@ -6360,8 +6632,10 @@ def adicionar_aluno(request):
         # VALIDAÇÕES
         # ==========================
 
+
+
         if not nome:
-            messages.error(request, "Nome obrigatório.")
+            messages.error(request, "Nome completo obrigatório.")
             return redirect("adicionar_aluno")
 
         if not numero_processo:

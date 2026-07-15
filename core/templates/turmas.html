@@ -2,262 +2,718 @@
 
 {% block content %}
 
+<style>
+
+.page-header h2{
+    font-weight:700;
+    letter-spacing:-0.5px;
+}
+
+
+.card-premium{
+
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+
+}
+
+
+.stat-card{
+
+    border:none;
+    border-radius:18px;
+    transition:.25s ease;
+
+}
+
+
+.stat-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+.stat-number{
+
+    font-size:32px;
+    font-weight:700;
+
+}
+
+
+.stat-label{
+
+    color:#6c757d;
+    font-size:14px;
+
+}
+
+
+.table thead th{
+
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    white-space:nowrap;
+
+}
+
+
+.table tbody tr{
+
+    transition:.2s ease;
+
+}
+
+
+.table tbody tr:hover{
+
+    background-color:#f8f9fa;
+
+}
+
+
+.badge-soft{
+
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:500;
+
+}
+
+
+.action-btn{
+
+    border-radius:10px;
+    padding:6px 12px;
+
+}
+
+
+
+</style>
+
+
+
 <div class="container-fluid">
 
-    <!-- CABEÇALHO -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-            <h2 class="fw-bold mb-1">
-                Gestão de Turmas
-            </h2>
-
-            <small class="text-muted">
-                Ano Letivo:
-                <strong>
-                    {{ ano_selecionado }}
-                </strong>
-            </small>
-        </div>
-
-        <div class="d-flex gap-2">
 
 
+<!-- CABEÇALHO -->
 
-            {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
-            <a href="{% url 'adicionar_turma' %}"
-               class="btn btn-success shadow-sm rounded-3 px-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-                <i class="bi bi-person-plus-fill"></i>
-                Nova Turma
 
-            </a>
-            {% endif %}
+    <div class="page-header">
 
-        </div>
+        <h2 class="mb-1">
+
+            Gestão de Turmas
+
+        </h2>
+
+
+        <p class="text-muted mb-0">
+
+            Organização académica das turmas da escola
+
+        </p>
+
 
     </div>
 
-    <!-- FILTRO ANO LETIVO -->
 
-    <div class="card shadow-sm border-0 mb-4">
 
-        <div class="card-body">
+    {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
 
-            <form method="GET">
 
-                <div class="row align-items-end">
+    <a href="{% url 'adicionar_turma' %}"
+       class="btn btn-primary rounded-3 px-4 shadow-sm">
 
-                    <div class="col-md-4">
 
-                        <label class="form-label">
-                            Histórico por Ano Letivo
-                        </label>
+        Nova Turma
 
-                        <select
-                            name="ano"
-                            class="form-select"
-                            onchange="this.form.submit()">
 
-                            <option value="">
-                                Ano Letivo Atual
-                            </option>
+    </a>
 
-                            {% for ano in anos_letivos %}
 
-                            <option
-                                value="{{ ano.id }}"
-                                {% if ano.id == ano_selecionado.id %}
+    {% endif %}
+
+
+</div>
+
+
+
+
+
+<!-- FILTRO ANO LETIVO -->
+
+
+<div class="card card-premium shadow-sm mb-4">
+
+
+    <div class="card-body p-4">
+
+
+        <form method="GET">
+
+
+            <div class="row align-items-end">
+
+
+                <div class="col-lg-4">
+
+
+                    <label class="form-label fw-semibold">
+
+                        Selecionar Ano Letivo
+
+                    </label>
+
+
+
+                    <select
+                        name="ano"
+                        class="form-select"
+                        onchange="this.form.submit()"
+                    >
+
+
+                        <option value="">
+
+
+                            Ano Letivo Atual
+
+
+                        </option>
+
+
+
+                        {% for ano in anos_letivos %}
+
+
+                        <option
+                            value="{{ ano.id }}"
+                            {% if ano.id == ano_selecionado.id %}
                                 selected
-                                {% endif %}
-                            >
-                                {{ ano.nome }}
-                            </option>
+                            {% endif %}
+                        >
 
-                            {% endfor %}
 
-                        </select>
+                            {{ ano.nome }}
 
-                    </div>
 
-                </div>
+                        </option>
 
-            </form>
-
-        </div>
-
-    </div>
-
-    <!-- ESTATÍSTICAS -->
-
-    <div class="row mb-4">
-
-        <div class="col-md-3">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-body">
-
-                    <h6 class="text-muted">
-                        Total de Turmas
-                    </h6>
-
-                    <h3 class="fw-bold text-primary">
-                        {{ turmas|length }}
-                    </h3>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- TABELA -->
-
-    <div class="card border-0 shadow-sm">
-
-        <div class="card-body p-0">
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle mb-0">
-
-                    <thead class="table-dark">
-
-                        <tr>
-
-                            <th>Classe</th>
-
-                            <th>Turma</th>
-
-                            <th>Curso</th>
-
-                            <th>Turno</th>
-
-                            <th>Ano Letivo</th>
-
-                            <th>Total Alunos</th>
-
-                            <th class="text-center">
-                                Ações
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for turma in turmas %}
-
-                        <tr>
-
-                            <td>
-                                {{ turma.get_classe_display }}
-                            </td>
-
-                            <td>
-                                <strong>
-                                    {{ turma.identificador }}
-                                </strong>
-                            </td>
-
-                            <td>
-
-                                {% if turma.curso %}
-
-                                    <span class="badge bg-primary">
-                                        {{ turma.curso.nome }}
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="text-muted">
-                                        Geral
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                            <td>
-
-                                {{ turma.get_turno_display }}
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge bg-info">
-
-                                    {{ turma.ano_letivo }}
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge bg-secondary">
-
-                                    {{ turma.total_alunos }}
-
-                                </span>
-
-                            </td>
-
-                            <td class="text-center">
-
-                                <div class="btn-group">
-
-                                    <a href="{% url 'imprimir_lista_turma' turma.id %}"
-                                       target="_blank"
-                                       class="btn btn-sm btn-outline-primary">
-
-                                        Lista
-
-                                    </a>
-
-                                    <a href="{% url 'editar_turma' turma.id %}"
-                                       class="btn btn-sm btn-outline-warning">
-
-                                        Editar
-
-                                    </a>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                        {% empty %}
-
-                        <tr>
-
-                            <td colspan="7"
-                                class="text-center py-5 text-muted">
-
-                                Nenhuma turma encontrada.
-
-                            </td>
-
-                        </tr>
 
                         {% endfor %}
 
-                    </tbody>
 
-                </table>
+                    </select>
+
+
+                </div>
+
 
             </div>
 
-        </div>
+
+        </form>
+
 
     </div>
 
+
 </div>
+
+
+
+
+
+
+
+<!-- INDICADORES -->
+
+
+<div class="row g-4 mb-4">
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body">
+
+
+                <span class="stat-label">
+
+                    Total de Turmas
+
+                </span>
+
+
+                <div class="stat-number text-primary mt-2">
+
+
+                    {{ turmas|length }}
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Turmas registadas
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body">
+
+
+                <span class="stat-label">
+
+                    Ano Selecionado
+
+                </span>
+
+
+                <div class="fw-bold fs-4 mt-2">
+
+
+                    {{ ano_selecionado.nome }}
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Período académico
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body">
+
+
+                <span class="stat-label">
+
+                    Estado
+
+                </span>
+
+
+                <div class="fw-bold fs-4 mt-2 text-success">
+
+
+                    Ativo
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Gestão disponível
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body">
+
+
+                <span class="stat-label">
+
+                    Escola
+
+                </span>
+
+
+                <div class="fw-bold fs-5 mt-2">
+
+
+                    {{ request.user.escola.nome }}
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Unidade escolar
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- LISTAGEM -->
+
+
+<div class="card card-premium shadow-sm">
+
+
+    <div class="card-header bg-white border-0 p-4">
+
+
+        <div class="d-flex justify-content-between align-items-center">
+
+
+            <h5 class="fw-bold mb-0">
+
+                Lista de Turmas
+
+            </h5>
+
+
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+
+
+                {{ turmas|length }} turmas
+
+
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="card-body p-0">
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-hover align-middle mb-0">
+
+
+                <thead class="table-light">
+
+
+                    <tr>
+
+                        <th>Classe</th>
+
+                        <th>Identificação</th>
+
+                        <th>Curso</th>
+
+                        <th>Turno</th>
+
+                        <th>Ano Letivo</th>
+
+                        <th>Alunos</th>
+
+                        <th class="text-center">
+
+                            Ações
+
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+
+                {% for turma in turmas %}
+
+
+                <tr>
+
+
+
+                    <td>
+
+
+                        <strong>
+
+                            {{ turma.get_classe_display }}
+
+                        </strong>
+
+
+                    </td>
+
+
+
+
+                    <td>
+
+
+                        <span class="fw-semibold">
+
+                            {{ turma.identificador }}
+
+                        </span>
+
+
+                    </td>
+
+
+
+
+
+                    <td>
+
+
+                        {% if turma.curso %}
+
+
+                            <span class="badge bg-primary badge-soft">
+
+
+                                {{ turma.curso.nome }}
+
+
+                            </span>
+
+
+                        {% else %}
+
+
+                            <span class="text-muted">
+
+                                Geral
+
+                            </span>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+
+
+
+                    <td>
+
+
+                        {{ turma.get_turno_display }}
+
+
+                    </td>
+
+
+
+
+
+                    <td>
+
+
+                        <span class="badge bg-info text-dark badge-soft">
+
+
+                            {{ turma.ano_letivo }}
+
+
+                        </span>
+
+
+                    </td>
+
+
+
+
+
+                    <td>
+
+
+                        <span class="badge bg-secondary badge-soft">
+
+
+                            {{ turma.total_alunos }}
+
+
+                        </span>
+
+
+                    </td>
+
+
+
+
+
+                    <td class="text-center">
+
+
+                        <div class="d-flex justify-content-center gap-2">
+
+
+                            <a
+                                href="{% url 'imprimir_lista_turma' turma.id %}"
+                                target="_blank"
+                                class="btn btn-outline-primary btn-sm action-btn"
+                            >
+
+                                Lista
+
+                            </a>
+
+
+
+                            {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+
+
+                            <a
+                                href="{% url 'editar_turma' turma.id %}"
+                                class="btn btn-outline-warning btn-sm action-btn"
+                            >
+
+                                Editar
+
+                            </a>
+
+
+                            {% endif %}
+
+
+
+                        </div>
+
+
+                    </td>
+
+
+
+                </tr>
+
+
+
+                {% empty %}
+
+
+
+                <tr>
+
+
+                    <td colspan="7"
+                        class="text-center py-5">
+
+
+                        <h5 class="text-muted">
+
+                            Nenhuma turma encontrada
+
+                        </h5>
+
+
+                        <p class="text-muted mb-0">
+
+                            Não existem turmas disponíveis para este ano letivo.
+
+                        </p>
+
+
+                    </td>
+
+
+                </tr>
+
+
+
+                {% endfor %}
+
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+</div>
+
 
 {% endblock %}

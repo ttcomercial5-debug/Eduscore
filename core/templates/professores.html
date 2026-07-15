@@ -2,520 +2,1371 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
-
-    <!-- ===================================== -->
-    <!-- HEADER -->
-    <!-- ===================================== -->
-
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-
-        <div>
-            <h3 class="fw-bold mb-1">
-                <i class="bi bi-person-workspace text-primary"></i>
-                Gestão de Professores
-            </h3>
-
-            <p class="text-muted mb-0">
-                Controle completo do corpo docente da instituição
-            </p>
-        </div>
-
-        {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
-        <a href="{% url 'adicionar_professor' %}"
-           class="btn btn-success shadow-sm rounded-3 px-4">
-
-            <i class="bi bi-person-plus-fill"></i>
-            Novo Professor
-
-        </a>
-        {% endif %}
-
-    </div>
-
-    <!-- ===================================== -->
-    <!-- CARDS -->
-    <!-- ===================================== -->
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-4">
-
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <div>
-
-                            <small class="text-muted">
-                                Total de Professores
-                            </small>
-
-                            <h2 class="fw-bold mt-2 mb-0">
-                                {{ total_professores }}
-                            </h2>
-
-                        </div>
-
-                        <div class="icon-circle bg-primary-subtle text-primary">
-
-                            <i class="bi bi-people-fill"></i>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ===================================== -->
-    <!-- MENSAGENS -->
-    <!-- ===================================== -->
-
-    {% if messages %}
-        {% for message in messages %}
-
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3">
-
-                {{ message }}
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert">
-                </button>
-
-            </div>
-
-        {% endfor %}
-    {% endif %}
-
-    <!-- ===================================== -->
-    <!-- LISTA -->
-    <!-- ===================================== -->
-
-    <div class="card border-0 shadow-sm rounded-4">
-
-        <div class="card-header bg-white border-0 pt-4 pb-0">
-
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-
-                <div>
-
-                    <h5 class="fw-bold mb-1">
-                        Lista de Professores
-                    </h5>
-
-                    <small class="text-muted">
-                        Professores cadastrados na escola
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="table-responsive">
-
-                <table class="table align-middle table-hover">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Professor</th>
-                            <th>Usuário</th>
-                            <th>Turmas</th>
-                            <th>Disciplinas</th>
-                            <th>Estado</th>
-
-                            {% if request.user.role == "DIRETOR" %}
-                            <th class="text-center">Ações</th>
-                            {% endif %}
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for professor in professores %}
-
-                        <tr>
-
-                            <!-- PROFESSOR -->
-
-                            <td>
-
-                                <div class="d-flex align-items-center gap-3">
-
-                                    <div class="avatar-circle">
-
-                                        {{ professor.first_name|slice:":1"|upper }}
-
-                                    </div>
-
-                                    <div>
-
-                                        <div class="fw-semibold">
-
-                                            {{ professor.get_full_name|default:professor.username }}
-
-                                        </div>
-
-                                        <small class="text-muted">
-
-                                            {{ professor.escola.nome }}
-
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-                            <!-- USERNAME -->
-
-                            <td>
-
-                                <span class="badge bg-light text-dark border px-3 py-2">
-
-                                    {{ professor.username }}
-
-                                </span>
-
-                            </td>
-
-                            <!-- TURMAS -->
-
-                            <td>
-
-                                {% if professor.disciplinas.all %}
-
-                                    <div class="d-flex flex-wrap gap-2">
-
-                                        {% for disciplina in professor.disciplinas.all %}
-
-                                            {% if disciplina.turma %}
-
-                                            <span class="badge turma-badge">
-
-                                                {{ disciplina.turma.classe }}ª
-                                                {{ disciplina.turma.identificador }}
-
-                                                {% if disciplina.turma.curso %}
-                                                    - {{ disciplina.turma.curso.nome }}
-                                                {% endif %}
-
-                                            </span>
-
-                                            {% endif %}
-
-                                        {% endfor %}
-
-                                    </div>
-
-                                {% else %}
-
-                                    <span class="text-muted">
-                                        Sem turmas
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                            <!-- DISCIPLINAS -->
-
-                            <td>
-
-                                {% if professor.disciplinas.all %}
-
-                                    <div class="d-flex flex-wrap gap-2">
-
-                                        {% for disciplina in professor.disciplinas.all %}
-
-                                            <span class="badge disciplina-badge">
-
-                                                {{ disciplina.nome }}
-
-                                            </span>
-
-                                        {% endfor %}
-
-                                    </div>
-
-                                {% else %}
-
-                                    <span class="text-muted">
-                                        Nenhuma disciplina
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                            <!-- ESTADO -->
-
-                            <td>
-
-                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
-
-                                    Ativo
-
-                                </span>
-
-                            </td>
-
-                            <!-- AÇÕES -->
-
-                            {% if request.user.role == "DIRETOR" %}
-
-                            <td class="text-center">
-
-                                <div class="d-flex justify-content-center gap-2">
-
-                                    <!-- BOTÃO EDITAR -->
-
-                                    <a href="#"
-                                       class="btn btn-sm btn-outline-primary rounded-3">
-
-                                        <i class="bi bi-pencil-square"></i>
-
-                                    </a>
-
-                                    <!-- BOTÃO ELIMINAR -->
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger rounded-3"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal{{ professor.id }}">
-
-                                        <i class="bi bi-trash"></i>
-
-                                    </button>
-
-                                </div>
-
-                                <!-- MODAL -->
-
-                                <div class="modal fade"
-                                     id="deleteModal{{ professor.id }}"
-                                     tabindex="-1">
-
-                                    <div class="modal-dialog modal-dialog-centered">
-
-                                        <div class="modal-content border-0 shadow">
-
-                                            <div class="modal-header bg-danger text-white border-0">
-
-                                                <h5 class="modal-title">
-
-                                                    Confirmar Eliminação
-
-                                                </h5>
-
-                                                <button type="button"
-                                                        class="btn-close btn-close-white"
-                                                        data-bs-dismiss="modal">
-                                                </button>
-
-                                            </div>
-
-                                            <div class="modal-body py-4">
-
-                                                <div class="text-center">
-
-                                                    <div class="delete-icon mb-3">
-
-                                                        <i class="bi bi-exclamation-triangle-fill"></i>
-
-                                                    </div>
-
-                                                    <h5 class="fw-bold">
-
-                                                        {{ professor.get_full_name|default:professor.username }}
-
-                                                    </h5>
-
-                                                    <p class="text-muted mb-0">
-
-                                                        Deseja realmente eliminar este professor?
-
-                                                    </p>
-
-                                                </div>
-
-                                            </div>
-
-                                            <div class="modal-footer border-0">
-
-                                                <button type="button"
-                                                        class="btn btn-light"
-                                                        data-bs-dismiss="modal">
-
-                                                    Cancelar
-
-                                                </button>
-
-                                                <form method="POST"
-                                                      action="{% url 'eliminar_professor' professor.id %}">
-
-                                                    {% csrf_token %}
-
-                                                    <button type="submit"
-                                                            class="btn btn-danger">
-
-                                                        Eliminar
-
-                                                    </button>
-
-                                                </form>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-                            {% endif %}
-
-                        </tr>
-
-                        {% empty %}
-
-                        <tr>
-
-                            <td colspan="6">
-
-                                <div class="text-center py-5">
-
-                                    <i class="bi bi-people display-4 text-muted"></i>
-
-                                    <h5 class="mt-3">
-                                        Nenhum professor cadastrado
-                                    </h5>
-
-                                    <p class="text-muted">
-                                        Ainda não existem professores registrados.
-                                    </p>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 <style>
 
-.avatar-circle{
-width:48px;
-height:48px;
-border-radius:50%;
-background:linear-gradient(135deg,#0d6efd,#198754);
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-font-size:18px;
+
+.page-title{
+
+    font-weight:700;
+    letter-spacing:-0.5px;
+
 }
 
-.icon-circle{
-width:60px;
-height:60px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
+
+
+.card-premium{
+
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+
 }
 
-.turma-badge{
-background:#eef4ff;
-color:#0d6efd;
-border:1px solid #d8e6ff;
-padding:8px 12px;
-font-weight:500;
-border-radius:10px;
+
+
+.stat-card{
+
+    border:none;
+    border-radius:20px;
+    transition:.25s ease;
+
 }
 
-.disciplina-badge{
-background:#edfdf3;
-color:#198754;
-border:1px solid #c7f0d8;
-padding:8px 12px;
-font-weight:500;
-border-radius:10px;
+
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
 }
 
-.delete-icon{
-width:80px;
-height:80px;
-margin:auto;
-border-radius:50%;
-background:#fff3f3;
-color:#dc3545;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:32px;
+
+
+.stat-label{
+
+    color:#6c757d;
+    font-size:14px;
+
 }
+
+
+
+.stat-value{
+
+    font-size:34px;
+    font-weight:700;
+
+}
+
+
+
+.avatar-professor{
+
+    width:52px;
+    height:52px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #198754
+    );
+
+    color:white;
+
+    font-size:20px;
+    font-weight:700;
+
+}
+
+
 
 .table thead th{
-background:#f8f9fa;
-border:none;
-font-size:14px;
-font-weight:700;
-color:#495057;
-padding:16px;
+
+    background:#f8f9fa;
+
+    border:none;
+
+    padding:16px;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.4px;
+
+    color:#495057;
+
 }
+
+
 
 .table tbody td{
-padding:18px 16px;
-vertical-align:middle;
+
+    padding:18px 16px;
+
+    vertical-align:middle;
+
 }
+
+
 
 .table tbody tr{
-border-bottom:1px solid #f1f3f5;
+
+    transition:.2s;
+
 }
+
+
 
 .table tbody tr:hover{
-background:#fafcff;
+
+    background:#f8fbff;
+
 }
 
-.card{
-overflow:hidden;
+
+
+.badge-custom{
+
+    padding:8px 12px;
+
+    border-radius:10px;
+
+    font-weight:500;
+
 }
+
+
+
+.tag-turma{
+
+    background:#edf4ff;
+
+    color:#0d6efd;
+
+    border:1px solid #d8e7ff;
+
+}
+
+
+
+.tag-disciplina{
+
+    background:#ecfff3;
+
+    color:#198754;
+
+    border:1px solid #c8efd7;
+
+}
+
+
+
+.action-btn{
+
+    width:38px;
+
+    height:38px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:10px;
+
+}
+
+
+
+.empty-state{
+
+    padding:60px 20px;
+
+    text-align:center;
+
+}
+
+
+
+.empty-title{
+
+    font-weight:700;
+
+    margin-top:15px;
+
+}
+
+
 
 </style>
+
+
+
+
+
+<div class="container-fluid">
+
+
+
+
+
+<!-- CABEÇALHO -->
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+
+    <div>
+
+
+        <h2 class="page-title mb-1">
+
+            Gestão de Professores
+
+        </h2>
+
+
+        <p class="text-muted mb-0">
+
+            Administração completa do corpo docente da instituição
+
+        </p>
+
+
+    </div>
+
+
+
+
+
+    {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+
+
+    <a href="{% url 'adicionar_professor' %}"
+
+       class="btn btn-primary rounded-3 px-4 shadow-sm">
+
+
+        Novo Professor
+
+
+    </a>
+
+
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- INDICADORES -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body p-4">
+
+
+                <span class="stat-label">
+
+                    Total de Professores
+
+                </span>
+
+
+                <div class="stat-value text-primary mt-2">
+
+
+                    {{ total_professores }}
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Docentes registados
+
+                </small>
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body p-4">
+
+
+                <span class="stat-label">
+
+                    Estado
+
+                </span>
+
+
+                <div class="stat-value text-success mt-2">
+
+                    Ativo
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Professores disponíveis
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="col-xl-3 col-md-6">
+
+
+        <div class="card stat-card shadow-sm">
+
+
+            <div class="card-body p-4">
+
+
+                <span class="stat-label">
+
+                    Escola
+
+                </span>
+
+
+                <div class="fw-bold fs-5 mt-3">
+
+
+                    {{ request.user.escola.nome }}
+
+
+                </div>
+
+
+                <small class="text-muted">
+
+                    Unidade escolar
+
+                </small>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+</div>
+<!-- MENSAGENS DO SISTEMA -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3 mb-4">
+
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+
+
+
+
+<!-- LISTAGEM DE PROFESSORES -->
+
+
+<div class="card card-premium shadow-sm">
+
+
+
+    <!-- CABEÇALHO CARD -->
+
+
+    <div class="card-header bg-white border-0 p-4">
+
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+
+            <div>
+
+
+                <h5 class="fw-bold mb-1">
+
+                    Lista de Professores
+
+                </h5>
+
+
+
+                <small class="text-muted">
+
+                    Professores cadastrados e respetivas atribuições académicas
+
+                </small>
+
+
+            </div>
+
+
+
+
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+
+
+                {{ total_professores }} docentes
+
+
+            </span>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+    <div class="card-body p-0">
+
+
+
+        <div class="table-responsive">
+
+
+
+            <table class="table table-hover align-middle mb-0">
+
+
+
+                <thead>
+
+
+
+                    <tr>
+
+
+                        <th>
+                            Professor
+                        </th>
+
+
+                        <th>
+                            Utilizador
+                        </th>
+
+
+                        <th>
+                            Turmas
+                        </th>
+
+
+                        <th>
+                            Disciplinas
+                        </th>
+
+
+                        <th>
+                            Estado
+                        </th>
+
+
+
+                        {% if request.user.role == "DIRETOR" %}
+
+                        <th class="text-center">
+
+                            Ações
+
+                        </th>
+
+                        {% endif %}
+
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+
+
+
+
+                <tbody>
+
+
+
+
+                {% for professor in professores %}
+
+
+
+
+
+                <tr>
+
+
+
+
+
+                    <!-- PROFESSOR -->
+
+
+                    <td>
+
+
+
+                        <div class="d-flex align-items-center gap-3">
+
+
+
+                            <div class="avatar-professor">
+
+
+                                {{ professor.first_name|slice:":1"|upper }}
+
+
+                            </div>
+
+
+
+
+
+                            <div>
+
+
+
+                                <div class="fw-semibold">
+
+
+                                    {{ professor.get_full_name|default:professor.username }}
+
+
+                                </div>
+
+
+
+
+                                <small class="text-muted">
+
+
+                                    {{ professor.escola.nome }}
+
+
+                                </small>
+
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+                    </td>
+
+
+
+
+
+
+
+
+                    <!-- UTILIZADOR -->
+
+
+                    <td>
+
+
+
+                        <span class="badge bg-light text-dark border badge-custom">
+
+
+                            {{ professor.username }}
+
+
+
+                        </span>
+
+
+
+                    </td>
+
+
+
+
+
+
+
+
+
+                    <!-- TURMAS -->
+
+
+                    <td>
+
+
+
+                        {% if professor.disciplinas.all %}
+
+
+
+                            <div class="d-flex flex-wrap gap-2">
+
+
+
+                                {% for disciplina in professor.disciplinas.all %}
+
+
+
+
+                                    {% if disciplina.turma %}
+
+
+
+                                    <span class="badge badge-custom tag-turma">
+
+
+                                        {{ disciplina.turma.classe }}ª
+
+                                        {{ disciplina.turma.identificador }}
+
+
+
+
+                                        {% if disciplina.turma.curso %}
+
+
+                                            -
+
+                                            {{ disciplina.turma.curso.nome }}
+
+
+                                        {% endif %}
+
+
+
+                                    </span>
+
+
+
+
+                                    {% endif %}
+
+
+
+
+
+                                {% endfor %}
+
+
+
+                            </div>
+
+
+
+
+                        {% else %}
+
+
+
+
+                            <span class="text-muted">
+
+
+                                Sem turmas atribuídas
+
+
+                            </span>
+
+
+
+                        {% endif %}
+
+
+
+                    </td>
+
+
+
+
+
+
+
+
+
+                    <!-- DISCIPLINAS -->
+
+
+                    <td>
+
+
+
+
+                        {% if professor.disciplinas.all %}
+
+
+
+
+                            <div class="d-flex flex-wrap gap-2">
+
+
+
+                                {% for disciplina in professor.disciplinas.all %}
+
+
+
+
+
+                                <span class="badge badge-custom tag-disciplina">
+
+
+                                    {{ disciplina.nome }}
+
+
+
+                                </span>
+
+
+
+
+
+                                {% endfor %}
+
+
+
+                            </div>
+
+
+
+
+                        {% else %}
+
+
+
+
+                            <span class="text-muted">
+
+
+                                Nenhuma disciplina
+
+
+                            </span>
+
+
+
+
+                        {% endif %}
+
+
+
+
+
+                    </td>
+
+
+                                    <!-- ESTADO -->
+
+
+                    <td>
+
+
+                        <span class="badge bg-success-subtle text-success border border-success-subtle badge-custom">
+
+
+                            Ativo
+
+
+                        </span>
+
+
+                    </td>
+
+
+
+
+
+
+
+
+
+                    <!-- AÇÕES -->
+
+
+                    {% if request.user.role == "DIRETOR" %}
+
+
+
+                    <td class="text-center">
+
+
+
+                        <div class="d-flex justify-content-center gap-2">
+
+
+
+
+
+                            <a href="#"
+
+                               class="btn btn-outline-primary action-btn"
+
+                               title="Editar professor">
+
+
+                                Editar
+
+
+                            </a>
+
+
+
+
+
+
+
+                            <button
+
+                                type="button"
+
+                                class="btn btn-outline-danger action-btn"
+
+                                data-bs-toggle="modal"
+
+                                data-bs-target="#modalEliminar{{ professor.id }}"
+
+                                title="Eliminar professor">
+
+
+                                Excluir
+
+
+                            </button>
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+                        <!-- MODAL ELIMINAR -->
+
+
+                        <div class="modal fade"
+
+                             id="modalEliminar{{ professor.id }}"
+
+                             tabindex="-1">
+
+
+
+
+
+                            <div class="modal-dialog modal-dialog-centered">
+
+
+
+
+
+                                <div class="modal-content border-0 shadow-lg rounded-4">
+
+
+
+
+
+                                    <div class="modal-header bg-danger text-white border-0">
+
+
+
+                                        <h5 class="modal-title fw-bold">
+
+
+                                            Confirmar eliminação
+
+
+                                        </h5>
+
+
+
+
+
+                                        <button
+
+                                            type="button"
+
+                                            class="btn-close btn-close-white"
+
+                                            data-bs-dismiss="modal">
+
+
+                                        </button>
+
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+                                    <div class="modal-body text-center py-4">
+
+
+
+
+
+                                        <div class="mb-4">
+
+
+
+                                            <div class="rounded-circle bg-danger bg-opacity-10 text-danger mx-auto d-flex align-items-center justify-content-center"
+
+                                                 style="width:80px;height:80px;font-size:28px;">
+
+
+
+                                                !
+
+
+
+                                            </div>
+
+
+
+                                        </div>
+
+
+
+
+
+
+
+
+                                        <h5 class="fw-bold">
+
+
+
+                                            {{ professor.get_full_name|default:professor.username }}
+
+
+
+                                        </h5>
+
+
+
+
+
+
+
+                                        <p class="text-muted mb-0">
+
+
+
+                                            Deseja realmente remover este professor do sistema?
+
+
+
+                                        </p>
+
+
+
+
+
+                                    </div>
+
+
+
+
+
+
+
+
+
+                                    <div class="modal-footer border-0 justify-content-center">
+
+
+
+
+
+                                        <button
+
+                                            type="button"
+
+                                            class="btn btn-light px-4"
+
+                                            data-bs-dismiss="modal">
+
+
+                                            Cancelar
+
+
+                                        </button>
+
+
+
+
+
+
+
+
+
+                                        <form method="POST"
+
+                                              action="{% url 'eliminar_professor' professor.id %}">
+
+
+                                            {% csrf_token %}
+
+
+
+
+
+                                            <button
+
+                                                type="submit"
+
+                                                class="btn btn-danger px-4">
+
+
+                                                Confirmar eliminação
+
+
+                                            </button>
+
+
+
+
+                                        </form>
+
+
+
+
+
+
+                                    </div>
+
+
+
+
+
+                                </div>
+
+
+
+
+
+                            </div>
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+                    </td>
+
+
+
+
+                    {% endif %}
+
+
+
+
+
+                </tr>
+
+
+
+
+
+                {% empty %}
+
+
+
+
+
+                <tr>
+
+
+
+                    <td colspan="6">
+
+
+
+
+
+                        <div class="empty-state">
+
+
+
+
+
+                            <h5 class="empty-title">
+
+
+                                Nenhum professor encontrado
+
+
+                            </h5>
+
+
+
+
+
+
+
+                            <p class="text-muted mb-0">
+
+
+                                Ainda não existem professores cadastrados nesta escola.
+
+
+                            </p>
+
+
+
+
+
+                        </div>
+
+
+
+
+                    </td>
+
+
+
+
+                </tr>
+
+
+
+
+
+                {% endfor %}
+
+
+
+
+
+                </tbody>
+
+
+
+
+
+            </table>
+
+
+
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+</div>
+</div>
+
+
+<style>
+
+
+/* =====================================
+   RESPONSIVIDADE MOBILE
+===================================== */
+
+
+@media(max-width:768px){
+
+
+    .page-title{
+
+        font-size:22px;
+
+    }
+
+
+
+    .stat-value{
+
+        font-size:28px;
+
+    }
+
+
+
+    .table{
+
+        min-width:900px;
+
+    }
+
+
+
+}
+
+
+
+
+
+/* =====================================
+   MELHORIAS VISUAIS
+===================================== */
+
+
+.btn{
+
+    transition:.2s ease;
+
+}
+
+
+
+.btn:hover{
+
+    transform:translateY(-1px);
+
+}
+
+
+
+.card{
+
+    background:#ffffff;
+
+}
+
+
+
+.badge{
+
+    font-size:12px;
+
+}
+
+
+
+.modal-content{
+
+    overflow:hidden;
+
+}
+
+
+
+
+
+</style>
+
+
+
+
 
 {% endblock %}
