@@ -442,7 +442,6 @@ class AnoLetivo(models.Model):
 # ==========================================================
 # TURMA
 # ==========================================================
-
 class Turma(models.Model):
 
     CLASSE_CHOICES = [
@@ -462,17 +461,20 @@ class Turma(models.Model):
         ('13', '13ª Classe'),
     ]
 
+
     TURNOS = [
         ('MANHA', 'Manhã'),
         ('TARDE', 'Tarde'),
         ('NOITE', 'Noite'),
     ]
 
+
     classe = models.CharField(
         max_length=10,
         choices=CLASSE_CHOICES,
         verbose_name="Classe"
     )
+
 
     curso = models.ForeignKey(
         'Curso',
@@ -483,10 +485,20 @@ class Turma(models.Model):
         verbose_name="Curso"
     )
 
+
     identificador = models.CharField(
         max_length=5,
-        verbose_name="Identificador"
+        verbose_name="Identificador da Turma"
     )
+
+
+    sala = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        verbose_name="Sala"
+    )
+
 
     turno = models.CharField(
         max_length=10,
@@ -495,12 +507,14 @@ class Turma(models.Model):
         verbose_name='Turno'
     )
 
+
     ano_letivo = models.ForeignKey(
         'AnoLetivo',
         on_delete=models.CASCADE,
         related_name="turmas",
         verbose_name="Ano Letivo"
     )
+
 
     escola = models.ForeignKey(
         'Escola',
@@ -509,6 +523,7 @@ class Turma(models.Model):
         verbose_name="Escola"
     )
 
+
     professor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -516,38 +531,71 @@ class Turma(models.Model):
         limit_choices_to={"role": "PROFESSOR"},
         null=True,
         blank=True,
-        verbose_name="Professor"
+        verbose_name="Professor Responsável"
     )
+
 
     criada_em = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Data de Criação"
     )
 
+
     class Meta:
+
         constraints = [
             models.UniqueConstraint(
-                fields=['classe', 'identificador', 'turno', 'ano_letivo', 'escola', 'curso'],
+                fields=[
+                    'classe',
+                    'identificador',
+                    'turno',
+                    'ano_letivo',
+                    'escola',
+                    'curso'
+                ],
                 name='unique_turma_por_curso'
             )
         ]
+
         verbose_name = "Turma"
         verbose_name_plural = "Turmas"
 
+
     def nome_completo(self):
-        return f"{self.get_classe_display()} {self.identificador} - {self.get_turno_display()} - {self.ano_letivo}"
+
+        nome = (
+            f"{self.get_classe_display()} "
+            f"{self.identificador}"
+        )
+
+        if self.sala:
+            nome += f" - Sala {self.sala}"
+
+        nome += (
+            f" - {self.get_turno_display()}"
+            f" - {self.ano_letivo}"
+        )
+
+        return nome
+
 
     def __str__(self):
+
         return self.nome_completo()
+
 
     @staticmethod
     def ordenar_queryset(queryset):
-        """
-        Ordenação numérica correta da classe.
-        """
+
         return queryset.annotate(
-            classe_int=Cast('classe', IntegerField())
-        ).order_by('classe_int', 'identificador')
+            classe_int=Cast(
+                'classe',
+                IntegerField()
+            )
+        ).order_by(
+            'classe_int',
+            'identificador'
+        )
 
 
 

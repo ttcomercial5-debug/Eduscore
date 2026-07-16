@@ -1,317 +1,793 @@
 {% extends "base_professor.html" %}
+
 {% block content %}
+
+
 
 <style>
 
+
 :root{
+
     --primary:#1e3a8a;
-    --primary-light:#3b82f6;
+    --primary-light:#2563eb;
     --dark:#0f172a;
     --gray:#64748b;
     --bg:#f8fafc;
+
 }
+
+
+
+body{
+
+    background:var(--bg);
+
+}
+
+
 
 .page-header{
-    background:linear-gradient(135deg,var(--dark),var(--primary));
-    color:#fff;
-    padding:28px;
-    border-radius:20px;
-    margin-bottom:25px;
-    box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a
+    );
+
+    color:white;
+
+    padding:32px;
+
+    border-radius:24px;
+
+    margin-bottom:30px;
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.15);
+
 }
+
+
 
 .page-title{
-    font-size:30px;
+
+    font-size:32px;
+
     font-weight:800;
-    margin-bottom:4px;
+
+    letter-spacing:-.5px;
+
 }
+
+
 
 .page-subtitle{
-    opacity:.85;
-    font-size:14px;
+
+    opacity:.8;
+
+    font-size:15px;
+
 }
+
+
+
+.year-box{
+
+    background:rgba(255,255,255,.12);
+
+    padding:15px 22px;
+
+    border-radius:15px;
+
+    backdrop-filter:blur(10px);
+
+}
+
+
+
+
 
 .summary-card{
-    background:#fff;
+
+    background:white;
+
     border:none;
-    border-radius:18px;
-    padding:20px;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    margin-bottom:25px;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
 }
+
+
 
 .summary-number{
-    font-size:34px;
+
+    font-size:38px;
+
     font-weight:800;
+
     color:var(--primary);
+
 }
+
+
 
 .summary-label{
+
     color:var(--gray);
-    font-size:14px;
+
 }
+
+
+
+
 
 .turma-card{
+
     border:none;
-    border-radius:20px;
+
+    border-radius:22px;
+
     overflow:hidden;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-    transition:.25s;
-    height:100%;
+
     background:white;
+
+    height:100%;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s ease;
+
 }
+
+
 
 .turma-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
+
+    transform:translateY(-8px);
+
+    box-shadow:
+    0 18px 40px rgba(0,0,0,.15);
+
 }
+
+
+
+
 
 .turma-banner{
-    background:linear-gradient(
+
+    background:
+
+    linear-gradient(
         135deg,
-        var(--primary-light),
-        var(--primary)
+        #2563eb,
+        #1e3a8a
     );
+
     color:white;
-    padding:22px;
+
+    padding:25px;
+
+    position:relative;
+
 }
+
+
 
 .turma-banner small{
-    opacity:.9;
-    font-size:13px;
+
+    opacity:.85;
+
+    font-size:14px;
+
 }
+
+
 
 .turma-banner h3{
-    margin:5px 0 0;
-    font-size:28px;
-    font-weight:800;
+
+    font-size:34px;
+
+    font-weight:900;
+
+    margin:8px 0 0;
+
 }
+
+
+
+
 
 .turma-content{
-    padding:20px;
+
+    padding:22px;
+
 }
+
+
+
+
 
 .info-item{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
-    padding:10px 0;
-    border-bottom:1px solid #eef2f7;
+
+    padding:13px 0;
+
+    border-bottom:
+
+    1px solid #edf2f7;
+
 }
+
+
 
 .info-item:last-child{
+
     border-bottom:none;
+
 }
+
+
 
 .info-label{
+
     color:var(--gray);
+
     font-size:14px;
+
 }
+
+
 
 .info-value{
+
     font-weight:700;
+
     color:var(--dark);
+
 }
 
-.course-badge{
+
+
+
+
+.badge-course{
+
     background:#dbeafe;
+
     color:#1d4ed8;
-    padding:6px 12px;
+
+    padding:7px 14px;
+
     border-radius:999px;
+
     font-size:12px;
+
     font-weight:700;
+
 }
+
+
+
+.badge-sala{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+
+
+
 
 .btn-turma{
-    border-radius:12px;
+
+    border-radius:14px;
+
+    padding:12px;
+
     font-weight:700;
-    padding:10px;
+
 }
+
+
+
+
 
 .empty-state{
+
     background:white;
-    border-radius:20px;
+
+    border-radius:22px;
+
     padding:70px 20px;
+
     text-align:center;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
 }
+
+
 
 .empty-state h4{
+
     font-weight:800;
+
 }
 
+
+
 </style>
+
+
+
+
+
+
+
 
 <div class="container-fluid py-4">
 
 
+
+
+
+
+
 <!-- HEADER -->
 
-<div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+<div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-    <div>
 
-        <div class="page-title">
-            Minhas Turmas
-        </div>
 
-        <div class="page-subtitle">
-            Gestão das turmas atribuídas ao professor
-        </div>
+<div>
 
-    </div>
 
-    <div class="text-end">
+<div class="page-title">
 
-        <small>Ano Letivo</small>
-
-        <h5 class="mb-0 mt-1">
-            {{ ano_letivo }}
-        </h5>
-
-    </div>
+Minhas Turmas
 
 </div>
+
+
+
+<div class="page-subtitle">
+
+Gestão académica das turmas atribuídas ao professor
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="year-box text-end">
+
+
+<small>
+
+Ano Letivo
+
+</small>
+
+
+<h5 class="mb-0 mt-1 fw-bold">
+
+{{ ano_letivo }}
+
+</h5>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
 
 <!-- RESUMO -->
 
-<div class="row mb-3">
 
-    <div class="col-md-4">
+<div class="row mb-4">
 
-        <div class="summary-card">
 
-            <div class="summary-number">
-                {{ total_turmas }}
-            </div>
+<div class="col-xl-3 col-md-6">
 
-            <div class="summary-label">
-                Turmas Atribuídas
-            </div>
 
-        </div>
+<div class="summary-card">
 
-    </div>
+
+<div class="summary-number">
+
+{{ total_turmas }}
 
 </div>
 
-<!-- LISTA -->
+
+<div class="summary-label">
+
+Turmas atribuídas
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
 
 {% if turmas %}
 
+
+
 <div class="row">
 
-    {% for turma in turmas %}
 
-    <div class="col-lg-4 col-md-6 mb-4">
 
-        <div class="card turma-card">
-
-            <div class="turma-banner">
-
-                <small>
-                    {{ turma.get_classe_display }}
-                </small>
-
-                <h3>
-                    {{ turma.identificador }}
-                </h3>
-
-            </div>
-
-            <div class="turma-content">
-
-                <div class="info-item">
-
-                    <span class="info-label">
-                        Classe
-                    </span>
-
-                    <span class="info-value">
-                        {{ turma.get_classe_display }}
-                    </span>
-
-                </div>
-
-                <div class="info-item">
-
-                    <span class="info-label">
-                        Turno
-                    </span>
-
-                    <span class="info-value">
-                        {{ turma.get_turno_display }}
-                    </span>
-
-                </div>
-
-                <div class="info-item">
-
-                    <span class="info-label">
-                        Ano Letivo
-                    </span>
-
-                    <span class="info-value">
-                        {{ turma.ano_letivo }}
-                    </span>
-
-                </div>
-
-                {% if turma.classe == "10" or turma.classe == "11" or turma.classe == "12" or turma.classe == "13" %}
-
-                <div class="info-item">
-
-                    <span class="info-label">
-                        Curso
-                    </span>
-
-                    <span class="course-badge">
-                        {{ turma.curso|default:"Não definido" }}
-                    </span>
-
-                </div>
-
-                {% endif %}
-
-                <div class="d-grid mt-4">
+{% for turma in turmas %}
 
 
 
-                    <a href="{% url 'alunos_da_turma' turma.id %}"
-                       class="btn btn-primary btn-turma">
-                        <i class="fas fa-users me-2"></i>
-                        Ver Alunos
-                    </a>
+<div class="col-xl-4 col-lg-6 mb-4">
 
-                </div>
 
-            </div>
 
-        </div>
+<div class="turma-card">
 
-    </div>
 
-    {% endfor %}
+
+
+
+<div class="turma-banner">
+
+
+
+<small>
+
+{{ turma.get_classe_display }}
+
+</small>
+
+
+
+<h3>
+
+Turma {{ turma.identificador }}
+
+</h3>
+
+
 
 </div>
+
+
+
+
+
+
+
+
+
+<div class="turma-content">
+
+
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+Classe
+
+</span>
+
+
+<span class="info-value">
+
+{{ turma.get_classe_display }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- SALA -->
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+Sala
+
+</span>
+
+
+
+{% if turma.sala %}
+
+
+<span class="badge-sala">
+
+Sala {{ turma.sala }}
+
+</span>
+
 
 {% else %}
 
-<div class="empty-state">
 
-    <h4>
-        Nenhuma turma encontrada
-    </h4>
+<span class="text-muted">
 
-    <p class="text-muted mb-0">
-        Não existem turmas atribuídas ao professor neste ano letivo.
-    </p>
+Não definida
 
-</div>
+</span>
+
 
 {% endif %}
 
 
+
 </div>
+
+
+
+
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+Turno
+
+</span>
+
+
+<span class="info-value">
+
+{{ turma.get_turno_display }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+Ano Letivo
+
+</span>
+
+
+<span class="info-value">
+
+{{ turma.ano_letivo }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{% if turma.curso %}
+
+
+
+<div class="info-item">
+
+
+<span class="info-label">
+
+Curso
+
+</span>
+
+
+
+<span class="badge-course">
+
+{{ turma.curso.nome }}
+
+</span>
+
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+<div class="d-grid mt-4">
+
+
+<a href="{% url 'alunos_da_turma' turma.id %}"
+
+class="btn btn-primary btn-turma">
+
+
+<i class="fas fa-users me-2"></i>
+
+
+Ver Alunos
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+
+
+<div class="empty-state">
+
+
+<h4>
+
+Nenhuma turma encontrada
+
+</h4>
+
+
+
+<p class="text-muted mb-0">
+
+Não existem turmas atribuídas ao professor neste ano letivo.
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
 
 {% endblock %}

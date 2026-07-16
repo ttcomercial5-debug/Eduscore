@@ -2,251 +2,986 @@
 
 {% block content %}
 
+
 <style>
-.page-header{
-    background:linear-gradient(135deg,#0f172a,#1e3a8a);
-    color:#fff;
-    border-radius:18px;
-    padding:24px;
-    margin-bottom:24px;
+
+:root{
+
+    --primary:#1d4ed8;
+    --dark:#0f172a;
+    --gray:#64748b;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
 }
+
+
+body{
+
+    background:var(--light);
+
+}
+
+
+/* ==========================
+   HEADER
+========================== */
+
+
+.page-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e40af
+    );
+
+    color:white;
+
+    border-radius:22px;
+
+    padding:26px 30px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+    0 12px 35px rgba(15,23,42,.18);
+
+}
+
+
+.page-title{
+
+    font-size:30px;
+
+    font-weight:800;
+
+    letter-spacing:-.5px;
+
+}
+
+
+.page-subtitle{
+
+    color:rgba(255,255,255,.75);
+
+    font-size:14px;
+
+}
+
+
+
+/* ==========================
+   INFORMAÇÕES
+========================== */
+
 
 .info-card{
-    background:#fff;
-    border-radius:16px;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    padding:18px;
-    margin-bottom:20px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+    0 8px 25px rgba(15,23,42,.08);
+
 }
 
-.table-card{
-    background:#fff;
-    border-radius:16px;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    overflow:hidden;
+
+
+.info-item{
+
+    padding:14px;
+
+    border-right:1px solid var(--border);
+
 }
 
-.presenca-check{
-    transform:scale(1.3);
-    cursor:pointer;
+
+
+.info-item:last-child{
+
+    border-right:none;
+
 }
 
-.justificada-check{
-    transform:scale(1.2);
-    cursor:pointer;
+
+
+.info-label{
+
+    color:var(--gray);
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+
 }
 
-.observacao-input{
-    border-radius:10px;
-    border:1px solid #ddd;
-    padding:6px 10px;
-    width:100%;
+
+
+.info-value{
+
+    font-size:16px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    margin-top:4px;
+
 }
 
-.footer-actions{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:10px;
-    padding-top:20px;
+
+
+.badge-custom{
+
+    display:inline-block;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
 }
+
+
+
+.badge-sala{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+
+
+.badge-curso{
+
+    background:#dbeafe;
+
+    color:#1e40af;
+
+}
+
+
+
+.badge-turno{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+
+
+
+/* ==========================
+   ALERTA
+========================== */
+
 
 .weekend-alert{
-    background:#fff3cd;
-    color:#856404;
-    border:1px solid #ffeeba;
-    border-radius:12px;
-    padding:14px;
+
+    background:#fff7ed;
+
+    color:#9a3412;
+
+    border:
+
+    1px solid #fed7aa;
+
+    border-radius:14px;
+
+    padding:15px;
+
     margin-bottom:20px;
+
 }
+
+
+
+
+/* ==========================
+   TABELA
+========================== */
+
+
+.table-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 8px 25px rgba(15,23,42,.08);
+
+}
+
+
+
+.table-header{
+
+    padding:20px 25px;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+.table-title{
+
+    font-size:18px;
+
+    font-weight:800;
+
+}
+
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    padding:15px;
+
+}
+
+
+
+.table tbody td{
+
+    padding:14px;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+
+/* ==========================
+   INPUTS
+========================== */
+
+
+.presenca-check{
+
+    width:20px;
+
+    height:20px;
+
+    cursor:pointer;
+
+}
+
+
+
+.justificada-check{
+
+    width:18px;
+
+    height:18px;
+
+    cursor:pointer;
+
+}
+
+
+
+.observacao-input{
+
+    border-radius:10px;
+
+    border:1px solid #cbd5e1;
+
+    padding:8px 12px;
+
+    width:100%;
+
+    font-size:14px;
+
+}
+
+
+
+
+/* ==========================
+   BOTÕES
+========================== */
+
+
+.action-area{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    padding-top:22px;
+
+}
+
+
+
+.btn-premium{
+
+    border-radius:12px;
+
+    padding:10px 18px;
+
+    font-weight:700;
+
+}
+
+
+
 </style>
+
+
+
+
 
 <div class="container-fluid py-4">
 
-    <div class="page-header">
-        <h2 class="fw-bold mb-2">Marcação de Frequência</h2>
-        <div>Registe a assiduidade dos alunos de forma rápida e segura.</div>
-    </div>
 
-    {% if hoje.weekday == 5 or hoje.weekday == 6 %}
-    <div class="weekend-alert">
-        <strong>Atenção:</strong> Hoje é fim de semana.
-    </div>
-    {% endif %}
 
-    <div class="info-card">
+<!-- HEADER -->
 
-        <div class="row">
+<div class="page-header">
 
-            <div class="col-md-4">
-                <strong>Turma</strong><br>
-                {{ turma.get_classe_display }} {{ turma.identificador }}
-            </div>
 
-            <div class="col-md-4">
-                <strong>Disciplina</strong><br>
-                {{ disciplina.nome }}
-            </div>
+<div class="page-title">
 
-            <div class="col-md-4">
-                <strong>Data</strong><br>
-                {{ hoje|date:"d/m/Y" }}
-            </div>
-
-        </div>
-
-    </div>
-
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="table-card">
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle mb-0">
-
-                    <thead class="table-dark">
-                        <tr>
-                            <th style="width:60px;">Nº</th>
-                            <th>Aluno</th>
-                            <th class="text-center">Presente</th>
-                            <th class="text-center">Falta Justificada</th>
-                            <th>Observação</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                    {% for aluno in alunos %}
-
-                    <tr>
-
-                        <td>{{ aluno.numero_na_turma }}</td>
-
-                        <td>
-                            <strong>{{ aluno.nome_completo }}</strong>
-                        </td>
-
-                        <!-- PRESENÇA -->
-                        <td class="text-center">
-
-                            <input
-                                type="checkbox"
-                                class="form-check-input presenca-check"
-                                name="presente_{{ aluno.id }}"
-                                id="presente_{{ aluno.id }}"
-                                checked
-                                onchange="toggleJustificacao({{ aluno.id }})"
-                            >
-
-                        </td>
-
-                        <!-- JUSTIFICADA -->
-                        <td class="text-center">
-
-                            <input
-                                type="checkbox"
-                                class="form-check-input justificada-check"
-                                name="justificada_{{ aluno.id }}"
-                                id="justificada_{{ aluno.id }}"
-                                disabled
-                            >
-
-                        </td>
-
-                        <!-- OBSERVAÇÃO -->
-                        <td>
-
-                            <input
-                                type="text"
-                                name="observacao_{{ aluno.id }}"
-                                class="observacao-input"
-                                placeholder="Opcional..."
-                            >
-
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-                        <td colspan="5" class="text-center py-5 text-muted">
-                            Nenhum aluno encontrado.
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <div class="footer-actions">
-
-            <a href="{% url 'alunos_da_turma' turma.id %}"
-               class="btn btn-outline-secondary">
-                ← Voltar
-            </a>
-
-            <div>
-
-                <button type="button"
-                        class="btn btn-outline-primary me-2"
-                        onclick="marcarTodos()">
-                    Marcar Todos
-                </button>
-
-                <button type="button"
-                        class="btn btn-outline-warning me-2"
-                        onclick="desmarcarTodos()">
-                    Desmarcar Todos
-                </button>
-
-                <button type="submit" class="btn btn-success">
-                    Guardar Frequências
-                </button>
-
-            </div>
-
-        </div>
-
-    </form>
+Marcação de Frequência
 
 </div>
 
+
+<div class="page-subtitle">
+
+Registo diário de presença dos alunos
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+{% if hoje.weekday == 5 or hoje.weekday == 6 %}
+
+<div class="weekend-alert">
+
+<strong>Atenção:</strong>
+
+Não é permitido lançar frequências aos sábados e domingos.
+
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+<!-- INFORMAÇÕES DA TURMA -->
+
+
+<div class="info-card">
+
+
+<div class="row g-3">
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="info-item">
+
+
+<div class="info-label">
+
+Turma
+
+</div>
+
+
+<div class="info-value">
+
+{{ turma.get_classe_display }}
+
+{{ turma.identificador }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="info-item">
+
+
+<div class="info-label">
+
+Sala
+
+</div>
+
+
+<div class="info-value">
+
+
+<span class="badge-custom badge-sala">
+
+Sala {{ turma.sala|default:"Não definida" }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="info-item">
+
+
+<div class="info-label">
+
+Disciplina
+
+</div>
+
+
+<div class="info-value">
+
+{{ disciplina.nome }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="info-item">
+
+
+<div class="info-label">
+
+Data
+
+</div>
+
+
+<div class="info-value">
+
+{{ hoje|date:"d/m/Y" }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+{% if turma.curso %}
+
+<hr>
+
+
+<div>
+
+<span class="badge-custom badge-curso">
+
+Curso: {{ turma.curso.nome }}
+
+</span>
+
+
+<span class="badge-custom badge-turno ms-2">
+
+Turno: {{ turma.get_turno_display }}
+
+</span>
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+
+
+<div class="table-card">
+
+
+<div class="table-header">
+
+<div class="table-title">
+
+Lista de Alunos
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+<thead>
+
+
+<tr>
+
+<th>
+
+Nº
+
+</th>
+
+
+<th>
+
+Aluno
+
+</th>
+
+
+<th class="text-center">
+
+Presente
+
+</th>
+
+
+<th class="text-center">
+
+Falta Justificada
+
+</th>
+
+
+<th>
+
+Observação
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+
+{% for aluno in alunos %}
+
+
+<tr>
+
+
+<td>
+
+{{ aluno.numero_na_turma }}
+
+</td>
+
+
+
+<td>
+
+<strong>
+
+{{ aluno.nome_completo }}
+
+</strong>
+
+</td>
+
+
+
+<td class="text-center">
+
+
+<input
+
+type="checkbox"
+
+class="form-check-input presenca-check"
+
+name="presente_{{ aluno.id }}"
+
+id="presente_{{ aluno.id }}"
+
+checked
+
+onchange="toggleJustificacao({{ aluno.id }})"
+
+>
+
+
+</td>
+
+
+
+
+<td class="text-center">
+
+
+<input
+
+type="checkbox"
+
+class="form-check-input justificada-check"
+
+name="justificada_{{ aluno.id }}"
+
+id="justificada_{{ aluno.id }}"
+
+disabled
+
+>
+
+
+</td>
+
+
+
+
+<td>
+
+
+<input
+
+type="text"
+
+name="observacao_{{ aluno.id }}"
+
+class="observacao-input"
+
+placeholder="Observação opcional"
+
+
+>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+<td colspan="5"
+
+class="text-center py-5 text-muted">
+
+Nenhum aluno encontrado.
+
+</td>
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="action-area">
+
+
+
+<a href="{% url 'alunos_da_turma' turma.id %}"
+
+class="btn btn-outline-secondary btn-premium">
+
+Voltar
+
+</a>
+
+
+
+
+
+<div>
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-primary btn-premium me-2"
+
+onclick="marcarTodos()">
+
+Marcar Todos
+
+</button>
+
+
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-warning btn-premium me-2"
+
+onclick="desmarcarTodos()">
+
+Desmarcar Todos
+
+</button>
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-success btn-premium">
+
+Guardar Frequências
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</form>
+
+
+
+
+</div>
+
+
+
+
+
+
 <script>
-function toggleJustificacao(id) {
-    const presente = document.getElementById("presente_" + id);
-    const justificada = document.getElementById("justificada_" + id);
 
-    if (presente.checked) {
-        justificada.checked = false;
-        justificada.disabled = true;
-    } else {
-        justificada.disabled = false;
+
+function toggleJustificacao(id){
+
+
+    const presente =
+    document.getElementById(
+        "presente_" + id
+    );
+
+
+    const justificada =
+    document.getElementById(
+        "justificada_" + id
+    );
+
+
+    if(presente.checked){
+
+        justificada.checked=false;
+
+        justificada.disabled=true;
+
     }
+
+    else{
+
+        justificada.disabled=false;
+
+    }
+
+
 }
 
-function marcarTodos() {
-    document.querySelectorAll(".presenca-check").forEach(el => {
-        el.checked = true;
-        el.dispatchEvent(new Event("change"));
-    });
+
+
+function marcarTodos(){
+
+
+document.querySelectorAll(
+".presenca-check"
+)
+.forEach(
+checkbox=>{
+
+checkbox.checked=true;
+
+checkbox.dispatchEvent(
+new Event("change")
+);
+
+});
+
+
 }
 
-function desmarcarTodos() {
-    document.querySelectorAll(".presenca-check").forEach(el => {
-        el.checked = false;
-        el.dispatchEvent(new Event("change"));
-    });
+
+
+
+
+function desmarcarTodos(){
+
+
+document.querySelectorAll(
+".presenca-check"
+)
+.forEach(
+checkbox=>{
+
+checkbox.checked=false;
+
+checkbox.dispatchEvent(
+new Event("change")
+);
+
+});
+
+
 }
+
+
 </script>
+
 
 {% endblock %}

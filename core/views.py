@@ -1624,92 +1624,221 @@ def lista_turmas(request):
     if not escola:
         return redirect("escolas")
 
+
     user = request.user
+
+
 
     # =====================================================
     # BASE TEMPLATE DINÂMICO
     # =====================================================
+
     if user.role == "DIRETOR_PEDAGOGICO":
+
         base_template = "base_diretor_pedagogico.html"
+
+
     elif user.role == "DIRETOR":
-        base_template = "base.html"
-    elif user.role == "PROFESSOR":
-        base_template = "base_professor.html"
-    else:
+
         base_template = "base.html"
 
-    # =====================================
-    # Filtro por ano letivo
-    # =====================================
-    ano_id = request.GET.get("ano")
+
+    elif user.role == "PROFESSOR":
+
+        base_template = "base_professor.html"
+
+
+    else:
+
+        base_template = "base.html"
+
+
+
+
+    # =====================================================
+    # ANOS LETIVOS
+    # =====================================================
 
     anos_letivos = AnoLetivo.objects.filter(
         escola=escola
     ).order_by("-id")
 
+
+
+    ano_id = request.GET.get(
+        "ano"
+    )
+
+
+
+    # =====================================================
+    # FILTRO POR ANO LETIVO
+    # =====================================================
+
     if ano_id:
 
-        turmas = Turma.objects.filter(
-            escola=escola,
-            ano_letivo_id=ano_id
-        )
 
         ano_selecionado = AnoLetivo.objects.filter(
+
             id=ano_id,
+
             escola=escola
+
         ).first()
+
+
+
+        turmas = Turma.objects.filter(
+
+            escola=escola,
+
+            ano_letivo_id=ano_id
+
+        )
+
+
 
     else:
 
+
+
         ano_selecionado = AnoLetivo.objects.filter(
+
             escola=escola,
+
             ativo=True
+
         ).first()
 
-        turmas = Turma.objects.filter(
-            escola=escola,
-            ano_letivo=ano_selecionado
-        )
 
-    # =====================================
-    # PERMISSÃO POR ROLE
-    # =====================================
+
+        if ano_selecionado:
+
+
+            turmas = Turma.objects.filter(
+
+                escola=escola,
+
+                ano_letivo=ano_selecionado
+
+            )
+
+
+        else:
+
+
+            turmas = Turma.objects.none()
+
+
+
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+
     if user.role == "PROFESSOR":
 
+
         turmas = turmas.filter(
+
             professores__usuario=user
+
         )
 
-    elif user.role not in ["DIRETOR", "DIRETOR_PEDAGOGICO"]:
-        return redirect("dashboard")
 
-    # =====================================
-    # ESTATÍSTICAS
-    # =====================================
+
+    elif user.role not in [
+        "DIRETOR",
+        "DIRETOR_PEDAGOGICO"
+    ]:
+
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+
+
+
+    # =====================================================
+    # CARREGAMENTO OPTIMIZADO
+    # INCLUI SALA AUTOMATICAMENTE
+    # =====================================================
+
+
     turmas = (
+
         turmas
+
         .select_related(
+
             "curso",
-            "ano_letivo"
+
+            "ano_letivo",
+
+            "escola",
+
+            "professor"
+
         )
+
         .annotate(
-            total_alunos=Count("alunos")
+
+            total_alunos=Count(
+                "alunos"
+            )
+
         )
+
         .order_by(
+
             "classe",
-            "identificador"
+
+            "identificador",
+
+            "turno"
+
         )
+
     )
 
-    # =====================================
+
+
+
+
+
+    # =====================================================
     # CONTEXTO
-    # =====================================
-    return render(request, "turmas.html", {
+    # =====================================================
+
+
+    contexto = {
+
         "turmas": turmas,
+
         "anos_letivos": anos_letivos,
+
         "ano_selecionado": ano_selecionado,
+
         "base_template": base_template,
-    })
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "turmas.html",
+
+        contexto
+
+    )
 
 
 
@@ -2038,11 +2167,14 @@ def adicionar_turma(request):
     if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
+
     escola = request.user.escola
+
 
     cursos = Curso.objects.filter(
         escola=escola
     ).order_by("nome")
+
 
     # ==========================================
     # BUSCAR ANO LETIVO ATIVO
@@ -2053,6 +2185,7 @@ def adicionar_turma(request):
         ativo=True
     ).first()
 
+
     if not ano_letivo_obj:
 
         messages.error(
@@ -2062,31 +2195,68 @@ def adicionar_turma(request):
 
         return redirect("dashboard")
 
+
+
     # ==========================================
     # POST
     # ==========================================
 
     if request.method == "POST":
 
-        classe = request.POST.get("classe", "").strip()
-        identificador = request.POST.get("identificador", "").strip()
-        turno = request.POST.get("turno", "").strip()
-        curso_id = request.POST.get("curso")
 
-        if not all([classe, identificador, turno]):
+        classe = request.POST.get(
+            "classe",
+            ""
+        ).strip()
+
+
+        identificador = request.POST.get(
+            "identificador",
+            ""
+        ).strip()
+
+
+        sala = request.POST.get(
+            "sala",
+            ""
+        ).strip()
+
+
+        turno = request.POST.get(
+            "turno",
+            ""
+        ).strip()
+
+
+        curso_id = request.POST.get(
+            "curso"
+        )
+
+
+
+        if not all([
+            classe,
+            identificador,
+            turno
+        ]):
 
             messages.error(
                 request,
                 "Preencha todos os campos obrigatórios."
             )
 
-            return redirect("adicionar_turma")
+            return redirect(
+                "adicionar_turma"
+            )
+
+
 
         # ==========================================
         # CURSO
         # ==========================================
 
         curso_obj = None
+
 
         if curso_id:
 
@@ -2095,18 +2265,29 @@ def adicionar_turma(request):
                 escola=escola
             ).first()
 
+
+
         # ==========================================
         # VERIFICAR DUPLICIDADE
         # ==========================================
 
         existe = Turma.objects.filter(
+
             classe=classe,
+
             identificador=identificador,
+
             turno=turno,
+
             ano_letivo=ano_letivo_obj,
+
             escola=escola,
+
             curso=curso_obj
+
         ).exists()
+
+
 
         if existe:
 
@@ -2115,7 +2296,11 @@ def adicionar_turma(request):
                 "Já existe uma turma com estes dados."
             )
 
-            return redirect("adicionar_turma")
+            return redirect(
+                "adicionar_turma"
+            )
+
+
 
         # ==========================================
         # CRIAR TURMA
@@ -2123,43 +2308,81 @@ def adicionar_turma(request):
 
         try:
 
+
             with transaction.atomic():
 
+
                 Turma.objects.create(
+
                     classe=classe,
+
                     identificador=identificador,
+
+                    sala=sala if sala else None,
+
                     turno=turno,
+
                     ano_letivo=ano_letivo_obj,
+
                     escola=escola,
+
                     curso=curso_obj
+
                 )
+
 
                 messages.success(
+
                     request,
+
                     f"Turma criada no ano letivo {ano_letivo_obj.nome}."
+
                 )
 
-                return redirect("turmas")
+
+                return redirect(
+                    "turmas"
+                )
+
+
 
         except Exception as e:
 
+
             messages.error(
+
                 request,
+
                 f"Erro ao criar turma: {str(e)}"
+
             )
 
-            return redirect("adicionar_turma")
+
+            return redirect(
+                "adicionar_turma"
+            )
+
+
 
     # ==========================================
     # CONTEXT
     # ==========================================
 
-    return render(request, "adicionar_turma.html", {
+    return render(
 
-        "cursos": cursos,
-        "ano_ativo": ano_letivo_obj
+        request,
 
-    })
+        "adicionar_turma.html",
+
+        {
+
+            "cursos": cursos,
+
+            "ano_ativo": ano_letivo_obj
+
+        }
+
+    )
 
 
 
@@ -2917,59 +3140,181 @@ def historico_notas(request):
 # ==========================================================
 # MINHAS TURMAS
 # ==========================================================
-
 @login_required
 def minhas_turmas(request):
 
 
+    # =====================================================
+    # VALIDAR PERFIL
+    # =====================================================
+
     if request.user.role != "PROFESSOR":
-        return redirect("dashboard")
+
+        return redirect(
+            "dashboard"
+        )
+
+
 
     professor = request.user
+
+
     escola = professor.escola
 
+
+
+    if not escola:
+
+
+        return render(
+
+            request,
+
+            "minhas_turmas.html",
+
+            {
+
+                "turmas": [],
+
+                "total_turmas": 0,
+
+                "ano_letivo": None,
+
+            }
+
+        )
+
+
+
+
+
+    # =====================================================
+    # ANO LETIVO ATIVO
+    # =====================================================
+
     ano_letivo = AnoLetivo.objects.filter(
+
         escola=escola,
+
         ativo=True
+
     ).first()
 
+
+
+
+
+
     if not ano_letivo:
+
+
         return render(
+
             request,
+
             "minhas_turmas.html",
+
             {
+
                 "turmas": [],
+
                 "total_turmas": 0,
+
                 "ano_letivo": None,
+
             }
+
         )
+
+
+
+
+
+
+
+
+    # =====================================================
+    # TURMAS DO PROFESSOR
+    # =====================================================
 
     turmas = (
+
         Turma.objects
+
         .filter(
+
             escola=escola,
+
             ano_letivo=ano_letivo,
+
             disciplinas__professor=professor
+
         )
+
+        .select_related(
+
+            "curso",
+
+            "ano_letivo",
+
+            "escola"
+
+        )
+
+        .prefetch_related(
+
+            "alunos"
+
+        )
+
         .distinct()
+
         .order_by(
+
             "classe",
+
             "identificador"
+
         )
+
     )
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
 
     context = {
+
+
         "turmas": turmas,
+
+
         "total_turmas": turmas.count(),
+
+
         "ano_letivo": ano_letivo,
+
+
     }
 
-    return render(
-        request,
-        "minhas_turmas.html",
-        context
-    )
 
+
+
+
+    return render(
+
+        request,
+
+        "minhas_turmas.html",
+
+        context
+
+    )
 
 
 from django.contrib.auth.decorators import login_required
@@ -2978,61 +3323,212 @@ from django.shortcuts import get_object_or_404, redirect, render
 @login_required
 def alunos_da_turma(request, turma_id):
 
+
+    # =====================================================
+    # VALIDAR PERFIL DO UTILIZADOR
+    # =====================================================
+
     if request.user.role != "PROFESSOR":
-        return redirect("dashboard")
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+    professor = request.user
+
+
+
+    # =====================================================
+    # BUSCAR TURMA
+    # A SALA VEM AUTOMATICAMENTE: turma.sala
+    # =====================================================
 
     turma = get_object_or_404(
+
         Turma,
+
         id=turma_id,
-        escola=request.user.escola,
+
+        escola=professor.escola
+
     )
+
+
+
+
+    # =====================================================
+    # ALUNOS DA TURMA
+    # =====================================================
 
     alunos = (
-        Aluno.objects.filter(
+
+        Aluno.objects
+
+        .filter(
+
             turma=turma,
-            escola=request.user.escola,
-            ativo=True,
+
+            escola=professor.escola,
+
+            ativo=True
+
         )
+
         .select_related(
+
             "usuario",
+
             "curso",
+
+            "turma"
+
         )
-        .order_by("numero_na_turma")
+
+        .order_by(
+
+            "numero_na_turma"
+
+        )
+
     )
 
-    # Todas as disciplinas deste professor nesta turma
+
+
+
+
+
+
+    # =====================================================
+    # DISCIPLINAS DO PROFESSOR NA TURMA
+    # =====================================================
+
     disciplinas = (
-        Disciplina.objects.filter(
+
+        Disciplina.objects
+
+        .filter(
+
             turma=turma,
-            professor=request.user,
-            escola=request.user.escola,
+
+            professor=professor,
+
+            escola=professor.escola
+
         )
-        .order_by("nome")
+
+        .order_by(
+
+            "nome"
+
+        )
+
     )
+
+
+
+
+
+
+    # =====================================================
+    # ESTATÍSTICAS
+    # =====================================================
+
+    total_alunos = alunos.count()
+
+
+
+    total_masculinos = alunos.filter(
+
+        sexo="Masculino"
+
+    ).count()
+
+
+
+    total_femininos = alunos.filter(
+
+        sexo="Feminino"
+
+    ).count()
+
+
+
+    total_aprovados = alunos.filter(
+
+        aprovado=True
+
+    ).count()
+
+
+
+    total_reprovados = alunos.filter(
+
+        aprovado=False
+
+    ).count()
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
 
     context = {
+
+
         "turma": turma,
+
+
+        # Inclui automaticamente:
+        # turma.sala
+        # turma.identificador
+        # turma.classe
+        # turma.turno
+
+        "sala": turma.sala,
+
+
+
         "alunos": alunos,
+
+
         "disciplinas": disciplinas,
-        "total_alunos": alunos.count(),
-        "total_masculinos": alunos.filter(
-            sexo="Masculino"
-        ).count(),
-        "total_femininos": alunos.filter(
-            sexo="Feminino"
-        ).count(),
-        "total_aprovados": alunos.filter(
-            aprovado=True
-        ).count(),
-        "total_reprovados": alunos.filter(
-            aprovado=False
-        ).count(),
+
+
+
+        "total_alunos": total_alunos,
+
+
+        "total_masculinos": total_masculinos,
+
+
+        "total_femininos": total_femininos,
+
+
+        "total_aprovados": total_aprovados,
+
+
+        "total_reprovados": total_reprovados,
+
+
     }
 
+
+
+
     return render(
+
         request,
+
         "alunos_da_turma.html",
-        context,
+
+        context
+
     )
 
 
@@ -3051,8 +3547,10 @@ def marcar_frequencia(request, turma_id, disciplina_id):
     if request.user.role != "PROFESSOR":
         return redirect("dashboard")
 
+
     professor = request.user
     escola = professor.escola
+
 
     # =====================================================
     # TURMA
@@ -3063,6 +3561,7 @@ def marcar_frequencia(request, turma_id, disciplina_id):
         id=turma_id,
         escola=escola,
     )
+
 
     # =====================================================
     # DISCIPLINA
@@ -3076,13 +3575,16 @@ def marcar_frequencia(request, turma_id, disciplina_id):
         escola=escola,
     )
 
+
     # =====================================================
     # DATA
     # =====================================================
 
     hoje = timezone.localdate()
 
+
     if hoje.weekday() in [5, 6]:
+
         messages.warning(
             request,
             "Não é permitido lançar frequências aos sábados e domingos."
@@ -3092,6 +3594,8 @@ def marcar_frequencia(request, turma_id, disciplina_id):
             "alunos_da_turma",
             turma_id=turma.id,
         )
+
+
 
     # =====================================================
     # ALUNOS
@@ -3104,16 +3608,22 @@ def marcar_frequencia(request, turma_id, disciplina_id):
             escola=escola,
             ativo=True,
         )
-        .order_by("numero_na_turma")
+        .order_by(
+            "numero_na_turma"
+        )
     )
 
+
+
     # =====================================================
-    # GUARDAR
+    # GUARDAR FREQUÊNCIA
     # =====================================================
 
     if request.method == "POST":
 
+
         for aluno in alunos:
+
 
             presente = (
                 request.POST.get(
@@ -3121,45 +3631,64 @@ def marcar_frequencia(request, turma_id, disciplina_id):
                 ) == "on"
             )
 
-            # Só faz sentido justificar quando existe falta
+
             if presente:
+
                 justificada = False
+
+
             else:
+
                 justificada = (
                     request.POST.get(
                         f"justificada_{aluno.id}"
                     ) == "on"
                 )
 
+
+
             observacao = (
                 request.POST.get(
                     f"observacao_{aluno.id}",
                     ""
-                ).strip()
+                )
+                .strip()
             )
+
+
 
             Frequencia.objects.update_or_create(
 
                 aluno=aluno,
+
                 disciplina=disciplina,
+
                 data=hoje,
+
 
                 defaults={
 
                     "presente": presente,
+
                     "justificada": justificada,
+
                     "observacao": observacao,
+
                     "professor": professor,
+
                     "escola": escola,
 
                 },
 
             )
 
+
+
         messages.success(
             request,
             "Frequências registadas com sucesso."
         )
+
 
         return redirect(
             "marcar_frequencia",
@@ -3167,17 +3696,29 @@ def marcar_frequencia(request, turma_id, disciplina_id):
             disciplina_id=disciplina.id,
         )
 
+
+
     # =====================================================
     # FREQUÊNCIAS EXISTENTES
     # =====================================================
 
     frequencias = {
+
         f.aluno_id: f
+
         for f in Frequencia.objects.filter(
+
             disciplina=disciplina,
+
             data=hoje,
+
+            escola=escola,
+
         )
+
     }
+
+
 
     # =====================================================
     # CONTEXTO
@@ -3185,18 +3726,36 @@ def marcar_frequencia(request, turma_id, disciplina_id):
 
     context = {
 
+
         "turma": turma,
+
+
+        "sala": turma.sala,
+
+
         "disciplina": disciplina,
+
+
         "alunos": alunos,
+
+
         "hoje": hoje,
+
+
         "frequencias": frequencias,
 
     }
 
+
+
     return render(
+
         request,
+
         "marcar_frequencia.html",
+
         context,
+
     )
 
 
@@ -3211,122 +3770,433 @@ def painel_diretor_frequencia(request):
     if request.user.role != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
+
     escola = request.user.escola
 
-    # ==========================
+
+    # =====================================================
     # FILTROS
-    # ==========================
+    # =====================================================
 
     turma_id = request.GET.get("turma")
     disciplina_id = request.GET.get("disciplina")
     aluno_id = request.GET.get("aluno")
     mes = request.GET.get("mes")
 
+
+
+    # =====================================================
+    # FREQUÊNCIAS BASE
+    # =====================================================
+
     frequencias = (
         Frequencia.objects
-        .filter(escola=escola)
+        .filter(
+            escola=escola
+        )
         .select_related(
             "aluno",
             "aluno__usuario",
+            "aluno__turma",
+            "aluno__turma__curso",
             "disciplina",
-            "aluno__turma"
         )
     )
 
+
+
+    # =====================================================
+    # FILTRO POR TURMA
+    # =====================================================
+
     if turma_id:
-        frequencias = frequencias.filter(aluno__turma_id=turma_id)
+
+        frequencias = frequencias.filter(
+            aluno__turma_id=turma_id
+        )
+
+
+
+    # =====================================================
+    # FILTRO POR DISCIPLINA
+    # =====================================================
 
     if disciplina_id:
-        frequencias = frequencias.filter(disciplina_id=disciplina_id)
+
+        frequencias = frequencias.filter(
+            disciplina_id=disciplina_id
+        )
+
+
+
+    # =====================================================
+    # FILTRO POR ALUNO
+    # =====================================================
 
     if aluno_id:
-        frequencias = frequencias.filter(aluno_id=aluno_id)
+
+        frequencias = frequencias.filter(
+            aluno_id=aluno_id
+        )
+
+
+
+    # =====================================================
+    # FILTRO POR MÊS
+    # =====================================================
 
     if mes:
+
         try:
-            frequencias = frequencias.filter(data__month=int(mes))
-        except (ValueError, TypeError):
+
+            frequencias = frequencias.filter(
+                data__month=int(mes)
+            )
+
+        except:
+
             pass
 
-    # ==========================
+
+
+
+
+    # =====================================================
     # KPIs
-    # ==========================
+    # =====================================================
 
-    total_faltas = frequencias.filter(presente=False).count()
-    total_presencas = frequencias.filter(presente=True).count()
-    total_registos = frequencias.count()
-
-    taxa_presenca = (
-        round((total_presencas / total_registos) * 100, 1)
-        if total_registos > 0 else 0
+    total_faltas = (
+        frequencias
+        .filter(
+            presente=False
+        )
+        .count()
     )
 
-    # ==========================
-    # TOP ALUNOS COM MAIS FALTAS
-    # ==========================
+
+    total_presencas = (
+        frequencias
+        .filter(
+            presente=True
+        )
+        .count()
+    )
+
+
+    total_registos = frequencias.count()
+
+
+
+    taxa_presenca = (
+
+        round(
+            (total_presencas / total_registos) * 100,
+            1
+        )
+
+        if total_registos > 0
+
+        else 0
+
+    )
+
+
+
+
+
+    # =====================================================
+    # TOP ALUNOS COM FALTAS
+    # =====================================================
 
     top_faltas_alunos = (
+
         frequencias
-        .filter(presente=False)
+
+        .filter(
+            presente=False
+        )
+
         .values(
             "aluno__id",
             "aluno__usuario__first_name",
             "aluno__usuario__last_name",
+
+            "aluno__turma__classe",
+            "aluno__turma__identificador",
+            "aluno__turma__sala",
+            "aluno__turma__curso__nome",
         )
-        .annotate(total=Count("id"))
+
+        .annotate(
+            total=Count("id")
+        )
+
         .order_by("-total")[:10]
+
     )
 
-    # ==========================
-    # FREQUÊNCIA POR TURMA (CLASSE + IDENTIFICADOR)
-    # ==========================
+
+
+
+
+
+    # =====================================================
+    # FREQUÊNCIA POR TURMA
+    # =====================================================
+
 
     frequencia_por_turma = (
+
         frequencias
+
         .values(
+
             "aluno__turma__id",
+
             "aluno__turma__classe",
-            "aluno__turma__identificador"
+
+            "aluno__turma__identificador",
+
+            "aluno__turma__sala",
+
+            "aluno__turma__curso__nome",
+
         )
+
         .annotate(
-            presencas=Count("id", filter=Q(presente=True)),
-            faltas=Count("id", filter=Q(presente=False))
+
+            presencas=Count(
+                "id",
+                filter=Q(
+                    presente=True
+                )
+            ),
+
+
+            faltas=Count(
+                "id",
+                filter=Q(
+                    presente=False
+                )
+            ),
+
         )
-        .order_by("aluno__turma__classe", "aluno__turma__identificador")
+
+
+        .order_by(
+
+            "aluno__turma__classe",
+
+            "aluno__turma__identificador"
+
+        )
+
     )
 
-    # ==========================
-    # CONTEXTO
-    # ==========================
+
+
+
+
+
+    # =====================================================
+    # TURMAS
+    # =====================================================
+
+
+    turmas = (
+
+        Turma.objects
+
+        .filter(
+            escola=escola
+        )
+
+        .select_related(
+            "curso"
+        )
+
+        .order_by(
+            "classe",
+            "identificador"
+        )
+
+    )
+
+
+
+
+
+
+
+    # =====================================================
+    # DISCIPLINAS DINÂMICAS
+    # SOMENTE DA TURMA ESCOLHIDA
+    # =====================================================
+
+
+    if turma_id:
+
+
+        disciplinas = (
+
+            Disciplina.objects
+
+            .filter(
+
+                escola=escola,
+
+                turma_id=turma_id
+
+            )
+
+            .order_by(
+                "nome"
+            )
+
+        )
+
+
+    else:
+
+
+        disciplinas = (
+
+            Disciplina.objects
+
+            .filter(
+                escola=escola
+            )
+
+            .order_by(
+                "nome"
+            )
+
+        )
+
+
+
+
+
+
+
+    # =====================================================
+    # ALUNOS
+    # =====================================================
+
+
+    alunos = (
+
+        Aluno.objects
+
+        .filter(
+            escola=escola
+        )
+
+        .select_related(
+            "usuario",
+            "turma",
+            "curso"
+        )
+
+        .order_by(
+            "usuario__first_name"
+        )
+
+    )
+
+
+
+
+
+
+    meses = [
+
+        (9,"Setembro"),
+
+        (10,"Outubro"),
+
+        (11,"Novembro"),
+
+        (12,"Dezembro"),
+
+        (1,"Janeiro"),
+
+        (2,"Fevereiro"),
+
+        (3,"Março"),
+
+        (4,"Abril"),
+
+        (5,"Maio"),
+
+        (6,"Junho"),
+
+    ]
+
+
+
+
+
+
 
     context = {
 
+
         "frequencias": frequencias,
 
+
         "total_faltas": total_faltas,
+
         "total_presencas": total_presencas,
+
         "taxa_presenca": taxa_presenca,
 
+
+
         "top_faltas_alunos": top_faltas_alunos,
+
+
         "frequencia_por_turma": frequencia_por_turma,
 
-        "turmas": Turma.objects.filter(escola=escola),
-        "disciplinas": Disciplina.objects.filter(escola=escola),
-        "alunos": Aluno.objects.filter(escola=escola).select_related("usuario"),
+
+
+        "turmas": turmas,
+
+
+        "disciplinas": disciplinas,
+
+
+        "alunos": alunos,
+
+
+        "meses": meses,
+
+
 
         "filtros": {
+
             "turma": turma_id,
+
             "disciplina": disciplina_id,
+
             "aluno": aluno_id,
+
             "mes": mes,
+
         }
 
     }
 
+
+
     return render(
+
         request,
+
         "painel_diretor_frequencia.html",
+
         context
+
     )
 
 
@@ -10991,34 +11861,235 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
 @login_required
 def editar_turma(request, pk):
 
-    turma = get_object_or_404(Turma, id=pk)
+
+    # =====================================================
+    # PERMISSÃO
+    # =====================================================
+
+    if request.user.role != "DIRETOR_PEDAGOGICO":
+
+        messages.error(
+            request,
+            "Não possui permissão para editar turmas."
+        )
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+
+    # =====================================================
+    # BUSCAR TURMA DA ESCOLA DO UTILIZADOR
+    # =====================================================
+
+    turma = get_object_or_404(
+
+        Turma,
+
+        id=pk,
+
+        escola=request.user.escola
+
+    )
+
+
+
 
     cursos = Curso.objects.filter(
+
         escola=turma.escola
-    ).order_by("nome")
+
+    ).order_by(
+
+        "nome"
+
+    )
+
+
+
+
+
+    # =====================================================
+    # POST
+    # =====================================================
 
     if request.method == "POST":
 
-        turma.identificador = request.POST.get("identificador")
-        turma.classe = request.POST.get("classe")
-        turma.curso_id = request.POST.get("curso")
 
-        turma.save()
+        identificador = request.POST.get(
+            "identificador",
+            ""
+        ).strip()
 
-        messages.success(
-            request,
-            "Turma atualizada com sucesso."
+
+
+        classe = request.POST.get(
+            "classe",
+            ""
+        ).strip()
+
+
+
+        sala = request.POST.get(
+            "sala",
+            ""
+        ).strip()
+
+
+
+        curso_id = request.POST.get(
+            "curso"
         )
 
-        return redirect("turmas")
+
+
+
+        if not identificador or not classe:
+
+
+            messages.error(
+
+                request,
+
+                "Preencha todos os campos obrigatórios."
+
+            )
+
+
+            return redirect(
+
+                "editar_turma",
+
+                pk=pk
+
+            )
+
+
+
+
+
+        try:
+
+
+            with transaction.atomic():
+
+
+
+                turma.identificador = identificador
+
+
+                turma.classe = classe
+
+
+
+                # NOVO CAMPO SALA
+
+                turma.sala = sala if sala else None
+
+
+
+
+                # CURSO
+
+                if curso_id:
+
+
+                    curso = Curso.objects.filter(
+
+                        id=curso_id,
+
+                        escola=turma.escola
+
+                    ).first()
+
+
+
+                    turma.curso = curso
+
+
+
+                else:
+
+
+                    turma.curso = None
+
+
+
+
+
+                turma.save()
+
+
+
+
+
+            messages.success(
+
+                request,
+
+                "Turma atualizada com sucesso."
+
+            )
+
+
+
+            return redirect(
+
+                "turmas"
+
+            )
+
+
+
+
+
+        except Exception as e:
+
+
+
+            messages.error(
+
+                request,
+
+                f"Erro ao atualizar turma: {str(e)}"
+
+            )
+
+
+
+            return redirect(
+
+                "editar_turma",
+
+                pk=pk
+
+            )
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
 
     return render(
+
         request,
+
         "editar_turma.html",
+
         {
+
             "turma": turma,
+
             "cursos": cursos,
+
         }
+
     )
 
 

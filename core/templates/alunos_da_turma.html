@@ -1,247 +1,1151 @@
 {% extends "base_professor.html" %}
+
 {% block content %}
+
 
 <style>
 
+:root{
+
+    --primary:#1d4ed8;
+    --primary-dark:#1e3a8a;
+    --dark:#0f172a;
+    --gray:#64748b;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
+}
+
+
+body{
+
+    background:var(--light);
+
+}
+
+
+
+/* ==========================
+   HEADER PREMIUM
+========================== */
+
 .page-header{
-    background:linear-gradient(135deg,#0f172a,#1e293b);
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e40af
+    );
+
     color:white;
+
     border-radius:20px;
-    padding:25px;
+
+    padding:22px 26px;
+
     margin-bottom:25px;
+
+    box-shadow:
+    0 12px 30px rgba(15,23,42,.15);
+
 }
 
-.stat-card{
-    background:white;
-    border:none;
-    border-radius:16px;
-    padding:20px;
-    text-align:center;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    height:100%;
-}
 
-.stat-number{
-    font-size:30px;
+.title-main{
+
+    font-size:28px;
+
     font-weight:800;
+
+    letter-spacing:-.4px;
+
 }
 
-.stat-label{
-    color:#64748b;
+
+.subtitle{
+
+    color:rgba(255,255,255,.75);
+
     font-size:13px;
+
+    margin-top:5px;
+
 }
 
-.table-card{
-    background:white;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
+
+
+
+
+/* ==========================
+   BADGES
+========================== */
+
+.info-container{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:14px;
+
 }
 
-.badge-status{
-    padding:6px 10px;
+
+.info-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    background:rgba(255,255,255,.15);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    padding:7px 13px;
+
     border-radius:999px;
+
     font-size:12px;
+
     font-weight:700;
+
 }
 
-.badge-aprovado{
+
+
+.sala-badge{
+
     background:#dcfce7;
+
     color:#166534;
-}
 
-.badge-reprovado{
-    background:#fee2e2;
-    color:#991b1b;
-}
+    padding:7px 14px;
 
-.badge-curso{
-    background:#dbeafe;
-    color:#1d4ed8;
-    padding:5px 10px;
     border-radius:999px;
+
     font-size:12px;
+
+    font-weight:800;
+
 }
+
+
+.sala-empty{
+
+    background:#e2e8f0;
+
+    color:#475569;
+
+    padding:9px 18px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+
+
+.course-badge{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+    padding:9px 18px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:800;
+
+}
+
+
+
+
+
+/* ==========================
+   BUTTONS
+========================== */
+
 
 .btn-back{
-    background:rgba(255,255,255,.15);
+
+    display:inline-block;
+
+    background:
+
+    rgba(255,255,255,.12);
+
     color:white;
-    border:1px solid rgba(255,255,255,.25);
-    padding:8px 14px;
-    border-radius:10px;
-    font-weight:600;
+
+    border:
+
+    1px solid rgba(255,255,255,.25);
+
+    padding:11px 22px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
     text-decoration:none;
-    transition:.2s;
+
+    transition:.25s;
+
 }
 
+
+
 .btn-back:hover{
-    background:rgba(255,255,255,.25);
-    color:white;
+
+    background:white;
+
+    color:var(--primary-dark);
+
 }
+
+
+
+.btn-frequency{
+
+    border-radius:10px;
+
+    padding:9px 15px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    box-shadow:
+
+    0 4px 12px rgba(0,0,0,.10);
+
+}
+
+
+
+
+/* ==========================
+   CONTADOR
+========================== */
+
+
+.student-counter{
+
+    margin-top:15px;
+
+}
+
+
+
+.student-counter h2{
+
+    font-size:32px;
+
+    font-weight:800;
+
+    margin-bottom:0;
+
+}
+
+
+
+.student-counter span{
+
+    opacity:.8;
+
+}
+
+
+/* ==========================
+   CARDS ESTATÍSTICOS
+========================== */
+
+
+.stat-card{
+
+    background:white;
+
+    border:none;
+
+    border-radius:22px;
+
+    padding:28px;
+
+    text-align:center;
+
+    height:100%;
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.08);
+
+    transition:.25s ease;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:
+
+    0 18px 40px rgba(15,23,42,.12);
+
+}
+
+
+
+
+
+.stat-number{
+
+    font-size:40px;
+
+    font-weight:900;
+
+    line-height:1;
+
+}
+
+
+
+.stat-label{
+
+    margin-top:12px;
+
+    color:var(--gray);
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* ==========================
+   TABELA ALUNOS
+========================== */
+
+
+.table-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.08);
+
+}
+
+
+
+.table-header{
+
+    padding:22px 25px;
+
+    border-bottom:
+
+    1px solid var(--border);
+
+}
+
+
+
+.table-title{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+
+
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:16px;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.6px;
+
+    border:none;
+
+}
+
+
+
+.table tbody td{
+
+    padding:16px;
+
+    vertical-align:middle;
+
+    border-color:#f1f5f9;
+
+}
+
+
+
+.table tbody tr{
+
+    transition:.2s ease;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+
+
+
+.student-name{
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+
+
+
+
+.empty-state{
+
+    padding:60px 20px;
+
+    text-align:center;
+
+    color:var(--gray);
+
+}
+
+
+
+.empty-state h5{
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+
+
+
 
 </style>
 
+
+
+
+
+
+
 <div class="container-fluid py-4">
 
-    <!-- HEADER -->
-    <div class="page-header">
 
-        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
 
-            <!-- INFO TURMA -->
-            <div>
 
-                <h2 class="fw-bold mb-2">
-                    {{ turma }}
-                </h2>
 
-                <div>
-                    Classe: {{ turma.get_classe_display }} | Turno: {{ turma.get_turno_display }}
-                </div>
+<!-- ==========================
+     HEADER TURMA
+========================== -->
 
-                {% if turma.curso %}
-                <div class="mt-2">
-                    <span class="badge-curso">
-                        {{ turma.curso }}
-                    </span>
-                </div>
-                {% endif %}
 
-            </div>
+<div class="page-header">
 
-            <!-- VOLTAR + TOTAL -->
-            <div class="text-end">
 
-                <div class="d-flex flex-column gap-2 align-items-end">
 
-                    <a href="{% url 'minhas_turmas' %}" class="btn-back">
-                        ← Voltar
-                    </a>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-4">
 
-                    {% for disciplina in disciplinas %}
-                        <a href="{% url 'marcar_frequencia' turma.id disciplina.id %}"
-                           class="btn btn-success w-100">
-                            <i class="fas fa-user-check me-2"></i>
-                            Marcar Frequência - {{ disciplina.nome }}
-                        </a>
-                    {% empty %}
-                        <button class="btn btn-secondary w-100" disabled>
-                            Nenhuma disciplina atribuída
-                        </button>
-                    {% endfor %}
 
-                </div>
 
-                <h3 class="mb-0 mt-3">
-                    {{ total_alunos }}
-                </h3>
 
-                <small>
-                    Alunos Matriculados
-                </small>
 
-            </div>
+<div>
 
-        </div>
 
-    </div>
+<div class="title-main">
 
-    <!-- ESTATÍSTICAS -->
-    <div class="row mb-4">
-
-        <div class="col-md-4 mb-3">
-            <div class="stat-card">
-                <div class="stat-number text-primary">
-                    {{ total_alunos }}
-                </div>
-                <div class="stat-label">Total de Alunos</div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="stat-card">
-                <div class="stat-number text-info">
-                    {{ total_masculinos }}
-                </div>
-                <div class="stat-label">Masculinos</div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="stat-card">
-                <div class="stat-number text-danger">
-                    {{ total_femininos }}
-                </div>
-                <div class="stat-label">Femininos</div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TABELA -->
-    <div class="table-card">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover mb-0">
-
-                <thead class="table-dark">
-
-                    <tr>
-                        <th>#</th>
-                        <th>Aluno</th>
-                        <th>Matrícula</th>
-                        <th>Processo</th>
-                        <th>Sexo</th>
-                        <th>Idade</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for aluno in alunos %}
-
-                    <tr>
-
-                        <td>{{ aluno.numero_na_turma }}</td>
-
-                        <td><strong>{{ aluno.nome_completo }}</strong></td>
-
-                        <td>{{ aluno.matricula }}</td>
-
-                        <td>{{ aluno.numero_processo }}</td>
-
-                        <td>{{ aluno.sexo }}</td>
-
-                        <td>
-                            {% if aluno.idade %}
-                                {{ aluno.idade }} anos
-                            {% else %}
-                                —
-                            {% endif %}
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-                        <td colspan="6" class="text-center py-5">
-                            Nenhum aluno encontrado.
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
+{{ turma }}
 
 </div>
+
+
+
+<div class="subtitle">
+
+Gestão académica da turma e acompanhamento dos alunos matriculados
+
+</div>
+
+
+
+
+
+<div class="info-container">
+
+
+
+<span class="info-badge">
+
+Classe:
+{{ turma.get_classe_display }}
+
+</span>
+
+
+
+
+
+<span class="info-badge">
+
+Turno:
+{{ turma.get_turno_display }}
+
+</span>
+
+
+
+
+
+
+{% if turma.sala %}
+
+
+<span class="sala-badge">
+
+Sala {{ turma.sala }}
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="sala-empty">
+
+Sala não definida
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+
+{% if turma.curso %}
+
+
+<span class="course-badge">
+
+{{ turma.curso.nome }}
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="text-end">
+
+
+
+
+
+<a href="{% url 'minhas_turmas' %}"
+
+class="btn-back mb-3">
+
+
+Voltar
+
+
+</a>
+
+
+
+
+
+
+
+
+<div class="d-flex flex-column gap-2">
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+<a href="{% url 'marcar_frequencia' turma.id disciplina.id %}"
+
+class="btn btn-success btn-frequency">
+
+
+Marcar Frequência - {{ disciplina.nome }}
+
+
+</a>
+
+
+
+{% empty %}
+
+
+
+<button class="btn btn-secondary" disabled>
+
+Nenhuma disciplina atribuída
+
+</button>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="student-counter">
+
+
+<h2>
+
+{{ total_alunos }}
+
+</h2>
+
+
+<span>
+
+Alunos Matriculados
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</div>
+<!-- ==========================
+     ESTATÍSTICAS
+========================== -->
+
+
+<div class="row mb-4">
+
+
+
+<div class="col-xl-4 col-md-6 mb-3">
+
+
+<div class="stat-card">
+
+
+<div class="stat-number text-primary">
+
+{{ total_alunos }}
+
+</div>
+
+
+<div class="stat-label">
+
+Total de Alunos
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-xl-4 col-md-6 mb-3">
+
+
+<div class="stat-card">
+
+
+<div class="stat-number text-info">
+
+{{ total_masculinos }}
+
+</div>
+
+
+<div class="stat-label">
+
+Masculinos
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-xl-4 col-md-6 mb-3">
+
+
+<div class="stat-card">
+
+
+<div class="stat-number text-danger">
+
+{{ total_femininos }}
+
+</div>
+
+
+<div class="stat-label">
+
+Femininos
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================
+     LISTA DE ALUNOS
+========================== -->
+
+
+<div class="table-card">
+
+
+
+
+
+<div class="table-header">
+
+
+<div class="table-title">
+
+Lista de Alunos
+
+</div>
+
+
+
+<small class="text-muted">
+
+Turma {{ turma.identificador }}
+|
+Sala
+{% if turma.sala %}
+{{ turma.sala }}
+{% else %}
+Não definida
+{% endif %}
+
+</small>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+#
+
+</th>
+
+
+<th>
+
+Aluno
+
+</th>
+
+
+<th>
+
+Matrícula
+
+</th>
+
+
+<th>
+
+Número Processo
+
+</th>
+
+
+<th>
+
+Sexo
+
+</th>
+
+
+<th>
+
+Idade
+
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+{% for aluno in alunos %}
+
+
+
+
+
+<tr>
+
+
+
+
+
+<td>
+
+{{ aluno.numero_na_turma }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<div class="student-name">
+
+{{ aluno.nome_completo }}
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{{ aluno.matricula }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{{ aluno.numero_processo }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{{ aluno.sexo }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if aluno.idade %}
+
+
+{{ aluno.idade }} anos
+
+
+
+{% else %}
+
+
+-
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+
+
+
+<tr>
+
+
+<td colspan="6">
+
+
+<div class="empty-state">
+
+
+
+<h5>
+
+Nenhum aluno encontrado
+
+</h5>
+
+
+
+<p class="mb-0">
+
+Esta turma ainda não possui alunos matriculados.
+
+</p>
+
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+</table>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
 
 {% endblock %}

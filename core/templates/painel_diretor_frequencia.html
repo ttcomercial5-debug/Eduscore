@@ -2,212 +2,1911 @@
 
 {% block content %}
 
+
+<style>
+
+
+:root{
+
+    --primary:#1e3a8a;
+    --primary-light:#2563eb;
+    --dark:#0f172a;
+    --gray:#64748b;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
+}
+
+
+
+body{
+
+    background:#f8fafc;
+
+}
+
+
+
+
+/* ==========================
+HEADER PREMIUM
+========================== */
+
+
+.dashboard-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e40af
+    );
+
+    padding:35px;
+
+    border-radius:24px;
+
+    color:white;
+
+    box-shadow:
+    0 15px 35px rgba(15,23,42,.18);
+
+}
+
+
+
+.dashboard-title{
+
+    font-size:34px;
+
+    font-weight:900;
+
+}
+
+
+
+.dashboard-subtitle{
+
+    margin-top:8px;
+
+    color:rgba(255,255,255,.75);
+
+}
+
+
+
+
+
+/* ==========================
+CARDS
+========================== */
+
+
+.premium-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    border:none;
+
+    box-shadow:
+
+    0 8px 25px rgba(15,23,42,.08);
+
+}
+
+
+
+
+
+.card-title-premium{
+
+    font-size:19px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+
+
+
+
+/* ==========================
+FORM
+========================== */
+
+
+.form-label{
+
+    font-weight:700;
+
+    color:#475569;
+
+}
+
+
+
+.form-select{
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    padding:12px;
+
+}
+
+
+
+.btn-filter{
+
+    padding:12px 30px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* ==========================
+BADGES
+========================== */
+
+
+.badge-room{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+.badge-course{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+.badge-class{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+
+
+/* ==========================
+KPI
+========================== */
+
+
+.kpi-card{
+
+    padding:25px;
+
+    text-align:center;
+
+}
+
+
+
+.kpi-number{
+
+    font-size:38px;
+
+    font-weight:900;
+
+}
+
+
+
+.kpi-label{
+
+    margin-top:8px;
+
+    color:var(--gray);
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* ==========================
+TABLE
+========================== */
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    text-transform:uppercase;
+
+    font-size:12px;
+
+    letter-spacing:.5px;
+
+    padding:15px;
+
+}
+
+
+
+.table tbody td{
+
+    padding:15px;
+
+    vertical-align:middle;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+</style>
+
+
+
+
+
 <div class="container-fluid py-4">
 
-    <!-- HEADER -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body">
-            <h3 class="fw-bold mb-1">Painel de Frequência</h3>
-            <p class="text-muted mb-0">
-                Análise geral de presenças e faltas da escola
-            </p>
-        </div>
-    </div>
 
-    <!-- FILTROS -->
-    <form method="get" class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body">
 
-            <div class="row g-3">
 
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Turma</label>
-                    <select name="turma" class="form-select">
-                        <option value="">Todas as turmas</option>
-                        {% for t in turmas %}
-                        <option value="{{ t.id }}"
-                            {% if filtros.turma == t.id|stringformat:"s" %}selected{% endif %}>
-                            {{ t.classe }}ª {{ t.identificador }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
 
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Disciplina</label>
-                    <select name="disciplina" class="form-select">
-                        <option value="">Todas as disciplinas</option>
-                        {% for d in disciplinas %}
-                        <option value="{{ d.id }}"
-                            {% if filtros.disciplina == d.id|stringformat:"s" %}selected{% endif %}>
-                            {{ d.nome }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+<!-- HEADER -->
 
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Aluno</label>
-                    <select name="aluno" class="form-select">
-                        <option value="">Todos os alunos</option>
-                        {% for a in alunos %}
-                        <option value="{{ a.id }}"
-                            {% if filtros.aluno == a.id|stringformat:"s" %}selected{% endif %}>
-                            {{ a.nome_completo }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+<div class="dashboard-header mb-4">
 
-                <!-- MESES LETIVOS -->
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Mês letivo</label>
-                    <select name="mes" class="form-select">
 
-                        <option value="">Todos os meses</option>
+    <h2 class="dashboard-title mb-1">
 
-                        <option value="9"  {% if filtros.mes == "9" %}selected{% endif %}>Setembro</option>
-                        <option value="10" {% if filtros.mes == "10" %}selected{% endif %}>Outubro</option>
-                        <option value="11" {% if filtros.mes == "11" %}selected{% endif %}>Novembro</option>
-                        <option value="12" {% if filtros.mes == "12" %}selected{% endif %}>Dezembro</option>
-                        <option value="1"  {% if filtros.mes == "1" %}selected{% endif %}>Janeiro</option>
-                        <option value="2"  {% if filtros.mes == "2" %}selected{% endif %}>Fevereiro</option>
-                        <option value="3"  {% if filtros.mes == "3" %}selected{% endif %}>Março</option>
-                        <option value="4"  {% if filtros.mes == "4" %}selected{% endif %}>Abril</option>
-                        <option value="5"  {% if filtros.mes == "5" %}selected{% endif %}>Maio</option>
-                        <option value="6"  {% if filtros.mes == "6" %}selected{% endif %}>Junho</option>
+        Painel de Frequência
 
-                    </select>
-                </div>
+    </h2>
 
-            </div>
 
-            <div class="mt-3 text-end">
-                <button class="btn btn-primary px-4">
-                    Filtrar
-                </button>
-            </div>
+    <p class="dashboard-subtitle mb-0">
 
-        </div>
-    </form>
+        Monitorização académica de presenças, faltas e assiduidade por turma.
 
-    <!-- KPIs -->
-    <div class="row g-4 mb-4">
+    </p>
 
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Total de Faltas</h6>
-                    <h2 class="fw-bold text-danger">{{ total_faltas }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Presenças</h6>
-                    <h2 class="fw-bold text-success">{{ total_presencas }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 h-100">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Taxa de Presença</h6>
-                    <h2 class="fw-bold text-primary">{{ taxa_presenca }}%</h2>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TOP ALUNOS -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold mb-3">Alunos com mais faltas</h5>
-
-            <ul class="list-group list-group-flush">
-
-                {% for a in top_faltas_alunos %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-
-                    <span class="fw-semibold">
-                        {{ a.aluno__usuario__first_name }}
-                        {{ a.aluno__usuario__last_name }}
-                    </span>
-
-                    <span class="badge bg-danger rounded-pill">
-                        {{ a.total }}
-                    </span>
-
-                </li>
-                {% empty %}
-                <li class="list-group-item text-muted">
-                    Sem dados disponíveis
-                </li>
-                {% endfor %}
-
-            </ul>
-
-        </div>
-
-    </div>
-
-    <!-- TURMAS -->
-    <div class="card border-0 shadow-sm rounded-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold mb-3">Frequência por turma</h5>
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-light">
-                        <tr>
-                            <th>Turma</th>
-                            <th class="text-success">Presenças</th>
-                            <th class="text-danger">Faltas</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for t in frequencia_por_turma %}
-                        <tr>
-                            <td class="fw-semibold">
-                                {{ t.aluno__turma__classe }}ª {{ t.aluno__turma__identificador }}
-                            </td>
-                            <td class="text-success fw-bold">
-                                {{ t.presencas }}
-                            </td>
-                            <td class="text-danger fw-bold">
-                                {{ t.faltas }}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">
-                                Sem dados disponíveis
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>
+
+
+
+
+
+<!-- FILTROS -->
+
+
+<form method="get" class="premium-card mb-4">
+
+
+<div class="card-body p-4">
+
+
+<h5 class="card-title-premium mb-4">
+
+Filtros de Pesquisa
+
+</h5>
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<!-- TURMA -->
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="form-label">
+
+Turma
+
+</label>
+
+
+<select name="turma" class="form-select">
+
+
+
+<option value="">
+
+Todas as turmas
+
+</option>
+
+
+
+
+{% for t in turmas %}
+
+
+
+<option value="{{ t.id }}"
+
+{% if filtros.turma == t.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ t.classe }}ª {{ t.identificador }}
+
+
+
+{% if t.sala %}
+
+ | Sala {{ t.sala }}
+
+{% endif %}
+
+
+
+{% if t.curso %}
+
+ | {{ t.curso.nome }}
+
+{% endif %}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<!-- DISCIPLINA -->
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="form-label">
+
+Disciplina
+
+</label>
+
+
+
+<select name="disciplina" class="form-select">
+
+
+
+<option value="">
+
+Todas as disciplinas
+
+</option>
+
+
+
+
+{% for d in disciplinas %}
+
+
+
+<option value="{{ d.id }}"
+
+{% if filtros.disciplina == d.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ d.nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+<!-- ALUNO -->
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="form-label">
+
+Aluno
+
+</label>
+
+
+
+<select name="aluno" class="form-select">
+
+
+
+<option value="">
+
+Todos os alunos
+
+</option>
+
+
+
+
+{% for a in alunos %}
+
+
+
+<option value="{{ a.id }}"
+
+{% if filtros.aluno == a.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+
+{{ a.usuario.first_name }}
+
+{{ a.usuario.last_name }}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- MÊS -->
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="form-label">
+
+Mês Letivo
+
+</label>
+
+
+
+<select name="mes" class="form-select">
+
+
+
+<option value="">
+
+Todos os meses
+
+</option>
+
+
+
+{% for numero,nome in meses %}
+
+
+
+<option value="{{ numero }}"
+
+{% if filtros.mes == numero|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="text-end mt-4">
+
+
+<button class="btn btn-primary btn-filter">
+
+Aplicar Filtros
+
+</button>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</form>
+
+
+
+
+
+
+
+
+
+<!-- ==========================
+     INDICADORES
+========================== -->
+
+
+
+<div class="row g-4 mb-4">
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="premium-card kpi-card">
+
+
+<div class="kpi-number text-danger">
+
+{{ total_faltas }}
+
+</div>
+
+
+
+<div class="kpi-label">
+
+Total de Faltas
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="premium-card kpi-card">
+
+
+<div class="kpi-number text-success">
+
+{{ total_presencas }}
+
+</div>
+
+
+
+<div class="kpi-label">
+
+Presenças Registadas
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="premium-card kpi-card">
+
+
+<div class="kpi-number text-primary">
+
+{{ taxa_presenca }}%
+
+</div>
+
+
+
+<div class="kpi-label">
+
+Taxa de Presença
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================
+     ALUNOS COM MAIS FALTAS
+========================== -->
+
+
+<div class="premium-card mb-4">
+
+
+<div class="card-body p-4">
+
+
+
+<h5 class="card-title-premium mb-4">
+
+Alunos com Mais Faltas
+
+</h5>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle mb-0">
+
+
+
+<thead>
+
+
+<tr>
+
+<th>
+
+Aluno
+
+</th>
+
+
+<th>
+
+Turma
+
+</th>
+
+
+<th>
+
+Sala
+
+</th>
+
+
+<th>
+
+Curso
+
+</th>
+
+
+<th>
+
+Faltas
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+
+{% for a in top_faltas_alunos %}
+
+
+
+
+
+<tr>
+
+
+
+
+<td class="fw-bold">
+
+
+{{ a.aluno__usuario__first_name }}
+
+{{ a.aluno__usuario__last_name }}
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<span class="badge-class">
+
+
+{{ a.aluno__turma__classe }}ª
+
+{{ a.aluno__turma__identificador }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if a.aluno__turma__sala %}
+
+
+<span class="badge-room">
+
+
+Sala {{ a.aluno__turma__sala }}
+
+
+</span>
+
+
+{% else %}
+
+
+-
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+
+{% if a.aluno__turma__curso__nome %}
+
+
+
+<span class="badge-course">
+
+
+{{ a.aluno__turma__curso__nome }}
+
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem curso
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-danger rounded-pill px-3">
+
+
+{{ a.total }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="5"
+
+class="text-center py-5 text-muted">
+
+
+Não existem dados disponíveis.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+<!-- ==========================
+     FREQUÊNCIA POR TURMA
+========================== -->
+
+
+<div class="premium-card mb-4">
+
+
+<div class="card-body p-4">
+
+
+
+<h5 class="card-title-premium mb-4">
+
+Frequência por Turma
+
+</h5>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle mb-0">
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Turma
+
+</th>
+
+
+
+<th>
+
+Sala
+
+</th>
+
+
+
+<th>
+
+Curso
+
+</th>
+
+
+
+<th>
+
+Presenças
+
+</th>
+
+
+
+<th>
+
+Faltas
+
+</th>
+
+
+
+<th>
+
+Taxa
+
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+{% for t in frequencia_por_turma %}
+
+
+
+
+
+
+<tr>
+
+
+
+
+
+<!-- TURMA -->
+
+
+<td>
+
+
+
+<span class="badge-class">
+
+
+{{ t.aluno__turma__classe }}ª
+
+
+{{ t.aluno__turma__identificador }}
+
+
+</span>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+<!-- SALA -->
+
+
+<td>
+
+
+
+{% if t.aluno__turma__sala %}
+
+
+
+<span class="badge-room">
+
+
+Sala {{ t.aluno__turma__sala }}
+
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem sala
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- CURSO -->
+
+
+<td>
+
+
+
+
+{% if t.aluno__turma__curso__nome %}
+
+
+
+<span class="badge-course">
+
+
+{{ t.aluno__turma__curso__nome }}
+
+
+</span>
+
+
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem curso
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- PRESENÇAS -->
+
+
+<td>
+
+
+<span class="text-success fw-bold">
+
+
+{{ t.presencas }}
+
+
+</span>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- FALTAS -->
+
+
+<td>
+
+
+<span class="text-danger fw-bold">
+
+
+{{ t.faltas }}
+
+
+</span>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- TAXA -->
+
+
+<td>
+
+
+
+{% with total=t.presencas|add:t.faltas %}
+
+
+
+
+{% if total > 0 %}
+
+
+
+<span class="fw-bold text-primary">
+
+
+{{ t.presencas|floatformat:0 }}
+
+
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+0%
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+
+{% endwith %}
+
+
+
+</td>
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+
+<tr>
+
+
+<td colspan="6"
+
+class="text-center py-5 text-muted">
+
+
+Nenhum registo de frequência encontrado.
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+</table>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ==========================
+     DETALHAMENTO DOS REGISTOS
+========================== -->
+
+
+
+<div class="premium-card">
+
+
+
+<div class="card-body p-4">
+
+
+
+<h5 class="card-title-premium mb-4">
+
+Registos Detalhados
+
+</h5>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+
+<th>
+
+Data
+
+</th>
+
+
+
+<th>
+
+Aluno
+
+</th>
+
+
+
+<th>
+
+Turma
+
+</th>
+
+
+
+<th>
+
+Sala
+
+</th>
+
+
+
+<th>
+
+Curso
+
+</th>
+
+
+
+<th>
+
+Disciplina
+
+</th>
+
+
+
+<th>
+
+Estado
+
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+
+{% for f in frequencias %}
+
+
+
+
+
+<tr>
+
+
+
+
+
+
+<td>
+
+
+{{ f.data|date:"d/m/Y" }}
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+
+{{ f.aluno.usuario.first_name }}
+
+{{ f.aluno.usuario.last_name }}
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+{{ f.aluno.turma.classe }}ª
+
+
+{{ f.aluno.turma.identificador }}
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if f.aluno.turma.sala %}
+
+
+
+<span class="badge-room">
+
+
+Sala {{ f.aluno.turma.sala }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+-
+
+
+
+{% endif %}
+
+
+
+</td>
+<!-- CURSO -->
+
+
+<td>
+
+
+{% if f.aluno.turma.curso %}
+
+
+
+<span class="badge-course">
+
+
+{{ f.aluno.turma.curso.nome }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem curso
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- DISCIPLINA -->
+
+
+<td>
+
+
+{{ f.disciplina.nome }}
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ESTADO -->
+
+
+<td>
+
+
+
+{% if f.presente %}
+
+
+
+<span class="badge bg-success px-3 py-2 rounded-pill">
+
+Presente
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+{% if f.justificada %}
+
+
+
+<span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+
+Falta Justificada
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+<span class="badge bg-danger px-3 py-2 rounded-pill">
+
+Falta
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+<tr>
+
+
+<td colspan="7"
+
+class="text-center py-5 text-muted">
+
+
+Nenhum registo encontrado.
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+</table>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
 
 {% endblock %}

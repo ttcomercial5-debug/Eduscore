@@ -2,100 +2,697 @@
 
 {% block title %}Editar Turma{% endblock %}
 
+
 {% block content %}
 
-<div class="container py-4">
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
 
-            <div class="card shadow border-0 rounded-4">
+<style>
 
-                <div class="card-header bg-primary text-white py-3">
-                    <h3 class="mb-0">
-                        <i class="fas fa-school me-2"></i>
-                        Editar Turma
-                    </h3>
-                </div>
 
-                <div class="card-body p-4">
+.page-title{
 
-                    <form method="POST">
-                        {% csrf_token %}
+    font-weight:700;
+    letter-spacing:-0.5px;
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">
-                                Nome / Identificador
-                            </label>
-                            <input
-                                type="text"
-                                name="identificador"
-                                class="form-control form-control-lg"
-                                value="{{ turma.identificador }}"
-                                required>
-                        </div>
+}
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">
-                                Classe
-                            </label>
-                            <input
-                                type="text"
-                                name="classe"
-                                class="form-control form-control-lg"
-                                value="{{ turma.classe }}"
-                                required>
-                        </div>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">
-                                Curso
-                            </label>
 
-                            <select
-                                name="curso"
-                                class="form-select form-select-lg">
+.card-premium{
 
-                                {% for curso in cursos %}
-                                <option
-                                    value="{{ curso.id }}"
-                                    {% if turma.curso.id == curso.id %}selected{% endif %}>
-                                    {{ curso.nome }}
-                                </option>
-                                {% endfor %}
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
 
-                            </select>
-                        </div>
+}
 
-                        <hr class="my-4">
 
-                        <div class="d-flex justify-content-between">
 
-                            <a href="{% url 'turmas' %}"
-                               class="btn btn-outline-secondary btn-lg">
-                                <i class="fas fa-arrow-left me-2"></i>
-                                Voltar
-                            </a>
+.header-premium{
 
-                            <button
-                                type="submit"
-                                class="btn btn-success btn-lg">
+    background:linear-gradient(
+        135deg,
+        #0d6efd,
+        #0b5ed7
+    );
 
-                                <i class="fas fa-save me-2"></i>
-                                Guardar Alterações
-                            </button>
+    padding:25px;
 
-                        </div>
+    color:white;
 
-                    </form>
+}
 
-                </div>
 
-            </div>
 
-        </div>
-    </div>
+.form-label{
+
+    font-weight:600;
+    color:#344054;
+
+}
+
+
+
+.form-control,
+.form-select{
+
+    border-radius:12px;
+    min-height:48px;
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:
+    0 0 0 .2rem rgba(13,110,253,.15);
+
+}
+
+
+
+.section-title{
+
+    font-size:15px;
+    font-weight:700;
+    color:#0d6efd;
+
+    margin-bottom:15px;
+
+}
+
+
+
+.info-box{
+
+    background:#f8f9fa;
+
+    border-radius:14px;
+
+    padding:15px;
+
+}
+
+
+
+.btn-premium{
+
+    border-radius:12px;
+
+    padding:12px 28px;
+
+    font-weight:600;
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+<div class="container-fluid py-4">
+
+
+
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-xl-8 col-lg-10">
+
+
+
+
+
+<div class="card shadow-lg card-premium">
+
+
+
+
+
+<!-- CABEÇALHO -->
+
+
+<div class="header-premium">
+
+
+<h3 class="mb-1 page-title">
+
+
+<i class="fas fa-school me-2"></i>
+
+Editar Turma
+
+
+</h3>
+
+
+
+<p class="mb-0 opacity-75">
+
+
+Atualize os dados académicos e a organização da turma.
+
+
+</p>
+
 
 </div>
+
+
+
+
+
+
+
+
+
+<div class="card-body p-4">
+
+
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+
+
+
+
+<!-- IDENTIFICAÇÃO -->
+
+<div class="section-title">
+
+Dados Principais da Turma
+
+</div>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<!-- IDENTIFICADOR -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Turma
+
+</label>
+
+
+
+<input
+
+type="text"
+
+name="identificador"
+
+class="form-control"
+
+value="{{ turma.identificador }}"
+
+placeholder="Ex: A"
+
+required>
+
+
+</div>
+
+
+
+
+
+
+<!-- CLASSE -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Classe
+
+</label>
+
+
+
+<select
+
+name="classe"
+
+class="form-select"
+
+required>
+
+
+<option value="">
+
+Selecionar Classe
+
+</option>
+
+
+<option value="0"
+
+{% if turma.classe == "0" %}selected{% endif %}>
+
+Iniciação
+
+</option>
+
+
+<option value="1"
+
+{% if turma.classe == "1" %}selected{% endif %}>
+
+1ª Classe
+
+</option>
+
+
+<option value="2"
+
+{% if turma.classe == "2" %}selected{% endif %}>
+
+2ª Classe
+
+</option>
+
+
+<option value="3"
+
+{% if turma.classe == "3" %}selected{% endif %}>
+
+3ª Classe
+
+</option>
+
+
+<option value="4"
+
+{% if turma.classe == "4" %}selected{% endif %}>
+
+4ª Classe
+
+</option>
+
+
+<option value="5"
+
+{% if turma.classe == "5" %}selected{% endif %}>
+
+5ª Classe
+
+</option>
+
+
+<option value="6"
+
+{% if turma.classe == "6" %}selected{% endif %}>
+
+6ª Classe
+
+</option>
+
+
+<option value="7"
+
+{% if turma.classe == "7" %}selected{% endif %}>
+
+7ª Classe
+
+</option>
+
+
+<option value="8"
+
+{% if turma.classe == "8" %}selected{% endif %}>
+
+8ª Classe
+
+</option>
+
+
+<option value="9"
+
+{% if turma.classe == "9" %}selected{% endif %}>
+
+9ª Classe
+
+</option>
+
+
+<option value="10"
+
+{% if turma.classe == "10" %}selected{% endif %}>
+
+10ª Classe
+
+</option>
+
+
+<option value="11"
+
+{% if turma.classe == "11" %}selected{% endif %}>
+
+11ª Classe
+
+</option>
+
+
+<option value="12"
+
+{% if turma.classe == "12" %}selected{% endif %}>
+
+12ª Classe
+
+</option>
+
+
+<option value="13"
+
+{% if turma.classe == "13" %}selected{% endif %}>
+
+13ª Classe
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- SALA NOVO CAMPO -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Sala
+
+</label>
+
+
+
+<input
+
+type="text"
+
+name="sala"
+
+class="form-control"
+
+value="{{ turma.sala|default:'' }}"
+
+placeholder="Ex: Sala 12">
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<hr class="my-5">
+
+
+
+
+
+
+
+<!-- CURSO -->
+
+
+<div class="section-title">
+
+Organização Curricular
+
+</div>
+
+
+
+
+
+<div class="mb-4">
+
+
+<label class="form-label">
+
+Curso
+
+</label>
+
+
+
+<select
+
+name="curso"
+
+class="form-select">
+
+
+<option value="">
+
+Ensino Geral / Sem Curso
+
+</option>
+
+
+
+{% for curso in cursos %}
+
+
+<option
+
+value="{{ curso.id }}"
+
+{% if turma.curso and turma.curso.id == curso.id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ curso.nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+<small class="text-muted">
+
+Aplicável principalmente para turmas da 10ª à 13ª Classe.
+
+</small>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- INFORMAÇÃO -->
+
+
+<div class="info-box mb-4">
+
+
+<div class="row">
+
+
+<div class="col-md-6">
+
+
+<strong>
+
+Ano Letivo:
+
+</strong>
+
+
+{{ turma.ano_letivo }}
+
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+<strong>
+
+Turno:
+
+</strong>
+
+
+{{ turma.get_turno_display }}
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- BOTÕES -->
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+
+<a href="{% url 'turmas' %}"
+
+class="btn btn-outline-secondary btn-premium">
+
+
+<i class="fas fa-arrow-left me-2"></i>
+
+
+Voltar
+
+
+</a>
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-success btn-premium">
+
+
+<i class="fas fa-save me-2"></i>
+
+
+Guardar Alterações
+
+
+</button>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</form>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
 
 {% endblock %}
