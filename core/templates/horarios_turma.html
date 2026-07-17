@@ -1,271 +1,2276 @@
 {% extends "base_diretor_pedagogico.html" %}
 {% load extras %}
+
 {% block content %}
 
 <style>
-/* =============================
-   ESTILOS PREMIUM PARA HORÁRIO
-============================= */
 
-/* Cards principais */
-.card-premium {
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 25px;
-    background: #ffffff;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease forwards;
-}
-.card-premium:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+/* ==========================================================
+   EDUSCORE
+   GESTÃO DE HORÁRIOS DE TURMAS
+   INTERFACE PREMIUM ERP ESCOLAR
+========================================================== */
+
+
+.page-wrapper{
+
+    padding:25px;
+
 }
 
-/* Títulos */
-.section-title {
-    font-weight: 700;
-    font-size: 28px;
-    color: #4f46e5;
-    margin-bottom: 20px;
+
+
+.card-premium{
+
+    background:#ffffff;
+
+    border:none;
+
+    border-radius:22px;
+
+    box-shadow:
+    0 10px 30px rgba(15,23,42,.08);
+
+    transition:.3s ease;
+
 }
 
-/* Select Turma */
-.form-select {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    transition: 0.3s;
-}
-.form-select:focus {
-    box-shadow: 0 6px 25px rgba(79,70,229,0.3);
-    border-color: #4f46e5;
-}
 
-/* Badge Turno */
-.badge-turno {
-    background: linear-gradient(135deg,#4f46e5,#6366f1);
-    color: #fff;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 14px;
+.card-premium:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 15px 40px rgba(15,23,42,.12);
+
 }
 
-/* Tabela Horário */
-.table thead {
-    background: #4f46e5;
-    color: #fff;
-}
-.table td, .table th {
-    vertical-align: middle !important;
-}
 
-/* Aulas e Intervalos */
-.aula-card {
-    border-radius: 12px;
-    padding: 8px 10px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    transition: 0.3s;
-    text-align: center;
-    line-height: 1.3;
-}
-.aula-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
-.bg-aula {
-    background: linear-gradient(135deg,#10b981,#059669);
-}
-.bg-intervalo {
-    background: linear-gradient(135deg,#f59e0b,#d97706);
+
+.header-card{
+
+    padding:30px;
+
 }
 
-/* Botão Adicionar Aula */
-.btn-lg {
-    font-weight: 600;
-    transition: 0.3s;
+
+
+.header-title{
+
+    font-size:30px;
+
+    font-weight:800;
+
+    color:#183153;
+
+    letter-spacing:-.8px;
+
 }
-.btn-lg:hover {
-    transform: translateY(-2px);
+
+
+
+.header-subtitle{
+
+    color:#6c757d;
+
+    font-size:15px;
+
 }
 
-/* Animação de entrada */
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+
+
+
+
+/* ==========================================================
+        INDICADORES
+========================================================== */
+
+
+.stat-card{
+
+    padding:25px;
+
+    height:100%;
+
 }
-</style>
 
-<div class="container mt-4">
 
-    <h2 class="mb-4 section-title">Horário por Turma</h2>
 
-    <!-- Selecionar Turma -->
-    <form method="get" class="mb-3">
-        <select name="turma" class="form-select form-select-lg shadow-sm" onchange="this.form.submit()">
-            <option value="">Selecionar turma</option>
-            {% for turma in turmas %}
-                <option value="{{ turma.id }}"
-                    {% if turma_selecionada and turma_selecionada.id == turma.id %}
-                        selected
-                    {% endif %}
-                >
-                    {{ turma.classe }}ª {{ turma.identificador }} | {{ turma.curso.nome }}
-                </option>
-            {% endfor %}
-        </select>
-    </form>
+.stat-label{
 
-    <hr class="mb-4">
+    text-transform:uppercase;
 
-    {% if horario %}
+    font-size:12px;
 
-    <!-- Cabeçalho Turma -->
-    <div class="card-premium mb-4">
-        <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h4 class="fw-bold mb-0">
-                {{ turma_selecionada.classe }}ª {{ turma_selecionada.identificador }} | {{ turma_selecionada.curso.nome }}
-            </h4>
-            <span class="badge-turno">
-                Turno: {{ horario.turno }}
-            </span>
-        </div>
-    </div>
+    font-weight:700;
 
-    <!-- Tabela Horário -->
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle shadow-sm">
-            <thead>
-                <tr>
-                    <th style="width:120px">Hora</th>
-                    {% for codigo, nome in dias_semana %}
-                        <th>{{ nome }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for hora, dias in grade.items %}
-                <tr>
-                    <td class="fw-bold">{{ hora }}</td>
-                    {% for codigo, nome in dias_semana %}
-                        <td style="height:90px">
-                            {% with aula=dias|get_item:codigo %}
-                                {% if aula %}
-                                    {% if aula.tipo == "INTERVALO" %}
-                                        <div class="aula-card bg-intervalo">
-                                            Intervalo
-                                            <br>
-                                            <small>{{ aula.hora_inicio|time:"H:i" }} - {{ aula.hora_fim|time:"H:i" }}</small>
-                                        </div>
-                                    {% else %}
-                                        <div class="aula-card bg-aula">
-                                            <div class="fw-bold">{{ aula.disciplina.nome }}</div>
-                                            <small>
-                                                {{ turma_selecionada.classe }}ª {{ turma_selecionada.identificador }} | {{ turma_selecionada.curso.nome }}
-                                            </small>
-                                            <br>
-                                            <small>{{ aula.hora_inicio|time:"H:i" }} - {{ aula.hora_fim|time:"H:i" }}</small>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                    {% endfor %}
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-muted py-4">Nenhuma aula cadastrada</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    color:#6c757d;
 
-    <hr class="my-4">
+    letter-spacing:.6px;
 
-    <!-- Formulário adicionar aula/intervalo -->
-    <div class="card-premium">
-        <div class="card-body">
-            <h5 class="mb-3 fw-bold">Adicionar Aula / Intervalo</h5>
-            <form method="post" action="{% url 'adicionar_aula' horario.id %}">
-                {% csrf_token %}
+}
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Dia da Semana</label>
-                    <select name="dia" id="dia_semana" class="form-select" required>
-                        <option value="">Selecionar Dia</option>
-                        {% for codigo, nome in dias_semana %}
-                            <option value="{{ codigo }}">{{ nome }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
 
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="toda_semana" id="toda_semana">
-                    <label class="form-check-label" for="toda_semana">
-                        Aplicar a toda a semana (Seg a Sex)
-                    </label>
-                </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Hora de Início</label>
-                        <input type="time" name="hora_inicio" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Hora de Fim</label>
-                        <input type="time" name="hora_fim" class="form-control" required>
-                    </div>
-                </div>
+.stat-value{
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Tipo</label>
-                    <select name="tipo" class="form-select" required>
-                        <option value="">Selecionar Tipo</option>
-                        <option value="AULA">Aula</option>
-                        <option value="INTERVALO">Intervalo</option>
-                    </select>
-                </div>
+    margin-top:8px;
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Disciplina</label>
-                    <select name="disciplina" class="form-select">
-                        <option value="">Selecionar Disciplina</option>
-                        {% for disciplina in disciplinas %}
-                            <option value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
-                        {% endfor %}
-                    </select>
-                    <small class="text-muted">Apenas necessário para aulas. Para intervalos, deixe vazio.</small>
-                </div>
+    font-size:30px;
 
-                <div class="d-grid">
-                    <button class="btn btn-success btn-lg">Adicionar Aula / Intervalo</button>
-                </div>
+    font-weight:800;
 
-            </form>
-        </div>
-    </div>
+    color:#183153;
 
-    {% endif %}
-</div>
+}
 
-<script>
-    const todaSemanaCheckbox = document.getElementById('toda_semana');
-    const diaSelect = document.getElementById('dia_semana');
 
-    function toggleDiaSemana() {
-        if (todaSemanaCheckbox.checked) {
-            diaSelect.disabled = true;
-            diaSelect.removeAttribute('required');
-        } else {
-            diaSelect.disabled = false;
-            diaSelect.setAttribute('required', 'required');
-        }
+
+.stat-description{
+
+    font-size:13px;
+
+    color:#6c757d;
+
+}
+
+
+
+
+.icon-box{
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:800;
+
+    font-size:20px;
+
+}
+
+
+
+
+
+.bg-primary-soft{
+
+    background:#eaf2ff;
+
+    color:#0d6efd;
+
+}
+
+
+
+.bg-success-soft{
+
+    background:#e9f8ef;
+
+    color:#198754;
+
+}
+
+
+
+.bg-warning-soft{
+
+    background:#fff4df;
+
+    color:#d97706;
+
+}
+
+
+
+.bg-dark-soft{
+
+    background:#edf0f3;
+
+    color:#343a40;
+
+}
+
+
+
+
+/* ==========================================================
+        FILTROS
+========================================================== */
+
+
+.form-control,
+.form-select{
+
+    border-radius:14px;
+
+    padding:12px 15px;
+
+    border:1px solid #dee2e6;
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:
+    0 0 0 .2rem rgba(13,110,253,.15);
+
+}
+
+
+
+.btn-premium{
+
+    border-radius:14px;
+
+    padding:12px 25px;
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* ==========================================================
+        TURMA SELECIONADA
+========================================================== */
+
+
+.turma-header{
+
+    padding:25px;
+
+}
+
+
+
+.turma-title{
+
+    font-size:24px;
+
+    font-weight:800;
+
+    color:#183153;
+
+}
+
+
+
+.badge-status{
+
+    padding:10px 16px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+
+
+.status-active{
+
+    background:#e9f8ef;
+
+    color:#198754;
+
+}
+
+
+
+.status-lock{
+
+    background:#ffecec;
+
+    color:#dc3545;
+
+}
+
+
+
+
+
+/* ==========================================================
+        RESPONSIVO
+========================================================== */
+
+
+@media(max-width:768px){
+
+    .page-wrapper{
+
+        padding:10px;
+
     }
 
-    todaSemanaCheckbox.addEventListener('change', toggleDiaSemana);
-    window.addEventListener('load', toggleDiaSemana);
+
+    .header-title{
+
+        font-size:22px;
+
+    }
+
+
+}
+
+/* ==========================================================
+   GRADE DE HORÁRIOS COMPACTA
+========================================================== */
+
+
+.celula-horario{
+
+    min-width:120px;
+    height:85px;
+    padding:6px !important;
+    vertical-align:middle;
+
+}
+
+
+
+.aula-box{
+
+    border-radius:12px;
+
+    padding:8px;
+
+    color:white;
+
+    font-size:12px;
+
+    line-height:1.3;
+
+    min-height:70px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+
+
+.aula-box strong{
+
+    font-size:13px;
+
+    font-weight:800;
+
+}
+
+
+
+.aula-box small{
+
+    font-size:11px;
+
+}
+
+
+
+.intervalo-box{
+
+    background:linear-gradient(
+    135deg,
+    #f59e0b,
+    #d97706
+    );
+
+}
+
+
+
+.disciplina-box{
+
+    background:linear-gradient(
+    135deg,
+    #0d6efd,
+    #198754
+    );
+
+}
+
+</style>
+
+
+
+<div class="container-fluid page-wrapper">
+
+
+
+<!-- ==========================================================
+        CABEÇALHO PRINCIPAL
+========================================================== -->
+
+
+<div class="card card-premium header-card mb-4">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+
+<div>
+
+
+<h2 class="header-title mb-2">
+
+Gestão de Horários
+
+</h2>
+
+
+
+<p class="header-subtitle mb-0">
+
+Organização dos horários das turmas por ano letivo
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+<a href="{% url 'dashboard' %}"
+
+class="btn btn-outline-secondary btn-premium">
+
+Voltar
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+        INDICADORES
+========================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card card-premium stat-card">
+
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-label">
+
+Turmas
+
+</div>
+
+
+<div class="stat-value">
+
+{{ turmas|length }}
+
+</div>
+
+
+<div class="stat-description">
+
+Turmas disponíveis
+
+</div>
+
+
+</div>
+
+
+
+<div class="icon-box bg-primary-soft">
+
+T
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card card-premium stat-card">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+
+<div>
+
+
+<div class="stat-label">
+
+Ano Letivo
+
+</div>
+
+
+
+<div class="stat-value fs-4">
+
+
+{% if ano_selecionado %}
+
+{{ ano_selecionado.nome }}
+
+{% else %}
+
+---
+
+{% endif %}
+
+
+</div>
+
+
+<div class="stat-description">
+
+Ano selecionado
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card card-premium stat-card">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-label">
+
+Estado
+
+</div>
+
+
+
+<div class="stat-value fs-4">
+
+
+{% if horario %}
+
+{% if horario.bloqueado %}
+
+Bloqueado
+
+{% else %}
+
+Ativo
+
+{% endif %}
+
+
+{% else %}
+
+---
+
+{% endif %}
+
+
+</div>
+
+
+<div class="stat-description">
+
+Controle de edição
+
+</div>
+
+
+</div>
+
+
+
+<div class="icon-box bg-warning-soft">
+
+E
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card card-premium stat-card">
+
+
+<div>
+
+
+<div class="stat-label">
+
+Escola
+
+</div>
+
+
+<div class="stat-value fs-5">
+
+
+{{ request.user.escola.nome }}
+
+
+</div>
+
+
+<div class="stat-description">
+
+Unidade escolar
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+        FILTROS
+========================================================== -->
+
+
+<div class="card card-premium p-4 mb-4">
+
+
+<form method="get">
+
+
+
+<div class="row g-3">
+
+
+
+<div class="col-lg-4">
+
+
+<label class="form-label fw-bold">
+
+Ano Letivo
+
+</label>
+
+
+<select name="ano"
+
+class="form-select"
+
+onchange="this.form.submit()">
+
+
+
+<option value="">
+
+Selecionar Ano
+
+</option>
+
+
+{% for ano in anos_letivos %}
+
+
+<option value="{{ ano.id }}"
+
+{% if ano_selecionado.id == ano.id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ ano.nome }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-5">
+
+
+<label class="form-label fw-bold">
+
+Turma
+
+</label>
+
+
+<select name="turma"
+
+class="form-select"
+
+onchange="this.form.submit()">
+
+
+
+<option value="">
+
+Selecionar Turma
+
+</option>
+
+
+{% for turma in turmas %}
+
+
+<option value="{{ turma.id }}"
+
+{% if turma_selecionada.id == turma.id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ turma.get_classe_display }}
+
+{{ turma.identificador }}
+
+{% if turma.curso %}
+
+- {{ turma.curso.nome }}
+
+{% endif %}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div class="col-lg-3 d-flex align-items-end">
+
+
+<a href="{% url 'horarios_turma' %}"
+
+class="btn btn-outline-secondary btn-premium w-100">
+
+
+Limpar
+
+
+</a>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</form>
+
+
+</div>
+<!-- ==========================================================
+        INFORMAÇÃO DA TURMA SELECIONADA
+========================================================== -->
+
+
+{% if turma_selecionada %}
+
+
+
+<div class="card card-premium turma-header mb-4">
+
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+
+<div>
+
+
+<h3 class="turma-title mb-2">
+
+
+{{ turma_selecionada.get_classe_display }}
+
+{{ turma_selecionada.identificador }}
+
+
+
+{% if turma_selecionada.curso %}
+
+
+<span class="text-muted">
+
+-
+
+{{ turma_selecionada.curso.nome }}
+
+</span>
+
+
+{% endif %}
+
+
+
+</h3>
+
+
+
+<div class="d-flex flex-wrap gap-3">
+
+
+
+<span class="text-muted">
+
+
+<strong>Ano Letivo:</strong>
+
+
+{% if horario.ano_letivo %}
+
+
+{{ horario.ano_letivo.nome }}
+
+
+{% else %}
+
+
+{{ turma_selecionada.ano_letivo.nome }}
+
+
+{% endif %}
+
+
+</span>
+
+
+
+
+<span class="text-muted">
+
+
+<strong>Sala:</strong>
+
+
+{% if turma_selecionada.sala %}
+
+
+{{ turma_selecionada.sala }}
+
+
+{% else %}
+
+
+Sem sala
+
+
+{% endif %}
+
+
+</span>
+
+
+
+
+
+<span class="text-muted">
+
+
+<div class="badge bg-primary rounded-pill px-3 py-2">
+
+Turno:
+
+{{ turma_selecionada.get_turno_display }}
+
+</div>
+
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div>
+
+
+{% if horario %}
+
+
+
+{% if horario.bloqueado %}
+
+
+<span class="badge-status status-lock">
+
+Ano {{ horario.ano_letivo.nome }} - Histórico
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge-status status-active">
+
+
+Horário Editável
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- ==========================================================
+        AVISO DE BLOQUEIO
+========================================================== -->
+
+
+{% if horario.bloqueado %}
+
+
+
+<div class="alert alert-danger rounded-4 shadow-sm p-4 mb-4">
+
+
+<div class="fw-bold mb-2">
+
+
+Horário histórico bloqueado
+
+
+</div>
+
+
+
+<p class="mb-0">
+
+
+Este horário pertence a um ano letivo encerrado e está protegido contra alterações.
+
+
+Para criar alterações, utilize o horário do ano letivo atual.
+
+
+</p>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+        RESUMO DO HORÁRIO
+========================================================== -->
+
+
+
+<div class="row g-4 mb-4">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="card card-premium p-4">
+
+
+<div class="stat-label">
+
+Aulas registadas
+
+</div>
+
+
+<div class="stat-value">
+
+
+{{ aulas|length|default:"0" }}
+
+
+</div>
+
+
+<div class="stat-description">
+
+Disciplinas distribuídas na semana
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="card card-premium p-4">
+
+
+<div class="stat-label">
+
+Disciplinas
+
+</div>
+
+
+<div class="stat-value">
+
+
+{{ disciplinas|length|default:"0" }}
+
+
+</div>
+
+
+<div class="stat-description">
+
+Disciplinas da turma
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="card card-premium p-4">
+
+
+<div class="stat-label">
+
+Situação
+
+</div>
+
+
+<div class="stat-value fs-4">
+
+
+{% if horario.bloqueado %}
+
+
+Histórico
+
+
+{% else %}
+
+
+Atual
+
+
+{% endif %}
+
+
+
+</div>
+
+
+<div class="stat-description">
+
+Gestão académica
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+        GRADE SEMANAL
+========================================================== -->
+
+
+
+<div class="card card-premium p-4 mb-4">
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<h4 class="fw-bold mb-0">
+
+
+Horário Semanal
+
+
+</h4>
+
+
+
+{% if horario.bloqueado %}
+
+
+<span class="badge bg-danger rounded-pill px-3 py-2">
+
+
+Somente leitura
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-success rounded-pill px-3 py-2">
+
+
+Edição ativa
+
+
+</span>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table table-bordered align-middle text-center">
+
+
+
+<thead class="table-light">
+
+
+<tr>
+
+
+<th style="width:120px">
+
+
+Horário
+
+
+</th>
+
+
+
+{% for codigo,nome in dias_semana %}
+
+
+<th>
+
+
+{{ nome }}
+
+
+</th>
+
+
+{% endfor %}
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+
+{% for hora,dias in grade.items %}
+
+
+
+<tr>
+
+
+
+<td class="fw-bold bg-light">
+
+
+{{ hora }}
+
+
+</td>
+
+
+
+{% for codigo,nome in dias_semana %}
+
+
+
+<td class="celula-horario">
+
+
+
+{% with aula=dias|get_item:codigo %}
+
+
+
+{% if aula %}
+
+
+
+{% if aula.tipo == "INTERVALO" %}
+
+
+
+<div class="aula-box intervalo-box">
+
+<strong>
+Intervalo
+</strong>
+
+<small>
+{{ aula.hora_inicio|time:"H:i" }}
+-
+{{ aula.hora_fim|time:"H:i" }}
+</small>
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+<div class="aula-box disciplina-box">
+
+
+
+<strong>
+
+
+{{ aula.disciplina.nome }}
+
+
+</strong>
+
+
+
+<br>
+
+
+
+<small>
+
+
+Professor:
+
+
+{% if aula.professor %}
+
+
+{{ aula.professor.get_full_name }}
+
+
+{% else %}
+
+
+Não definido
+
+
+{% endif %}
+
+
+
+</small>
+
+
+
+<br>
+
+
+
+<small>
+
+
+{{ aula.hora_inicio|time:"H:i" }}
+
+-
+
+{{ aula.hora_fim|time:"H:i" }}
+
+
+</small>
+
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+{% endwith %}
+
+
+
+</td>
+
+
+{% endfor %}
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="6"
+
+class="py-5 text-muted">
+
+
+Nenhuma aula cadastrada para esta turma.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+<!-- ==========================================================
+        FORMULÁRIO NOVA AULA
+========================================================== -->
+
+
+
+{% if horario and not horario.bloqueado %}
+
+
+<div class="card card-premium p-4 mb-5">
+
+
+<div class="mb-4">
+
+
+<h4 class="fw-bold">
+
+Configurar Horário do Turno
+
+</h4>
+
+
+<p class="text-muted mb-0">
+
+Defina aulas e intervalos da turma para o ano letivo selecionado.
+
+</p>
+
+
+</div>
+
+
+
+
+<form method="post"
+
+action="{% url 'adicionar_aula' horario.id %}">
+
+
+{% csrf_token %}
+
+
+
+
+
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="col-md-12">
+
+
+<div class="form-check form-switch p-3 rounded-4 bg-light">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="toda_semana"
+
+id="toda_semana"
+
+
+>
+
+
+<label
+
+class="form-check-label fw-bold"
+
+for="toda_semana">
+
+
+Aplicar em todas as semanas úteis
+
+
+</label>
+
+
+<div class="text-muted small mt-1">
+
+
+Criará automaticamente de Segunda a Sexta.
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+<label class="form-label fw-bold">
+
+
+Dia da Semana
+
+
+</label>
+
+
+
+<select name="dia"
+
+id="campo_dia"
+
+class="form-select">
+
+
+
+<option value="">Selecionar</option>
+
+
+
+{% for codigo,nome in dias_semana %}
+
+
+
+<option value="{{ codigo }}">
+
+
+{{ nome }}
+
+
+</option>
+
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+
+<label class="form-label fw-bold">
+
+
+Hora Inicial
+
+
+</label>
+
+
+
+<input type="time"
+
+name="hora_inicio"
+
+class="form-control"
+
+required>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+
+<label class="form-label fw-bold">
+
+
+Hora Final
+
+
+</label>
+
+
+
+<input type="time"
+
+name="hora_fim"
+
+class="form-control"
+
+required>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+
+<label class="form-label fw-bold">
+
+
+Tipo
+
+
+</label>
+
+
+
+<select name="tipo"
+
+class="form-select"
+
+id="tipo_aula"
+
+required>
+
+
+
+<option value="AULA">
+
+
+Aula
+
+
+</option>
+
+
+
+<option value="INTERVALO">
+
+
+Intervalo
+
+
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+
+<label class="form-label fw-bold">
+
+
+Disciplina
+
+
+</label>
+
+
+
+<select name="disciplina"
+
+class="form-select">
+
+
+
+<option value="">Selecionar disciplina</option>
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+<option value="{{ disciplina.id }}">
+
+
+{{ disciplina.nome }}
+
+
+</option>
+
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+
+<label class="form-label fw-bold">
+
+
+Professor
+
+
+</label>
+
+
+
+<select name="professor"
+
+class="form-select">
+
+
+
+<option value="">Selecionar professor</option>
+
+
+
+{% for professor in professores %}
+
+
+
+<option value="{{ professor.id }}">
+
+
+{{ professor.get_full_name }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-6 d-flex align-items-end">
+
+
+
+<button class="btn btn-primary btn-premium w-100">
+
+Guardar Configuração do Horário
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+</form>
+
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+<!-- ==========================================================
+        ESTADO SEM TURMA SELECIONADA
+========================================================== -->
+
+
+{% if not turma_selecionada %}
+
+
+
+<div class="card card-premium p-5 text-center">
+
+
+<h4 class="fw-bold text-muted">
+
+
+Selecione uma turma
+
+
+</h4>
+
+
+
+<p class="text-muted mb-0">
+
+
+Escolha o ano letivo e a turma para consultar ou gerir o horário.
+
+
+</p>
+
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+<!-- ==========================================================
+        RODAPÉ
+========================================================== -->
+
+
+<div class="text-center mt-5 mb-3">
+
+
+<small class="text-muted">
+
+
+Eduscore — Gestão Académica Integrada
+
+
+</small>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+        JAVASCRIPT
+========================================================== -->
+
+
+<script>
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+
+const tipo = document.getElementById(
+"tipo_aula"
+);
+
+
+
+const disciplina = document.querySelector(
+"select[name='disciplina']"
+);
+
+
+
+if(tipo && disciplina){
+
+
+
+function controlarDisciplina(){
+
+
+
+if(tipo.value === "INTERVALO"){
+
+
+
+disciplina.value="";
+
+disciplina.disabled=true;
+
+
+
+}
+else{
+
+
+disciplina.disabled=false;
+
+
+
+}
+
+
+
+}
+
+
+
+tipo.addEventListener(
+"change",
+controlarDisciplina
+);
+
+
+
+controlarDisciplina();
+
+
+
+}
+
+
+
+});
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+const todas = document.getElementById(
+"toda_semana"
+);
+
+
+const dia = document.getElementById(
+"campo_dia"
+);
+
+
+
+if(todas && dia){
+
+
+function controlarDia(){
+
+
+if(todas.checked){
+
+
+dia.disabled=true;
+
+dia.removeAttribute("required");
+
+
+}else{
+
+
+dia.disabled=false;
+
+dia.setAttribute(
+"required",
+"required"
+);
+
+
+}
+
+
+}
+
+
+
+todas.addEventListener(
+"change",
+controlarDia
+);
+
+
+controlarDia();
+
+
+}
+
+
+});
+
+
+
 </script>
+
+
+
+
 
 {% endblock %}

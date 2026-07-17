@@ -1837,10 +1837,18 @@ class HistoricoAcademico(models.Model):
 
 
 class HorarioTurma(models.Model):
+
     escola = models.ForeignKey(
         "Escola",
         on_delete=models.CASCADE,
         related_name="horarios_escola"
+    )
+
+    ano_letivo = models.ForeignKey(
+        "AnoLetivo",
+        on_delete=models.CASCADE,
+        related_name="horarios",
+        verbose_name="Ano Letivo"
     )
 
     turma = models.ForeignKey(
@@ -1858,10 +1866,34 @@ class HorarioTurma(models.Model):
         ]
     )
 
-    criado_em = models.DateTimeField(auto_now_add=True)
+    bloqueado = models.BooleanField(
+        default=False,
+        verbose_name="Horário bloqueado"
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        unique_together = (
+            "escola",
+            "ano_letivo",
+            "turma",
+            "turno",
+        )
+        ordering = [
+            "-ano_letivo__nome",
+            "turma__classe",
+            "turma__identificador",
+        ]
 
     def __str__(self):
-        return f"{self.turma} - {self.turno}"
+        return f"{self.turma} | {self.ano_letivo}"
 
 
 class AulaHorario(models.Model):

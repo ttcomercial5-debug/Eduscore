@@ -9918,209 +9918,727 @@ def horarios(request):
 
 from collections import defaultdict
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
 @login_required
 def horarios_turma(request):
 
-    # Apenas diretor
+    # ==========================================================
+    # PERMISSÃO
+    # ==========================================================
+
     if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
     escola = request.user.escola
 
-    # Turmas da escola com curso
-    turmas = Turma.objects.select_related("curso").filter(
-        escola=escola
-    ).order_by("classe", "identificador")
+    # ==========================================================
+    # ANOS LETIVOS
+    # ==========================================================
+
+    anos_letivos = (
+        AnoLetivo.objects
+        .filter(escola=escola)
+        .order_by("-nome")
+    )
+
+    ano_id = request.GET.get("ano")
+
+    if ano_id:
+
+        ano_selecionado = get_object_or_404(
+            AnoLetivo,
+            id=ano_id,
+            escola=escola
+        )
+
+    else:
+
+        ano_selecionado = anos_letivos.filter(
+            ativo=True
+        ).first()
+
+        if not ano_selecionado:
+            ano_selecionado = anos_letivos.first()
+
+    # ==========================================================
+    # TURMAS DO ANO
+    # ==========================================================
+
+    turmas = (
+        Turma.objects
+        .select_related(
+            "curso",
+            "ano_letivo"
+        )
+        .filter(
+            escola=escola,
+            ano_letivo=ano_selecionado
+        )
+        .order_by(
+            "classe",
+            "identificador"
+        )
+    )
 
     turma_id = request.GET.get("turma")
 
     horario = None
-    aulas = None
+    aulas = []
+    disciplinas = []
     turma_selecionada = None
-    disciplinas = None
 
-    # grade estilo ERP
     grade = defaultdict(dict)
+
+    horario_editavel = False
+
+    # ==========================================================
+    # TURMA SELECIONADA
+    # ==========================================================
 
     if turma_id:
 
-        turma_selecionada = get_object_or_404(
-            Turma.objects.select_related("curso"),
-            id=turma_id,
-            escola=escola
+        turma_selecionada = (
+            Turma.objects
+            .select_related(
+                "curso",
+                "ano_letivo"
+            )
+            .filter(
+                id=turma_id,
+                escola=escola,
+                ano_letivo=ano_selecionado
+            )
+            .first()
         )
 
-        # Criar ou buscar horário
-        horario, created = HorarioTurma.objects.get_or_create(
-            turma=turma_selecionada,
+        # Se a turma não pertence ao ano selecionado
+        # ignora a seleção antiga
+        if turma_selecionada:
+
+            # Buscar ou criar horário do ano letivo
+            horario, criado = HorarioTurma.objects.get_or_create(
+
+                escola=escola,
+
+                turma=turma_selecionada,
+
+                ano_letivo=ano_selecionado,
+
+                turno=turma_selecionada.turno,
+
+                defaults={
+                    "bloqueado": False
+                }
+
+            )
+
+            # Se o ano não estiver ativo, bloqueia automaticamente
+            if not ano_selecionado.ativo and not horario.bloqueado:
+                horario.bloqueado = True
+
+                horario.save(
+                    update_fields=[
+                        "bloqueado"
+                    ]
+                )
+
+            horario_editavel = (
+                    ano_selecionado.ativo
+                    and
+                    not horario.bloqueado
+            )
+
+            # ======================================================
+            # AULAS
+            # ======================================================
+
+            aulas = (
+                AulaHorario.objects
+                .filter(
+                    horario=horario
+                )
+                .select_related(
+                    "disciplina",
+                    "professor",
+                    "horario__turma",
+                    "horario__turma__curso"
+                )
+                .order_by(
+                    "hora_inicio",
+                    "dia"
+                )
+            )
+
+            # ======================================================
+            # GRADE
+            # ======================================================
+
+            for aula in aulas:
+                hora = aula.hora_inicio.strftime("%H:%M")
+
+                grade[hora][aula.dia] = aula
+
+            # ======================================================
+            # DISCIPLINAS
+            # ======================================================
+
+            disciplinas = (
+                Disciplina.objects
+                .filter(
+                    turma=turma_selecionada,
+                    escola=escola
+                )
+                .select_related("professor")
+                .order_by("nome")
+            )
+
+    # ==========================================================
+    # CONTADORES
+    # ==========================================================
+
+    total_turmas = turmas.count()
+
+    total_horarios = (
+        HorarioTurma.objects.filter(
             escola=escola,
-            turno=turma_selecionada.turno
-        )
+            ano_letivo=ano_selecionado
+        ).count()
+        if ano_selecionado
+        else 0
+    )
 
-        # Buscar aulas
-        aulas = AulaHorario.objects.filter(
-            horario=horario
-        ).select_related(
-            "disciplina",
-            "horario__turma__curso"
-        ).order_by("hora_inicio")
+    total_aulas = (
+        AulaHorario.objects.filter(
+            horario__ano_letivo=ano_selecionado
+        ).count()
+        if ano_selecionado
+        else 0
+    )
 
-        # Montar grade tipo calendário
-        for aula in aulas:
-            hora = aula.hora_inicio.strftime("%H:%M")
-            grade[hora][aula.dia] = aula
-
-        # Disciplinas disponíveis
-        disciplinas = Disciplina.objects.filter(
-            turma=turma_selecionada,
-            escola=escola
-        ).order_by("nome")
+    # ==========================================================
+    # CONTEXTO
+    # ==========================================================
 
     context = {
+
+        "anos_letivos": anos_letivos,
+
+        "ano_selecionado": ano_selecionado,
+
         "turmas": turmas,
-        "horario": horario,
-        "aulas": aulas,
-        "grade": dict(grade),
+
         "turma_selecionada": turma_selecionada,
+
+        "horario": horario,
+
+        "horario_editavel": horario_editavel,
+
         "disciplinas": disciplinas,
+
+        "aulas": aulas,
+
+        "grade": dict(grade),
+
+        "total_turmas": total_turmas,
+
+        "total_horarios": total_horarios,
+
+        "total_aulas": total_aulas,
+
         "dias_semana": [
+
             ("SEG", "Segunda"),
+
             ("TER", "Terça"),
+
             ("QUA", "Quarta"),
+
             ("QUI", "Quinta"),
+
             ("SEX", "Sexta"),
-        ]
+
+
+        ],
+
     }
 
-    return render(request, "horarios_turma.html", context)
+    return render(
+        request,
+        "horarios_turma.html",
+        context
+    )
+
 
 
 
 from datetime import datetime
-from django.shortcuts import get_object_or_404, redirect, render
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.shortcuts import (
+    redirect,
+    get_object_or_404
+)
+
+from academic.models import (
+    HorarioTurma,
+    AulaHorario,
+    Disciplina
+)
+
+
 
 @login_required
 def adicionar_aula(request, horario_id):
 
-    # =========================
+    # ==========================================================
     # PERMISSÃO
-    # =========================
+    # ==========================================================
+
     if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
-        messages.error(request, "Sem permissão para esta ação.")
+
+        messages.error(
+            request,
+            "Sem permissão para configurar horários."
+        )
+
         return redirect("dashboard")
+
+
 
     escola = request.user.escola
 
+
+
+    # ==========================================================
+    # HORÁRIO DA TURMA
+    # ==========================================================
+
     horario = get_object_or_404(
+
         HorarioTurma,
+
         id=horario_id,
+
         escola=escola
+
     )
 
-    # =========================
-    # POST
-    # =========================
-    if request.method == "POST":
 
-        dia = request.POST.get("dia")
-        hora_inicio = request.POST.get("hora_inicio")
-        hora_fim = request.POST.get("hora_fim")
-        tipo = request.POST.get("tipo")
-        disciplina_id = request.POST.get("disciplina")
-        toda_semana = request.POST.get("toda_semana") == "on"
 
-        # =========================
-        # VALIDAÇÃO DE HORAS
-        # =========================
-        try:
-            inicio = datetime.strptime(hora_inicio, "%H:%M").time()
-            fim = datetime.strptime(hora_fim, "%H:%M").time()
-        except (ValueError, TypeError):
-            messages.error(request, "Formato de hora inválido.")
-            return redirect(f"/horarios/?turma={horario.turma.id}")
+    # ==========================================================
+    # BLOQUEIO DE ANO LETIVO FECHADO
+    # ==========================================================
 
-        if inicio >= fim:
-            messages.error(request, "A hora final deve ser maior que a inicial.")
-            return redirect(f"/horarios/?turma={horario.turma.id}")
+    if horario.bloqueado or not horario.ano_letivo.ativo:
 
-        # =========================
-        # DISCIPLINA (CASO AULA)
-        # =========================
-        disciplina = None
+        messages.warning(
 
-        if tipo == "AULA":
-            if not disciplina_id:
-                messages.error(request, "Selecione uma disciplina.")
-                return redirect(f"/horarios/?turma={horario.turma.id}")
+            request,
 
-            disciplina = get_object_or_404(
-                Disciplina,
-                id=disciplina_id,
-                escola=escola
+            "Este horário pertence a um ano letivo fechado e não pode ser alterado."
+
+        )
+
+        return redirect(
+            f"/horarios/?turma={horario.turma.id}"
+        )
+
+
+
+    # ==========================================================
+    # SOMENTE POST
+    # ==========================================================
+
+    if request.method != "POST":
+
+        return redirect("horarios")
+
+
+
+    # ==========================================================
+    # DADOS DO FORMULÁRIO
+    # ==========================================================
+
+
+    dia = request.POST.get("dia")
+
+    hora_inicio = request.POST.get("hora_inicio")
+
+    hora_fim = request.POST.get("hora_fim")
+
+    tipo = request.POST.get("tipo")
+
+    disciplina_id = request.POST.get("disciplina")
+
+    professor_id = request.POST.get("professor")
+
+
+    todas_semana = (
+        request.POST.get("toda_semana")
+        == "on"
+    )
+
+
+
+    # ==========================================================
+    # VALIDAR HORAS
+    # ==========================================================
+
+    try:
+
+        inicio = datetime.strptime(
+            hora_inicio,
+            "%H:%M"
+        ).time()
+
+
+        fim = datetime.strptime(
+            hora_fim,
+            "%H:%M"
+        ).time()
+
+
+    except:
+
+        messages.error(
+
+            request,
+
+            "Horário inválido."
+
+        )
+
+
+        return redirect(
+            f"/horarios/?turma={horario.turma.id}"
+        )
+
+
+
+    if inicio >= fim:
+
+
+        messages.error(
+
+            request,
+
+            "A hora final deve ser superior à hora inicial."
+
+        )
+
+
+        return redirect(
+            f"/horarios/?turma={horario.turma.id}"
+        )
+
+
+
+    # ==========================================================
+    # VALIDAR TURNO
+    # ==========================================================
+
+    turno = horario.turno
+
+
+
+    if turno == "MANHA":
+
+        limite_inicio = "06:00"
+        limite_fim = "12:30"
+
+
+
+    elif turno == "TARDE":
+
+        limite_inicio = "12:00"
+        limite_fim = "18:30"
+
+
+
+    else:
+
+        limite_inicio = "18:00"
+        limite_fim = "23:30"
+
+
+
+
+    # ==========================================================
+    # DISCIPLINA
+    # ==========================================================
+
+    disciplina = None
+
+
+    if tipo == "AULA":
+
+
+        if not disciplina_id:
+
+
+            messages.error(
+
+                request,
+
+                "Selecione a disciplina."
+
             )
 
-        # =========================
-        # DIAS ÚTEIS
-        # =========================
-        DIAS_UTEIS = [
-            d for d, _ in AulaHorario.DIAS_SEMANA
-            if d != "SAB"
-        ]
 
-        dias_uso = DIAS_UTEIS if toda_semana else [dia]
-
-        # =========================
-        # CRIAÇÃO COM VERIFICAÇÃO DE CONFLITO
-        # =========================
-        criadas = 0
-        ignoradas = 0
-
-        for d in dias_uso:
-
-            conflito = AulaHorario.objects.filter(
-                horario=horario,
-                dia=d
-            ).filter(
-                Q(hora_inicio__lt=fim) &
-                Q(hora_fim__gt=inicio)
-            ).exists()
-
-            if conflito:
-                ignoradas += 1
-                continue
-
-            AulaHorario.objects.create(
-                horario=horario,
-                dia=d,
-                hora_inicio=inicio,
-                hora_fim=fim,
-                tipo=tipo,
-                disciplina=disciplina
+            return redirect(
+                f"/horarios/?turma={horario.turma.id}"
             )
 
-            criadas += 1
 
-        # =========================
-        # FEEDBACK INTELIGENTE
-        # =========================
-        if criadas > 0:
+
+        disciplina = get_object_or_404(
+
+            Disciplina,
+
+            id=disciplina_id,
+
+            turma=horario.turma,
+
+            escola=escola
+
+        )
+
+
+
+    # ==========================================================
+    # PROFESSOR
+    # ==========================================================
+
+    professor = None
+
+
+    if professor_id:
+
+
+        professor = get_object_or_404(
+
+            User,
+
+            id=professor_id,
+
+            escola=escola
+
+        )
+
+
+
+    # ==========================================================
+    # DIAS DA SEMANA
+    # SEM SÁBADO
+    # ==========================================================
+
+
+    DIAS_UTEIS = [
+
+        "SEG",
+
+        "TER",
+
+        "QUA",
+
+        "QUI",
+
+        "SEX",
+
+    ]
+
+
+
+    if todas_semana:
+
+
+        dias = DIAS_UTEIS
+
+
+    else:
+
+
+        if dia not in DIAS_UTEIS:
+
+
+            messages.error(
+
+                request,
+
+                "Selecione um dia válido."
+
+            )
+
+
+            return redirect(
+                f"/horarios/?turma={horario.turma.id}"
+            )
+
+
+        dias = [dia]
+
+
+
+    # ==========================================================
+    # CRIAÇÃO DO HORÁRIO
+    # ==========================================================
+
+
+    criadas = 0
+
+    conflitos = 0
+
+
+
+    for dia_atual in dias:
+
+
+
+        existe = AulaHorario.objects.filter(
+
+            horario=horario,
+
+            dia=dia_atual
+
+        ).filter(
+
+            Q(
+                hora_inicio__lt=fim
+            )
+
+            &
+
+            Q(
+                hora_fim__gt=inicio
+            )
+
+        ).exists()
+
+
+
+        if existe:
+
+
+            conflitos += 1
+
+            continue
+
+
+
+        AulaHorario.objects.create(
+
+            horario=horario,
+
+            dia=dia_atual,
+
+            hora_inicio=inicio,
+
+            hora_fim=fim,
+
+            tipo=tipo,
+
+            disciplina=disciplina,
+
+            professor=professor
+
+        )
+
+
+        criadas += 1
+
+
+
+    # ==========================================================
+    # MENSAGENS
+    # ==========================================================
+
+
+    if criadas:
+
+
+        if todas_semana:
+
+
             messages.success(
+
                 request,
-                f"{criadas} aula(s) adicionada(s) com sucesso!"
+
+                f"{criadas} horários criados de segunda a sexta com sucesso."
+
             )
 
-        if ignoradas > 0:
-            messages.warning(
+
+        else:
+
+
+            messages.success(
+
                 request,
-                f"{ignoradas} conflito(s) ignorado(s) por sobreposição de horário."
+
+                "Horário adicionado com sucesso."
+
             )
 
-        return redirect(f"/horarios/?turma={horario.turma.id}")
 
-    return redirect("horarios")
+
+    if conflitos:
+
+
+        messages.warning(
+
+            request,
+
+            f"{conflitos} horário(s) não foram adicionados porque já existiam conflitos."
+
+        )
+
+
+
+    return redirect(
+
+        f"/horarios/?turma={horario.turma.id}"
+
+    )
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+
+@login_required
+def remover_aula_horario(request, aula_id):
+
+    if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
+        return redirect("dashboard")
+
+    aula = get_object_or_404(
+        AulaHorario,
+        id=aula_id,
+        horario__escola=request.user.escola
+    )
+
+    turma_id = aula.horario.turma.id
+
+    # não permitir apagar horários arquivados
+    if aula.horario.bloqueado:
+        messages.error(
+            request,
+            "Este horário pertence a um ano letivo encerrado e não pode ser alterado."
+        )
+        return redirect(f"/horarios/?turma={turma_id}")
+
+    aula.delete()
+
+    messages.success(
+        request,
+        "Aula removida com sucesso."
+    )
+
+    return redirect(f"/horarios/?turma={turma_id}")
 
 
 @login_required

@@ -109,6 +109,7 @@ urlpatterns = [
     path("diretor/turma/<int:turma_id>/imprimir/", views.imprimir_lista_turma, name="imprimir_lista_turma"),
     path("horarios/", views.horarios_turma, name="horarios_turma"),
     path("horarios/adicionar/<int:horario_id>/", views.adicionar_aula, name="adicionar_aula"),
+    path("horarios/aula/<int:aula_id>/remover/", views.remover_aula_horario, name="remover_aula_horario",),
 
     # =============================
     # DIRETOR
