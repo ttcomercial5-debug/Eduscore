@@ -9919,7 +9919,19 @@ def horarios(request):
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect, render
+
+from academic.models import (
+    AnoLetivo,
+    Turma,
+    HorarioTurma,
+    AulaHorario,
+    Disciplina,
+)
+
+User = get_user_model()
+
 
 @login_required
 def horarios_turma(request):
@@ -9931,11 +9943,19 @@ def horarios_turma(request):
     if getattr(request.user, "role", None) != "DIRETOR_PEDAGOGICO":
         return redirect("dashboard")
 
-    escola = request.user.escola
+
+    escola = getattr(request.user, "escola", None)
+
+
+    if not escola:
+        return redirect("dashboard")
+
+
 
     # ==========================================================
     # ANOS LETIVOS
     # ==========================================================
+
 
     anos_letivos = (
         AnoLetivo.objects
@@ -9943,100 +9963,175 @@ def horarios_turma(request):
         .order_by("-nome")
     )
 
+
     ano_id = request.GET.get("ano")
+
+
+    ano_selecionado = None
+
+
 
     if ano_id:
 
+
         ano_selecionado = get_object_or_404(
+
             AnoLetivo,
+
             id=ano_id,
+
             escola=escola
+
         )
+
 
     else:
 
-        ano_selecionado = anos_letivos.filter(
-            ativo=True
-        ).first()
+
+        ano_selecionado = (
+            anos_letivos
+            .filter(ativo=True)
+            .first()
+        )
+
 
         if not ano_selecionado:
+
             ano_selecionado = anos_letivos.first()
 
-    # ==========================================================
-    # TURMAS DO ANO
-    # ==========================================================
 
-    turmas = (
-        Turma.objects
-        .select_related(
-            "curso",
-            "ano_letivo"
-        )
-        .filter(
-            escola=escola,
-            ano_letivo=ano_selecionado
-        )
-        .order_by(
-            "classe",
-            "identificador"
-        )
-    )
-
-    turma_id = request.GET.get("turma")
-
-    horario = None
-    aulas = []
-    disciplinas = []
-    turma_selecionada = None
-
-    grade = defaultdict(dict)
-
-    horario_editavel = False
 
     # ==========================================================
-    # TURMA SELECIONADA
+    # TURMAS
     # ==========================================================
 
-    if turma_id:
 
-        turma_selecionada = (
+    turmas = Turma.objects.none()
+
+
+    if ano_selecionado:
+
+
+        turmas = (
             Turma.objects
             .select_related(
                 "curso",
                 "ano_letivo"
             )
             .filter(
-                id=turma_id,
                 escola=escola,
                 ano_letivo=ano_selecionado
             )
-            .first()
+            .order_by(
+                "classe",
+                "identificador"
+            )
         )
 
-        # Se a turma não pertence ao ano selecionado
-        # ignora a seleção antiga
-        if turma_selecionada:
 
-            # Buscar ou criar horário do ano letivo
-            horario, criado = HorarioTurma.objects.get_or_create(
+
+    turma_id = request.GET.get("turma")
+
+
+    horario = None
+
+    aulas = []
+
+    disciplinas = []
+
+    professores = []
+
+    turma_selecionada = None
+
+
+    grade = defaultdict(dict)
+
+
+    horario_editavel = False
+
+
+
+    # ==========================================================
+    # TURMA SELECIONADA
+    # ==========================================================
+
+
+    if turma_id and ano_selecionado:
+
+
+        turma_selecionada = (
+
+            Turma.objects
+
+            .select_related(
+                "curso",
+                "ano_letivo"
+            )
+
+            .filter(
+
+                id=turma_id,
 
                 escola=escola,
 
-                turma=turma_selecionada,
-
-                ano_letivo=ano_selecionado,
-
-                turno=turma_selecionada.turno,
-
-                defaults={
-                    "bloqueado": False
-                }
+                ano_letivo=ano_selecionado
 
             )
 
-            # Se o ano não estiver ativo, bloqueia automaticamente
-            if not ano_selecionado.ativo and not horario.bloqueado:
+            .first()
+
+        )
+
+
+
+        if turma_selecionada:
+
+
+
+            horario, criado = (
+
+                HorarioTurma.objects
+
+                .get_or_create(
+
+                    escola=escola,
+
+                    turma=turma_selecionada,
+
+                    ano_letivo=ano_selecionado,
+
+                    turno=turma_selecionada.turno,
+
+                    defaults={
+
+                        "bloqueado": False
+
+                    }
+
+                )
+
+            )
+
+
+
+            # ==================================================
+            # BLOQUEIO AUTOMÁTICO DE ANO FECHADO
+            # ==================================================
+
+
+            if (
+
+                not ano_selecionado.ativo
+
+                and
+
+                not horario.bloqueado
+
+            ):
+
+
                 horario.bloqueado = True
+
 
                 horario.save(
                     update_fields=[
@@ -10044,108 +10139,231 @@ def horarios_turma(request):
                     ]
                 )
 
+
+
             horario_editavel = (
-                    ano_selecionado.ativo
-                    and
-                    not horario.bloqueado
+
+                ano_selecionado.ativo
+
+                and
+
+                not horario.bloqueado
+
             )
 
-            # ======================================================
+
+
+            # ==================================================
             # AULAS
-            # ======================================================
+            # ==================================================
+
 
             aulas = (
+
                 AulaHorario.objects
+
                 .filter(
                     horario=horario
                 )
+
                 .select_related(
+
                     "disciplina",
+
                     "professor",
-                    "horario__turma",
-                    "horario__turma__curso"
+
+                    "horario",
+
                 )
+
                 .order_by(
+
                     "hora_inicio",
+
                     "dia"
+
                 )
+
             )
 
-            # ======================================================
-            # GRADE
-            # ======================================================
+
+
+            # ==================================================
+            # MONTAR GRADE
+            # ==================================================
+
 
             for aula in aulas:
+
+
                 hora = aula.hora_inicio.strftime("%H:%M")
+
 
                 grade[hora][aula.dia] = aula
 
-            # ======================================================
+
+
+
+            # ==================================================
             # DISCIPLINAS
-            # ======================================================
+            # ==================================================
+
 
             disciplinas = (
+
                 Disciplina.objects
+
                 .filter(
+
                     turma=turma_selecionada,
+
                     escola=escola
+
                 )
-                .select_related("professor")
-                .order_by("nome")
+
+                .select_related(
+                    "professor"
+                )
+
+                .order_by(
+                    "nome"
+                )
+
             )
 
+
+
+            # ==================================================
+            # PROFESSORES DA ESCOLA
+            # ==================================================
+
+
+            professores = (
+
+                User.objects
+
+                .filter(
+
+                    escola=escola,
+
+                    role="PROFESSOR"
+
+                )
+
+                .order_by(
+                    "first_name",
+                    "last_name"
+                )
+
+            )
+
+
+
+
     # ==========================================================
-    # CONTADORES
+    # INDICADORES
     # ==========================================================
+
 
     total_turmas = turmas.count()
 
-    total_horarios = (
-        HorarioTurma.objects.filter(
-            escola=escola,
-            ano_letivo=ano_selecionado
-        ).count()
-        if ano_selecionado
-        else 0
-    )
 
-    total_aulas = (
-        AulaHorario.objects.filter(
-            horario__ano_letivo=ano_selecionado
-        ).count()
-        if ano_selecionado
-        else 0
-    )
+
+    total_horarios = 0
+
+
+    total_aulas = 0
+
+
+
+    if ano_selecionado:
+
+
+        total_horarios = (
+
+            HorarioTurma.objects
+
+            .filter(
+
+                escola=escola,
+
+                ano_letivo=ano_selecionado
+
+            )
+
+            .count()
+
+        )
+
+
+
+        total_aulas = (
+
+            AulaHorario.objects
+
+            .filter(
+
+                horario__escola=escola,
+
+                horario__ano_letivo=ano_selecionado
+
+            )
+
+            .count()
+
+        )
+
+
+
 
     # ==========================================================
     # CONTEXTO
     # ==========================================================
 
+
     context = {
+
 
         "anos_letivos": anos_letivos,
 
+
         "ano_selecionado": ano_selecionado,
+
 
         "turmas": turmas,
 
+
         "turma_selecionada": turma_selecionada,
+
 
         "horario": horario,
 
+
         "horario_editavel": horario_editavel,
+
 
         "disciplinas": disciplinas,
 
+
+        "professores": professores,
+
+
         "aulas": aulas,
+
 
         "grade": dict(grade),
 
+
+
         "total_turmas": total_turmas,
+
 
         "total_horarios": total_horarios,
 
+
         "total_aulas": total_aulas,
+
+
 
         "dias_semana": [
 
@@ -10159,18 +10377,22 @@ def horarios_turma(request):
 
             ("SEX", "Sexta"),
 
-
         ],
+
 
     }
 
+
+
     return render(
+
         request,
+
         "horarios_turma.html",
+
         context
+
     )
-
-
 
 
 from datetime import datetime
