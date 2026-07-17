@@ -2,42 +2,44 @@
 
 {% block content %}
 
+
 <style>
 
-.turma-card {
 
-    border: none;
-    border-radius: 18px;
-    overflow: hidden;
+.turma-card{
+
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
 
 }
 
 
-.turma-header {
 
-    background: linear-gradient(
-        135deg,
-        #0d6efd,
-        #0b5ed7
-    );
+.turma-header{
+
+    background:
+    linear-gradient(135deg,#0d6efd,#084298);
 
     color:white;
-    padding:25px;
+    padding:30px;
 
 }
+
 
 
 .form-control,
-.form-select {
+.form-select{
 
-    min-height:45px;
-    border-radius:10px;
+    min-height:48px;
+    border-radius:12px;
 
 }
 
 
+
 .form-control:focus,
-.form-select:focus {
+.form-select:focus{
 
     border-color:#0d6efd;
 
@@ -47,459 +49,795 @@
 }
 
 
-.label-title {
 
-    font-size:.9rem;
-    font-weight:600;
+.label-title{
+
+    font-size:14px;
+    font-weight:700;
     color:#344054;
 
 }
 
 
-.section-title {
 
-    font-size:.95rem;
-    font-weight:700;
+.section-title{
+
+    font-size:15px;
+    font-weight:800;
     color:#0d6efd;
-    margin-bottom:15px;
+
+    padding-bottom:10px;
+
+    border-bottom:1px solid #e9ecef;
+
+    margin-bottom:20px;
 
 }
 
 
-.btn-premium {
 
-    border-radius:10px;
-    padding:11px 28px;
-    font-weight:600;
+.btn-premium{
 
-}
-
-
-.info-box {
-
-    background:#f8f9fa;
     border-radius:12px;
-    padding:15px;
+    padding:12px 28px;
+    font-weight:700;
 
 }
+
+
+
+.info-box{
+
+    background:#f8fafc;
+    border-radius:14px;
+    padding:15px 20px;
+
+}
+
+
+
+.director-box{
+
+    background:#eef6ff;
+
+    border:1px solid #dbeafe;
+
+    border-radius:16px;
+
+    padding:18px;
+
+}
+
+
+
+.help-text{
+
+    font-size:13px;
+
+    color:#6c757d;
+
+}
+
 
 
 </style>
 
 
 
+
+
 <div class="container-fluid py-4">
 
 
-    <div class="card shadow-lg turma-card">
 
+<div class="card shadow-lg turma-card">
 
-        <!-- HEADER -->
 
-        <div class="turma-header">
 
-            <h3 class="fw-bold mb-1">
 
-                <i class="bi bi-people-fill"></i>
 
-                Nova Turma
+<!-- HEADER -->
 
-            </h3>
+<div class="turma-header">
 
 
-            <p class="mb-0 opacity-75">
+<h3 class="fw-bold mb-2">
 
-                Configure uma nova turma para o ano letivo ativo.
+<i class="bi bi-people-fill me-2"></i>
 
-            </p>
+Nova Turma
 
+</h3>
 
-        </div>
 
+<p class="mb-0 opacity-75">
 
+Configure a turma, responsável pedagógico e organização curricular.
 
-        <div class="card-body p-4">
+</p>
 
 
-            <form method="POST">
+</div>
 
-                {% csrf_token %}
 
 
 
-                <div class="row g-4">
 
 
 
-                    <!-- DADOS PRINCIPAIS -->
 
-                    <div class="col-12">
+<div class="card-body p-4">
 
-                        <div class="section-title">
 
-                            Dados da Turma
 
-                        </div>
+<form method="POST">
 
-                    </div>
+{% csrf_token %}
 
 
 
-                    <!-- Classe -->
+<div class="row g-4">
 
-                    <div class="col-md-6">
 
 
-                        <label class="label-title mb-2">
 
-                            Classe
 
-                        </label>
 
 
-                        <select
-                            name="classe"
-                            class="form-select"
-                            required>
+<!-- DADOS PRINCIPAIS -->
 
 
-                            <option value="">
-                                Selecionar classe
-                            </option>
+<div class="col-12">
 
+<div class="section-title">
 
-                            <option value="0">
-                                Iniciação
-                            </option>
+Dados Principais da Turma
 
-                            <option value="1">
-                                1ª Classe
-                            </option>
+</div>
 
-                            <option value="2">
-                                2ª Classe
-                            </option>
+</div>
 
-                            <option value="3">
-                                3ª Classe
-                            </option>
 
-                            <option value="4">
-                                4ª Classe
-                            </option>
 
-                            <option value="5">
-                                5ª Classe
-                            </option>
 
-                            <option value="6">
-                                6ª Classe
-                            </option>
 
-                            <option value="7">
-                                7ª Classe
-                            </option>
 
-                            <option value="8">
-                                8ª Classe
-                            </option>
 
-                            <option value="9">
-                                9ª Classe
-                            </option>
 
-                            <option value="10">
-                                10ª Classe
-                            </option>
 
-                            <option value="11">
-                                11ª Classe
-                            </option>
+<!-- CLASSE -->
 
-                            <option value="12">
-                                12ª Classe
-                            </option>
 
-                            <option value="13">
-                                13ª Classe
-                            </option>
+<div class="col-md-6">
 
 
-                        </select>
+<label class="label-title mb-2">
 
+Classe
 
-                    </div>
+</label>
 
 
 
+<select
 
-                    <!-- Turma -->
+name="classe"
 
-                    <div class="col-md-3">
+class="form-select"
 
+required>
 
-                        <label class="label-title mb-2">
 
-                            Identificador
 
-                        </label>
+<option value="">
 
+Selecionar classe
 
-                        <input
-                            type="text"
-                            name="identificador"
-                            class="form-control"
-                            placeholder="Ex: A"
-                            required>
+</option>
 
 
-                    </div>
 
+<option value="0">
 
+Iniciação
 
+</option>
 
-                    <!-- Sala -->
 
-                    <div class="col-md-3">
+<option value="1">
 
+1ª Classe
 
-                        <label class="label-title mb-2">
+</option>
 
-                            Sala
 
-                        </label>
+<option value="2">
 
+2ª Classe
 
-                        <input
-                            type="text"
-                            name="sala"
-                            class="form-control"
-                            placeholder="Ex: 12">
+</option>
 
 
-                    </div>
+<option value="3">
 
+3ª Classe
 
+</option>
 
 
+<option value="4">
 
-                    <!-- Turno -->
+4ª Classe
 
-                    <div class="col-md-6">
+</option>
 
 
-                        <label class="label-title mb-2">
+<option value="5">
 
-                            Turno
+5ª Classe
 
-                        </label>
+</option>
 
 
-                        <select
-                            name="turno"
-                            class="form-select"
-                            required>
+<option value="6">
 
+6ª Classe
 
-                            <option value="">
-                                Selecionar turno
-                            </option>
+</option>
 
 
-                            <option value="MANHA">
-                                Manhã
-                            </option>
+<option value="7">
 
+7ª Classe
 
-                            <option value="TARDE">
-                                Tarde
-                            </option>
+</option>
 
 
-                            <option value="NOITE">
-                                Noite
-                            </option>
+<option value="8">
 
+8ª Classe
 
-                        </select>
+</option>
 
 
-                    </div>
+<option value="9">
 
+9ª Classe
 
+</option>
 
 
+<option value="10">
 
-                    <!-- Ano Letivo -->
+10ª Classe
 
-                    <div class="col-md-6">
+</option>
 
 
-                        <label class="label-title mb-2">
+<option value="11">
 
-                            Ano Letivo
+11ª Classe
 
-                        </label>
+</option>
 
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="{{ ano_ativo.nome }}"
-                            readonly>
+<option value="12">
 
+12ª Classe
 
-                    </div>
+</option>
 
 
+<option value="13">
 
+13ª Classe
 
+</option>
 
 
-                    <!-- CURSO -->
 
-                    <div class="col-12">
+</select>
 
 
-                        <div class="section-title mt-3">
 
-                            Organização Curricular
+</div>
 
-                        </div>
 
 
-                    </div>
 
 
 
-                    <div class="col-md-12">
 
 
-                        <label class="label-title mb-2">
 
-                            Curso
 
-                        </label>
+<!-- IDENTIFICADOR -->
 
 
-                        <select
-                            name="curso"
-                            class="form-select">
+<div class="col-md-3">
 
 
-                            <option value="">
+<label class="label-title mb-2">
 
-                                Ensino Geral / Sem Curso
+Identificador
 
-                            </option>
+</label>
 
 
 
-                            {% for curso in cursos %}
+<input
 
-                            <option value="{{ curso.id }}">
+type="text"
 
-                                {{ curso.nome }}
+name="identificador"
 
-                            </option>
+class="form-control"
 
+placeholder="Ex: A"
 
-                            {% endfor %}
+required>
 
 
 
-                        </select>
+</div>
 
 
 
-                        <small class="text-muted">
 
-                            Aplicável principalmente para turmas da 10ª à 13ª Classe.
 
-                        </small>
 
 
-                    </div>
 
 
 
+<!-- SALA -->
 
-                </div>
 
+<div class="col-md-3">
 
 
+<label class="label-title mb-2">
 
+Sala
 
-                <!-- BOTÕES -->
+</label>
 
-                <div class="d-flex justify-content-between align-items-center mt-5">
 
 
-                    <div class="info-box">
+<input
 
+type="text"
 
-                        <small class="text-muted">
+name="sala"
 
-                            Ano ativo:
+class="form-control"
 
-                        </small>
+placeholder="Ex: 12">
 
 
-                        <strong>
 
-                            {{ ano_ativo.nome }}
+</div>
 
-                        </strong>
 
 
-                    </div>
 
 
 
 
 
-                    <div>
 
 
-                        <a href="{% url 'turmas' %}"
 
-                           class="btn btn-outline-secondary btn-premium me-2">
 
+<!-- TURNO -->
 
-                            Cancelar
 
+<div class="col-md-6">
 
-                        </a>
 
+<label class="label-title mb-2">
 
+Turno
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary btn-premium">
+</label>
 
 
-                            <i class="bi bi-check-circle"></i>
 
-                            Guardar Turma
+<select
 
+name="turno"
 
-                        </button>
+class="form-select"
 
+required>
 
-                    </div>
 
 
-                </div>
+<option value="">
 
+Selecionar turno
 
+</option>
 
-            </form>
 
 
-        </div>
+<option value="MANHA">
 
+Manhã
 
-    </div>
+</option>
+
+
+
+<option value="TARDE">
+
+Tarde
+
+</option>
+
+
+
+<option value="NOITE">
+
+Noite
+
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- ANO -->
+
+
+<div class="col-md-6">
+
+
+<label class="label-title mb-2">
+
+Ano Letivo
+
+</label>
+
+
+
+<input
+
+type="text"
+
+class="form-control"
+
+value="{{ ano_ativo.nome }}"
+
+readonly>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- DIRETOR DE TURMA -->
+
+
+<div class="col-12 mt-4">
+
+
+
+<div class="section-title">
+
+Responsável Pedagógico
+
+</div>
+
+
+
+<div class="director-box">
+
+
+
+
+
+<label class="label-title mb-2">
+
+Diretor de Turma
+
+</label>
+
+
+
+
+<select
+
+name="diretor_turma"
+
+class="form-select">
+
+
+
+<option value="">
+
+Selecionar professor responsável
+
+</option>
+
+
+
+{% for professor in professores %}
+
+
+
+<option value="{{ professor.id }}">
+
+
+{{ professor.get_full_name|default:professor.username }}
+
+
+</option>
+
+
+
+{% empty %}
+
+
+<option disabled>
+
+Nenhum professor disponível
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+
+<div class="help-text mt-2">
+
+O diretor de turma será responsável pelo acompanhamento pedagógico, comunicação com encarregados de educação e relatórios da turma.
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- CURSO -->
+
+
+<div class="col-12 mt-4">
+
+
+<div class="section-title">
+
+Organização Curricular
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-12">
+
+
+<label class="label-title mb-2">
+
+Curso
+
+</label>
+
+
+
+
+<select
+
+name="curso"
+
+class="form-select">
+
+
+
+<option value="">
+
+Ensino Geral / Sem Curso
+
+</option>
+
+
+
+{% for curso in cursos %}
+
+
+
+<option value="{{ curso.id }}">
+
+
+{{ curso.nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+
+<div class="help-text mt-2">
+
+Aplicável principalmente para turmas do ensino médio e cursos técnicos.
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- FOOTER -->
+
+
+<div class="d-flex justify-content-between align-items-center mt-5 flex-wrap gap-3">
+
+
+
+
+
+<div class="info-box">
+
+
+<div class="text-muted small">
+
+Ano letivo ativo
+
+</div>
+
+
+<strong>
+
+{{ ano_ativo.nome }}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div>
+
+
+<a href="{% url 'turmas' %}"
+
+class="btn btn-outline-secondary btn-premium me-2">
+
+
+Cancelar
+
+
+</a>
+
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-premium">
+
+
+<i class="bi bi-check-circle me-1"></i>
+
+Guardar Turma
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
 
 
 </div>

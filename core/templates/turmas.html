@@ -63,7 +63,7 @@
 
 .table thead th{
 
-    font-size:13px;
+    font-size:12px;
     text-transform:uppercase;
     letter-spacing:.4px;
     white-space:nowrap;
@@ -107,28 +107,58 @@
 
 
 
-.info-mini{
-
-    font-size:13px;
-    color:#6c757d;
-
-}
-
-
-
 .sala-box{
 
     background:#f1f5ff;
+
     color:#0d6efd;
+
     border-radius:10px;
+
     padding:7px 12px;
+
     font-weight:600;
+
     display:inline-block;
 
 }
 
 
+
+
+.diretor-box{
+
+    background:#eef6ff;
+
+    color:#0d6efd;
+
+    border-radius:10px;
+
+    padding:7px 12px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    display:inline-block;
+
+}
+
+
+
+.sem-diretor{
+
+    color:#6c757d;
+
+    font-size:13px;
+
+}
+
+
+
 </style>
+
+
 
 
 
@@ -140,54 +170,60 @@
 
 
 
+
+
 <!-- CABEÇALHO -->
 
 <div class="d-flex justify-content-between align-items-center mb-4">
 
 
 
-    <div class="page-header">
+<div class="page-header">
 
 
-        <h2 class="mb-1">
+<h2 class="mb-1">
 
-            Gestão de Turmas
+Gestão de Turmas
 
-        </h2>
-
-
-        <p class="text-muted mb-0">
-
-            Organização académica, salas e distribuição das turmas
-
-        </p>
+</h2>
 
 
-    </div>
+<p class="text-muted mb-0">
+
+Organização académica, salas e responsáveis pedagógicos
+
+</p>
+
+
+</div>
 
 
 
 
-    {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+
+{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
 
 
-    <a href="{% url 'adicionar_turma' %}"
+<a href="{% url 'adicionar_turma' %}"
 
-       class="btn btn-primary rounded-3 px-4 shadow-sm">
-
-
-        Nova Turma
+class="btn btn-primary rounded-3 px-4 shadow-sm">
 
 
-    </a>
+Nova Turma
 
 
-    {% endif %}
+</a>
 
+
+{% endif %}
 
 
 
 </div>
+
+
+
+
 
 
 
@@ -199,82 +235,97 @@
 
 <!-- FILTRO -->
 
+
 <div class="card card-premium shadow-sm mb-4">
 
 
-    <div class="card-body p-4">
+<div class="card-body p-4">
 
 
-        <form method="GET">
+<form method="GET">
 
 
-            <div class="row">
+<div class="row">
 
 
-                <div class="col-lg-4">
+<div class="col-lg-4">
 
 
-                    <label class="form-label fw-semibold">
+<label class="form-label fw-semibold">
 
-                        Ano Letivo
+Ano Letivo
 
-                    </label>
-
-
-
-                    <select
-                        name="ano"
-                        class="form-select"
-                        onchange="this.form.submit()"
-                    >
-
-
-                        <option value="">
-
-                            Ano Letivo Atual
-
-                        </option>
+</label>
 
 
 
 
-                        {% for ano in anos_letivos %}
+<select
+
+name="ano"
+
+class="form-select"
+
+onchange="this.form.submit()"
+
+>
 
 
-                        <option value="{{ ano.id }}"
+<option value="">
 
-                        {% if ano_selecionado and ano.id == ano_selecionado.id %}
-                            selected
-                        {% endif %}
+Ano Letivo Atual
 
-                        >
+</option>
 
 
-                            {{ ano.nome }}
+
+{% for ano in anos_letivos %}
 
 
-                        </option>
+
+<option value="{{ ano.id }}"
+
+{% if ano_selecionado and ano.id == ano_selecionado.id %}
+
+selected
+
+{% endif %}
+
+>
 
 
-                        {% endfor %}
+{{ ano.nome }}
 
 
-                    </select>
+</option>
 
 
-                </div>
+
+{% endfor %}
 
 
-            </div>
 
+</select>
 
-        </form>
-
-
-    </div>
 
 
 </div>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+
+
 
 
 
@@ -286,15 +337,21 @@
 
 <!-- INDICADORES -->
 
+
 <div class="row g-4 mb-4">
+
+
 
 
 
 <div class="col-xl-3 col-md-6">
 
+
 <div class="card stat-card shadow-sm">
 
+
 <div class="card-body">
+
 
 
 <span class="stat-label">
@@ -304,11 +361,13 @@ Total de Turmas
 </span>
 
 
+
 <div class="stat-number text-primary mt-2">
 
 {{ turmas|length }}
 
 </div>
+
 
 
 <small class="text-muted">
@@ -318,11 +377,16 @@ Turmas registadas
 </small>
 
 
-</div>
 
 </div>
 
+
 </div>
+
+
+</div>
+
+
 
 
 
@@ -333,7 +397,9 @@ Turmas registadas
 
 <div class="card stat-card shadow-sm">
 
+
 <div class="card-body">
+
 
 
 <span class="stat-label">
@@ -341,6 +407,7 @@ Turmas registadas
 Ano Selecionado
 
 </span>
+
 
 
 
@@ -369,12 +436,16 @@ Período académico
 </small>
 
 
-</div>
 
 </div>
 
 
 </div>
+
+
+</div>
+
+
 
 
 
@@ -387,6 +458,7 @@ Período académico
 
 
 <div class="card-body">
+
 
 
 <span class="stat-label">
@@ -404,11 +476,13 @@ Ativo
 </div>
 
 
+
 <small class="text-muted">
 
 Gestão disponível
 
 </small>
+
 
 
 </div>
@@ -434,6 +508,7 @@ Gestão disponível
 <div class="card-body">
 
 
+
 <span class="stat-label">
 
 Escola
@@ -444,9 +519,7 @@ Escola
 
 <div class="fw-bold fs-5 mt-2">
 
-
 {{ request.user.escola.nome }}
-
 
 </div>
 
@@ -459,8 +532,6 @@ Unidade escolar
 </small>
 
 
-</div>
-
 
 </div>
 
@@ -469,6 +540,17 @@ Unidade escolar
 
 
 </div>
+
+
+
+
+
+</div>
+
+
+
+
+
 
 
 
@@ -485,6 +567,8 @@ Unidade escolar
 
 
 
+
+
 <div class="card-header bg-white border-0 p-4">
 
 
@@ -496,6 +580,7 @@ Unidade escolar
 Lista de Turmas
 
 </h5>
+
 
 
 
@@ -518,13 +603,18 @@ Lista de Turmas
 
 
 
+
 <div class="card-body p-0">
+
 
 
 <div class="table-responsive">
 
 
+
 <table class="table table-hover align-middle mb-0">
+
+
 
 
 
@@ -534,11 +624,13 @@ Lista de Turmas
 <tr>
 
 
+
 <th>
 
 Classe
 
 </th>
+
 
 
 <th>
@@ -548,11 +640,13 @@ Turma
 </th>
 
 
+
 <th>
 
 Sala
 
 </th>
+
 
 
 <th>
@@ -562,11 +656,21 @@ Curso
 </th>
 
 
+
+<th>
+
+Diretor de Turma
+
+</th>
+
+
+
 <th>
 
 Turno
 
 </th>
+
 
 
 <th>
@@ -576,11 +680,13 @@ Ano Letivo
 </th>
 
 
+
 <th>
 
 Alunos
 
 </th>
+
 
 
 <th class="text-center">
@@ -590,10 +696,14 @@ Ações
 </th>
 
 
+
 </tr>
 
 
+
 </thead>
+
+
 
 
 
@@ -605,12 +715,15 @@ Ações
 
 
 
+
+
 {% for turma in turmas %}
 
 
 
-
 <tr>
+
+
 
 
 
@@ -625,6 +738,9 @@ Ações
 
 
 </td>
+
+
+
 
 
 
@@ -648,7 +764,9 @@ Ações
 
 
 
+
 <td>
+
 
 
 {% if turma.sala %}
@@ -663,6 +781,7 @@ Sala {{ turma.sala }}
 </span>
 
 
+
 {% else %}
 
 
@@ -673,10 +792,15 @@ Sem sala
 </span>
 
 
+
 {% endif %}
 
 
+
 </td>
+
+
+
 
 
 
@@ -687,17 +811,23 @@ Sem sala
 <td>
 
 
+
 {% if turma.curso %}
+
 
 
 <span class="badge bg-primary badge-soft">
 
+
 {{ turma.curso.nome }}
+
 
 </span>
 
 
+
 {% else %}
+
 
 
 <span class="text-muted">
@@ -707,10 +837,59 @@ Ensino Geral
 </span>
 
 
+
 {% endif %}
 
 
+
 </td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if turma.diretor_turma %}
+
+
+
+<span class="diretor-box">
+
+
+{{ turma.diretor_turma.get_full_name|default:turma.diretor_turma.username }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="sem-diretor">
+
+Não atribuído
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
 
 
 
@@ -732,6 +911,8 @@ Ensino Geral
 
 
 
+
+
 <td>
 
 
@@ -745,6 +926,8 @@ Ensino Geral
 
 
 </td>
+
+
 
 
 
@@ -773,11 +956,14 @@ Ensino Geral
 
 
 
+
 <td class="text-center">
 
 
 
 <div class="d-flex justify-content-center gap-2">
+
+
 
 
 
@@ -792,6 +978,8 @@ Lista
 
 
 </a>
+
+
 
 
 
@@ -817,6 +1005,8 @@ Editar
 
 
 
+
+
 </div>
 
 
@@ -826,7 +1016,11 @@ Editar
 
 
 
+
+
 </tr>
+
+
 
 
 
@@ -837,10 +1031,11 @@ Editar
 
 
 
+
 <tr>
 
 
-<td colspan="8" class="text-center py-5">
+<td colspan="9" class="text-center py-5">
 
 
 <h5 class="text-muted">
@@ -850,11 +1045,13 @@ Nenhuma turma encontrada
 </h5>
 
 
+
 <p class="text-muted mb-0">
 
 Não existem turmas disponíveis para este ano letivo.
 
 </p>
+
 
 
 </td>
@@ -865,7 +1062,12 @@ Não existem turmas disponíveis para este ano letivo.
 
 
 
+
+
+
 {% endfor %}
+
+
 
 
 
@@ -874,10 +1076,17 @@ Não existem turmas disponíveis para este ano letivo.
 
 
 
+
+
 </table>
 
 
 
+
+
+</div>
+
+
 </div>
 
 
@@ -886,7 +1095,6 @@ Não existem turmas disponíveis para este ano letivo.
 
 
 
-</div>
 
 
 
@@ -894,6 +1102,7 @@ Não existem turmas disponíveis para este ano letivo.
 
 
 </div>
+
 
 
 {% endblock %}

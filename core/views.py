@@ -2228,6 +2228,11 @@ from django.db.models import Count
 
 
 
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.shortcuts import redirect, render
+
+
 @login_required
 def lista_turmas(request):
 
@@ -2242,7 +2247,7 @@ def lista_turmas(request):
 
 
     # =====================================================
-    # BASE TEMPLATE DINÂMICO
+    # TEMPLATE DINÂMICO POR PERFIL
     # =====================================================
 
     if user.role == "DIRETOR_PEDAGOGICO":
@@ -2267,36 +2272,55 @@ def lista_turmas(request):
 
 
 
+
     # =====================================================
     # ANOS LETIVOS
     # =====================================================
 
-    anos_letivos = AnoLetivo.objects.filter(
-        escola=escola
-    ).order_by("-id")
+    anos_letivos = (
 
+        AnoLetivo.objects
 
+        .filter(
+            escola=escola
+        )
 
-    ano_id = request.GET.get(
-        "ano"
+        .order_by("-id")
+
     )
 
 
 
+
+
+    ano_id = request.GET.get("ano")
+
+
+
+
+
     # =====================================================
-    # FILTRO POR ANO LETIVO
+    # FILTRO POR ANO
     # =====================================================
 
     if ano_id:
 
 
-        ano_selecionado = AnoLetivo.objects.filter(
+        ano_selecionado = (
 
-            id=ano_id,
+            AnoLetivo.objects
 
-            escola=escola
+            .filter(
 
-        ).first()
+                id=ano_id,
+
+                escola=escola
+
+            )
+
+            .first()
+
+        )
 
 
 
@@ -2310,17 +2334,26 @@ def lista_turmas(request):
 
 
 
+
     else:
 
 
 
-        ano_selecionado = AnoLetivo.objects.filter(
+        ano_selecionado = (
 
-            escola=escola,
+            AnoLetivo.objects
 
-            ativo=True
+            .filter(
 
-        ).first()
+                escola=escola,
+
+                ativo=True
+
+            )
+
+            .first()
+
+        )
 
 
 
@@ -2345,6 +2378,8 @@ def lista_turmas(request):
 
 
 
+
+
     # =====================================================
     # PERMISSÕES
     # =====================================================
@@ -2362,8 +2397,11 @@ def lista_turmas(request):
 
 
     elif user.role not in [
+
         "DIRETOR",
+
         "DIRETOR_PEDAGOGICO"
+
     ]:
 
 
@@ -2376,9 +2414,11 @@ def lista_turmas(request):
 
 
 
+
+
     # =====================================================
-    # CARREGAMENTO OPTIMIZADO
-    # INCLUI SALA AUTOMATICAMENTE
+    # OTIMIZAÇÃO DOS DADOS
+    # INCLUI DIRETOR DE TURMA
     # =====================================================
 
 
@@ -2394,7 +2434,7 @@ def lista_turmas(request):
 
             "escola",
 
-            "professor"
+            "diretor_turma"
 
         )
 
@@ -2423,6 +2463,8 @@ def lista_turmas(request):
 
 
 
+
+
     # =====================================================
     # CONTEXTO
     # =====================================================
@@ -2430,15 +2472,22 @@ def lista_turmas(request):
 
     contexto = {
 
+
         "turmas": turmas,
+
 
         "anos_letivos": anos_letivos,
 
+
         "ano_selecionado": ano_selecionado,
+
 
         "base_template": base_template,
 
+
     }
+
+
 
 
 
@@ -2451,7 +2500,6 @@ def lista_turmas(request):
         contexto
 
     )
-
 
 
 
@@ -2773,45 +2821,102 @@ def adicionar_professor(request):
 # ==========================================
     # ADICIONAR TURMAS
 # ==========================================
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import transaction
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
+
 @login_required
 def adicionar_turma(request):
 
+
+    # =====================================================
+    # PERMISSÃO
+    # =====================================================
+
     if request.user.role != "DIRETOR_PEDAGOGICO":
+
         return redirect("dashboard")
+
 
 
     escola = request.user.escola
 
 
-    cursos = Curso.objects.filter(
-        escola=escola
-    ).order_by("nome")
+
+    # =====================================================
+    # CURSOS
+    # =====================================================
+
+    cursos = (
+        Curso.objects
+        .filter(
+            escola=escola
+        )
+        .order_by("nome")
+    )
 
 
-    # ==========================================
-    # BUSCAR ANO LETIVO ATIVO
-    # ==========================================
 
-    ano_letivo_obj = AnoLetivo.objects.filter(
-        escola=escola,
-        ativo=True
-    ).first()
+    # =====================================================
+    # PROFESSORES DISPONÍVEIS
+    # =====================================================
+
+    professores = (
+        User.objects
+        .filter(
+            escola=escola,
+            role="PROFESSOR"
+        )
+        .order_by(
+            "first_name",
+            "last_name"
+        )
+    )
+
+
+
+    # =====================================================
+    # ANO LETIVO ATIVO
+    # =====================================================
+
+    ano_letivo_obj = (
+        AnoLetivo.objects
+        .filter(
+            escola=escola,
+            ativo=True
+        )
+        .first()
+    )
+
 
 
     if not ano_letivo_obj:
+
 
         messages.error(
             request,
             "Nenhum ano letivo ativo encontrado."
         )
 
-        return redirect("dashboard")
+
+        return redirect(
+            "dashboard"
+        )
 
 
 
-    # ==========================================
+
+
+    # =====================================================
     # POST
-    # ==========================================
+    # =====================================================
 
     if request.method == "POST":
 
@@ -2822,10 +2927,12 @@ def adicionar_turma(request):
         ).strip()
 
 
+
         identificador = request.POST.get(
             "identificador",
             ""
         ).strip()
+
 
 
         sala = request.POST.get(
@@ -2834,10 +2941,12 @@ def adicionar_turma(request):
         ).strip()
 
 
+
         turno = request.POST.get(
             "turno",
             ""
         ).strip()
+
 
 
         curso_id = request.POST.get(
@@ -2846,67 +2955,118 @@ def adicionar_turma(request):
 
 
 
-        if not all([
-            classe,
-            identificador,
-            turno
-        ]):
+        diretor_turma_id = request.POST.get(
+            "diretor_turma"
+        )
+
+
+
+
+        # =================================================
+        # VALIDAÇÃO
+        # =================================================
+
+
+        if not all(
+            [
+                classe,
+                identificador,
+                turno
+            ]
+        ):
+
 
             messages.error(
                 request,
                 "Preencha todos os campos obrigatórios."
             )
 
+
             return redirect(
                 "adicionar_turma"
             )
 
 
 
-        # ==========================================
+
+
+        # =================================================
         # CURSO
-        # ==========================================
+        # =================================================
+
 
         curso_obj = None
 
 
         if curso_id:
 
-            curso_obj = Curso.objects.filter(
-                id=curso_id,
-                escola=escola
-            ).first()
+
+            curso_obj = (
+                Curso.objects
+                .filter(
+                    id=curso_id,
+                    escola=escola
+                )
+                .first()
+            )
 
 
 
-        # ==========================================
-        # VERIFICAR DUPLICIDADE
-        # ==========================================
 
-        existe = Turma.objects.filter(
 
-            classe=classe,
+        # =================================================
+        # DIRETOR DE TURMA
+        # =================================================
 
-            identificador=identificador,
 
-            turno=turno,
+        diretor_turma_obj = None
 
-            ano_letivo=ano_letivo_obj,
 
-            escola=escola,
 
-            curso=curso_obj
+        if diretor_turma_id:
 
-        ).exists()
+
+            diretor_turma_obj = (
+                User.objects
+                .filter(
+                    id=diretor_turma_id,
+                    escola=escola,
+                    role="PROFESSOR"
+                )
+                .first()
+            )
+
+
+
+
+        # =================================================
+        # DUPLICIDADE
+        # =================================================
+
+
+        existe = (
+            Turma.objects
+            .filter(
+                classe=classe,
+                identificador=identificador,
+                turno=turno,
+                ano_letivo=ano_letivo_obj,
+                escola=escola,
+                curso=curso_obj
+            )
+            .exists()
+        )
 
 
 
         if existe:
 
+
             messages.error(
                 request,
                 "Já existe uma turma com estes dados."
             )
+
 
             return redirect(
                 "adicionar_turma"
@@ -2914,9 +3074,12 @@ def adicionar_turma(request):
 
 
 
-        # ==========================================
-        # CRIAR TURMA
-        # ==========================================
+
+
+        # =================================================
+        # CRIAÇÃO
+        # =================================================
+
 
         try:
 
@@ -2924,37 +3087,53 @@ def adicionar_turma(request):
             with transaction.atomic():
 
 
-                Turma.objects.create(
+                turma = Turma.objects.create(
+
 
                     classe=classe,
 
+
                     identificador=identificador,
+
 
                     sala=sala if sala else None,
 
+
                     turno=turno,
+
 
                     ano_letivo=ano_letivo_obj,
 
+
                     escola=escola,
 
-                    curso=curso_obj
+
+                    curso=curso_obj,
+
+
+                    diretor_turma=diretor_turma_obj
 
                 )
+
+
 
 
                 messages.success(
 
                     request,
 
-                    f"Turma criada no ano letivo {ano_letivo_obj.nome}."
+                    f"Turma {turma} criada com sucesso. "
+
+                    f"Diretor de turma atribuído."
 
                 )
+
 
 
                 return redirect(
                     "turmas"
                 )
+
 
 
 
@@ -2970,15 +3149,19 @@ def adicionar_turma(request):
             )
 
 
+
             return redirect(
                 "adicionar_turma"
             )
 
 
 
-    # ==========================================
-    # CONTEXT
-    # ==========================================
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+
 
     return render(
 
@@ -2988,9 +3171,15 @@ def adicionar_turma(request):
 
         {
 
+
             "cursos": cursos,
 
+
+            "professores": professores,
+
+
             "ano_ativo": ano_letivo_obj
+
 
         }
 
@@ -11535,150 +11724,614 @@ def situacao_financeira(request):
 
 
 
-
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
+
+User = get_user_model()
+
+
+
 @login_required
 def cursos(request):
 
+
     escola = get_escola(request)
 
+
     if not escola:
-        return redirect("dashboard")
+
+        return redirect(
+            "dashboard"
+        )
+
+
 
     user = request.user
+
+
 
     # =====================================================
     # BASE TEMPLATE DINÂMICO
     # =====================================================
+
     if user.role == "DIRETOR_PEDAGOGICO":
-        base_template = "base_diretor_pedagogico.html"
+
+        base_template = (
+            "base_diretor_pedagogico.html"
+        )
+
+
     elif user.role == "DIRETOR":
+
         base_template = "base.html"
+
+
     else:
-        return redirect("dashboard")
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+
+
+    # =====================================================
+    # PROFESSORES DISPONÍVEIS
+    # =====================================================
+
+    professores = (
+
+        User.objects
+
+        .filter(
+            escola=escola,
+            role="PROFESSOR"
+        )
+
+        .order_by(
+            "first_name",
+            "last_name"
+        )
+
+    )
+
+
+
+
 
     # =====================================================
     # LISTA DE CURSOS
     # =====================================================
-    cursos = Curso.objects.filter(
-        escola=escola
-    ).order_by("nome")
+
+    cursos = (
+
+        Curso.objects
+
+        .filter(
+            escola=escola
+        )
+
+        .select_related(
+            "coordenador"
+        )
+
+        .order_by(
+            "nome"
+        )
+
+    )
+
+
+
+
+
 
     # =====================================================
-    # CRIAÇÃO DE CURSO (APENAS DIRETOR PEDAGÓGICO)
+    # CRIAR CURSO
     # =====================================================
+
     if request.method == "POST":
 
-        if user.role != "DIRETOR_PEDAGOGICO":
-            messages.error(request, "Sem permissão para criar cursos.")
-            return redirect("cursos")
 
-        nome = request.POST.get("nome", "").strip()
-        descricao = request.POST.get("descricao", "").strip()
+        if user.role != "DIRETOR_PEDAGOGICO":
+
+
+            messages.error(
+
+                request,
+
+                "Sem permissão para criar cursos."
+
+            )
+
+
+            return redirect(
+                "cursos"
+            )
+
+
+
+
+        nome = request.POST.get(
+            "nome",
+            ""
+        ).strip()
+
+
+
+        descricao = request.POST.get(
+            "descricao",
+            ""
+        ).strip()
+
+
+
+        coordenador_id = request.POST.get(
+            "coordenador"
+        )
+
+
+
+
 
         if not nome:
-            messages.error(request, "Informe o nome do curso.")
-            return redirect("cursos")
+
+
+            messages.error(
+
+                request,
+
+                "Informe o nome do curso."
+
+            )
+
+
+            return redirect(
+                "cursos"
+            )
+
+
+
+
+
 
         if Curso.objects.filter(
+
             escola=escola,
+
             nome__iexact=nome
+
         ).exists():
 
+
+
             messages.warning(
+
                 request,
+
                 "Já existe um curso com este nome."
+
             )
-            return redirect("cursos")
+
+
+            return redirect(
+                "cursos"
+            )
+
+
+
+
+
+
+        # =====================================================
+        # COORDENADOR
+        # =====================================================
+
+        coordenador_obj = None
+
+
+
+        if coordenador_id:
+
+
+            coordenador_obj = (
+
+                User.objects
+
+                .filter(
+
+                    id=coordenador_id,
+
+                    escola=escola,
+
+                    role="PROFESSOR"
+
+                )
+
+                .first()
+
+            )
+
+
+
+
+
+
+
+        # =====================================================
+        # CRIAÇÃO
+        # =====================================================
+
 
         Curso.objects.create(
+
             escola=escola,
+
             nome=nome,
-            descricao=descricao
+
+            descricao=descricao,
+
+            coordenador=coordenador_obj
+
         )
+
+
+
 
         messages.success(
+
             request,
+
             "Curso criado com sucesso."
+
         )
 
-        return redirect("cursos")
+
+
+        return redirect(
+            "cursos"
+        )
+
+
+
+
+
+
+
 
     # =====================================================
     # CONTEXTO
     # =====================================================
+
+
     context = {
-        "cursos": cursos,
-        "total_cursos": cursos.count(),
-        "base_template": base_template,
+
+
+        "cursos":
+
+            cursos,
+
+
+        "professores":
+
+            professores,
+
+
+        "total_cursos":
+
+            cursos.count(),
+
+
+        "base_template":
+
+            base_template,
+
+
     }
 
+
+
     return render(
+
         request,
+
         "cursos.html",
+
         context
+
     )
 
 
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
 
 @login_required
 def editar_curso(request, curso_id):
 
+
+    # =====================================================
+    # ESCOLA DO UTILIZADOR
+    # =====================================================
+
     escola = request.user.escola
 
+
+
+    # =====================================================
+    # BUSCAR CURSO
+    # =====================================================
+
     curso = get_object_or_404(
+
         Curso,
+
         id=curso_id,
+
         escola=escola
+
     )
+
+
+
+    # =====================================================
+    # PERMISSÃO
+    # =====================================================
+
+    if request.user.role not in [
+
+        "DIRETOR_PEDAGOGICO",
+
+        "DIRETOR"
+
+    ]:
+
+
+        messages.error(
+
+            request,
+
+            "Não possui permissão para editar cursos."
+
+        )
+
+
+        return redirect(
+            "cursos"
+        )
+
+
+
+
+
+    # =====================================================
+    # POST
+    # =====================================================
 
     if request.method == "POST":
 
-        nome = request.POST.get("nome", "").strip()
-        descricao = request.POST.get("descricao", "").strip()
+
+
+        nome = request.POST.get(
+
+            "nome",
+
+            ""
+
+        ).strip()
+
+
+
+
+        descricao = request.POST.get(
+
+            "descricao",
+
+            ""
+
+        ).strip()
+
+
+
+
+        coordenador_id = request.POST.get(
+
+            "coordenador"
+
+        )
+
+
+
+
+
+        # =================================================
+        # VALIDAÇÃO NOME
+        # =================================================
+
 
         if not nome:
 
+
             messages.error(
+
                 request,
+
                 "Informe o nome do curso."
+
             )
 
-            return redirect("cursos")
+
+            return redirect(
+
+                "cursos"
+
+            )
+
+
+
+
+
+
+        # =================================================
+        # DUPLICIDADE
+        # =================================================
+
 
         existe = Curso.objects.filter(
+
             escola=escola,
+
             nome__iexact=nome
+
         ).exclude(
+
             id=curso.id
+
         ).exists()
+
+
+
+
 
         if existe:
 
+
             messages.warning(
+
                 request,
+
                 "Já existe outro curso com este nome."
+
             )
 
-            return redirect("cursos")
+
+            return redirect(
+
+                "cursos"
+
+            )
+
+
+
+
+
+
+
+        # =================================================
+        # COORDENADOR DO CURSO
+        # =================================================
+
+
+        coordenador = None
+
+
+
+
+        if coordenador_id:
+
+
+            coordenador = User.objects.filter(
+
+                id=coordenador_id,
+
+                escola=escola,
+
+                role="PROFESSOR"
+
+            ).first()
+
+
+
+
+
+            if not coordenador:
+
+
+                messages.error(
+
+                    request,
+
+                    "Coordenador selecionado inválido."
+
+                )
+
+
+                return redirect(
+
+                    "cursos"
+
+                )
+
+
+
+
+
+
+
+        # =================================================
+        # ATUALIZAR CURSO
+        # =================================================
+
 
         curso.nome = nome
+
+
         curso.descricao = descricao
+
+
+        curso.coordenador = coordenador
+
+
+
         curso.save()
 
+
+
+
+
+
         messages.success(
+
             request,
-            "Curso atualizado com sucesso."
+
+            f"Curso '{curso.nome}' atualizado com sucesso."
+
         )
 
-        return redirect("cursos")
 
-    return redirect("cursos")
+
+        return redirect(
+
+            "cursos"
+
+        )
+
+
+
+
+
+
+
+    # =====================================================
+    # GET
+    # =====================================================
+
+
+    return redirect(
+
+        "cursos"
+
+    )
 
 
 @login_required
@@ -13732,15 +14385,12 @@ def editar_turma(request, pk):
             "Não possui permissão para editar turmas."
         )
 
-        return redirect(
-            "dashboard"
-        )
-
+        return redirect("dashboard")
 
 
 
     # =====================================================
-    # BUSCAR TURMA DA ESCOLA DO UTILIZADOR
+    # TURMA
     # =====================================================
 
     turma = get_object_or_404(
@@ -13755,15 +14405,35 @@ def editar_turma(request, pk):
 
 
 
+    escola = turma.escola
+
+
+
+    # =====================================================
+    # DADOS AUXILIARES
+    # =====================================================
 
     cursos = Curso.objects.filter(
 
-        escola=turma.escola
+        escola=escola
 
     ).order_by(
-
         "nome"
+    )
 
+
+
+    # PROFESSORES DISPONÍVEIS PARA DIRETOR DE TURMA
+
+    professores = User.objects.filter(
+
+        escola=escola,
+
+        role="PROFESSOR"
+
+    ).order_by(
+        "first_name",
+        "last_name"
     )
 
 
@@ -13784,13 +14454,6 @@ def editar_turma(request, pk):
 
 
 
-        classe = request.POST.get(
-            "classe",
-            ""
-        ).strip()
-
-
-
         sala = request.POST.get(
             "sala",
             ""
@@ -13804,26 +14467,32 @@ def editar_turma(request, pk):
 
 
 
+        diretor_turma_id = request.POST.get(
+            "diretor_turma"
+        )
 
-        if not identificador or not classe:
+
+
+
+
+        if not identificador:
 
 
             messages.error(
 
                 request,
 
-                "Preencha todos os campos obrigatórios."
+                "O identificador da turma é obrigatório."
 
             )
 
 
             return redirect(
-
                 "editar_turma",
-
                 pk=pk
-
             )
+
+
 
 
 
@@ -13836,21 +14505,58 @@ def editar_turma(request, pk):
 
 
 
+                # IDENTIFICAÇÃO
+
                 turma.identificador = identificador
 
 
-                turma.classe = classe
 
-
-
-                # NOVO CAMPO SALA
+                # SALA
 
                 turma.sala = sala if sala else None
 
 
 
 
+
+                # =================================================
+                # DIRETOR DE TURMA
+                # =================================================
+
+                if diretor_turma_id:
+
+
+                    professor = User.objects.filter(
+
+                        id=diretor_turma_id,
+
+                        escola=escola,
+
+                        role="PROFESSOR"
+
+                    ).first()
+
+
+
+                    turma.diretor_turma = professor
+
+
+
+                else:
+
+
+                    turma.diretor_turma = None
+
+
+
+
+
+
+
+                # =================================================
                 # CURSO
+                # =================================================
+
 
                 if curso_id:
 
@@ -13859,7 +14565,7 @@ def editar_turma(request, pk):
 
                         id=curso_id,
 
-                        escola=turma.escola
+                        escola=escola
 
                     ).first()
 
@@ -13884,6 +14590,8 @@ def editar_turma(request, pk):
 
 
 
+
+
             messages.success(
 
                 request,
@@ -13895,17 +14603,15 @@ def editar_turma(request, pk):
 
 
             return redirect(
-
                 "turmas"
-
             )
 
 
 
 
 
-        except Exception as e:
 
+        except Exception as e:
 
 
             messages.error(
@@ -13915,7 +14621,6 @@ def editar_turma(request, pk):
                 f"Erro ao atualizar turma: {str(e)}"
 
             )
-
 
 
             return redirect(
@@ -13931,9 +14636,31 @@ def editar_turma(request, pk):
 
 
 
+
+
+
     # =====================================================
     # CONTEXTO
     # =====================================================
+
+
+    contexto = {
+
+
+        "turma": turma,
+
+
+        "cursos": cursos,
+
+
+        "professores": professores,
+
+
+    }
+
+
+
+
 
     return render(
 
@@ -13941,13 +14668,7 @@ def editar_turma(request, pk):
 
         "editar_turma.html",
 
-        {
-
-            "turma": turma,
-
-            "cursos": cursos,
-
-        }
+        contexto
 
     )
 

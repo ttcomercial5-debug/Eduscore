@@ -6,10 +6,24 @@
 <style>
 
 
+/* =====================================================
+   GESTÃO DE CURSOS
+   MODELO PREMIUM - BOOTSTRAP
+===================================================== */
+
+
 .page-header h2{
 
-    font-weight:700;
-    letter-spacing:-0.5px;
+    font-weight:800;
+    letter-spacing:-0.6px;
+
+}
+
+
+
+.page-header p{
+
+    font-size:15px;
 
 }
 
@@ -18,7 +32,9 @@
 .card-premium{
 
     border:none;
-    border-radius:20px;
+
+    border-radius:22px;
+
     overflow:hidden;
 
 }
@@ -28,7 +44,9 @@
 .stat-card{
 
     border:none;
+
     border-radius:18px;
+
     transition:.25s ease;
 
 }
@@ -37,7 +55,7 @@
 
 .stat-card:hover{
 
-    transform:translateY(-4px);
+    transform:translateY(-5px);
 
 }
 
@@ -45,8 +63,9 @@
 
 .stat-number{
 
-    font-size:32px;
-    font-weight:700;
+    font-size:34px;
+
+    font-weight:800;
 
 }
 
@@ -54,8 +73,11 @@
 
 .stat-label{
 
-    color:#6c757d;
+    color:#64748b;
+
     font-size:14px;
+
+    font-weight:600;
 
 }
 
@@ -63,9 +85,12 @@
 
 .table thead th{
 
-    font-size:13px;
+    font-size:12px;
+
     text-transform:uppercase;
-    letter-spacing:.4px;
+
+    letter-spacing:.6px;
+
     white-space:nowrap;
 
 }
@@ -82,26 +107,7 @@
 
 .table tbody tr:hover{
 
-    background:#f8f9fa;
-
-}
-
-
-
-.badge-soft{
-
-    padding:8px 12px;
-    border-radius:10px;
-    font-weight:500;
-
-}
-
-
-
-.action-btn{
-
-    border-radius:10px;
-    padding:6px 12px;
+    background:#f8fafc;
 
 }
 
@@ -109,12 +115,55 @@
 
 .curso-box{
 
-    background:#eef4ff;
+    background:#e8f1ff;
+
     color:#0d6efd;
-    border-radius:10px;
-    padding:8px 14px;
-    font-weight:700;
+
+    padding:10px 16px;
+
+    border-radius:12px;
+
+    font-weight:800;
+
     display:inline-block;
+
+}
+
+
+
+.coordenador-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+.avatar-mini{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:800;
+
+    font-size:14px;
 
 }
 
@@ -122,8 +171,10 @@
 
 .descricao-box{
 
-    max-width:350px;
-    color:#6c757d;
+    max-width:320px;
+
+    color:#64748b;
+
     font-size:14px;
 
 }
@@ -133,10 +184,75 @@
 .data-box{
 
     background:#f1f5f9;
+
     color:#475569;
-    padding:7px 12px;
+
+    padding:8px 14px;
+
     border-radius:10px;
+
+    font-weight:700;
+
+}
+
+
+
+.action-btn{
+
+    min-width:110px;
+
+    border-radius:12px;
+
+    padding:10px 18px;
+
     font-weight:600;
+
+}
+
+
+
+.form-control,
+.form-select{
+
+    min-height:48px;
+
+    border-radius:12px;
+
+}
+
+
+
+.modal-content{
+
+    border:none;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+}
+
+
+
+.modal-header{
+
+    padding:20px 25px;
+
+}
+
+
+
+.modal-body{
+
+    padding:25px;
+
+}
+
+
+
+.modal-footer{
+
+    padding:20px 25px;
 
 }
 
@@ -150,18 +266,18 @@
 
 
 
-<div class="container-fluid py-3">
+<div class="container-fluid py-4">
 
 
 
 
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-
-<!-- HEADER -->
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-
 
 
 <div class="page-header">
@@ -177,12 +293,14 @@ Gestão de Cursos
 
 <p class="text-muted mb-0">
 
-Organização dos cursos e estrutura académica da instituição
+Organização curricular, coordenadores e estrutura académica da instituição.
 
 </p>
 
 
+
 </div>
+
 
 
 
@@ -191,12 +309,17 @@ Organização dos cursos e estrutura académica da instituição
 {% if request.user.role|upper == "DIRETOR_PEDAGOGICO" %}
 
 
-<button class="btn btn-primary rounded-3 px-4 shadow-sm"
+
+<button
+
+class="btn btn-primary px-4 py-2 rounded-3 shadow-sm"
 
 data-bs-toggle="modal"
 
 data-bs-target="#novoCursoModal">
 
+
+<i class="fas fa-plus me-2"></i>
 
 Novo Curso
 
@@ -204,6 +327,7 @@ Novo Curso
 </button>
 
 
+
 {% endif %}
 
 
@@ -216,23 +340,30 @@ Novo Curso
 
 
 
+<!-- =====================================================
+     MENSAGENS
+===================================================== -->
 
-
-<!-- MESSAGES -->
 
 {% if messages %}
+
 
 {% for message in messages %}
 
 
+
 <div class="alert alert-{{ message.tags }} rounded-3">
 
+
 {{ message }}
+
 
 </div>
 
 
+
 {% endfor %}
+
 
 {% endif %}
 
@@ -243,13 +374,18 @@ Novo Curso
 
 
 
+<!-- =====================================================
+     INDICADORES
+===================================================== -->
 
-<!-- INDICADORES -->
 
 <div class="row g-4 mb-4">
 
 
 
+
+
+<!-- TOTAL CURSOS -->
 
 
 <div class="col-xl-3 col-md-6">
@@ -261,17 +397,19 @@ Novo Curso
 <div class="card-body">
 
 
-<span class="stat-label">
+<div class="stat-label">
 
 Total de Cursos
 
-</span>
+</div>
 
 
 
 <div class="stat-number text-primary mt-2">
 
+
 {{ total_cursos }}
+
 
 </div>
 
@@ -301,6 +439,9 @@ Cursos registados
 
 
 
+<!-- COORDENADORES -->
+
+
 <div class="col-xl-3 col-md-6">
 
 
@@ -310,25 +451,81 @@ Cursos registados
 <div class="card-body">
 
 
-<span class="stat-label">
+<div class="stat-label">
 
-Estado
+Professores Disponíveis
 
-</span>
+</div>
 
 
 
-<div class="fw-bold fs-4 mt-2 text-success">
+<div class="stat-number text-success mt-2">
+
+
+{{ professores.count }}
+
+
+</div>
+
+
+
+<small class="text-muted">
+
+Possíveis coordenadores
+
+</small>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ESTADO -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<div class="stat-label">
+
+Estado da Gestão
+
+</div>
+
+
+
+<div class="fw-bold fs-3 text-success mt-2">
+
 
 Ativo
 
+
 </div>
 
 
 
 <small class="text-muted">
 
-Gestão académica
+Estrutura académica
 
 </small>
 
@@ -349,6 +546,7 @@ Gestão académica
 
 
 
+<!-- ESCOLA -->
 
 <div class="col-xl-3 col-md-6">
 
@@ -358,60 +556,6 @@ Gestão académica
 
 <div class="card-body">
 
-
-<span class="stat-label">
-
-Turmas associadas
-
-</span>
-
-
-
-<div class="fw-bold fs-3 mt-2 text-primary">
-
-
-{% with total=0 %}
-
-{{ cursos|length }}
-
-{% endwith %}
-
-
-</div>
-
-
-
-<small class="text-muted">
-
-Estrutura curricular
-
-</small>
-
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="col-xl-3 col-md-6">
-
-
-<div class="card stat-card shadow-sm">
-
-
-<div class="card-body">
 
 
 <span class="stat-label">
@@ -424,9 +568,7 @@ Escola
 
 <div class="fw-bold fs-5 mt-2">
 
-
 {{ request.user.escola.nome }}
-
 
 </div>
 
@@ -452,19 +594,10 @@ Unidade escolar
 
 
 
-
-
 </div>
-
-
-
-
-
-
-
-
-
-<!-- PESQUISA -->
+<!-- =====================================================
+     PESQUISA
+===================================================== -->
 
 
 <div class="card card-premium shadow-sm mb-4">
@@ -473,26 +606,28 @@ Unidade escolar
 <div class="card-body p-4">
 
 
-<div class="row">
 
+<label class="form-label fw-bold">
 
-<div class="col-lg-5">
-
-
-<label class="form-label fw-semibold">
-
-Pesquisar curso
+Pesquisar curso ou coordenador
 
 </label>
 
 
-<input type="text"
+
+
+<input
+
+type="text"
 
 id="pesquisaCurso"
 
 class="form-control"
 
-placeholder="Digite o nome do curso...">
+placeholder="Digite o nome do curso ou coordenador...">
+
+
+
 
 
 </div>
@@ -501,10 +636,6 @@ placeholder="Digite o nome do curso...">
 </div>
 
 
-</div>
-
-
-</div>
 
 
 
@@ -512,13 +643,13 @@ placeholder="Digite o nome do curso...">
 
 
 
-
-
-<!-- TABELA -->
-
+<!-- =====================================================
+     LISTAGEM DE CURSOS
+===================================================== -->
 
 
 <div class="card card-premium shadow-sm">
+
 
 
 
@@ -530,6 +661,7 @@ placeholder="Digite o nome do curso...">
 <div class="d-flex justify-content-between align-items-center">
 
 
+
 <h5 class="fw-bold mb-0">
 
 Lista de Cursos
@@ -538,15 +670,17 @@ Lista de Cursos
 
 
 
-<span class="badge bg-primary rounded-pill px-3 py-2">
 
-{{ total_cursos }} cursos
+<span class="badge bg-primary rounded-pill px-4 py-2">
+
+{{ total_cursos }} Cursos
 
 </span>
 
 
 
 </div>
+
 
 
 </div>
@@ -567,6 +701,8 @@ Lista de Cursos
 
 
 
+
+
 <table class="table table-hover align-middle mb-0">
 
 
@@ -579,11 +715,23 @@ Lista de Cursos
 <tr>
 
 
-<th>
+
+<th class="px-4">
 
 Curso
 
 </th>
+
+
+
+
+<th>
+
+Coordenador(a)
+
+</th>
+
+
 
 
 <th>
@@ -593,11 +741,15 @@ Descrição
 </th>
 
 
+
+
 <th>
 
 Turmas
 
 </th>
+
+
 
 
 <th>
@@ -607,6 +759,8 @@ Criado em
 </th>
 
 
+
+
 <th>
 
 Estado
@@ -614,11 +768,15 @@ Estado
 </th>
 
 
+
+
 <th class="text-center">
 
 Ações
 
 </th>
+
+
 
 
 </tr>
@@ -644,13 +802,21 @@ Ações
 
 
 
+
 <tr class="curso-item">
 
 
 
 
 
-<td>
+
+
+
+<!-- CURSO -->
+
+
+<td class="px-4">
+
 
 
 <span class="curso-box">
@@ -662,6 +828,7 @@ Ações
 </span>
 
 
+
 </td>
 
 
@@ -672,7 +839,100 @@ Ações
 
 
 
+<!-- COORDENADOR -->
+
+
 <td>
+
+
+
+
+{% if curso.coordenador %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+
+
+
+<div class="fw-bold">
+
+
+{{ curso.coordenador.get_full_name|default:curso.coordenador.username }}
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+{% else %}
+
+
+
+
+<span class="badge bg-secondary rounded-pill px-3 py-2">
+
+Não definido
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- DESCRIÇÃO -->
+
+
+<td>
+
+
 
 
 <div class="descricao-box">
@@ -681,7 +941,11 @@ Ações
 {{ curso.descricao|default:"Sem descrição." }}
 
 
+
 </div>
+
+
+
 
 
 </td>
@@ -694,20 +958,27 @@ Ações
 
 
 
+<!-- TURMAS -->
+
+
 <td>
 
 
-<span class="badge bg-primary badge-soft">
+
+<span class="badge bg-primary rounded-pill px-3 py-2">
 
 
 {{ curso.turma_set.count }}
 
-turma(s)
+
+Turma(s)
 
 
 </span>
 
 
+
+
 </td>
 
 
@@ -718,7 +989,11 @@ turma(s)
 
 
 
+<!-- DATA -->
+
+
 <td>
+
 
 
 <span class="data-box">
@@ -727,7 +1002,10 @@ turma(s)
 {{ curso.criado_em|date:"d/m/Y" }}
 
 
+
 </span>
+
+
 
 
 </td>
@@ -738,16 +1016,24 @@ turma(s)
 
 
 
+
+
+<!-- ESTADO -->
 
 
 <td>
 
 
-<span class="badge bg-success badge-soft">
+
+<span class="badge bg-success rounded-pill px-3 py-2">
+
 
 Ativo
 
+
 </span>
+
+
 
 
 </td>
@@ -760,7 +1046,12 @@ Ativo
 
 
 
+<!-- AÇÕES -->
+
+
 <td class="text-center">
+
+
 
 
 
@@ -770,14 +1061,25 @@ Ativo
 
 
 
-<button class="btn btn-outline-warning action-btn"
+
+<button
+
+
+class="btn btn-outline-warning action-btn"
+
 
 data-bs-toggle="modal"
+
 
 data-bs-target="#editarCurso{{ curso.id }}">
 
 
+
+<i class="fas fa-edit me-1"></i>
+
+
 Editar
+
 
 
 </button>
@@ -787,12 +1089,24 @@ Editar
 
 
 
-<a href="{% url 'eliminar_curso' curso.id %}"
+
+
+
+<a
+
+
+href="{% url 'eliminar_curso' curso.id %}"
+
 
 class="btn btn-outline-danger action-btn btn-eliminar">
 
 
+
+<i class="fas fa-trash me-1"></i>
+
+
 Eliminar
+
 
 
 </a>
@@ -802,7 +1116,10 @@ Eliminar
 
 
 
+
 </div>
+
+
 
 
 
@@ -814,160 +1131,6 @@ Eliminar
 
 
 </tr>
-
-
-
-
-
-
-
-
-
-<!-- MODAL EDITAR -->
-
-
-<div class="modal fade"
-
-id="editarCurso{{ curso.id }}"
-
-tabindex="-1">
-
-
-
-<div class="modal-dialog">
-
-
-
-<div class="modal-content">
-
-
-
-<form method="POST"
-
-action="{% url 'editar_curso' curso.id %}">
-
-
-{% csrf_token %}
-
-
-
-<div class="modal-header">
-
-
-<h5 class="modal-title">
-
-Editar Curso
-
-</h5>
-
-
-<button type="button"
-
-class="btn-close"
-
-data-bs-dismiss="modal"></button>
-
-
-</div>
-
-
-
-
-
-
-<div class="modal-body">
-
-
-
-<div class="mb-3">
-
-
-<label class="form-label">
-
-Nome
-
-</label>
-
-
-<input type="text"
-
-name="nome"
-
-value="{{ curso.nome }}"
-
-class="form-control"
-
-required>
-
-
-</div>
-
-
-
-
-
-<div>
-
-
-<label class="form-label">
-
-Descrição
-
-</label>
-
-
-<textarea name="descricao"
-
-class="form-control"
-
-rows="3">{{ curso.descricao }}</textarea>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="modal-footer">
-
-
-<button class="btn btn-primary">
-
-
-Guardar Alterações
-
-
-</button>
-
-
-</div>
-
-
-
-
-
-
-</form>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-
 
 
 
@@ -983,23 +1146,32 @@ Guardar Alterações
 <tr>
 
 
-<td colspan="6"
+<td colspan="7" class="text-center py-5">
 
-class="text-center py-5">
+
+
 
 
 <h5 class="text-muted">
 
+
 Nenhum curso encontrado
+
 
 </h5>
 
 
+
+
+
 <p class="text-muted mb-0">
+
 
 Crie o primeiro curso da instituição.
 
+
 </p>
+
 
 
 
@@ -1007,6 +1179,7 @@ Crie o primeiro curso da instituição.
 
 
 </tr>
+
 
 
 
@@ -1025,30 +1198,19 @@ Crie o primeiro curso da instituição.
 
 
 
+
+
 </table>
 
 
 
 
 
-</div>
-
-
 
 </div>
 
 
-
-
-
-
-
 </div>
-
-
-
-
-
 
 
 
@@ -1059,23 +1221,29 @@ Crie o primeiro curso da instituição.
 
 
 
+<!-- =====================================================
+     MODAIS EDITAR CURSO
+     FORA DA TABELA PARA EVITAR ERROS
+===================================================== -->
 
 
-
-
-<!-- NOVO CURSO MODAL -->
+{% for curso in cursos %}
 
 
 
 <div class="modal fade"
 
-id="novoCursoModal"
+id="editarCurso{{ curso.id }}"
 
 tabindex="-1">
 
 
 
-<div class="modal-dialog">
+
+
+<div class="modal-dialog modal-lg">
+
+
 
 
 
@@ -1083,21 +1251,42 @@ tabindex="-1">
 
 
 
-<form method="POST">
+
+
+
+
+<form method="POST"
+
+action="{% url 'editar_curso' curso.id %}">
+
 
 
 {% csrf_token %}
 
 
 
-<div class="modal-header">
 
 
-<h5 class="modal-title">
 
-Novo Curso
+
+
+<div class="modal-header bg-light">
+
+
+
+
+
+<h5 class="modal-title fw-bold">
+
+
+Editar Curso
+
 
 </h5>
+
+
+
+
 
 
 
@@ -1105,11 +1294,19 @@ Novo Curso
 
 class="btn-close"
 
-data-bs-dismiss="modal"></button>
+data-bs-dismiss="modal">
+
+</button>
+
+
+
 
 
 
 </div>
+
+
+
 
 
 
@@ -1120,53 +1317,302 @@ data-bs-dismiss="modal"></button>
 
 
 
-<div class="mb-3">
 
 
-<label class="form-label">
 
-Nome
+<div class="row g-4">
+
+
+
+
+
+
+
+<!-- NOME DO CURSO -->
+
+
+<div class="col-md-6">
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Nome do Curso
+
 
 </label>
 
 
-<input type="text"
+
+
+
+
+
+<input
+
+
+type="text"
+
 
 name="nome"
 
+
 class="form-control"
+
+
+value="{{ curso.nome }}"
+
 
 required>
 
 
+
+
+
+
+
 </div>
 
 
 
 
 
-<div>
 
 
-<label class="form-label">
 
-Descrição
+
+
+
+
+<!-- COORDENADOR -->
+
+
+<div class="col-md-6">
+
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Coordenador(a) do Curso
+
 
 </label>
 
 
-<textarea name="descricao"
+
+
+
+
+
+
+
+<select
+
+
+name="coordenador"
+
+
+class="form-select">
+
+
+
+
+
+
+
+<option value="">
+
+
+Sem coordenador definido
+
+
+</option>
+
+
+
+
+
+
+
+
+
+{% for professor in professores %}
+
+
+
+
+
+
+<option
+
+
+value="{{ professor.id }}"
+
+
+
+
+{% if curso.coordenador %}
+
+
+
+{% if curso.coordenador.id == professor.id %}
+
+selected
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+>
+
+
+
+
+
+{{ professor.get_full_name|default:professor.username }}
+
+
+
+
+
+</option>
+
+
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+</select>
+
+
+
+
+
+
+
+
+<small class="text-muted">
+
+
+Professor responsável pela coordenação pedagógica do curso.
+
+
+</small>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- DESCRIÇÃO -->
+
+
+<div class="col-12">
+
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Descrição do Curso
+
+
+</label>
+
+
+
+
+
+
+
+
+
+<textarea
+
+
+name="descricao"
+
 
 class="form-control"
 
-rows="3"></textarea>
+
+rows="5"
+
+
+placeholder="Descrição do curso...">{{ curso.descricao }}</textarea>
+
+
+
+
+
 
 
 </div>
 
 
 
+
+
+
+
+
+
 </div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -1176,15 +1622,68 @@ rows="3"></textarea>
 <div class="modal-footer">
 
 
-<button class="btn btn-primary">
 
 
-Guardar Curso
+
+
+
+<button
+
+
+type="button"
+
+
+class="btn btn-outline-secondary rounded-3"
+
+
+data-bs-dismiss="modal">
+
+
+
+Cancelar
+
+
 
 </button>
 
 
+
+
+
+
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn btn-primary rounded-3 px-4">
+
+
+
+Guardar Alterações
+
+
+
+</button>
+
+
+
+
+
+
+
+
+
 </div>
+
+
+
+
+
 
 
 
@@ -1194,7 +1693,6 @@ Guardar Curso
 
 
 
-</div>
 
 
 
@@ -1202,6 +1700,17 @@ Guardar Curso
 
 
 
+
+
+
+
+</div>
+
+
+
+
+
+
 </div>
 
 
@@ -1210,41 +1719,545 @@ Guardar Curso
 
 
 
+{% endfor %}
+
+
+
+
+<!-- =====================================================
+     MODAL NOVO CURSO
+===================================================== -->
+
+
+<div class="modal fade"
+
+id="novoCursoModal"
+
+tabindex="-1">
+
+
+
+
+
+<div class="modal-dialog modal-lg">
+
+
+
+
+
+<div class="modal-content">
+
+
+
+
+
+
+<form method="POST">
+
+
+
+{% csrf_token %}
+
+
+
+
+
+
+
+
+
+<div class="modal-header bg-light">
+
+
+
+
+
+
+<h5 class="modal-title fw-bold">
+
+
+Novo Curso
+
+
+</h5>
+
+
+
+
+
+
+
+<button type="button"
+
+
+class="btn-close"
+
+
+data-bs-dismiss="modal">
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal-body">
+
+
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+
+
+<!-- NOME -->
+
+
+<div class="col-md-6">
+
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Nome do Curso
+
+
+</label>
+
+
+
+
+
+
+
+
+
+<input
+
+
+type="text"
+
+
+name="nome"
+
+
+class="form-control"
+
+
+placeholder="Ex: Informática de Gestão"
+
+
+required>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- COORDENADOR -->
+
+
+<div class="col-md-6">
+
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Coordenador(a) do Curso
+
+
+</label>
+
+
+
+
+
+
+
+
+
+<select
+
+
+name="coordenador"
+
+
+class="form-select">
+
+
+
+
+
+
+<option value="">
+
+
+Sem coordenador definido
+
+
+</option>
+
+
+
+
+
+
+
+
+
+{% for professor in professores %}
+
+
+
+
+
+<option value="{{ professor.id }}">
+
+
+
+
+
+{{ professor.get_full_name|default:professor.username }}
+
+
+
+
+
+</option>
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+</select>
+
+
+
+
+
+
+
+
+<small class="text-muted">
+
+
+Professor responsável pelo acompanhamento curricular do curso.
+
+
+</small>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- DESCRIÇÃO -->
+
+
+<div class="col-12">
+
+
+
+
+
+
+<label class="form-label fw-bold">
+
+
+Descrição
+
+
+</label>
+
+
+
+
+
+
+
+
+<textarea
+
+
+name="descricao"
+
+
+class="form-control"
+
+
+rows="5"
+
+
+placeholder="Descrição do curso..."></textarea>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal-footer">
+
+
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+class="btn btn-outline-secondary rounded-3"
+
+
+data-bs-dismiss="modal">
+
+
+Cancelar
+
+
+</button>
+
+
+
+
+
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn btn-primary rounded-3 px-4">
+
+
+
+Guardar Curso
+
+
+
+</button>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     PESQUISA DINÂMICA
+===================================================== -->
 
 
 <script>
 
 
-document.getElementById("pesquisaCurso")
 
-.addEventListener("keyup", function(){
-
-
-let valor=this.value.toLowerCase();
+const pesquisaCurso = document.getElementById(
+    "pesquisaCurso"
+);
 
 
 
-document.querySelectorAll(".curso-item")
+if(pesquisaCurso){
 
+
+
+pesquisaCurso.addEventListener(
+"keyup",
+
+function(){
+
+
+
+let valor = this.value.toLowerCase();
+
+
+
+
+
+document
+.querySelectorAll(".curso-item")
 .forEach(function(item){
+
+
 
 
 
 item.style.display =
 
-item.innerText.toLowerCase().includes(valor)
+
+
+item.innerText
+.toLowerCase()
+.includes(valor)
+
+
 
 ?
 
+
+
 ""
 
+
+
 :
+
+
 
 "none";
 
 
 
-});
 
 
 
@@ -1252,54 +2265,118 @@ item.innerText.toLowerCase().includes(valor)
 
 
 
-</script>
 
 
+}
 
+);
 
-
-
-
-
-
-<script>
-
-
-document.querySelectorAll(".btn-eliminar")
-
-.forEach(btn=>{
-
-
-btn.addEventListener("click",function(e){
-
-
-e.preventDefault();
-
-
-
-let url=this.href;
-
-
-
-if(confirm("Deseja realmente eliminar este curso?")){
-
-
-window.location.href=url;
 
 
 }
 
 
 
-});
-
-
-
-});
 
 
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     CONFIRMAÇÃO DE ELIMINAÇÃO
+===================================================== -->
+
+
+<script>
+
+
+
+document
+.querySelectorAll(".btn-eliminar")
+.forEach(function(btn){
+
+
+
+
+
+
+btn.addEventListener(
+"click",
+
+function(e){
+
+
+
+
+
+e.preventDefault();
+
+
+
+
+
+let url = this.href;
+
+
+
+
+
+
+
+if(confirm(
+
+"Deseja realmente eliminar este curso?"
+
+)){
+
+
+
+
+
+window.location.href = url;
+
+
+
+
+
+}
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+});
+
+
+
+
+
+</script>
+
+
+
+
 
 
 

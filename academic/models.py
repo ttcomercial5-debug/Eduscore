@@ -534,6 +534,18 @@ class Turma(models.Model):
         verbose_name="Professor Responsável"
     )
 
+    diretor_turma = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={
+            "role": "PROFESSOR"
+        },
+        related_name="turmas_como_diretor",
+        verbose_name="Diretor de Turma"
+    )
+
 
     criada_em = models.DateTimeField(
         auto_now_add=True,
@@ -2114,14 +2126,15 @@ class Curso(models.Model):
 
     nome = models.CharField(
         max_length=90,
-        unique=True,
         verbose_name="Curso"
     )
+
 
     descricao = models.TextField(
         blank=True,
         null=True
     )
+
 
     escola = models.ForeignKey(
         'Escola',
@@ -2129,13 +2142,36 @@ class Curso(models.Model):
         related_name='cursos'
     )
 
-    criado_em = models.DateTimeField(auto_now_add=True)
+    coordenador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="cursos_coordenados",
+        limit_choices_to={"role": "PROFESSOR"},
+        verbose_name="Coordenador do Curso",
+    )
+
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
 
     class Meta:
+
         verbose_name = "Curso"
+
         verbose_name_plural = "Cursos"
 
+        unique_together = (
+            "nome",
+            "escola",
+        )
+
+
     def __str__(self):
+
         return self.nome
 
 

@@ -6,7 +6,6 @@
 {% block content %}
 
 
-
 <style>
 
 
@@ -22,7 +21,7 @@
 .card-premium{
 
     border:none;
-    border-radius:20px;
+    border-radius:22px;
     overflow:hidden;
 
 }
@@ -31,13 +30,14 @@
 
 .header-premium{
 
-    background:linear-gradient(
+    background:
+    linear-gradient(
         135deg,
         #0d6efd,
-        #0b5ed7
+        #084298
     );
 
-    padding:25px;
+    padding:28px;
 
     color:white;
 
@@ -47,7 +47,7 @@
 
 .form-label{
 
-    font-weight:600;
+    font-weight:700;
     color:#344054;
 
 }
@@ -57,8 +57,9 @@
 .form-control,
 .form-select{
 
-    border-radius:12px;
     min-height:48px;
+
+    border-radius:12px;
 
 }
 
@@ -76,13 +77,25 @@
 
 
 
+.readonly-box{
+
+    background:#f8fafc;
+
+    cursor:not-allowed;
+
+}
+
+
+
 .section-title{
 
     font-size:15px;
-    font-weight:700;
+
+    font-weight:800;
+
     color:#0d6efd;
 
-    margin-bottom:15px;
+    margin-bottom:18px;
 
 }
 
@@ -90,11 +103,25 @@
 
 .info-box{
 
-    background:#f8f9fa;
+    background:#f8fafc;
 
     border-radius:14px;
 
-    padding:15px;
+    padding:18px;
+
+}
+
+
+
+.director-box{
+
+    background:#eef6ff;
+
+    border:1px solid #dbeafe;
+
+    border-radius:16px;
+
+    padding:20px;
 
 }
 
@@ -106,6 +133,22 @@
 
     padding:12px 28px;
 
+    font-weight:700;
+
+}
+
+
+
+.badge-info-custom{
+
+    background:#e7f1ff;
+
+    color:#0d6efd;
+
+    padding:8px 14px;
+
+    border-radius:10px;
+
     font-weight:600;
 
 }
@@ -113,6 +156,7 @@
 
 
 </style>
+
 
 
 
@@ -134,25 +178,24 @@
 
 
 
+
 <div class="card shadow-lg card-premium">
 
 
 
 
 
-<!-- CABEÇALHO -->
 
+<!-- HEADER -->
 
 <div class="header-premium">
 
 
-<h3 class="mb-1 page-title">
-
+<h3 class="mb-2 page-title">
 
 <i class="fas fa-school me-2"></i>
 
 Editar Turma
-
 
 </h3>
 
@@ -160,11 +203,10 @@ Editar Turma
 
 <p class="mb-0 opacity-75">
 
-
-Atualize os dados académicos e a organização da turma.
-
+Atualize a identificação, sala, curso e responsável pedagógico da turma.
 
 </p>
+
 
 
 </div>
@@ -183,6 +225,8 @@ Atualize os dados académicos e a organização da turma.
 
 
 
+
+
 <form method="POST">
 
 
@@ -193,7 +237,11 @@ Atualize os dados académicos e a organização da turma.
 
 
 
-<!-- IDENTIFICAÇÃO -->
+
+
+
+<!-- DADOS PRINCIPAIS -->
+
 
 <div class="section-title">
 
@@ -205,7 +253,13 @@ Dados Principais da Turma
 
 
 
+
+
 <div class="row g-4">
+
+
+
+
 
 
 
@@ -235,8 +289,6 @@ class="form-control"
 
 value="{{ turma.identificador }}"
 
-placeholder="Ex: A"
-
 required>
 
 
@@ -247,7 +299,10 @@ required>
 
 
 
-<!-- CLASSE -->
+
+
+
+<!-- CLASSE BLOQUEADA -->
 
 
 <div class="col-md-4">
@@ -261,149 +316,22 @@ Classe
 
 
 
-<select
+<input
 
-name="classe"
+type="text"
 
-class="form-select"
+class="form-control readonly-box"
 
-required>
+value="{{ turma.get_classe_display }}"
 
+readonly>
 
-<option value="">
 
-Selecionar Classe
+<small class="text-muted">
 
-</option>
+A classe não pode ser alterada após criação.
 
-
-<option value="0"
-
-{% if turma.classe == "0" %}selected{% endif %}>
-
-Iniciação
-
-</option>
-
-
-<option value="1"
-
-{% if turma.classe == "1" %}selected{% endif %}>
-
-1ª Classe
-
-</option>
-
-
-<option value="2"
-
-{% if turma.classe == "2" %}selected{% endif %}>
-
-2ª Classe
-
-</option>
-
-
-<option value="3"
-
-{% if turma.classe == "3" %}selected{% endif %}>
-
-3ª Classe
-
-</option>
-
-
-<option value="4"
-
-{% if turma.classe == "4" %}selected{% endif %}>
-
-4ª Classe
-
-</option>
-
-
-<option value="5"
-
-{% if turma.classe == "5" %}selected{% endif %}>
-
-5ª Classe
-
-</option>
-
-
-<option value="6"
-
-{% if turma.classe == "6" %}selected{% endif %}>
-
-6ª Classe
-
-</option>
-
-
-<option value="7"
-
-{% if turma.classe == "7" %}selected{% endif %}>
-
-7ª Classe
-
-</option>
-
-
-<option value="8"
-
-{% if turma.classe == "8" %}selected{% endif %}>
-
-8ª Classe
-
-</option>
-
-
-<option value="9"
-
-{% if turma.classe == "9" %}selected{% endif %}>
-
-9ª Classe
-
-</option>
-
-
-<option value="10"
-
-{% if turma.classe == "10" %}selected{% endif %}>
-
-10ª Classe
-
-</option>
-
-
-<option value="11"
-
-{% if turma.classe == "11" %}selected{% endif %}>
-
-11ª Classe
-
-</option>
-
-
-<option value="12"
-
-{% if turma.classe == "12" %}selected{% endif %}>
-
-12ª Classe
-
-</option>
-
-
-<option value="13"
-
-{% if turma.classe == "13" %}selected{% endif %}>
-
-13ª Classe
-
-</option>
-
-
-</select>
+</small>
 
 
 </div>
@@ -415,7 +343,8 @@ Iniciação
 
 
 
-<!-- SALA NOVO CAMPO -->
+
+<!-- SALA -->
 
 
 <div class="col-md-4">
@@ -449,6 +378,8 @@ placeholder="Ex: Sala 12">
 
 
 
+
+
 </div>
 
 
@@ -459,9 +390,140 @@ placeholder="Ex: Sala 12">
 
 
 
+<hr class="my-5">
+
+
+
+
+
+
+
+<!-- DIRETOR DE TURMA -->
+
+
+<div class="section-title">
+
+Responsável Pedagógico
+
+</div>
+
+
+
+
+
+
+
+
+<div class="director-box mb-4">
+
+
+
+
+
+<label class="form-label">
+
+Diretor de Turma
+
+</label>
+
+
+
+
+
+
+<select
+
+name="diretor_turma"
+
+class="form-select">
+
+
+
+
+
+
+<option value="">
+
+Sem diretor de turma definido
+
+</option>
+
+
+
+
+
+
+
+{% for professor in professores %}
+
+
+
+
+
+<option
+
+value="{{ professor.id }}"
+
+{% if turma.diretor_turma and turma.diretor_turma.id == professor.id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+
+{{ professor.get_full_name|default:professor.username }}
+
+
+
+</option>
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</select>
+
+
+
+
+
+
+<small class="text-muted d-block mt-2">
+
+
+Professor responsável pelo acompanhamento da turma, comunicação com encarregados de educação e coordenação pedagógica.
+
+
+</small>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
 
 
 <hr class="my-5">
+
+
 
 
 
@@ -482,7 +544,14 @@ Organização Curricular
 
 
 
+
+
+
+
 <div class="mb-4">
+
+
+
 
 
 <label class="form-label">
@@ -493,11 +562,20 @@ Curso
 
 
 
+
+
+
+
 <select
 
 name="curso"
 
 class="form-select">
+
+
+
+
+
 
 
 <option value="">
@@ -508,7 +586,16 @@ Ensino Geral / Sem Curso
 
 
 
+
+
+
+
+
 {% for curso in cursos %}
+
+
+
+
 
 
 <option
@@ -531,7 +618,14 @@ selected
 
 
 
+
+
+
+
 {% endfor %}
+
+
+
 
 
 
@@ -539,11 +633,20 @@ selected
 
 
 
+
+
+
+
 <small class="text-muted">
 
-Aplicável principalmente para turmas da 10ª à 13ª Classe.
+
+Aplicável principalmente para turmas do ensino médio técnico.
+
 
 </small>
+
+
+
 
 
 </div>
@@ -556,47 +659,89 @@ Aplicável principalmente para turmas da 10ª à 13ª Classe.
 
 
 
+<!-- INFORMAÇÕES FIXAS -->
 
-<!-- INFORMAÇÃO -->
 
 
 <div class="info-box mb-4">
 
 
-<div class="row">
+
+<div class="row g-3">
 
 
-<div class="col-md-6">
+
+
+
+<div class="col-md-4">
+
+
+<div class="text-muted small">
+
+Ano Letivo
+
+</div>
 
 
 <strong>
-
-Ano Letivo:
-
-</strong>
-
 
 {{ turma.ano_letivo }}
 
+</strong>
+
 
 </div>
 
 
 
-<div class="col-md-6">
+
+
+
+<div class="col-md-4">
+
+
+<div class="text-muted small">
+
+Turno
+
+</div>
 
 
 <strong>
 
-Turno:
+{{ turma.get_turno_display }}
 
 </strong>
 
 
-{{ turma.get_turno_display }}
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="text-muted small">
+
+Escola
+
+</div>
+
+
+<strong>
+
+{{ turma.escola.nome }}
+
+</strong>
 
 
 </div>
+
+
+
 
 
 </div>
@@ -615,7 +760,10 @@ Turno:
 <!-- BOTÕES -->
 
 
-<div class="d-flex justify-content-between align-items-center">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
 
 
 
@@ -631,6 +779,9 @@ Voltar
 
 
 </a>
+
+
+
 
 
 
@@ -655,7 +806,11 @@ Guardar Alterações
 
 
 
+
+
 </div>
+
+
 
 
 
@@ -669,11 +824,6 @@ Guardar Alterações
 
 
 
-</div>
-
-
-
-
 
 </div>
 
@@ -686,7 +836,19 @@ Guardar Alterações
 </div>
 
 
+
+
+
+
+
 </div>
+
+
+</div>
+
+
+
+
 
 
 
