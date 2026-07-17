@@ -1,213 +1,1072 @@
 {% extends base_template %}
+
 {% block content %}
 
-<div class="container-fluid mt-4">
 
-<!-- ================= HEADER ================= -->
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+<style>
 
-    <div>
-        <h2 class="fw-bold mb-1">
-            Gestão de Disciplinas
-        </h2>
-        <small class="text-muted">
-            Organização curricular da escola por ano letivo
-        </small>
-    </div>
 
-    {% if user.role == "DIRETOR_PEDAGOGICO" %}
-    <a href="{% url 'adicionar_disciplina' %}"
-       class="btn btn-primary shadow-sm rounded-pill px-4">
+.page-header h2{
 
-        <i class="fas fa-plus me-2"></i>
-        Nova Disciplina
-    </a>
-    {% endif %}
+    font-weight:700;
+    letter-spacing:-0.5px;
+
+}
+
+
+
+.card-premium{
+
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+
+}
+
+
+
+.stat-card{
+
+    border:none;
+    border-radius:18px;
+    transition:.25s ease;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+
+.stat-number{
+
+    font-size:32px;
+    font-weight:700;
+
+}
+
+
+
+.stat-label{
+
+    color:#6c757d;
+    font-size:14px;
+
+}
+
+
+
+.table thead th{
+
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    white-space:nowrap;
+
+}
+
+
+
+.table tbody tr{
+
+    transition:.2s ease;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8f9fa;
+
+}
+
+
+
+.badge-soft{
+
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:500;
+
+}
+
+
+
+.action-btn{
+
+    border-radius:10px;
+    padding:6px 12px;
+
+}
+
+
+
+.professor-box{
+
+    background:#e9f8ef;
+    color:#198754;
+    border-radius:10px;
+    padding:7px 12px;
+    font-weight:600;
+    display:inline-block;
+
+}
+
+
+
+.disciplina-box{
+
+    background:#eef4ff;
+    color:#0d6efd;
+    border-radius:10px;
+    padding:7px 12px;
+    font-weight:700;
+    display:inline-block;
+
+}
+
+
+</style>
+
+
+
+
+
+
+
+<div class="container-fluid py-3">
+
+
+
+
+
+
+
+<!-- HEADER -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+
+<div class="page-header">
+
+
+<h2 class="mb-1">
+
+Gestão de Disciplinas
+
+</h2>
+
+
+
+<p class="text-muted mb-0">
+
+Organização curricular e distribuição das disciplinas por turma
+
+</p>
+
 
 </div>
 
-<!-- ================= FILTRO ================= -->
-<form method="GET" class="mb-4">
 
-    <div class="row">
 
-        <div class="col-md-4">
 
-            <label class="form-label fw-semibold">
-                Filtrar por Ano Letivo
-            </label>
 
-            <select name="ano"
-                    class="form-select shadow-sm rounded-3"
-                    onchange="this.form.submit()">
+{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
 
-                <option value="">
-                    Ano Atual ({{ ano_ativo.nome }})
-                </option>
 
-                {% for ano in anos %}
+<a href="{% url 'adicionar_disciplina' %}"
 
-                    <option value="{{ ano.id }}"
-                        {% if ano_selecionado and ano.id|stringformat:"s" == ano_selecionado %}
-                            selected
-                        {% endif %}>
+class="btn btn-primary rounded-3 px-4 shadow-sm">
 
-                        {{ ano.nome }}
 
-                    </option>
+Nova Disciplina
 
-                {% endfor %}
 
-            </select>
+</a>
 
-        </div>
 
-    </div>
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- FILTRO -->
+
+
+<div class="card card-premium shadow-sm mb-4">
+
+
+<div class="card-body p-4">
+
+
+
+<form method="GET">
+
+
+
+<div class="row">
+
+
+
+<div class="col-lg-4">
+
+
+<label class="form-label fw-semibold">
+
+Ano Letivo
+
+</label>
+
+
+
+
+<select
+
+name="ano"
+
+class="form-select"
+
+onchange="this.form.submit()"
+
+>
+
+
+
+<option value="">
+
+Ano Letivo Atual
+
+</option>
+
+
+
+{% for ano in anos %}
+
+
+
+<option value="{{ ano.id }}"
+
+
+{% if ano_selecionado and ano.id|stringformat:"s" == ano_selecionado %}
+
+selected
+
+{% endif %}
+
+
+>
+
+
+{{ ano.nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
 
 </form>
 
-<!-- ================= LISTA ================= -->
-<div class="row g-4">
 
-    {% for disciplina in disciplinas %}
-
-    <div class="col-md-6 col-xl-4">
-
-        <div class="card border-0 shadow-lg h-100 rounded-4 hover-card">
-
-            <!-- HEADER -->
-            <div class="card-header bg-primary text-white border-0 rounded-top-4">
-
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <h6 class="mb-0 fw-bold">
-                        {{ disciplina.nome }}
-                    </h6>
-
-                    {% if disciplina.turma.ano_letivo.ativo %}
-                        <span class="badge bg-light text-dark">
-                            Atual
-                        </span>
-                    {% else %}
-                        <span class="badge bg-secondary">
-                            Histórico
-                        </span>
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-            <!-- BODY -->
-            <div class="card-body">
-
-                <p class="mb-2">
-                    <strong>Turma:</strong><br>
-                    <span class="text-muted">{{ disciplina.turma }}</span>
-                </p>
-
-                <p class="mb-2">
-                    <strong>🎓 Curso:</strong><br>
-
-                    {% if disciplina.turma.curso %}
-                        <span class="badge bg-info text-dark">
-                            {{ disciplina.turma.curso.nome }}
-                        </span>
-                    {% else %}
-                        <span class="text-muted">
-                            Ensino Geral
-                        </span>
-                    {% endif %}
-
-                </p>
-
-                <p class="mb-2">
-                    <strong>Professor:</strong><br>
-
-                    {% if disciplina.professor %}
-                        <span class="text-success fw-semibold">
-                            {{ disciplina.professor.get_full_name|default:disciplina.professor.username }}
-                        </span>
-                    {% else %}
-                        <span class="badge bg-warning text-dark">
-                            Não atribuído
-                        </span>
-                    {% endif %}
-
-                </p>
-
-                <p class="mb-0">
-                    <strong>Ano Letivo:</strong><br>
-                    <span class="text-muted">
-                        {{ disciplina.turma.ano_letivo }}
-                    </span>
-                </p>
-
-            </div>
-
-            <!-- FOOTER -->
-            <div class="card-footer bg-white border-0">
-
-                {% if request.user.role|upper == "DIRETOR_PEDAGOGICO" and disciplina.turma.ano_letivo.ativo %}
-
-                    <a href="{% url 'editar_disciplina' disciplina.id %}"
-                       class="btn btn-outline-primary btn-sm w-100 rounded-pill">
-                        Editar Disciplina
-                    </a>
-
-                {% else %}
-
-                    <button class="btn btn-outline-secondary btn-sm w-100 rounded-pill"
-                            disabled
-                            title="Não é possível editar disciplinas de anos encerrados">
-
-                        Histórico (não editável)
-
-                    </button>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-    {% empty %}
-
-    <div class="col-12">
-
-        <div class="alert alert-info text-center shadow-sm rounded-4">
-
-            <strong>Sem disciplinas encontradas</strong><br>
-            Verifique o filtro de ano letivo ou crie novas disciplinas.
-
-        </div>
-
-    </div>
-
-    {% endfor %}
 
 </div>
 
+
 </div>
 
-<!-- ================= STYLE PREMIUM ================= -->
-<style>
 
-.hover-card {
-    transition: all 0.25s ease;
-}
 
-.hover-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-}
 
-.card-header {
-    padding: 14px 18px;
-}
 
-</style>
+
+
+
+
+<!-- INDICADORES -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+
+<span class="stat-label">
+
+Total de Disciplinas
+
+</span>
+
+
+
+<div class="stat-number text-primary mt-2">
+
+
+{{ disciplinas|length }}
+
+
+</div>
+
+
+
+<small class="text-muted">
+
+Disciplinas registadas
+
+</small>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<span class="stat-label">
+
+Ano Selecionado
+
+</span>
+
+
+
+
+<div class="fw-bold fs-4 mt-2">
+
+
+{% if ano_selecionado %}
+
+
+{{ ano_selecionado.nome }}
+
+
+{% else %}
+
+
+---
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+<small class="text-muted">
+
+Período académico
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+
+<span class="stat-label">
+
+Estado
+
+</span>
+
+
+
+<div class="fw-bold fs-4 mt-2 text-success">
+
+Ativo
+
+</div>
+
+
+
+<small class="text-muted">
+
+Gestão curricular
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+
+<span class="stat-label">
+
+Escola
+
+</span>
+
+
+
+
+<div class="fw-bold fs-5 mt-2">
+
+
+{{ request.user.escola.nome }}
+
+
+</div>
+
+
+
+<small class="text-muted">
+
+Unidade escolar
+
+</small>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- TABELA -->
+
+
+<div class="card card-premium shadow-sm">
+
+
+
+
+
+<div class="card-header bg-white border-0 p-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<h5 class="fw-bold mb-0">
+
+Lista de Disciplinas
+
+</h5>
+
+
+
+<span class="badge bg-primary rounded-pill px-3 py-2">
+
+{{ disciplinas|length }} disciplinas
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card-body p-0">
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+
+
+
+<thead class="table-light">
+
+
+<tr>
+
+
+
+<th>
+
+Disciplina
+
+</th>
+
+
+
+<th>
+
+Classe
+
+</th>
+
+
+
+<th>
+
+Turma
+
+</th>
+
+
+
+<th>
+
+Curso
+
+</th>
+
+
+
+<th>
+
+Professor
+
+</th>
+
+
+
+<th>
+
+Ano Letivo
+
+</th>
+
+
+
+<th>
+
+Estado
+
+</th>
+
+
+
+<th class="text-center">
+
+Ações
+
+</th>
+
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+
+<tr>
+
+
+
+
+
+<td>
+
+
+<span class="disciplina-box">
+
+
+{{ disciplina.nome }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+
+{{ disciplina.turma.get_classe_display }}
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+{{ disciplina.turma.identificador }}
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+{% if disciplina.turma.curso %}
+
+
+<span class="badge bg-primary badge-soft">
+
+
+{{ disciplina.turma.curso.nome }}
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="text-muted">
+
+Ensino Geral
+
+</span>
+
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+{% if disciplina.professor %}
+
+
+<span class="professor-box">
+
+
+{{ disciplina.professor.get_full_name|default:disciplina.professor.username }}
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-warning text-dark badge-soft">
+
+
+Não atribuído
+
+
+</span>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-info text-dark badge-soft">
+
+
+{{ disciplina.turma.ano_letivo }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+{% if disciplina.turma.ano_letivo.ativo %}
+
+
+<span class="badge bg-success badge-soft">
+
+
+Atual
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-secondary badge-soft">
+
+
+Histórico
+
+
+</span>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+<div class="d-flex justify-content-center gap-2">
+
+
+
+
+
+
+{% if request.user.role == "DIRETOR_PEDAGOGICO" and disciplina.turma.ano_letivo.ativo %}
+
+
+
+<a href="{% url 'editar_disciplina' disciplina.id %}"
+
+class="btn btn-outline-warning btn-sm action-btn">
+
+
+Editar
+
+
+</a>
+
+
+
+{% else %}
+
+
+
+<button
+
+class="btn btn-outline-secondary btn-sm action-btn"
+
+disabled>
+
+
+Histórico
+
+
+</button>
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+<tr>
+
+
+<td colspan="8" class="text-center py-5">
+
+
+<h5 class="text-muted">
+
+Nenhuma disciplina encontrada
+
+</h5>
+
+
+<p class="text-muted mb-0">
+
+Não existem disciplinas cadastradas para este ano letivo.
+
+</p>
+
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+</table>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
 
 {% endblock %}
