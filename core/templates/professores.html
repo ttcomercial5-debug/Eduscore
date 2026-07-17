@@ -6,10 +6,35 @@
 <style>
 
 
-.page-title{
+/* ======================================================
+        EDUSCORE
+        GESTÃO DE PROFESSORES
+        TABELA PREMIUM
+====================================================== */
 
-    font-weight:700;
-    letter-spacing:-0.5px;
+
+.page-header{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:28px;
+
+    box-shadow:
+    0 8px 25px rgba(15,23,42,.06);
+
+}
+
+
+
+.page-header h2{
+
+    font-weight:750;
+
+    color:#183153;
+
+    letter-spacing:-.5px;
 
 }
 
@@ -18,7 +43,9 @@
 .card-premium{
 
     border:none;
-    border-radius:22px;
+
+    border-radius:20px;
+
     overflow:hidden;
 
 }
@@ -28,7 +55,9 @@
 .stat-card{
 
     border:none;
-    border-radius:20px;
+
+    border-radius:18px;
+
     transition:.25s ease;
 
 }
@@ -43,46 +72,29 @@
 
 
 
+.stat-number{
+
+    font-size:32px;
+
+    font-weight:750;
+
+    color:#183153;
+
+}
+
+
+
 .stat-label{
 
+    font-size:13px;
+
     color:#6c757d;
-    font-size:14px;
 
-}
+    text-transform:uppercase;
 
+    font-weight:600;
 
-
-.stat-value{
-
-    font-size:34px;
-    font-weight:700;
-
-}
-
-
-
-.avatar-professor{
-
-    width:52px;
-    height:52px;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0d6efd,
-        #198754
-    );
-
-    color:white;
-
-    font-size:20px;
-    font-weight:700;
+    letter-spacing:.5px;
 
 }
 
@@ -92,27 +104,13 @@
 
     background:#f8f9fa;
 
-    border:none;
-
-    padding:16px;
-
-    font-size:13px;
+    font-size:12px;
 
     text-transform:uppercase;
 
-    letter-spacing:.4px;
+    letter-spacing:.5px;
 
-    color:#495057;
-
-}
-
-
-
-.table tbody td{
-
-    padding:18px 16px;
-
-    vertical-align:middle;
+    white-space:nowrap;
 
 }
 
@@ -120,7 +118,7 @@
 
 .table tbody tr{
 
-    transition:.2s;
+    transition:.2s ease;
 
 }
 
@@ -128,53 +126,20 @@
 
 .table tbody tr:hover{
 
-    background:#f8fbff;
+    background:#f8faff;
 
 }
 
 
 
-.badge-custom{
-
-    padding:8px 12px;
-
-    border-radius:10px;
-
-    font-weight:500;
-
-}
+.avatar-professor{
 
 
+    width:48px;
 
-.tag-turma{
+    height:48px;
 
-    background:#edf4ff;
-
-    color:#0d6efd;
-
-    border:1px solid #d8e7ff;
-
-}
-
-
-
-.tag-disciplina{
-
-    background:#ecfff3;
-
-    color:#198754;
-
-    border:1px solid #c8efd7;
-
-}
-
-
-
-.action-btn{
-
-    width:38px;
-
-    height:38px;
+    border-radius:14px;
 
     display:flex;
 
@@ -182,27 +147,101 @@
 
     justify-content:center;
 
-    border-radius:10px;
 
-}
+    background:
 
-
-
-.empty-state{
-
-    padding:60px 20px;
-
-    text-align:center;
-
-}
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #198754
+    );
 
 
+    color:white;
 
-.empty-title{
+    font-size:20px;
 
     font-weight:700;
 
-    margin-top:15px;
+
+}
+
+
+
+.badge-soft{
+
+
+    padding:7px 12px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+}
+
+
+
+.badge-disciplina{
+
+
+    background:#eaf8ef;
+
+    color:#198754;
+
+
+}
+
+
+
+.badge-turma{
+
+
+    background:#eaf2ff;
+
+    color:#0d6efd;
+
+
+}
+
+
+
+.sala-box{
+
+
+    background:#f1f5ff;
+
+    color:#0d6efd;
+
+    padding:6px 12px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+
+}
+
+
+
+.info-mini{
+
+
+    font-size:13px;
+
+    color:#6c757d;
+
+
+}
+
+
+
+.action-btn{
+
+
+    border-radius:10px;
+
+    padding:6px 12px;
+
 
 }
 
@@ -214,56 +253,66 @@
 
 
 
-<div class="container-fluid">
+
+<div class="container-fluid py-3">
 
 
 
 
 
-<!-- CABEÇALHO -->
 
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+<!-- ======================================================
+                    CABEÇALHO
+====================================================== -->
 
 
-    <div>
-
-
-        <h2 class="page-title mb-1">
-
-            Gestão de Professores
-
-        </h2>
-
-
-        <p class="text-muted mb-0">
-
-            Administração completa do corpo docente da instituição
-
-        </p>
-
-
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
 
 
 
+<div class="page-header">
 
 
-    {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+<h2 class="mb-1">
+
+Gestão de Professores
+
+</h2>
 
 
-    <a href="{% url 'adicionar_professor' %}"
+<p class="text-muted mb-0">
 
-       class="btn btn-primary rounded-3 px-4 shadow-sm">
+Corpo docente, disciplinas e distribuição académica
 
-
-        Novo Professor
-
-
-    </a>
+</p>
 
 
-    {% endif %}
+</div>
+
+
+
+
+
+
+{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+
+
+
+<a href="{% url 'atribuir_professor' %}"
+
+class="btn btn-primary rounded-3 px-4 shadow-sm">
+
+
+Gerir Atribuições
+
+
+</a>
+
+
+
+{% endif %}
+
 
 
 
@@ -275,163 +324,916 @@
 
 
 
-<!-- INDICADORES -->
+
+
+<!-- ======================================================
+                    FILTROS
+====================================================== -->
+
+
+<div class="card card-premium shadow-sm mb-4">
+
+
+
+<div class="card-body p-4">
+
+
+
+<form method="GET">
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<label class="form-label fw-semibold">
+
+Ano Letivo
+
+</label>
+
+
+
+<select
+
+name="ano"
+
+class="form-select"
+
+onchange="this.form.submit()"
+
+>
+
+
+<option value="">
+
+
+Ano Atual
+
+
+</option>
+
+
+
+{% for ano in anos %}
+
+
+
+<option value="{{ ano.id }}"
+
+
+{% if ano_selecionado and ano.id == ano_selecionado.id %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ ano.nome }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-5">
+
+
+<label class="form-label fw-semibold">
+
+Pesquisar Professor
+
+</label>
+
+
+
+<input
+
+type="text"
+
+name="q"
+
+value="{{ pesquisa }}"
+
+class="form-control"
+
+placeholder="Nome ou utilizador..."
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-3 d-flex align-items-end">
+
+
+<button
+
+class="btn btn-primary w-100 rounded-3">
+
+
+Pesquisar
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+                    INDICADORES
+====================================================== -->
 
 
 <div class="row g-4 mb-4">
 
 
 
-    <div class="col-xl-3 col-md-6">
+<div class="col-xl-3 col-md-6">
 
 
-        <div class="card stat-card shadow-sm">
+<div class="card stat-card shadow-sm">
 
 
-            <div class="card-body p-4">
+<div class="card-body">
 
 
-                <span class="stat-label">
+<span class="stat-label">
 
-                    Total de Professores
+Professores
 
-                </span>
+</span>
 
 
-                <div class="stat-value text-primary mt-2">
 
+<div class="stat-number mt-2">
 
-                    {{ total_professores }}
+{{ total_professores }}
 
+</div>
 
-                </div>
 
+<small class="text-muted">
 
-                <small class="text-muted">
+Docentes registados
 
-                    Docentes registados
+</small>
 
-                </small>
 
+</div>
 
 
-            </div>
+</div>
 
 
-        </div>
+</div>
 
 
-    </div>
 
 
 
 
+<div class="col-xl-3 col-md-6">
 
-    <div class="col-xl-3 col-md-6">
 
+<div class="card stat-card shadow-sm">
 
-        <div class="card stat-card shadow-sm">
 
+<div class="card-body">
 
-            <div class="card-body p-4">
 
+<span class="stat-label">
 
-                <span class="stat-label">
+Turmas
 
-                    Estado
+</span>
 
-                </span>
 
 
-                <div class="stat-value text-success mt-2">
+<div class="stat-number mt-2">
 
-                    Ativo
+{{ total_turmas }}
 
-                </div>
+</div>
 
 
-                <small class="text-muted">
+<small class="text-muted">
 
-                    Professores disponíveis
+Ano selecionado
 
-                </small>
+</small>
 
 
-            </div>
+</div>
 
 
-        </div>
+</div>
 
 
-    </div>
+</div>
 
 
 
 
 
-    <div class="col-xl-3 col-md-6">
 
 
-        <div class="card stat-card shadow-sm">
+<div class="col-xl-3 col-md-6">
 
 
-            <div class="card-body p-4">
+<div class="card stat-card shadow-sm">
 
 
-                <span class="stat-label">
+<div class="card-body">
 
-                    Escola
 
-                </span>
+<span class="stat-label">
 
+Disciplinas
 
-                <div class="fw-bold fs-5 mt-3">
+</span>
 
 
-                    {{ request.user.escola.nome }}
 
+<div class="stat-number mt-2">
 
-                </div>
+{{ total_disciplinas }}
 
+</div>
 
-                <small class="text-muted">
 
-                    Unidade escolar
+<small class="text-muted">
 
-                </small>
+Atribuições académicas
 
+</small>
 
-            </div>
 
+</div>
 
-        </div>
 
+</div>
 
-    </div>
+
+</div>
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<span class="stat-label">
+
+Ano Letivo
+
+</span>
+
+
+
+<div class="fw-bold fs-4 mt-2">
+
+
+{% if ano_selecionado %}
+
+{{ ano_selecionado.nome }}
+
+{% else %}
+
+---
+
+{% endif %}
+
+
+</div>
+
+
+<small class="text-muted">
+
+Período ativo
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
 
 
 
 
 
 </div>
-<!-- MENSAGENS DO SISTEMA -->
+<!-- ======================================================
+                    LISTAGEM PROFESSORES
+====================================================== -->
 
-{% if messages %}
 
-    {% for message in messages %}
+<div class="card card-premium shadow-sm">
 
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-3 mb-4">
 
-            {{ message }}
 
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
+<div class="card-header bg-white border-0 p-4">
 
-        </div>
 
-    {% endfor %}
+<div class="d-flex justify-content-between align-items-center">
+
+
+<h5 class="fw-bold mb-0">
+
+Lista de Professores
+
+</h5>
+
+
+
+<span class="badge bg-primary rounded-pill px-3 py-2">
+
+{{ total_professores }} professores
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card-body p-0">
+
+
+<div class="table-responsive">
+
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Professor
+
+</th>
+
+
+
+<th>
+
+Contacto
+
+</th>
+
+
+
+<th>
+
+Disciplinas
+
+</th>
+
+
+
+<th>
+
+Turmas
+
+</th>
+
+
+
+<th>
+
+Total
+
+</th>
+
+
+
+<th class="text-center">
+
+Ações
+
+</th>
+
+
+
+</tr>
+
+
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+{% for professor in professores %}
+
+
+
+
+
+<tr>
+
+
+
+
+
+
+
+<!-- ==============================
+        PROFESSOR
+================================ -->
+
+<td>
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+<div class="avatar-professor">
+
+
+{{ professor.first_name|default:professor.username|slice:":1"|upper }}
+
+
+
+</div>
+
+
+
+
+
+
+<div>
+
+
+
+<strong>
+
+
+{% if professor.get_full_name %}
+
+
+{{ professor.get_full_name }}
+
+
+{% else %}
+
+
+{{ professor.username }}
+
+
+{% endif %}
+
+
+</strong>
+
+
+
+<div class="info-mini">
+
+
+@{{ professor.username }}
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+        CONTACTO
+================================ -->
+
+<td>
+
+
+
+<div>
+
+
+{% if professor.email %}
+
+
+<div class="info-mini">
+
+
+{{ professor.email }}
+
+
+</div>
+
+
+{% else %}
+
+
+<span class="text-muted">
+
+
+Sem email
+
+
+</span>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+{% if professor.telefone %}
+
+
+<span class="badge bg-light text-dark badge-soft">
+
+
+{{ professor.telefone }}
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="text-muted">
+
+
+Sem telefone
+
+
+</span>
+
+
+{% endif %}
+
+
+</div>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+        DISCIPLINAS
+================================ -->
+
+<td>
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+
+
+
+{% for disciplina in professor.disciplinas_ano %}
+
+
+
+<span class="badge badge-disciplina badge-soft">
+
+
+{{ disciplina.nome }}
+
+
+</span>
+
+
+
+{% empty %}
+
+
+
+<span class="text-muted">
+
+
+Sem disciplinas
+
+
+</span>
+
+
+
+{% endfor %}
+
+
+
+
+</div>
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+        TURMAS
+================================ -->
+
+
+<td>
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+
+{% for turma in professor.turmas_ano %}
+
+
+
+
+<span class="badge badge-turma badge-soft">
+
+
+
+{{ turma.get_classe_display }}
+
+
+-
+
+
+{{ turma.identificador }}
+
+
+
+{% if turma.curso %}
+
+
+<br>
+
+
+<small>
+
+
+{{ turma.curso.nome }}
+
+
+</small>
+
+
+{% endif %}
+
+
+
+
+</span>
+
+
+
+
+
+{% empty %}
+
+
+
+<span class="text-muted">
+
+Sem turmas
+
+</span>
+
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+        TOTAL
+================================ -->
+
+
+<td>
+
+
+
+<div class="d-flex flex-column gap-2">
+
+
+
+<span class="badge bg-primary badge-soft">
+
+
+{{ professor.total_turmas }}
+
+Turmas
+
+
+</span>
+
+
+
+
+<span class="badge bg-success badge-soft">
+
+
+{{ professor.total_disciplinas }}
+
+Disciplinas
+
+
+</span>
+
+
+
+
+</div>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+        AÇÕES
+================================ -->
+
+
+<td class="text-center">
+
+
+
+<div class="d-flex justify-content-center gap-2">
+
+
+
+
+
+{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
+
+
+
+<a href="{% url 'atribuir_professor' %}"
+
+class="btn btn-outline-primary btn-sm action-btn">
+
+
+Atribuir
+
+
+</a>
+
+
 
 {% endif %}
 
@@ -439,934 +1241,130 @@
 
 
 
+</div>
 
 
-<!-- LISTAGEM DE PROFESSORES -->
 
+</td>
 
-<div class="card card-premium shadow-sm">
 
 
 
-    <!-- CABEÇALHO CARD -->
 
 
-    <div class="card-header bg-white border-0 p-4">
 
+</tr>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
 
 
-            <div>
 
 
-                <h5 class="fw-bold mb-1">
 
-                    Lista de Professores
 
-                </h5>
 
+{% empty %}
 
 
-                <small class="text-muted">
 
-                    Professores cadastrados e respetivas atribuições académicas
 
-                </small>
 
+<tr>
 
-            </div>
 
+<td colspan="6" class="text-center py-5">
 
 
 
-            <span class="badge bg-primary rounded-pill px-3 py-2">
+<h5 class="text-muted">
 
 
-                {{ total_professores }} docentes
+Nenhum professor encontrado
 
 
-            </span>
+</h5>
 
 
 
-        </div>
+<p class="text-muted mb-0">
 
 
-    </div>
+Não existem professores para o ano letivo selecionado.
 
 
+</p>
 
 
 
+</td>
 
 
-    <div class="card-body p-0">
+</tr>
 
 
 
-        <div class="table-responsive">
 
 
+{% endfor %}
 
-            <table class="table table-hover align-middle mb-0">
 
 
 
-                <thead>
 
 
 
-                    <tr>
+</tbody>
 
 
-                        <th>
-                            Professor
-                        </th>
 
 
-                        <th>
-                            Utilizador
-                        </th>
 
-
-                        <th>
-                            Turmas
-                        </th>
-
-
-                        <th>
-                            Disciplinas
-                        </th>
-
-
-                        <th>
-                            Estado
-                        </th>
-
-
-
-                        {% if request.user.role == "DIRETOR" %}
-
-                        <th class="text-center">
-
-                            Ações
-
-                        </th>
-
-                        {% endif %}
-
-
-
-                    </tr>
-
-
-                </thead>
-
-
-
-
-
-
-
-                <tbody>
-
-
-
-
-                {% for professor in professores %}
-
-
-
-
-
-                <tr>
-
-
-
-
-
-                    <!-- PROFESSOR -->
-
-
-                    <td>
-
-
-
-                        <div class="d-flex align-items-center gap-3">
-
-
-
-                            <div class="avatar-professor">
-
-
-                                {{ professor.first_name|slice:":1"|upper }}
-
-
-                            </div>
-
-
-
-
-
-                            <div>
-
-
-
-                                <div class="fw-semibold">
-
-
-                                    {{ professor.get_full_name|default:professor.username }}
-
-
-                                </div>
-
-
-
-
-                                <small class="text-muted">
-
-
-                                    {{ professor.escola.nome }}
-
-
-                                </small>
-
-
-
-                            </div>
-
-
-
-
-                        </div>
-
-
-
-                    </td>
-
-
-
-
-
-
-
-
-                    <!-- UTILIZADOR -->
-
-
-                    <td>
-
-
-
-                        <span class="badge bg-light text-dark border badge-custom">
-
-
-                            {{ professor.username }}
-
-
-
-                        </span>
-
-
-
-                    </td>
-
-
-
-
-
-
-
-
-
-                    <!-- TURMAS -->
-
-
-                    <td>
-
-
-
-                        {% if professor.disciplinas.all %}
-
-
-
-                            <div class="d-flex flex-wrap gap-2">
-
-
-
-                                {% for disciplina in professor.disciplinas.all %}
-
-
-
-
-                                    {% if disciplina.turma %}
-
-
-
-                                    <span class="badge badge-custom tag-turma">
-
-
-                                        {{ disciplina.turma.classe }}ª
-
-                                        {{ disciplina.turma.identificador }}
-
-
-
-
-                                        {% if disciplina.turma.curso %}
-
-
-                                            -
-
-                                            {{ disciplina.turma.curso.nome }}
-
-
-                                        {% endif %}
-
-
-
-                                    </span>
-
-
-
-
-                                    {% endif %}
-
-
-
-
-
-                                {% endfor %}
-
-
-
-                            </div>
-
-
-
-
-                        {% else %}
-
-
-
-
-                            <span class="text-muted">
-
-
-                                Sem turmas atribuídas
-
-
-                            </span>
-
-
-
-                        {% endif %}
-
-
-
-                    </td>
-
-
-
-
-
-
-
-
-
-                    <!-- DISCIPLINAS -->
-
-
-                    <td>
-
-
-
-
-                        {% if professor.disciplinas.all %}
-
-
-
-
-                            <div class="d-flex flex-wrap gap-2">
-
-
-
-                                {% for disciplina in professor.disciplinas.all %}
-
-
-
-
-
-                                <span class="badge badge-custom tag-disciplina">
-
-
-                                    {{ disciplina.nome }}
-
-
-
-                                </span>
-
-
-
-
-
-                                {% endfor %}
-
-
-
-                            </div>
-
-
-
-
-                        {% else %}
-
-
-
-
-                            <span class="text-muted">
-
-
-                                Nenhuma disciplina
-
-
-                            </span>
-
-
-
-
-                        {% endif %}
-
-
-
-
-
-                    </td>
-
-
-                                    <!-- ESTADO -->
-
-
-                    <td>
-
-
-                        <span class="badge bg-success-subtle text-success border border-success-subtle badge-custom">
-
-
-                            Ativo
-
-
-                        </span>
-
-
-                    </td>
-
-
-
-
-
-
-
-
-
-                    <!-- AÇÕES -->
-
-
-                    {% if request.user.role == "DIRETOR" %}
-
-
-
-                    <td class="text-center">
-
-
-
-                        <div class="d-flex justify-content-center gap-2">
-
-
-
-
-
-                            <a href="#"
-
-                               class="btn btn-outline-primary action-btn"
-
-                               title="Editar professor">
-
-
-                                Editar
-
-
-                            </a>
-
-
-
-
-
-
-
-                            <button
-
-                                type="button"
-
-                                class="btn btn-outline-danger action-btn"
-
-                                data-bs-toggle="modal"
-
-                                data-bs-target="#modalEliminar{{ professor.id }}"
-
-                                title="Eliminar professor">
-
-
-                                Excluir
-
-
-                            </button>
-
-
-
-
-
-                        </div>
-
-
-
-
-
-
-
-
-
-                        <!-- MODAL ELIMINAR -->
-
-
-                        <div class="modal fade"
-
-                             id="modalEliminar{{ professor.id }}"
-
-                             tabindex="-1">
-
-
-
-
-
-                            <div class="modal-dialog modal-dialog-centered">
-
-
-
-
-
-                                <div class="modal-content border-0 shadow-lg rounded-4">
-
-
-
-
-
-                                    <div class="modal-header bg-danger text-white border-0">
-
-
-
-                                        <h5 class="modal-title fw-bold">
-
-
-                                            Confirmar eliminação
-
-
-                                        </h5>
-
-
-
-
-
-                                        <button
-
-                                            type="button"
-
-                                            class="btn-close btn-close-white"
-
-                                            data-bs-dismiss="modal">
-
-
-                                        </button>
-
-
-
-                                    </div>
-
-
-
-
-
-
-
-
-                                    <div class="modal-body text-center py-4">
-
-
-
-
-
-                                        <div class="mb-4">
-
-
-
-                                            <div class="rounded-circle bg-danger bg-opacity-10 text-danger mx-auto d-flex align-items-center justify-content-center"
-
-                                                 style="width:80px;height:80px;font-size:28px;">
-
-
-
-                                                !
-
-
-
-                                            </div>
-
-
-
-                                        </div>
-
-
-
-
-
-
-
-
-                                        <h5 class="fw-bold">
-
-
-
-                                            {{ professor.get_full_name|default:professor.username }}
-
-
-
-                                        </h5>
-
-
-
-
-
-
-
-                                        <p class="text-muted mb-0">
-
-
-
-                                            Deseja realmente remover este professor do sistema?
-
-
-
-                                        </p>
-
-
-
-
-
-                                    </div>
-
-
-
-
-
-
-
-
-
-                                    <div class="modal-footer border-0 justify-content-center">
-
-
-
-
-
-                                        <button
-
-                                            type="button"
-
-                                            class="btn btn-light px-4"
-
-                                            data-bs-dismiss="modal">
-
-
-                                            Cancelar
-
-
-                                        </button>
-
-
-
-
-
-
-
-
-
-                                        <form method="POST"
-
-                                              action="{% url 'eliminar_professor' professor.id %}">
-
-
-                                            {% csrf_token %}
-
-
-
-
-
-                                            <button
-
-                                                type="submit"
-
-                                                class="btn btn-danger px-4">
-
-
-                                                Confirmar eliminação
-
-
-                                            </button>
-
-
-
-
-                                        </form>
-
-
-
-
-
-
-                                    </div>
-
-
-
-
-
-                                </div>
-
-
-
-
-
-                            </div>
-
-
-
-
-
-                        </div>
-
-
-
-
-
-
-
-                    </td>
-
-
-
-
-                    {% endif %}
-
-
-
-
-
-                </tr>
-
-
-
-
-
-                {% empty %}
-
-
-
-
-
-                <tr>
-
-
-
-                    <td colspan="6">
-
-
-
-
-
-                        <div class="empty-state">
-
-
-
-
-
-                            <h5 class="empty-title">
-
-
-                                Nenhum professor encontrado
-
-
-                            </h5>
-
-
-
-
-
-
-
-                            <p class="text-muted mb-0">
-
-
-                                Ainda não existem professores cadastrados nesta escola.
-
-
-                            </p>
-
-
-
-
-
-                        </div>
-
-
-
-
-                    </td>
-
-
-
-
-                </tr>
-
-
-
-
-
-                {% endfor %}
-
-
-
-
-
-                </tbody>
-
-
-
-
-
-            </table>
-
-
-
-
-
-        </div>
-
-
-
-
-
-    </div>
+</table>
 
 
 
 
 
 </div>
+
+
+
 </div>
 
 
-<style>
 
-
-/* =====================================
-   RESPONSIVIDADE MOBILE
-===================================== */
-
-
-@media(max-width:768px){
-
-
-    .page-title{
-
-        font-size:22px;
-
-    }
-
-
-
-    .stat-value{
-
-        font-size:28px;
-
-    }
-
-
-
-    .table{
-
-        min-width:900px;
-
-    }
-
-
-
-}
+</div>
 
 
 
 
 
-/* =====================================
-   MELHORIAS VISUAIS
-===================================== */
 
 
-.btn{
-
-    transition:.2s ease;
-
-}
+<!-- ======================================================
+                    RODAPÉ
+====================================================== -->
 
 
-
-.btn:hover{
-
-    transform:translateY(-1px);
-
-}
+<div class="text-center mt-5 mb-3">
 
 
-
-.card{
-
-    background:#ffffff;
-
-}
+<small class="text-muted">
 
 
-
-.badge{
-
-    font-size:12px;
-
-}
+Eduscore — Gestão Académica Integrada
 
 
+</small>
 
-.modal-content{
 
-    overflow:hidden;
-
-}
+</div>
 
 
 
 
 
-</style>
 
-
-
+</div>
 
 
 {% endblock %}

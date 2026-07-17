@@ -1547,64 +1547,676 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Prefetch
 from django.shortcuts import render, redirect
 
-
-
 @login_required
 def lista_professores(request):
 
-    # ======================================================
-    # PERMISSÃO (DIRETOR + DIRETOR_PEDAGOGICO)
-    # ======================================================
-    if request.user.role not in ["DIRETOR", "DIRETOR_PEDAGOGICO"]:
+    # ==========================================================
+    # PERMISSÕES
+    # ==========================================================
+
+    if request.user.role not in [
+        "DIRETOR",
+        "DIRETOR_PEDAGOGICO"
+    ]:
         return redirect("dashboard")
 
+
+
     escola = get_escola(request)
+
 
     if not escola:
         return redirect("dashboard")
 
-    # ======================================================
-    # BASE TEMPLATE DINÂMICO
-    # ======================================================
-    if request.user.role == "DIRETOR_PEDAGOGICO":
-        base_template = "base_diretor_pedagogico.html"
-    elif request.user.role == "DIRETOR":
-        base_template = "base.html"
-    else:
-        base_template = "base.html"
 
-    # ======================================================
-    # QUERY PROFESSORES
-    # ======================================================
-    professores = User.objects.filter(
-        role="PROFESSOR",
-        escola=escola
-    ).prefetch_related(
-        Prefetch(
-            "disciplinas",
-            queryset=Disciplina.objects.select_related(
-                "turma",
-                "turma__curso"
-            )
-        )
-    ).annotate(
-        total_turmas=Count("disciplinas__turma", distinct=True),
-        total_disciplinas=Count("disciplinas", distinct=True),
-    ).order_by(
-        "first_name",
-        "username"
+
+    # ==========================================================
+    # TEMPLATE BASE
+    # ==========================================================
+
+    base_template = (
+        "base_diretor_pedagogico.html"
+        if request.user.role == "DIRETOR_PEDAGOGICO"
+        else "base.html"
     )
 
+
+
+    # ==========================================================
+    # ANOS LETIVOS
+    # ==========================================================
+
+    anos = AnoLetivo.objects.filter(
+        escola=escola
+    ).order_by("-nome")
+
+
+
+    ano_id = request.GET.get("ano")
+
+
+
+    if ano_id:
+
+        ano_selecionado = get_object_or_404(
+            AnoLetivo,
+            id=ano_id,
+            escola=escola
+        )
+
+    else:
+
+        ano_selecionado = anos.filter(
+            ativo=True
+        ).first()
+
+
+        if not ano_selecionado:
+
+            ano_selecionado = anos.first()
+
+
+
+    # ==========================================================
+    # PESQUISA
+    # ==========================================================
+
+    pesquisa = request.GET.get(
+        "q",
+        ""
+    ).strip()
+
+
+
+    professores = User.objects.filter(
+
+        escola=escola,
+
+        role="PROFESSOR"
+
+    )
+
+
+
+    if pesquisa:
+
+
+        professores = professores.filter(
+
+            Q(first_name__icontains=pesquisa)
+
+            |
+
+            Q(last_name__icontains=pesquisa)
+
+            |
+
+            Q(username__icontains=pesquisa)
+
+        )
+
+
+
+    # ==========================================================
+    # DISCIPLINAS E TURMAS DO PROFESSOR
+    # ==========================================================
+
+
+    if ano_selecionado:
+
+
+        disciplinas_queryset = Disciplina.objects.filter(
+
+            turma__ano_letivo=ano_selecionado,
+
+            turma__escola=escola
+
+        ).select_related(
+
+            "turma",
+
+            "turma__curso",
+
+            "turma__ano_letivo"
+
+        ).order_by(
+
+            "turma__classe",
+
+            "turma__identificador",
+
+            "nome"
+
+        )
+
+
+    else:
+
+
+        disciplinas_queryset = Disciplina.objects.none()
+
+
+
+    professores = professores.prefetch_related(
+
+        Prefetch(
+
+            "disciplinas",
+
+            queryset=disciplinas_queryset,
+
+            to_attr="disciplinas_ano"
+
+        )
+
+    )
+
+
+
+    # ==========================================================
+    # CONTADORES
+    # ==========================================================
+
+
+    professores = professores.annotate(
+
+
+        total_disciplinas=Count(
+
+            "disciplinas",
+
+            filter=Q(
+
+                disciplinas__turma__ano_letivo=ano_selecionado
+
+            ),
+
+            distinct=True
+
+        ),
+
+
+
+        total_turmas=Count(
+
+            "disciplinas__turma",
+
+            filter=Q(
+
+                disciplinas__turma__ano_letivo=ano_selecionado
+
+            ),
+
+            distinct=True
+
+        )
+
+
+    ).order_by(
+
+        "first_name",
+
+        "last_name",
+
+        "username"
+
+    )
+
+
+
+    # ==========================================================
+    # CRIAR TURMAS ÚNICAS PARA CADA PROFESSOR
+    # ==========================================================
+
+
+    for professor in professores:
+
+
+        turmas = []
+
+
+        for disciplina in getattr(
+            professor,
+            "disciplinas_ano",
+            []
+        ):
+
+
+            if disciplina.turma not in turmas:
+
+                turmas.append(
+                    disciplina.turma
+                )
+
+
+        professor.turmas_ano = turmas
+
+
+
+
+    # ==========================================================
+    # INDICADORES
+    # ==========================================================
+
+
     total_professores = professores.count()
+
+
+
+    if ano_selecionado:
+
+
+        total_turmas = Turma.objects.filter(
+
+            escola=escola,
+
+            ano_letivo=ano_selecionado
+
+        ).count()
+
+
+
+        total_disciplinas = Disciplina.objects.filter(
+
+            escola=escola,
+
+            turma__ano_letivo=ano_selecionado
+
+        ).count()
+
+
+
+    else:
+
+
+        total_turmas = 0
+
+        total_disciplinas = 0
+
+
+
+
+    # ==========================================================
+    # CONTEXTO
+    # ==========================================================
+
+
+    contexto = {
+
+
+        "base_template":
+
+            base_template,
+
+
+        "professores":
+
+            professores,
+
+
+        "anos":
+
+            anos,
+
+
+        "ano_selecionado":
+
+            ano_selecionado,
+
+
+        "pesquisa":
+
+            pesquisa,
+
+
+        "total_professores":
+
+            total_professores,
+
+
+        "total_turmas":
+
+            total_turmas,
+
+
+        "total_disciplinas":
+
+            total_disciplinas,
+
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "professores.html",
+
+        contexto
+
+    )
+
+@login_required
+def atribuir_professor(request):
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+
+    if request.user.role not in [
+        "DIRETOR",
+        "DIRETOR_PEDAGOGICO"
+    ]:
+        return redirect("dashboard")
+
+
+
+    escola = get_escola(request)
+
+
+
+    if not escola:
+
+        return redirect("dashboard")
+
+
+
+
+
+    # ======================================================
+    # TEMPLATE BASE
+    # ======================================================
+
+
+    base_template = (
+
+        "base_diretor_pedagogico.html"
+
+        if request.user.role == "DIRETOR_PEDAGOGICO"
+
+        else "base.html"
+
+    )
+
+
+
+
+
+    # ======================================================
+    # ANOS LETIVOS
+    # ======================================================
+
+
+    anos = AnoLetivo.objects.filter(
+
+        escola=escola
+
+    ).order_by(
+
+        "-nome"
+
+    )
+
+
+
+    ano_id = request.GET.get("ano")
+
+
+
+    if ano_id:
+
+
+        ano_selecionado = get_object_or_404(
+
+            AnoLetivo,
+
+            id=ano_id,
+
+            escola=escola
+
+        )
+
+
+    else:
+
+
+        ano_selecionado = anos.filter(
+
+            ativo=True
+
+        ).first()
+
+
+
+        if not ano_selecionado:
+
+
+            ano_selecionado = anos.first()
+
+
+
+
+
+    # ======================================================
+    # PROFESSORES
+    # ======================================================
+
+
+    professores = User.objects.filter(
+
+        escola=escola,
+
+        role="PROFESSOR"
+
+    ).prefetch_related(
+
+
+        Prefetch(
+
+            "disciplinas",
+
+            queryset=Disciplina.objects.filter(
+
+                turma__ano_letivo=ano_selecionado
+
+            ).select_related(
+
+                "turma",
+
+                "turma__curso",
+
+                "turma__ano_letivo"
+
+            ),
+
+            to_attr="disciplinas_ano"
+
+        )
+
+    ).annotate(
+
+
+        total_disciplinas=Count(
+
+            "disciplinas",
+
+            filter=Q(
+
+                disciplinas__turma__ano_letivo=ano_selecionado
+
+            ),
+
+            distinct=True
+
+        ),
+
+
+        total_turmas=Count(
+
+            "disciplinas__turma",
+
+            filter=Q(
+
+                disciplinas__turma__ano_letivo=ano_selecionado
+
+            ),
+
+            distinct=True
+
+        )
+
+
+    ).order_by(
+
+        "first_name",
+
+        "last_name"
+
+    )
+
+
+
+
+
+
+
+    # ======================================================
+    # TURMAS DO ANO
+    # ======================================================
+
+
+    turmas = Turma.objects.filter(
+
+        escola=escola,
+
+        ano_letivo=ano_selecionado
+
+    ).select_related(
+
+        "curso",
+
+        "ano_letivo"
+
+    ).prefetch_related(
+
+        "disciplinas"
+
+    ).order_by(
+
+        "classe",
+
+        "identificador"
+
+    )
+
+
+
+
+
+
+
+    # ======================================================
+    # DISCIPLINAS DO ANO
+    # ======================================================
+
+
+    disciplinas = Disciplina.objects.filter(
+
+        turma__escola=escola,
+
+        turma__ano_letivo=ano_selecionado
+
+    ).select_related(
+
+        "turma",
+
+        "turma__curso"
+
+    ).order_by(
+
+        "turma__classe",
+
+        "nome"
+
+    )
+
+
+
+
+
+
+
+    # ======================================================
+    # ESTATÍSTICAS
+    # ======================================================
+
+
+    total_professores = professores.count()
+
+
+
+    total_turmas = turmas.count()
+
+
+
+    total_disciplinas = disciplinas.count()
+
+
+
+
 
     # ======================================================
     # CONTEXTO
     # ======================================================
-    return render(request, "professores.html", {
-        "professores": professores,
-        "total_professores": total_professores,
+
+
+    contexto = {
+
+
         "base_template": base_template,
-    })
+
+
+        "professores": professores,
+
+
+        "anos": anos,
+
+
+        "ano_selecionado": ano_selecionado,
+
+
+        "turmas": turmas,
+
+
+        "disciplinas": disciplinas,
+
+
+        "total_professores": total_professores,
+
+
+        "total_turmas": total_turmas,
+
+
+        "total_disciplinas": total_disciplinas,
+
+
+    }
+
+
+
+
+
+    return render(
+
+        request,
+
+        "atribuir_professor.html",
+
+        contexto
+
+    )
 
 
 # =====================================================
@@ -8142,98 +8754,248 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from datetime import datetime
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from django.db import transaction
+from django.http import HttpResponse
+from django.utils import timezone
+
+
 @login_required
 @transaction.atomic
-
 def promover_ano_letivo(request, ano_id):
 
+    """
+    ==========================================================
+        ENCERRAMENTO E PROMOÇÃO DE ANO LETIVO
+        SISTEMA EDUSCORE
+        MODELO PROFISSIONAL ESCOLAR
+        COMPATÍVEL COM MINED ANGOLA
+    ==========================================================
+    """
+
     if request.method != "POST":
+        messages.warning(
+            request,
+            "Operação inválida."
+        )
         return redirect("dashboard")
 
-    escola = request.user.escola
+
+    # ======================================================
+    # ESCOLA DO UTILIZADOR
+    # ======================================================
+
+    escola = getattr(
+        request.user,
+        "escola",
+        None
+    )
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Utilizador sem escola associada."
+        )
+
+        return redirect("dashboard")
+
+
+
+    # ======================================================
+    # ANO LETIVO ATUAL
+    # ======================================================
 
     ano_atual = get_object_or_404(
+
         AnoLetivo,
+
         id=ano_id,
+
         escola=escola
+
     )
 
-    # =========================
-    # CRIAR NOVO ANO
-    # =========================
 
-    try:
-        inicio, fim = ano_atual.nome.split("/")
-        novo_nome = f"{int(inicio)+1}/{int(fim)+1}"
-    except:
-        messages.error(request, "Formato do ano letivo inválido.")
+    if not ano_atual.ativo:
+
+        messages.error(
+            request,
+            "Este ano letivo já foi encerrado."
+        )
+
         return redirect("dashboard")
 
-    # Desativar anos anteriores
-    AnoLetivo.objects.filter(
-        escola=escola
-    ).update(ativo=False)
 
-    # Criar novo ano
+
+    # ======================================================
+    # GERAR NOVO ANO
+    # ======================================================
+
+    try:
+
+        inicio, fim = ano_atual.nome.split("/")
+
+        novo_nome = (
+            f"{int(inicio)+1}/{int(fim)+1}"
+        )
+
+
+    except Exception:
+
+
+        messages.error(
+            request,
+            "Formato do ano letivo inválido."
+        )
+
+        return redirect("dashboard")
+
+
+
+    # ======================================================
+    # VERIFICAR SE JÁ EXISTE
+    # ======================================================
+
     novo_ano, criado = AnoLetivo.objects.get_or_create(
-        nome=novo_nome,
+
         escola=escola,
+
+        nome=novo_nome,
+
         defaults={
+
             "ativo": True
+
         }
+
     )
+
+
+
+    # Desativar anos antigos
+
+    AnoLetivo.objects.filter(
+
+        escola=escola
+
+    ).exclude(
+
+        id=novo_ano.id
+
+    ).update(
+
+        ativo=False
+
+    )
+
 
     novo_ano.ativo = True
     novo_ano.save()
 
+
+
+    # ======================================================
+    # CONTADORES
+    # ======================================================
+
     promovidos = 0
     finalistas = 0
+    turmas_criadas = 0
 
-    # =========================
-    # TURMAS DO ANO ATUAL
-    # =========================
+
+
+    # ======================================================
+    # PROCESSAR TURMAS
+    # ======================================================
 
     turmas = Turma.objects.filter(
-        ano_letivo=ano_atual,
-        escola=escola
+
+        escola=escola,
+
+        ano_letivo=ano_atual
+
     )
+
+
 
     for turma in turmas:
 
+
         alunos = turma.alunos.all()
+
+
 
         for aluno in alunos:
 
-            classe_atual = int(turma.classe)
 
-            # =========================
-            # FINALISTA
-            # =========================
+            try:
+
+                classe_atual = int(
+                    turma.classe
+                )
+
+            except ValueError:
+
+
+                continue
+
+
+
+            # =================================================
+            # FINALISTAS
+            # =================================================
 
             if classe_atual >= 12:
 
+
                 HistoricoAcademico.objects.create(
+
                     aluno=aluno,
+
                     ano_letivo=ano_atual,
+
                     classe=turma.classe,
+
                     turma=turma,
+
                     situacao="FINALISTA"
+
                 )
 
+
                 finalistas += 1
+
+
                 continue
 
-            # =========================
+
+
+
+            # =================================================
             # NOVA CLASSE
-            # =========================
+            # =================================================
 
-            nova_classe = str(classe_atual + 1)
 
-            # =========================
+            nova_classe = str(
+                classe_atual + 1
+            )
+
+
+
+            # =================================================
             # CRIAR NOVA TURMA
-            # =========================
+            # =================================================
 
-            nova_turma, created = Turma.objects.get_or_create(
+
+            nova_turma, criada = Turma.objects.get_or_create(
+
+                escola=escola,
+
+                ano_letivo=novo_ano,
 
                 classe=nova_classe,
 
@@ -8243,217 +9005,574 @@ def promover_ano_letivo(request, ano_id):
 
                 curso=turma.curso,
 
-                ano_letivo=novo_ano,
-
-                escola=turma.escola,
 
                 defaults={
+
                     "professor": turma.professor
+
                 }
+
             )
 
-            # =========================
-            # HISTÓRICO
-            # =========================
+
+
+            if criada:
+
+                turmas_criadas += 1
+
+
+
+
+            # =================================================
+            # HISTÓRICO ACADÉMICO
+            # =================================================
+
 
             HistoricoAcademico.objects.create(
+
                 aluno=aluno,
+
                 ano_letivo=ano_atual,
+
                 classe=turma.classe,
+
                 turma=turma,
+
                 situacao="APROVADO"
+
             )
 
-            # =========================
-            # PROMOVER ALUNO
-            # =========================
+
+
+            # =================================================
+            # ATUALIZAR MATRÍCULA
+            # =================================================
+
 
             aluno.classe = nova_classe
+
             aluno.ano_letivo = novo_ano
+
             aluno.turma = nova_turma
 
-            aluno.save()
+
+            aluno.save(
+                update_fields=[
+                    "classe",
+                    "ano_letivo",
+                    "turma"
+                ]
+            )
+
+
 
             promovidos += 1
-
-    # =========================
-    # PDF
-    # =========================
+    # ==========================================================
+    #                 GERAR RELATÓRIO PDF
+    # ==========================================================
 
     from reportlab.lib import colors
-    from reportlab.lib.enums import TA_CENTER
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import cm
     from reportlab.platypus import (
         SimpleDocTemplate,
         Paragraph,
         Spacer,
         Table,
         TableStyle,
+        Image
     )
-    from django.http import HttpResponse
-    from django.utils import timezone
 
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = (
-        f'attachment; filename="encerramento_{ano_atual.nome}.pdf"'
+
+    response = HttpResponse(
+        content_type="application/pdf"
     )
+
+
+    response[
+        "Content-Disposition"
+    ] = (
+        f'attachment; filename="Encerramento_Ano_{ano_atual.nome}.pdf"'
+    )
+
+
+
+    # ======================================================
+    # CONFIGURAÇÃO DO DOCUMENTO
+    # ======================================================
+
 
     doc = SimpleDocTemplate(
+
         response,
+
         pagesize=A4,
-        rightMargin=30,
-        leftMargin=30,
-        topMargin=30,
-        bottomMargin=30,
+
+        rightMargin=2 * cm,
+
+        leftMargin=2 * cm,
+
+        topMargin=2 * cm,
+
+        bottomMargin=2 * cm
+
     )
+
+
 
     styles = getSampleStyleSheet()
 
-    titulo = styles["Title"]
-    titulo.alignment = TA_CENTER
 
-    subtitulo = styles["Heading2"]
-    subtitulo.alignment = TA_CENTER
+
+    estilo_titulo = ParagraphStyle(
+
+        "TituloPremium",
+
+        parent=styles["Title"],
+
+        alignment=TA_CENTER,
+
+        fontSize=18,
+
+        leading=22,
+
+        spaceAfter=10,
+
+        fontName="Helvetica-Bold"
+
+    )
+
+
+
+    estilo_subtitulo = ParagraphStyle(
+
+        "Subtitulo",
+
+        parent=styles["Normal"],
+
+        alignment=TA_CENTER,
+
+        fontSize=11,
+
+        leading=15
+
+    )
+
+
+
+    estilo_texto = ParagraphStyle(
+
+        "Texto",
+
+        parent=styles["Normal"],
+
+        fontSize=10,
+
+        leading=15,
+
+        alignment=0
+
+    )
+
+
+
+    estilo_assinatura = ParagraphStyle(
+
+        "Assinatura",
+
+        parent=styles["Normal"],
+
+        alignment=TA_CENTER,
+
+        fontSize=10
+
+    )
+
+
 
     elementos = []
 
-    # =====================================================
-    # CABEÇALHO
-    # =====================================================
 
-    nome_escola = (
-        request.user.escola.nome
-        if getattr(request.user, "escola", None)
-        else "Sistema Eduscore"
-    )
+
+    # ======================================================
+    # CABEÇALHO INSTITUCIONAL
+    # ======================================================
+
 
     elementos.append(
-        Paragraph("<b>EDUSCORE</b>", titulo)
-    )
 
-    elementos.append(
-        Paragraph(nome_escola, subtitulo)
-    )
-
-    elementos.append(Spacer(1, 0.20 * inch))
-
-    elementos.append(
         Paragraph(
-            f"<b>RELATÓRIO DE ENCERRAMENTO DO ANO LETIVO {ano_atual.nome}</b>",
-            styles["Heading1"],
+
+            "EDUSCORE",
+
+            estilo_titulo
+
         )
+
     )
 
-    elementos.append(Spacer(1, 0.35 * inch))
 
-    # =====================================================
-    # TABELA RESUMO
-    # =====================================================
+
+    elementos.append(
+
+        Paragraph(
+
+            "Sistema Integrado de Gestão Escolar",
+
+            estilo_subtitulo
+
+        )
+
+    )
+
+
+    elementos.append(
+
+        Spacer(
+            1,
+            0.3 * cm
+        )
+
+    )
+
+
+
+    elementos.append(
+
+        Paragraph(
+
+            f"""
+            <b>{escola.nome}</b><br/>
+            Relatório Oficial de Encerramento do Ano Letivo
+            """,
+
+            estilo_subtitulo
+
+        )
+
+    )
+
+
+    elementos.append(
+
+        Spacer(
+            1,
+            0.8 * cm
+        )
+
+    )
+
+
+
+    # ======================================================
+    # TÍTULO PRINCIPAL
+    # ======================================================
+
+
+    elementos.append(
+
+        Paragraph(
+
+            f"""
+            ENCERRAMENTO DO ANO LETIVO {ano_atual.nome}
+            """,
+
+            estilo_titulo
+
+        )
+
+    )
+
+
+    elementos.append(
+
+        Spacer(
+            1,
+            0.5 * cm
+        )
+
+    )
+
+
+
+    # ======================================================
+    # INFORMAÇÕES GERAIS
+    # ======================================================
+
 
     dados = [
-        ["Campo", "Informação"],
-        ["Ano Letivo Encerrado", str(ano_atual.nome)],
-        ["Novo Ano Letivo", str(novo_nome)],
-        ["Alunos Promovidos", str(promovidos)],
-        ["Finalistas", str(finalistas)],
+
         [
-            "Emitido em",
-            timezone.localtime().strftime("%d/%m/%Y %H:%M"),
+            "Descrição",
+            "Informação"
         ],
+
+
         [
-            "Emitido por",
-            request.user.get_full_name() or request.user.username,
+            "Ano encerrado",
+            ano_atual.nome
         ],
+
+
+        [
+            "Novo ano criado",
+            novo_nome
+        ],
+
+
+        [
+            "Alunos promovidos",
+            str(promovidos)
+        ],
+
+
+        [
+            "Alunos finalistas",
+            str(finalistas)
+        ],
+
+
+        [
+            "Novas turmas criadas",
+            str(turmas_criadas)
+        ],
+
+
+        [
+            "Data de processamento",
+            timezone.localtime().strftime(
+                "%d/%m/%Y %H:%M"
+            )
+        ],
+
+
+        [
+            "Responsável",
+            request.user.get_full_name()
+            or request.user.username
+        ]
+
     ]
 
+
+
     tabela = Table(
+
         dados,
-        colWidths=[220, 250],
+
+        colWidths=[7 * cm, 8 * cm]
+
     )
 
+
+
     tabela.setStyle(
+
         TableStyle(
+
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F4E78")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 10),
-                ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-                ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("BOTTOMPADDING", (0, 0), (-1, 0), 8),
-                ("TOPPADDING", (0, 0), (-1, -1), 6),
-                ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
+
+                (
+                    "BACKGROUND",
+                    (0,0),
+                    (-1,0),
+                    colors.HexColor(
+                        "#123B63"
+                    )
+                ),
+
+
+                (
+                    "TEXTCOLOR",
+                    (0,0),
+                    (-1,0),
+                    colors.white
+                ),
+
+
+                (
+                    "FONTNAME",
+                    (0,0),
+                    (-1,0),
+                    "Helvetica-Bold"
+                ),
+
+
+                (
+                    "GRID",
+                    (0,0),
+                    (-1,-1),
+                    0.4,
+                    colors.grey
+                ),
+
+
+                (
+                    "FONTSIZE",
+                    (0,0),
+                    (-1,-1),
+                    10
+                ),
+
+
+                (
+                    "VALIGN",
+                    (0,0),
+                    (-1,-1),
+                    "MIDDLE"
+                ),
+
+
+                (
+                    "TOPPADDING",
+                    (0,0),
+                    (-1,-1),
+                    8
+                ),
+
+
+                (
+                    "BOTTOMPADDING",
+                    (0,0),
+                    (-1,-1),
+                    8
+                )
+
             ]
+
         )
+
     )
+
 
     elementos.append(tabela)
 
-    elementos.append(Spacer(1, 0.35 * inch))
 
-    # =====================================================
-    # MENSAGEM
-    # =====================================================
 
     elementos.append(
-        Paragraph(
-            (
-                "O encerramento do ano letivo foi realizado com sucesso. "
-                "Os alunos elegíveis foram promovidos para o novo ano letivo "
-                "e os finalistas concluíram o seu ciclo académico."
-            ),
-            styles["Normal"],
+
+        Spacer(
+            1,
+            0.8 * cm
         )
+
     )
 
-    elementos.append(Spacer(1, 0.60 * inch))
 
-    # =====================================================
+
+    # ======================================================
+    # TEXTO OFICIAL
+    # ======================================================
+
+
+    elementos.append(
+
+        Paragraph(
+
+            """
+            Declara-se para os devidos efeitos que o processo
+            de encerramento do ano letivo foi concluído com sucesso.
+
+            Os alunos aprovados foram automaticamente transferidos
+            para o ano letivo seguinte, mantendo-se o histórico
+            académico devidamente registado no Sistema Eduscore.
+
+            Este documento constitui comprovativo digital da
+            operação realizada pela direção da instituição.
+            """,
+
+            estilo_texto
+
+        )
+
+    )
+
+
+
+    elementos.append(
+
+        Spacer(
+            1,
+            1.5 * cm
+        )
+
+    )
+
+
+
+    # ======================================================
     # ASSINATURA
-    # =====================================================
+    # ======================================================
+
 
     elementos.append(
+
         Paragraph(
-            "__________________________________________",
-            styles["Normal"],
+
+            "________________________________",
+
+            estilo_assinatura
+
         )
+
     )
 
+
     elementos.append(
+
         Paragraph(
+
             "Direção da Escola",
-            styles["Normal"],
+
+            estilo_assinatura
+
         )
+
     )
 
-    elementos.append(Spacer(1, 0.40 * inch))
 
-    # =====================================================
-    # RODAPÉ
-    # =====================================================
 
     elementos.append(
-        Paragraph(
-            "<font size='8' color='grey'>"
-            "Documento gerado automaticamente pelo Sistema Eduscore. "
-            "Este relatório serve como comprovativo do encerramento do ano letivo."
-            "</font>",
-            styles["Normal"],
+
+        Spacer(
+            1,
+            1 * cm
         )
+
     )
 
-    # Gerar PDF
-    doc.build(elementos)
 
-    # Mensagem de sucesso
-    messages.success(
-        request,
-        f"{promovidos} alunos promovidos para {novo_nome}.",
+
+    elementos.append(
+
+        Paragraph(
+
+            """
+            Documento gerado automaticamente pelo Sistema Eduscore.
+            Plataforma de Gestão Escolar Inteligente.
+            """,
+
+            estilo_subtitulo
+
+        )
+
     )
+    elementos.append(
 
-    return response
+        Paragraph(
+
+            """
+            Documento gerado automaticamente pelo Sistema Eduscore.
+            Plataforma de Gestão Escolar Inteligente.
+            """,
+
+            estilo_subtitulo
+
+        )
+
+    )
 
 
 from django.http import HttpResponse

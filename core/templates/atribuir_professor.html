@@ -1,0 +1,2131 @@
+{% extends base_template %}
+
+{% load static %}
+
+{% block content %}
+
+
+<style>
+
+/* ==========================================================
+        EDUSCORE
+        ATRIBUIÇÃO DE PROFESSORES
+        PREMIUM ACADEMIC UI
+========================================================== */
+
+
+body{
+
+    background:#f4f6f9;
+
+    font-family:
+    Inter,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+}
+
+
+
+/* HEADER */
+
+.page-header{
+
+    background:#ffffff;
+
+    border-radius:24px;
+
+    padding:35px;
+
+    border:1px solid #e9ecef;
+
+    box-shadow:
+    0 10px 35px rgba(15,23,42,.06);
+
+}
+
+
+
+.page-title{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:#183153;
+
+    letter-spacing:-.5px;
+
+}
+
+
+
+.page-description{
+
+    color:#6c757d;
+
+    max-width:850px;
+
+    line-height:1.6;
+
+}
+
+
+
+/* BOTÕES */
+
+
+.btn-premium{
+
+    border-radius:14px;
+
+    padding:.75rem 1.5rem;
+
+    font-weight:600;
+
+    transition:.25s ease;
+
+}
+
+
+
+.btn-premium:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* CARDS */
+
+
+.card-premium{
+
+    background:#ffffff;
+
+    border:none;
+
+    border-radius:22px;
+
+    box-shadow:
+
+    0 8px 30px rgba(15,23,42,.06);
+
+}
+
+
+
+
+
+.card-premium .card-body{
+
+    padding:30px;
+
+}
+
+
+
+/* INDICADORES */
+
+
+.stat-card{
+
+    background:#ffffff;
+
+    border:none;
+
+    border-radius:22px;
+
+    box-shadow:
+
+    0 8px 25px rgba(15,23,42,.05);
+
+    transition:.25s ease;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.stat-icon{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:25px;
+
+}
+
+
+
+.icon-blue{
+
+    background:#eaf2ff;
+
+    color:#0d6efd;
+
+}
+
+
+
+.icon-green{
+
+    background:#eaf8ef;
+
+    color:#198754;
+
+}
+
+
+
+.icon-orange{
+
+    background:#fff5df;
+
+    color:#b7791f;
+
+}
+
+
+
+.icon-purple{
+
+    background:#f1eaff;
+
+    color:#6f42c1;
+
+}
+
+
+
+.stat-title{
+
+    font-size:.78rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.6px;
+
+    font-weight:700;
+
+    color:#6c757d;
+
+}
+
+
+
+.stat-number{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:#183153;
+
+}
+
+
+
+/* SECÇÕES */
+
+
+.section-title{
+
+    font-size:1.15rem;
+
+    font-weight:750;
+
+    color:#183153;
+
+}
+
+
+
+
+
+/* FORM */
+
+
+.form-control,
+
+.form-select{
+
+    border-radius:14px;
+
+    padding:.75rem 1rem;
+
+    border:1px solid #dee2e6;
+
+}
+
+
+
+.form-control:focus,
+
+.form-select:focus{
+
+    border-color:#0d6efd;
+
+    box-shadow:
+
+    0 0 0 .2rem rgba(13,110,253,.15);
+
+}
+
+
+
+/* PROFESSORES */
+
+
+.professor-box{
+
+    border-radius:18px;
+
+    border:1px solid #edf0f4;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    transition:.25s ease;
+
+}
+
+
+
+.professor-box:hover{
+
+    border-color:#0d6efd;
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.avatar{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:18px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #198754
+    );
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:800;
+
+    font-size:22px;
+
+}
+
+
+
+/* RESPONSIVO */
+
+
+@media(max-width:768px){
+
+    .page-header{
+
+        padding:25px;
+
+    }
+
+
+    .page-title{
+
+        font-size:1.5rem;
+
+    }
+
+}
+
+
+</style>
+
+
+
+
+
+<div class="container-fluid py-4">
+
+
+
+<!-- ======================================================
+                    CABEÇALHO
+====================================================== -->
+
+
+<div class="page-header mb-4">
+
+
+<div class="row align-items-center gy-3">
+
+
+<div class="col-lg-8">
+
+
+<h2 class="page-title mb-2">
+
+Atribuição de Professores
+
+</h2>
+
+
+
+<p class="page-description mb-0">
+
+Organize a distribuição do corpo docente, associando professores às respetivas turmas e disciplinas por ano letivo.
+
+</p>
+
+
+</div>
+
+
+
+<div class="col-lg-4 text-lg-end">
+
+
+<a href="{% url 'professores' %}"
+
+class="btn btn-outline-secondary btn-premium">
+
+
+Voltar aos Professores
+
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+<!-- ======================================================
+                    INDICADORES
+====================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+<!-- PROFESSORES -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card h-100">
+
+
+<div class="card-body p-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Professores
+
+</div>
+
+
+
+<div class="stat-number mt-2">
+
+{{ professores|length }}
+
+</div>
+
+
+
+<small class="text-muted">
+
+Docentes registados
+
+</small>
+
+
+</div>
+
+
+
+
+<div class="stat-icon icon-blue">
+
+
+<i class="bi bi-person-workspace"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card h-100">
+
+
+<div class="card-body p-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Turmas
+
+</div>
+
+
+
+<div class="stat-number mt-2">
+
+{{ turmas|length }}
+
+</div>
+
+
+
+<small class="text-muted">
+
+Disponíveis para atribuição
+
+</small>
+
+
+</div>
+
+
+
+
+<div class="stat-icon icon-green">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- DISCIPLINAS -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card h-100">
+
+
+<div class="card-body p-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Disciplinas
+
+</div>
+
+
+
+<div class="stat-number mt-2">
+
+{{ disciplinas|length }}
+
+</div>
+
+
+
+<small class="text-muted">
+
+Componentes curriculares
+
+</small>
+
+
+</div>
+
+
+
+
+<div class="stat-icon icon-orange">
+
+
+<i class="bi bi-journal-bookmark-fill"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ANOS -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card h-100">
+
+
+<div class="card-body p-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Anos Letivos
+
+</div>
+
+
+
+<div class="stat-number mt-2">
+
+{{ anos|length }}
+
+</div>
+
+
+
+<small class="text-muted">
+
+Histórico académico
+
+</small>
+
+
+</div>
+
+
+
+
+<div class="stat-icon icon-purple">
+
+
+<i class="bi bi-calendar3"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+                    FILTRO
+====================================================== -->
+
+
+<div class="card-premium mb-4">
+
+
+<div class="card-body">
+
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+
+<div>
+
+
+<h5 class="section-title mb-1">
+
+Configuração da Atribuição
+
+</h5>
+
+
+<p class="text-muted small mb-0">
+
+Selecione o período académico antes de realizar as associações.
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<form method="GET">
+
+
+<div class="row g-3">
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<label class="form-label fw-semibold">
+
+Ano Letivo
+
+</label>
+
+
+
+<select
+
+name="ano"
+
+class="form-select">
+
+
+<option value="">
+
+
+Selecionar ano letivo
+
+
+</option>
+
+
+
+
+{% for ano in anos %}
+
+
+
+<option value="{{ ano.id }}">
+
+
+{{ ano.nome }}
+
+
+
+{% if ano.ativo %}
+
+- Atual
+
+{% endif %}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-lg-4">
+
+
+<label class="form-label fw-semibold">
+
+Pesquisar Professor
+
+</label>
+
+
+
+<div class="input-group">
+
+
+<span class="input-group-text bg-white">
+
+
+<i class="bi bi-search"></i>
+
+
+</span>
+
+
+
+
+<input
+
+type="text"
+
+class="form-control"
+
+placeholder="Nome do professor..."
+
+name="q"
+
+
+>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-4 d-flex align-items-end">
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-premium w-100">
+
+
+Aplicar Filtros
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</form>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ======================================================
+                    ÁREA PRINCIPAL
+====================================================== -->
+
+
+<div class="card-premium">
+
+
+<div class="card-body">
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+
+<h5 class="section-title mb-1">
+
+Professores Disponíveis
+
+</h5>
+
+
+
+<p class="text-muted small mb-0">
+
+Selecione um professor para gerir as suas atribuições académicas.
+
+</p>
+
+
+</div>
+
+
+
+<span class="badge bg-primary rounded-pill px-3 py-2">
+
+
+{{ professores|length }} Professores
+
+
+</span>
+
+
+
+</div>
+<!-- ======================================================
+                LISTAGEM DE PROFESSORES
+====================================================== -->
+
+
+<div class="row g-4">
+
+
+
+{% for professor in professores %}
+
+
+
+<div class="col-xl-4 col-lg-6">
+
+
+
+<div class="professor-box h-100">
+
+
+
+
+
+<!-- CABEÇALHO PROFESSOR -->
+
+
+<div class="d-flex align-items-center mb-4">
+
+
+
+<div class="avatar">
+
+
+{{ professor.first_name|default:professor.username|slice:":1"|upper }}
+
+
+</div>
+
+
+
+
+
+<div class="ms-3">
+
+
+<h5 class="fw-bold mb-1">
+
+
+{{ professor.get_full_name|default:professor.username }}
+
+
+</h5>
+
+
+
+
+<div class="text-muted small">
+
+
+{{ professor.username }}
+
+
+</div>
+
+
+
+{% if professor.email %}
+
+
+<div class="text-primary small">
+
+
+{{ professor.email }}
+
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- INFORMAÇÕES -->
+
+
+<div class="mb-4">
+
+
+
+<div class="d-flex justify-content-between mb-2">
+
+
+<span class="text-muted small">
+
+Estado
+
+</span>
+
+
+
+<span class="badge bg-success-subtle text-success rounded-pill px-3">
+
+
+Ativo
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted small">
+
+Escola
+
+</span>
+
+
+
+<strong class="small">
+
+
+{{ escola.nome|default:"Unidade Escolar" }}
+
+
+</strong>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+<!-- ATRIBUIÇÕES -->
+
+
+<div class="mb-3">
+
+
+
+<h6 class="fw-bold text-dark mb-3">
+
+
+Atribuir Carga Académica
+
+
+</h6>
+
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+
+
+
+
+
+<div class="mb-3">
+
+
+<label class="form-label small fw-semibold">
+
+
+Turma
+
+
+</label>
+
+
+
+<select
+
+class="form-select"
+
+name="turma">
+
+
+<option value="">
+
+
+Selecionar turma
+
+
+</option>
+
+
+
+{% for turma in turmas %}
+
+
+
+<option value="{{ turma.id }}">
+
+
+{{ turma.get_classe_display }}
+
+-
+
+{{ turma.identificador }}
+
+
+{% if turma.curso %}
+
+
+- {{ turma.curso.nome }}
+
+
+{% endif %}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="mb-3">
+
+
+<label class="form-label small fw-semibold">
+
+
+Disciplina
+
+
+</label>
+
+
+
+<select
+
+class="form-select"
+
+name="disciplina">
+
+
+
+<option value="">
+
+
+Selecionar disciplina
+
+
+</option>
+
+
+
+
+{% for disciplina in disciplinas %}
+
+
+
+<option value="{{ disciplina.id }}">
+
+
+
+{{ disciplina.nome }}
+
+
+-
+
+
+{{ disciplina.turma.identificador }}
+
+
+
+</option>
+
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-premium w-100">
+
+
+Guardar Atribuição
+
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- RESUMO TURMAS -->
+
+
+<div class="mt-4">
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+
+
+<h6 class="fw-bold mb-0">
+
+
+Resumo Académico
+
+
+</h6>
+
+
+
+
+<span class="badge bg-light text-dark border rounded-pill">
+
+
+{{ turmas|length }} Turmas
+
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="list-group list-group-flush">
+
+
+
+
+
+{% for turma in turmas|slice:":3" %}
+
+
+
+<div class="list-group-item px-0 border-0">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+
+<div>
+
+
+<strong class="small">
+
+
+{{ turma.get_classe_display }}
+
+
+</strong>
+
+
+
+<div class="text-muted small">
+
+
+Turma {{ turma.identificador }}
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% if turma.sala %}
+
+
+<span class="badge bg-primary-subtle text-primary rounded-pill">
+
+
+Sala {{ turma.sala }}
+
+
+</span>
+
+
+{% else %}
+
+
+<span class="badge bg-light text-muted rounded-pill">
+
+
+Sem sala
+
+
+</span>
+
+
+{% endif %}
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+{% empty %}
+
+
+
+<div class="text-muted small">
+
+
+Nenhuma turma disponível.
+
+
+</div>
+
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+{% empty %}
+
+
+
+
+<div class="col-12">
+
+
+<div class="card-premium">
+
+
+<div class="card-body text-center py-5">
+
+
+
+<h5 class="fw-bold text-muted">
+
+
+Nenhum professor encontrado
+
+
+</h5>
+
+
+
+<p class="text-muted mb-0">
+
+
+Não existem professores disponíveis para atribuição.
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+
+
+<!-- ======================================================
+            RESUMO GERAL DAS TURMAS
+====================================================== -->
+
+
+<div class="mt-5">
+
+
+<div class="card-premium">
+
+
+<div class="card-body">
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div>
+
+
+<h5 class="section-title mb-1">
+
+
+Distribuição Académica
+
+
+</h5>
+
+
+<p class="text-muted small mb-0">
+
+
+Visão geral das turmas disponíveis para organização docente.
+
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+<thead class="table-light">
+
+
+<tr>
+
+
+<th>
+
+Classe
+
+</th>
+
+
+<th>
+
+Turma
+
+</th>
+
+
+<th>
+
+Sala
+
+</th>
+
+
+<th>
+
+Curso
+
+</th>
+
+
+<th>
+
+Ano Letivo
+
+</th>
+
+
+<th class="text-center">
+
+Estado
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+
+{% for turma in turmas %}
+
+
+
+<tr>
+
+
+
+<td>
+
+
+<strong>
+
+
+{{ turma.get_classe_display }}
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<span class="fw-semibold">
+
+
+{{ turma.identificador }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{% if turma.sala %}
+
+
+
+<span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+
+
+Sala {{ turma.sala }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+<span class="text-muted small">
+
+
+Sem sala
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{% if turma.curso %}
+
+
+
+<span class="badge bg-info-subtle text-info rounded-pill px-3">
+
+
+{{ turma.curso.nome }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+
+Ensino Geral
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-light text-dark border rounded-pill px-3">
+
+
+{{ turma.ano_letivo.nome }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+<span class="badge bg-success-subtle text-success rounded-pill px-3">
+
+
+Disponível
+
+
+</span>
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="6" class="text-center py-5">
+
+
+<span class="text-muted">
+
+
+Nenhuma turma cadastrada.
+
+
+</span>
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<style>
+
+
+/* ======================================================
+        TABELA PREMIUM
+====================================================== */
+
+
+.table{
+
+    border-radius:15px;
+    overflow:hidden;
+
+}
+
+
+
+.table thead th{
+
+    font-size:.78rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    color:#6c757d;
+
+}
+
+
+
+
+
+.table tbody tr{
+
+    transition:.2s ease;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8faff;
+
+}
+
+
+
+
+
+
+/* BADGES */
+
+
+.bg-primary-subtle{
+
+    background:#eaf2ff!important;
+
+}
+
+
+.bg-success-subtle{
+
+    background:#eaf8ef!important;
+
+}
+
+
+.bg-info-subtle{
+
+    background:#e8f8fb!important;
+
+}
+
+
+
+
+
+/* LISTA INTERNA */
+
+
+.list-group-item{
+
+    background:transparent;
+
+}
+
+
+
+
+
+
+
+/* MOBILE */
+
+
+@media(max-width:768px){
+
+
+
+    .professor-box{
+
+        padding:18px;
+
+    }
+
+
+
+    .table{
+
+        font-size:.85rem;
+
+    }
+
+
+
+    .btn-premium{
+
+        width:100%;
+
+    }
+
+
+
+}
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+{% endblock %}
