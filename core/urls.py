@@ -22,10 +22,7 @@ urlpatterns = [
     path('bloqueado/', views.bloqueado, name='bloqueado'),
     path("alterar-senha/", views.alterar_senha, name="alterar_senha"),
     path("diretor-pedagogico/dashboard/", views.dashboard_diretor_pedagogico, name="dashboard_diretor_pedagogico"),
-    path("secretaria/alterar-senha/", views.alterar_senha_secretaria, name="alterar_senha_secretaria"),
-    path("financeiro/alterar-senha/", views.alterar_senha_financeiro, name="alterar_senha_financeiro"),
-    path("professor/alterar-senha/", views.alterar_senha_professor, name="alterar_senha_professor"),
-    path("aluno/alterar-senha/", views.alterar_senha_aluno, name="alterar_senha_aluno"),
+
     path("professor/turma/<int:turma_id>/disciplina/<int:disciplina_id>/frequencia/", views.marcar_frequencia, name="marcar_frequencia",),
 
 

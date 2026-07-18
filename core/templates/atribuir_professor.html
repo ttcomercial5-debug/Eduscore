@@ -10,7 +10,7 @@
 /* ==========================================================
         EDUSCORE
         ATRIBUIÇÃO DE PROFESSORES
-        PREMIUM ACADEMIC UI
+        PREMIUM ACADEMIC UI V2
 ========================================================== */
 
 
@@ -28,7 +28,20 @@ body{
 
 
 
+/* ALERTAS */
+
+.alert{
+
+    border-radius:16px;
+
+    border:none;
+
+}
+
+
+
 /* HEADER */
+
 
 .page-header{
 
@@ -55,8 +68,6 @@ body{
 
     color:#183153;
 
-    letter-spacing:-.5px;
-
 }
 
 
@@ -66,8 +77,6 @@ body{
     color:#6c757d;
 
     max-width:850px;
-
-    line-height:1.6;
 
 }
 
@@ -117,8 +126,6 @@ body{
 
 
 
-
-
 .card-premium .card-body{
 
     padding:30px;
@@ -127,7 +134,7 @@ body{
 
 
 
-/* INDICADORES */
+/* ESTATÍSTICAS */
 
 
 .stat-card{
@@ -141,16 +148,6 @@ body{
     box-shadow:
 
     0 8px 25px rgba(15,23,42,.05);
-
-    transition:.25s ease;
-
-}
-
-
-
-.stat-card:hover{
-
-    transform:translateY(-5px);
 
 }
 
@@ -185,7 +182,6 @@ body{
 }
 
 
-
 .icon-green{
 
     background:#eaf8ef;
@@ -193,7 +189,6 @@ body{
     color:#198754;
 
 }
-
 
 
 .icon-orange{
@@ -205,7 +200,6 @@ body{
 }
 
 
-
 .icon-purple{
 
     background:#f1eaff;
@@ -213,7 +207,6 @@ body{
     color:#6f42c1;
 
 }
-
 
 
 .stat-title{
@@ -231,62 +224,11 @@ body{
 }
 
 
-
 .stat-number{
 
     font-size:2rem;
 
     font-weight:800;
-
-    color:#183153;
-
-}
-
-
-
-/* SECÇÕES */
-
-
-.section-title{
-
-    font-size:1.15rem;
-
-    font-weight:750;
-
-    color:#183153;
-
-}
-
-
-
-
-
-/* FORM */
-
-
-.form-control,
-
-.form-select{
-
-    border-radius:14px;
-
-    padding:.75rem 1rem;
-
-    border:1px solid #dee2e6;
-
-}
-
-
-
-.form-control:focus,
-
-.form-select:focus{
-
-    border-color:#0d6efd;
-
-    box-shadow:
-
-    0 0 0 .2rem rgba(13,110,253,.15);
 
 }
 
@@ -303,7 +245,7 @@ body{
 
     padding:20px;
 
-    background:#ffffff;
+    background:white;
 
     transition:.25s ease;
 
@@ -353,30 +295,27 @@ body{
 
 
 
-/* RESPONSIVO */
+.form-control,
 
+.form-select{
 
-@media(max-width:768px){
+    border-radius:14px;
 
-    .page-header{
-
-        padding:25px;
-
-    }
-
-
-    .page-title{
-
-        font-size:1.5rem;
-
-    }
+    padding:.75rem 1rem;
 
 }
 
 
+
+.badge{
+
+    font-weight:600;
+
+}
+
+
+
 </style>
-
-
 
 
 
@@ -384,15 +323,30 @@ body{
 
 
 
-<!-- ======================================================
-                    CABEÇALHO
-====================================================== -->
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-success shadow-sm">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+
+
+
+<!-- CABEÇALHO -->
 
 
 <div class="page-header mb-4">
 
 
-<div class="row align-items-center gy-3">
+<div class="row align-items-center">
 
 
 <div class="col-lg-8">
@@ -408,7 +362,7 @@ Atribuição de Professores
 
 <p class="page-description mb-0">
 
-Organize a distribuição do corpo docente, associando professores às respetivas turmas e disciplinas por ano letivo.
+Organize o corpo docente associando professores às turmas e disciplinas do ano letivo.
 
 </p>
 
@@ -434,7 +388,6 @@ Voltar aos Professores
 </div>
 
 
-
 </div>
 
 
@@ -446,9 +399,6 @@ Voltar aos Professores
 
 <div class="row g-4 mb-4">
 
-
-
-<!-- PROFESSORES -->
 
 
 <div class="col-xl-3 col-md-6">
@@ -473,13 +423,11 @@ Professores
 </div>
 
 
-
 <div class="stat-number mt-2">
 
-{{ professores|length }}
+{{ total_professores }}
 
 </div>
-
 
 
 <small class="text-muted">
@@ -490,7 +438,6 @@ Docentes registados
 
 
 </div>
-
 
 
 
@@ -521,9 +468,6 @@ Docentes registados
 
 
 
-<!-- TURMAS -->
-
-
 <div class="col-xl-3 col-md-6">
 
 
@@ -546,24 +490,21 @@ Turmas
 </div>
 
 
-
 <div class="stat-number mt-2">
 
-{{ turmas|length }}
+{{ total_turmas }}
 
 </div>
 
 
-
 <small class="text-muted">
 
-Disponíveis para atribuição
+Disponíveis
 
 </small>
 
 
 </div>
-
 
 
 
@@ -594,9 +535,6 @@ Disponíveis para atribuição
 
 
 
-<!-- DISCIPLINAS -->
-
-
 <div class="col-xl-3 col-md-6">
 
 
@@ -619,13 +557,11 @@ Disciplinas
 </div>
 
 
-
 <div class="stat-number mt-2">
 
-{{ disciplinas|length }}
+{{ total_disciplinas }}
 
 </div>
-
 
 
 <small class="text-muted">
@@ -636,7 +572,6 @@ Componentes curriculares
 
 
 </div>
-
 
 
 
@@ -667,9 +602,6 @@ Componentes curriculares
 
 
 
-<!-- ANOS -->
-
-
 <div class="col-xl-3 col-md-6">
 
 
@@ -687,29 +619,26 @@ Componentes curriculares
 
 <div class="stat-title">
 
-Anos Letivos
+Ano Letivo
 
 </div>
-
 
 
 <div class="stat-number mt-2">
 
-{{ anos|length }}
+{{ ano_selecionado.nome }}
 
 </div>
 
 
-
 <small class="text-muted">
 
-Histórico académico
+Período ativo
 
 </small>
 
 
 </div>
-
 
 
 
@@ -758,34 +687,18 @@ Histórico académico
 
 
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-
-
-<div>
-
-
-<h5 class="section-title mb-1">
+<h5 class="fw-bold mb-1">
 
 Configuração da Atribuição
 
 </h5>
 
 
-<p class="text-muted small mb-0">
+<p class="text-muted small">
 
-Selecione o período académico antes de realizar as associações.
+Selecione o ano letivo antes de associar professores.
 
 </p>
-
-
-</div>
-
-
-
-</div>
-
-
-
 
 
 
@@ -799,7 +712,7 @@ Selecione o período académico antes de realizar as associações.
 
 
 
-<div class="col-lg-4">
+<div class="col-lg-5">
 
 
 <label class="form-label fw-semibold">
@@ -814,14 +727,15 @@ Ano Letivo
 
 name="ano"
 
-class="form-select">
+class="form-select"
+
+>
+
 
 
 <option value="">
 
-
-Selecionar ano letivo
-
+Selecionar ano
 
 </option>
 
@@ -832,7 +746,18 @@ Selecionar ano letivo
 
 
 
-<option value="{{ ano.id }}">
+<option
+
+value="{{ ano.id }}"
+
+{% if ano_selecionado.id == ano.id %}
+
+selected
+
+{% endif %}
+
+>
+
 
 
 {{ ano.nome }}
@@ -865,7 +790,8 @@ Selecionar ano letivo
 
 
 
-<div class="col-lg-4">
+
+<div class="col-lg-5">
 
 
 <label class="form-label fw-semibold">
@@ -873,7 +799,6 @@ Selecionar ano letivo
 Pesquisar Professor
 
 </label>
-
 
 
 <div class="input-group">
@@ -889,17 +814,15 @@ Pesquisar Professor
 
 
 
-
 <input
 
 type="text"
 
+name="q"
+
 class="form-control"
 
 placeholder="Nome do professor..."
-
-name="q"
-
 
 >
 
@@ -907,7 +830,6 @@ name="q"
 </div>
 
 
-
 </div>
 
 
@@ -916,17 +838,20 @@ name="q"
 
 
 
-<div class="col-lg-4 d-flex align-items-end">
+
+<div class="col-lg-2 d-flex align-items-end">
 
 
 <button
 
+class="btn btn-primary btn-premium w-100"
+
 type="submit"
 
-class="btn btn-primary btn-premium w-100">
+>
 
 
-Aplicar Filtros
+Filtrar
 
 
 </button>
@@ -937,21 +862,18 @@ Aplicar Filtros
 
 
 
-
-
 </div>
+
 
 
 </form>
 
 
 
-
 </div>
 
 
 </div>
-
 
 
 
@@ -960,7 +882,7 @@ Aplicar Filtros
 
 
 <!-- ======================================================
-                    ÁREA PRINCIPAL
+                    PROFESSORES
 ====================================================== -->
 
 
@@ -977,17 +899,16 @@ Aplicar Filtros
 <div>
 
 
-<h5 class="section-title mb-1">
+<h5 class="fw-bold mb-1">
 
 Professores Disponíveis
 
 </h5>
 
 
-
 <p class="text-muted small mb-0">
 
-Selecione um professor para gerir as suas atribuições académicas.
+Associe disciplinas e turmas aos docentes.
 
 </p>
 
@@ -996,10 +917,11 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 
+
 <span class="badge bg-primary rounded-pill px-3 py-2">
 
 
-{{ professores|length }} Professores
+{{ total_professores }} Professores
 
 
 </span>
@@ -1007,15 +929,14 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 </div>
-<!-- ======================================================
-                LISTAGEM DE PROFESSORES
-====================================================== -->
+
+
+
+
+
 
 
 <div class="row g-4">
-
-
-
 {% for professor in professores %}
 
 
@@ -1030,11 +951,12 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 
-<!-- CABEÇALHO PROFESSOR -->
+<!-- ===============================
+        CABEÇALHO PROFESSOR
+================================ -->
 
 
 <div class="d-flex align-items-center mb-4">
-
 
 
 <div class="avatar">
@@ -1044,7 +966,6 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 </div>
-
 
 
 
@@ -1062,12 +983,9 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 
-
 <div class="text-muted small">
 
-
 {{ professor.username }}
-
 
 </div>
 
@@ -1078,9 +996,7 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 <div class="text-primary small">
 
-
 {{ professor.email }}
-
 
 </div>
 
@@ -1101,13 +1017,12 @@ Selecione um professor para gerir as suas atribuições académicas.
 
 
 
-
-
-<!-- INFORMAÇÕES -->
+<!-- ===============================
+        ESTADO
+================================ -->
 
 
 <div class="mb-4">
-
 
 
 <div class="d-flex justify-content-between mb-2">
@@ -1121,7 +1036,7 @@ Estado
 
 
 
-<span class="badge bg-success-subtle text-success rounded-pill px-3">
+<span class="badge bg-success-subtle text-success rounded-pill">
 
 
 Ativo
@@ -1156,16 +1071,11 @@ Escola
 </strong>
 
 
-
 </div>
 
 
 
-
 </div>
-
-
-
 
 
 
@@ -1181,22 +1091,17 @@ Escola
 
 
 
+<!-- ===============================
+        FORM ATRIBUIÇÃO
+================================ -->
 
 
-<!-- ATRIBUIÇÕES -->
-
-
-<div class="mb-3">
-
-
-
-<h6 class="fw-bold text-dark mb-3">
-
+<h6 class="fw-bold mb-3">
 
 Atribuir Carga Académica
 
-
 </h6>
+
 
 
 
@@ -1205,6 +1110,24 @@ Atribuir Carga Académica
 
 
 {% csrf_token %}
+
+
+
+
+<!-- IMPORTANTE:
+     IDENTIFICA O PROFESSOR
+-->
+
+
+<input
+
+type="hidden"
+
+name="professor"
+
+value="{{ professor.id }}"
+
+>
 
 
 
@@ -1227,9 +1150,13 @@ Turma
 
 <select
 
+name="turma"
+
 class="form-select"
 
-name="turma">
+required
+
+>
 
 
 <option value="">
@@ -1249,6 +1176,7 @@ Selecionar turma
 <option value="{{ turma.id }}">
 
 
+
 {{ turma.get_classe_display }}
 
 -
@@ -1256,11 +1184,10 @@ Selecionar turma
 {{ turma.identificador }}
 
 
+
 {% if turma.curso %}
 
-
 - {{ turma.curso.nome }}
-
 
 {% endif %}
 
@@ -1275,6 +1202,7 @@ Selecionar turma
 
 
 </select>
+
 
 
 </div>
@@ -1300,11 +1228,16 @@ Disciplina
 
 
 
+
 <select
+
+name="disciplina"
 
 class="form-select"
 
-name="disciplina">
+required
+
+>
 
 
 
@@ -1319,21 +1252,44 @@ Selecionar disciplina
 
 
 
+
 {% for disciplina in disciplinas %}
 
 
 
-<option value="{{ disciplina.id }}">
+<option
+
+value="{{ disciplina.id }}"
+
+>
 
 
 
 {{ disciplina.nome }}
 
 
+
 -
+
+{{ disciplina.turma.get_classe_display }}
+
 
 
 {{ disciplina.turma.identificador }}
+
+
+
+{% if disciplina.professor %}
+
+
+(Professor:
+
+{{ disciplina.professor.get_full_name }}
+
+)
+
+
+{% endif %}
 
 
 
@@ -1341,8 +1297,8 @@ Selecionar disciplina
 
 
 
-
 {% endfor %}
+
 
 
 
@@ -1364,7 +1320,12 @@ Selecionar disciplina
 
 type="submit"
 
-class="btn btn-primary btn-premium w-100">
+class="btn btn-primary btn-premium w-100"
+
+>
+
+
+<i class="bi bi-save me-2"></i>
 
 
 Guardar Atribuição
@@ -1381,31 +1342,24 @@ Guardar Atribuição
 
 
 
-</div>
 
 
 
 
 
-
-
-
-
-<!-- RESUMO TURMAS -->
+<!-- ===============================
+        DISCIPLINAS ATRIBUÍDAS
+================================ -->
 
 
 <div class="mt-4">
 
 
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<h6 class="fw-bold mb-3">
 
 
-
-<h6 class="fw-bold mb-0">
-
-
-Resumo Académico
+Disciplinas atribuídas
 
 
 </h6>
@@ -1413,50 +1367,31 @@ Resumo Académico
 
 
 
-<span class="badge bg-light text-dark border rounded-pill">
 
-
-{{ turmas|length }} Turmas
-
-
-</span>
+{% for disciplina in disciplinas %}
 
 
 
-</div>
+{% if disciplina.professor.id == professor.id %}
 
 
 
 
 
+<div class="border rounded-3 p-3 mb-2 bg-light">
 
-
-
-<div class="list-group list-group-flush">
-
-
-
-
-
-{% for turma in turmas|slice:":3" %}
-
-
-
-<div class="list-group-item px-0 border-0">
 
 
 <div class="d-flex justify-content-between align-items-center">
 
 
-
 <div>
+
 
 
 <strong class="small">
 
-
-{{ turma.get_classe_display }}
-
+{{ disciplina.nome }}
 
 </strong>
 
@@ -1465,52 +1400,44 @@ Resumo Académico
 <div class="text-muted small">
 
 
-Turma {{ turma.identificador }}
+{{ disciplina.turma.get_classe_display }}
+
+-
+
+{{ disciplina.turma.identificador }}
 
 
 </div>
 
 
+
 </div>
 
 
 
 
 
-{% if turma.sala %}
+<span class="badge bg-success">
 
 
-<span class="badge bg-primary-subtle text-primary rounded-pill">
-
-
-Sala {{ turma.sala }}
+Atribuída
 
 
 </span>
 
 
-{% else %}
+
+</div>
 
 
-<span class="badge bg-light text-muted rounded-pill">
+
+</div>
 
 
-Sem sala
 
-
-</span>
 
 
 {% endif %}
-
-
-
-
-</div>
-
-
-</div>
-
 
 
 
@@ -1520,9 +1447,7 @@ Sem sala
 
 <div class="text-muted small">
 
-
-Nenhuma turma disponível.
-
+Nenhuma disciplina atribuída.
 
 </div>
 
@@ -1540,10 +1465,6 @@ Nenhuma turma disponível.
 
 
 
-</div>
-
-
-
 
 
 
@@ -1553,13 +1474,11 @@ Nenhuma turma disponível.
 
 
 </div>
-
 
 
 
 
 {% empty %}
-
 
 
 
@@ -1575,9 +1494,7 @@ Nenhuma turma disponível.
 
 <h5 class="fw-bold text-muted">
 
-
 Nenhum professor encontrado
-
 
 </h5>
 
@@ -1585,9 +1502,7 @@ Nenhum professor encontrado
 
 <p class="text-muted mb-0">
 
-
-Não existem professores disponíveis para atribuição.
-
+Não existem professores disponíveis.
 
 </p>
 
@@ -1603,18 +1518,11 @@ Não existem professores disponíveis para atribuição.
 
 
 
-
 {% endfor %}
 
 
 
-
-
 </div>
-
-
-
-
 <!-- ======================================================
             RESUMO GERAL DAS TURMAS
 ====================================================== -->
@@ -1636,20 +1544,16 @@ Não existem professores disponíveis para atribuição.
 <div>
 
 
-<h5 class="section-title mb-1">
-
+<h5 class="fw-bold mb-1">
 
 Distribuição Académica
-
 
 </h5>
 
 
 <p class="text-muted small mb-0">
 
-
-Visão geral das turmas disponíveis para organização docente.
-
+Visão geral das turmas e respetivas disciplinas.
 
 </p>
 
@@ -1657,9 +1561,7 @@ Visão geral das turmas disponíveis para organização docente.
 </div>
 
 
-
 </div>
-
 
 
 
@@ -1696,14 +1598,14 @@ Turma
 
 <th>
 
-Sala
+Curso
 
 </th>
 
 
 <th>
 
-Curso
+Sala
 
 </th>
 
@@ -1715,9 +1617,9 @@ Ano Letivo
 </th>
 
 
-<th class="text-center">
+<th>
 
-Estado
+Disciplinas
 
 </th>
 
@@ -1726,8 +1628,6 @@ Estado
 
 
 </thead>
-
-
 
 
 
@@ -1750,11 +1650,25 @@ Estado
 
 <strong>
 
-
 {{ turma.get_classe_display }}
 
-
 </strong>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="fw-semibold">
+
+{{ turma.identificador }}
+
+</span>
 
 
 </td>
@@ -1767,16 +1681,33 @@ Estado
 <td>
 
 
-<span class="fw-semibold">
+{% if turma.curso %}
 
 
-{{ turma.identificador }}
+<span class="badge bg-info-subtle text-info rounded-pill px-3">
+
+
+{{ turma.curso.nome }}
 
 
 </span>
 
 
+{% else %}
+
+
+<span class="text-muted">
+
+Ensino Geral
+
+</span>
+
+
+{% endif %}
+
+
 </td>
+
 
 
 
@@ -1790,8 +1721,7 @@ Estado
 {% if turma.sala %}
 
 
-
-<span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+<span class="badge bg-primary-subtle text-primary rounded-pill">
 
 
 Sala {{ turma.sala }}
@@ -1800,22 +1730,17 @@ Sala {{ turma.sala }}
 </span>
 
 
-
 {% else %}
 
 
 <span class="text-muted small">
 
-
 Sem sala
 
-
 </span>
 
 
-
 {% endif %}
-
 
 
 </td>
@@ -1825,54 +1750,10 @@ Sem sala
 
 
 
-
 <td>
 
 
-{% if turma.curso %}
-
-
-
-<span class="badge bg-info-subtle text-info rounded-pill px-3">
-
-
-{{ turma.curso.nome }}
-
-
-</span>
-
-
-
-{% else %}
-
-
-
-<span class="text-muted">
-
-
-Ensino Geral
-
-
-</span>
-
-
-
-{% endif %}
-
-
-
-</td>
-
-
-
-
-
-
-
-<td>
-
-
-<span class="badge bg-light text-dark border rounded-pill px-3">
+<span class="badge bg-light text-dark border rounded-pill">
 
 
 {{ turma.ano_letivo.nome }}
@@ -1889,14 +1770,17 @@ Ensino Geral
 
 
 
-<td class="text-center">
+
+<td>
 
 
 
-<span class="badge bg-success-subtle text-success rounded-pill px-3">
+<span class="badge bg-secondary rounded-pill">
 
 
-Disponível
+{{ turma.disciplinas.count }}
+
+disciplinas
 
 
 </span>
@@ -1910,6 +1794,8 @@ Disponível
 
 
 </tr>
+
+
 
 
 
@@ -1925,9 +1811,7 @@ Disponível
 
 <span class="text-muted">
 
-
-Nenhuma turma cadastrada.
-
+Nenhuma turma encontrada.
 
 </span>
 
@@ -1940,6 +1824,7 @@ Nenhuma turma cadastrada.
 
 
 {% endfor %}
+
 
 
 
@@ -1958,20 +1843,13 @@ Nenhuma turma cadastrada.
 
 
 
-
 </div>
 
 
 </div>
 
 
-
 </div>
-
-
-
-
-
 
 
 
@@ -1982,6 +1860,8 @@ Nenhuma turma cadastrada.
 
 
 </div>
+
+
 
 
 
@@ -1993,13 +1873,39 @@ Nenhuma turma cadastrada.
 
 
 /* ======================================================
-        TABELA PREMIUM
+        ELEMENTOS EXTRA
 ====================================================== */
+
+
+.bg-primary-subtle{
+
+    background:#eaf2ff!important;
+
+}
+
+
+
+.bg-success-subtle{
+
+    background:#eaf8ef!important;
+
+}
+
+
+
+.bg-info-subtle{
+
+    background:#e8f8fb!important;
+
+}
+
+
 
 
 .table{
 
-    border-radius:15px;
+    border-radius:16px;
+
     overflow:hidden;
 
 }
@@ -2007,6 +1913,7 @@ Nenhuma turma cadastrada.
 
 
 .table thead th{
+
 
     font-size:.78rem;
 
@@ -2017,8 +1924,6 @@ Nenhuma turma cadastrada.
     color:#6c757d;
 
 }
-
-
 
 
 
@@ -2040,75 +1945,31 @@ Nenhuma turma cadastrada.
 
 
 
-
-/* BADGES */
-
-
-.bg-primary-subtle{
-
-    background:#eaf2ff!important;
-
-}
-
-
-.bg-success-subtle{
-
-    background:#eaf8ef!important;
-
-}
-
-
-.bg-info-subtle{
-
-    background:#e8f8fb!important;
-
-}
-
-
-
-
-
-/* LISTA INTERNA */
-
-
-.list-group-item{
-
-    background:transparent;
-
-}
-
-
-
-
-
-
-
 /* MOBILE */
 
 
 @media(max-width:768px){
 
 
+    .page-header{
+
+        padding:25px;
+
+    }
+
+
+
+    .page-title{
+
+        font-size:1.5rem;
+
+    }
+
+
 
     .professor-box{
 
         padding:18px;
-
-    }
-
-
-
-    .table{
-
-        font-size:.85rem;
-
-    }
-
-
-
-    .btn-premium{
-
-        width:100%;
 
     }
 
@@ -2121,7 +1982,6 @@ Nenhuma turma cadastrada.
 
 
 </style>
-
 
 
 

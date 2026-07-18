@@ -1122,36 +1122,13 @@ from django.db.models.functions import Lower
 from django.shortcuts import render, redirect
 
 
-
-
 @login_required
 def lista_alunos(request):
-
-    """
-    Lista e gestão de alunos.
-
-    Permissões:
-
-    DIRETOR:
-        - Visualiza todos os alunos da escola.
-
-    DIRETOR_PEDAGOGICO:
-        - Visualiza todos os alunos da escola.
-
-    PROFESSOR:
-        - Visualiza apenas alunos das suas turmas.
-    """
-
-
-    # ======================================================
-    # ESCOLA DO UTILIZADOR
-    # ======================================================
 
     escola = get_escola(request)
 
 
     if not escola:
-
         return redirect("escolas")
 
 
@@ -1161,7 +1138,7 @@ def lista_alunos(request):
 
 
     # ======================================================
-    # TEMPLATE DINÂMICO SaaS
+    # TEMPLATE DINÂMICO
     # ======================================================
 
     templates = {
@@ -1184,134 +1161,151 @@ def lista_alunos(request):
 
 
     if not base_template:
-
         return redirect("dashboard")
 
 
 
+
     # ======================================================
-    # QUERY PRINCIPAL
+    # ANOS LETIVOS
     # ======================================================
 
-    alunos = (
-        Aluno.objects
-
+    anos_letivos = (
+        AnoLetivo.objects
         .filter(
             escola=escola
         )
-
-        .select_related(
-            "usuario",
-            "turma",
-            "turma__curso",
-            "ano_letivo",
-        )
-
-        .only(
-
-            "id",
-            "numero_bi",
-            "numero_processo",
-            "turma",
-            "ano_letivo",
-
-            "usuario__id",
-            "usuario__first_name",
-            "usuario__last_name",
-            "usuario__email",
-            "usuario__is_active",
-
-            "turma__id",
-            "turma__classe",
-            "turma__identificador",
-
-            "turma__curso__nome",
-
+        .order_by(
+            "-nome"
         )
     )
 
 
 
+    ano_id = request.GET.get(
+        "ano",
+        ""
+    )
+
+
+
+    if ano_id:
+
+
+        ano_selecionado = (
+            AnoLetivo.objects
+            .filter(
+                id=ano_id,
+                escola=escola
+            )
+            .first()
+        )
+
+
+    else:
+
+
+        ano_selecionado = (
+            anos_letivos
+            .filter(
+                ativo=True
+            )
+            .first()
+        )
+
+
+
+
+    historico = False
+
+
+
+
     # ======================================================
-    # RESTRIÇÃO DO PROFESSOR
+    # CONSULTA PRINCIPAL
     # ======================================================
+
+
+    if ano_selecionado and ano_selecionado.ativo:
+
+
+        # ==============================
+        # ANO ATUAL
+        # ==============================
+
+
+        alunos = (
+            Aluno.objects
+            .filter(
+                escola=escola,
+                ano_letivo=ano_selecionado
+            )
+            .select_related(
+                "usuario",
+                "turma",
+                "turma__curso",
+                "ano_letivo"
+            )
+        )
+
+
+
+    else:
+
+
+        # ==============================
+        # HISTÓRICO
+        # ==============================
+
+
+        historico = True
+
+
+
+        alunos = (
+            HistoricoMatricula.objects
+            .filter(
+                ano_letivo=ano_selecionado,
+                aluno__escola=escola
+            )
+            .select_related(
+                "aluno",
+                "aluno__usuario",
+                "turma",
+                "curso",
+                "ano_letivo"
+            )
+        )
+
+
+
+
+
+    # ======================================================
+    # PROFESSOR
+    # ======================================================
+
 
     if user.role == "PROFESSOR":
 
 
         alunos = (
             alunos
-
             .filter(
                 turma__professores__usuario=user
             )
-
             .distinct()
         )
 
 
 
-    # ======================================================
-    # ESTATÍSTICAS
-    # ======================================================
-
-    total_alunos = alunos.count()
-
-
-    alunos_ativos = (
-        alunos
-
-        .filter(
-            usuario__is_active=True
-        )
-
-        .count()
-    )
-
-
-    alunos_bloqueados = (
-        alunos
-
-        .filter(
-            usuario__is_active=False
-        )
-
-        .count()
-    )
-
-
-    alunos_sem_turma = (
-        alunos
-
-        .filter(
-            turma__isnull=True
-        )
-
-        .count()
-    )
-
-
-    total_turmas = (
-        alunos
-
-        .exclude(
-            turma__isnull=True
-        )
-
-        .values(
-            "turma"
-        )
-
-        .distinct()
-
-        .count()
-    )
 
 
 
     # ======================================================
-    # FILTRO DE PESQUISA
+    # PESQUISA
     # ======================================================
+
 
     buscar = request.GET.get(
         "buscar",
@@ -1323,43 +1317,82 @@ def lista_alunos(request):
     if buscar:
 
 
-        alunos = alunos.filter(
+        if historico:
 
-            Q(
-                usuario__first_name__icontains=buscar
+
+            alunos = alunos.filter(
+
+
+                Q(
+                    aluno__usuario__first_name__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    aluno__usuario__last_name__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    aluno__numero_bi__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    aluno__numero_processo__icontains=buscar
+                )
+
+
             )
 
-            |
 
-            Q(
-                usuario__last_name__icontains=buscar
+        else:
+
+
+            alunos = alunos.filter(
+
+
+                Q(
+                    usuario__first_name__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    usuario__last_name__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    numero_bi__icontains=buscar
+                )
+
+                |
+
+                Q(
+                    numero_processo__icontains=buscar
+                )
+
             )
 
-            |
 
-            Q(
-                numero_bi__icontains=buscar
-            )
 
-            |
-
-            Q(
-                numero_processo__icontains=buscar
-            )
-
-        )
 
 
 
     # ======================================================
-    # FILTRO POR TURMA
+    # FILTRO TURMA
     # ======================================================
+
 
     turma_id = request.GET.get(
         "turma",
         ""
     )
-
 
 
     if turma_id:
@@ -1371,21 +1404,114 @@ def lista_alunos(request):
 
 
 
+
+
+
     # ======================================================
     # ORDENAÇÃO
     # ======================================================
 
-    alunos = alunos.order_by(
 
-        Lower(
-            "usuario__first_name"
-        ),
+    if historico:
 
-        Lower(
-            "usuario__last_name"
+
+        alunos = alunos.order_by(
+
+            Lower(
+                "aluno__usuario__first_name"
+            ),
+
+            Lower(
+                "aluno__usuario__last_name"
+            )
+
         )
 
+
+    else:
+
+
+        alunos = alunos.order_by(
+
+            Lower(
+                "usuario__first_name"
+            ),
+
+            Lower(
+                "usuario__last_name"
+            )
+
+        )
+
+
+
+
+
+
+
+    # ======================================================
+    # ESTATÍSTICAS
+    # ======================================================
+
+
+    total_alunos = alunos.count()
+
+
+
+    if historico:
+
+
+        alunos_ativos = 0
+
+        alunos_bloqueados = 0
+
+
+    else:
+
+
+        alunos_ativos = (
+            alunos
+            .filter(
+                usuario__is_active=True
+            )
+            .count()
+        )
+
+
+        alunos_bloqueados = (
+            alunos
+            .filter(
+                usuario__is_active=False
+            )
+            .count()
+        )
+
+
+
+    alunos_sem_turma = (
+        alunos
+        .filter(
+            turma__isnull=True
+        )
+        .count()
     )
+
+
+
+    total_turmas = (
+        alunos
+        .exclude(
+            turma=None
+        )
+        .values(
+            "turma"
+        )
+        .distinct()
+        .count()
+    )
+
+
+
 
 
 
@@ -1393,34 +1519,34 @@ def lista_alunos(request):
     # PAGINAÇÃO
     # ======================================================
 
+
     paginator = Paginator(
         alunos,
         15
     )
 
 
-    page_number = request.GET.get(
-        "page"
-    )
-
-
     page_obj = paginator.get_page(
-        page_number
+        request.GET.get("page")
     )
 
 
 
+
+
+
+
     # ======================================================
-    # TURMAS DISPONÍVEIS NO FILTRO
+    # TURMAS DO ANO SELECIONADO
     # ======================================================
+
 
     turmas = (
         Turma.objects
-
         .filter(
-            escola=escola
+            escola=escola,
+            ano_letivo=ano_selecionado
         )
-
         .select_related(
             "curso"
         )
@@ -1433,31 +1559,31 @@ def lista_alunos(request):
 
         turmas = (
             turmas
-
             .filter(
                 professores__usuario=user
             )
-
             .distinct()
         )
 
 
 
     turmas = turmas.order_by(
-
         "classe",
-
         "identificador"
-
     )
 
 
 
+
+
+
     # ======================================================
-    # MANTER FILTROS NA PAGINAÇÃO
+    # PAGINAÇÃO COM FILTROS
     # ======================================================
 
+
     query_params = request.GET.copy()
+
 
 
     if "page" in query_params:
@@ -1467,13 +1593,17 @@ def lista_alunos(request):
         )
 
 
+
     query_string = query_params.urlencode()
 
 
 
+
+
     # ======================================================
-    # CONTEXTO FINAL
+    # CONTEXTO
     # ======================================================
+
 
     context = {
 
@@ -1490,13 +1620,28 @@ def lista_alunos(request):
             turmas,
 
 
+        "anos_letivos":
+            anos_letivos,
+
+
+        "ano_id":
+            str(ano_id),
+
+
+        "ano_selecionado":
+            ano_selecionado,
+
+
+        "contexto_historico":
+            historico,
+
+
         "buscar":
             buscar,
 
 
         "turma_id":
             turma_id,
-
 
 
         "total_alunos":
@@ -1519,26 +1664,18 @@ def lista_alunos(request):
             total_turmas,
 
 
-
         "query_string":
             query_string,
-
 
     }
 
 
 
     return render(
-
         request,
-
         "alunos.html",
-
         context
-
     )
-
-
 
 # =====================================================
 # PROFESSORES
@@ -1897,7 +2034,6 @@ def lista_professores(request):
         contexto
 
     )
-
 @login_required
 def atribuir_professor(request):
 
@@ -1916,11 +2052,9 @@ def atribuir_professor(request):
     escola = get_escola(request)
 
 
-
     if not escola:
 
         return redirect("dashboard")
-
 
 
 
@@ -1945,6 +2079,116 @@ def atribuir_professor(request):
 
 
     # ======================================================
+    # PROCESSAR POST
+    # ======================================================
+
+
+    if request.method == "POST":
+
+
+        professor_id = request.POST.get(
+            "professor"
+        )
+
+
+        turma_id = request.POST.get(
+            "turma"
+        )
+
+
+        disciplina_id = request.POST.get(
+            "disciplina"
+        )
+
+
+
+        if professor_id and disciplina_id:
+
+
+            professor = get_object_or_404(
+
+                User,
+
+                id=professor_id,
+
+                escola=escola,
+
+                role="PROFESSOR"
+
+            )
+
+
+
+            disciplina = get_object_or_404(
+
+                Disciplina,
+
+                id=disciplina_id,
+
+                escola=escola
+
+            )
+
+
+
+            # garantir que pertence à turma escolhida
+
+            if str(disciplina.turma.id) == str(turma_id):
+
+
+                disciplina.professor = professor
+
+                disciplina.save()
+
+
+
+                messages.success(
+
+                    request,
+
+                    "Professor atribuído à disciplina com sucesso."
+
+                )
+
+
+            else:
+
+
+                messages.error(
+
+                    request,
+
+                    "A disciplina não pertence à turma selecionada."
+
+                )
+
+
+
+
+        else:
+
+
+            messages.error(
+
+                request,
+
+                "Selecione professor, turma e disciplina."
+
+            )
+
+
+
+        return redirect(
+            request.path
+        )
+
+
+
+
+
+
+
+    # ======================================================
     # ANOS LETIVOS
     # ======================================================
 
@@ -1961,7 +2205,9 @@ def atribuir_professor(request):
 
 
 
-    ano_id = request.GET.get("ano")
+    ano_id = request.GET.get(
+        "ano"
+    )
 
 
 
@@ -1999,6 +2245,8 @@ def atribuir_professor(request):
 
 
 
+
+
     # ======================================================
     # PROFESSORES
     # ======================================================
@@ -2009,64 +2257,6 @@ def atribuir_professor(request):
         escola=escola,
 
         role="PROFESSOR"
-
-    ).prefetch_related(
-
-
-        Prefetch(
-
-            "disciplinas",
-
-            queryset=Disciplina.objects.filter(
-
-                turma__ano_letivo=ano_selecionado
-
-            ).select_related(
-
-                "turma",
-
-                "turma__curso",
-
-                "turma__ano_letivo"
-
-            ),
-
-            to_attr="disciplinas_ano"
-
-        )
-
-    ).annotate(
-
-
-        total_disciplinas=Count(
-
-            "disciplinas",
-
-            filter=Q(
-
-                disciplinas__turma__ano_letivo=ano_selecionado
-
-            ),
-
-            distinct=True
-
-        ),
-
-
-        total_turmas=Count(
-
-            "disciplinas__turma",
-
-            filter=Q(
-
-                disciplinas__turma__ano_letivo=ano_selecionado
-
-            ),
-
-            distinct=True
-
-        )
-
 
     ).order_by(
 
@@ -2081,9 +2271,8 @@ def atribuir_professor(request):
 
 
 
-
     # ======================================================
-    # TURMAS DO ANO
+    # TURMAS
     # ======================================================
 
 
@@ -2099,10 +2288,6 @@ def atribuir_professor(request):
 
         "ano_letivo"
 
-    ).prefetch_related(
-
-        "disciplinas"
-
     ).order_by(
 
         "classe",
@@ -2116,15 +2301,14 @@ def atribuir_professor(request):
 
 
 
-
     # ======================================================
-    # DISCIPLINAS DO ANO
+    # DISCIPLINAS
     # ======================================================
 
 
     disciplinas = Disciplina.objects.filter(
 
-        turma__escola=escola,
+        escola=escola,
 
         turma__ano_letivo=ano_selecionado
 
@@ -2132,7 +2316,9 @@ def atribuir_professor(request):
 
         "turma",
 
-        "turma__curso"
+        "turma__curso",
+
+        "professor"
 
     ).order_by(
 
@@ -2148,58 +2334,42 @@ def atribuir_professor(request):
 
 
 
-    # ======================================================
-    # ESTATÍSTICAS
-    # ======================================================
-
-
-    total_professores = professores.count()
-
-
-
-    total_turmas = turmas.count()
-
-
-
-    total_disciplinas = disciplinas.count()
-
-
-
-
-
-    # ======================================================
-    # CONTEXTO
-    # ======================================================
-
-
     contexto = {
 
 
-        "base_template": base_template,
+        "base_template":
+
+            base_template,
 
 
-        "professores": professores,
+        "escola":
+
+            escola,
 
 
-        "anos": anos,
+        "professores":
+
+            professores,
 
 
-        "ano_selecionado": ano_selecionado,
+        "anos":
+
+            anos,
 
 
-        "turmas": turmas,
+        "ano_selecionado":
+
+            ano_selecionado,
 
 
-        "disciplinas": disciplinas,
+        "turmas":
+
+            turmas,
 
 
-        "total_professores": total_professores,
+        "disciplinas":
 
-
-        "total_turmas": total_turmas,
-
-
-        "total_disciplinas": total_disciplinas,
+            disciplinas,
 
 
     }
@@ -12491,127 +12661,143 @@ def gerar_recibo(request, pagamento_id):
 @login_required
 def alterar_senha(request):
 
-    if request.method == "POST":
-
-        senha1 = request.POST.get("senha1")
-        senha2 = request.POST.get("senha2")
-
-        if senha1 != senha2:
-            messages.error(request, "As senhas não coincidem.")
-            return redirect("alterar_senha")
-
-        if len(senha1) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return redirect("alterar_senha")
-
-        user = request.user
-        user.set_password(senha1)
-        user.save()
-
-        messages.success(request, "Senha alterada com sucesso. Faça login novamente.")
-        return redirect("login")
-
-    return render(request, "alterar_senha.html")
-
-@login_required
-def alterar_senha_secretaria(request):
-
-    if request.method == "POST":
-
-        senha1 = request.POST.get("senha1")
-        senha2 = request.POST.get("senha2")
-
-        if senha1 != senha2:
-            messages.error(request, "As senhas não coincidem.")
-            return redirect("alterar_senha")
-
-        if len(senha1) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return redirect("alterar_senha")
-
-        user = request.user
-        user.set_password(senha1)
-        user.save()
-
-        messages.success(request, "Senha alterada com sucesso. Faça login novamente.")
-        return redirect("login")
-    return render(request, "alterar_senha_secretaria.html")
+    user = request.user
 
 
-@login_required
-def alterar_senha_financeiro(request):
+    # =====================================================
+    # TEMPLATE DINÂMICO POR PERFIL
+    # =====================================================
+
+    if user.role == "DIRETOR_PEDAGOGICO":
+
+        base_template = "base_diretor_pedagogico.html"
+
+
+    elif user.role == "DIRETOR":
+
+        base_template = "base.html"
+
+
+    elif user.role == "PROFESSOR":
+
+        base_template = "base_professor.html"
+
+
+    elif user.role == "SECRETARIA":
+
+        base_template = "base_secretaria.html"
+
+
+    elif user.role == "FINANCEIRO":
+
+        base_template = "base_financeiro.html"
+
+
+    elif user.role == "ALUNO":
+
+        base_template = "base_aluno.html"
+
+
+    else:
+
+        base_template = "base.html"
+
+
+
+    # =====================================================
+    # ALTERAÇÃO DE SENHA
+    # =====================================================
 
     if request.method == "POST":
 
-        senha1 = request.POST.get("senha1")
-        senha2 = request.POST.get("senha2")
+
+        senha_atual = request.POST.get(
+            "senha_atual"
+        )
+
+
+        senha1 = request.POST.get(
+            "senha1"
+        )
+
+
+        senha2 = request.POST.get(
+            "senha2"
+        )
+
+
+
+        if not user.check_password(
+            senha_atual
+        ):
+
+            messages.error(
+                request,
+                "A senha atual está incorreta."
+            )
+
+            return redirect(
+                "alterar_senha"
+            )
+
+
 
         if senha1 != senha2:
-            messages.error(request, "As senhas não coincidem.")
-            return redirect("alterar_senha")
 
-        if len(senha1) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return redirect("alterar_senha")
 
-        user = request.user
-        user.set_password(senha1)
+            messages.error(
+                request,
+                "As novas senhas não coincidem."
+            )
+
+            return redirect(
+                "alterar_senha"
+            )
+
+
+
+        if len(senha1) < 8:
+
+
+            messages.error(
+                request,
+                "A senha deve possuir pelo menos 8 caracteres."
+            )
+
+            return redirect(
+                "alterar_senha"
+            )
+
+
+
+        user.set_password(
+            senha1
+        )
+
+
         user.save()
 
-        messages.success(request, "Senha alterada com sucesso. Faça login novamente.")
-        return redirect("login")
-    return render(request, "alterar_senha_financeiro.html")
-
-@login_required
-def alterar_senha_professor(request):
-
-    if request.method == "POST":
-
-        senha1 = request.POST.get("senha1")
-        senha2 = request.POST.get("senha2")
-
-        if senha1 != senha2:
-            messages.error(request, "As senhas não coincidem.")
-            return redirect("alterar_senha")
-
-        if len(senha1) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return redirect("alterar_senha")
-
-        user = request.user
-        user.set_password(senha1)
-        user.save()
-
-        messages.success(request, "Senha alterada com sucesso. Faça login novamente.")
-        return redirect("login")
-
-    return render(request, "alterar_senha_professor.html")
 
 
-@login_required
-def alterar_senha_aluno(request):
+        messages.success(
+            request,
+            "Senha alterada com sucesso. Faça login novamente."
+        )
 
-    if request.method == "POST":
 
-        senha1 = request.POST.get("senha1")
-        senha2 = request.POST.get("senha2")
+        return redirect(
+            "login"
+        )
 
-        if senha1 != senha2:
-            messages.error(request, "As senhas não coincidem.")
-            return redirect("alterar_senha")
 
-        if len(senha1) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return redirect("alterar_senha")
 
-        user = request.user
-        user.set_password(senha1)
-        user.save()
-
-        messages.success(request, "Senha alterada com sucesso. Faça login novamente.")
-        return redirect("login")
-
-    return render(request, "alterar_senha_aluno.html")
+    return render(
+        request,
+        "alterar_senha.html",
+        {
+            "base_template": base_template
+        }
+    )
 
 
 #=============================================================

@@ -4,37 +4,66 @@
 
 <style>
 
+/* ======================================================
+   LISTA DE ALUNOS - EDUSCORE PREMIUM
+====================================================== */
+
+
 .page-title{
-    font-weight:700;
+
+    font-weight:800;
     letter-spacing:-0.5px;
+
 }
 
+
+
 .stat-card{
+
     border:none;
     border-radius:18px;
     transition:.25s ease;
+
 }
+
 
 .stat-card:hover{
+
     transform:translateY(-5px);
+
 }
 
+
+
 .stat-icon{
-    width:48px;
-    height:48px;
-    border-radius:14px;
+
+    width:50px;
+    height:50px;
+
+    border-radius:16px;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:22px;
-    font-weight:700;
+
+    font-size:20px;
+    font-weight:800;
+
 }
 
+
+
+
 .card-modern{
+
     border:none;
     border-radius:20px;
     overflow:hidden;
+
 }
+
+
+
 
 .avatar-aluno{
 
@@ -47,18 +76,21 @@
     align-items:center;
     justify-content:center;
 
-    font-weight:700;
-    font-size:18px;
-
-    color:#fff;
-
     background:
     linear-gradient(
         135deg,
         #0d6efd,
         #6610f2
     );
+
+    color:white;
+
+    font-weight:800;
+    font-size:18px;
+
 }
+
+
 
 
 .table > :not(caption) > * > *{
@@ -68,14 +100,37 @@
 }
 
 
+
 .table thead th{
 
-    font-size:13px;
+    font-size:12px;
+
     text-transform:uppercase;
-    letter-spacing:.4px;
+
+    letter-spacing:.5px;
+
     white-space:nowrap;
 
 }
+
+
+
+.search-box{
+
+    border-radius:12px;
+
+}
+
+
+
+.badge{
+
+    padding:7px 10px;
+
+    font-weight:600;
+
+}
+
 
 
 .action-btn{
@@ -91,20 +146,6 @@
 }
 
 
-.search-box{
-
-    border-radius:12px;
-
-}
-
-
-.badge{
-
-    padding:7px 10px;
-    font-weight:500;
-
-}
-
 
 @media(max-width:768px){
 
@@ -116,375 +157,326 @@
 
 }
 
+
 </style>
+
 
 
 <div class="container-fluid">
 
 
-<!-- CABEÇALHO -->
+
+<!-- ======================================================
+     CABEÇALHO
+====================================================== -->
+
 
 <div class="d-flex justify-content-between align-items-center mb-4">
 
 
-    <div>
-
-        <h2 class="page-title mb-1">
-
-            Lista de Alunos
-
-        </h2>
+<div>
 
 
-        <p class="text-muted mb-0">
+<h2 class="page-title mb-1">
 
-            Gestão académica dos estudantes da escola
+Lista de Alunos
 
-        </p>
+</h2>
 
 
-    </div>
+<p class="text-muted mb-0">
+
+Gestão académica dos estudantes da instituição
+
+</p>
 
 
 </div>
 
 
 
-<!-- INDICADORES -->
+</div>
+
+
+
+
+
+<!-- ======================================================
+     INDICADORES
+====================================================== -->
 
 
 <div class="row g-4 mb-4">
 
 
-    <div class="col-xl-3 col-md-6">
 
+<div class="col-xl-3 col-md-6">
 
-        <div class="card stat-card shadow-sm">
 
+<div class="card stat-card shadow-sm">
 
-            <div class="card-body">
 
+<div class="card-body">
 
-                <div class="d-flex justify-content-between align-items-center">
 
+<div class="d-flex justify-content-between align-items-center">
 
-                    <div>
 
+<div>
 
-                        <small class="text-muted">
-                            Total de Alunos
-                        </small>
 
+<small class="text-muted">
 
-                        <h2 class="fw-bold mt-2 mb-0 text-primary">
+Total de alunos
 
-                            {{ total_alunos }}
+</small>
 
-                        </h2>
 
+<h2 class="fw-bold mt-2 mb-0 text-primary">
 
-                    </div>
+{{ total_alunos }}
 
-
-                    <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-
-                        A
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <div class="col-xl-3 col-md-6">
-
-
-        <div class="card stat-card shadow-sm">
-
-
-            <div class="card-body">
-
-
-                <div class="d-flex justify-content-between align-items-center">
-
-
-                    <div>
-
-
-                        <small class="text-muted">
-                            Alunos Ativos
-                        </small>
-
-
-                        <h2 class="fw-bold mt-2 mb-0 text-success">
-
-                            {{ alunos_ativos }}
-
-                        </h2>
-
-
-                    </div>
-
-
-                    <div class="stat-icon bg-success bg-opacity-10 text-success">
-
-                        +
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <div class="col-xl-3 col-md-6">
-
-
-        <div class="card stat-card shadow-sm">
-
-
-            <div class="card-body">
-
-
-                <div class="d-flex justify-content-between align-items-center">
-
-
-                    <div>
-
-
-                        <small class="text-muted">
-                            Bloqueados
-                        </small>
-
-
-                        <h2 class="fw-bold mt-2 mb-0 text-danger">
-
-                            {{ alunos_bloqueados }}
-
-                        </h2>
-
-
-                    </div>
-
-
-                    <div class="stat-icon bg-danger bg-opacity-10 text-danger">
-
-                        !
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <div class="col-xl-3 col-md-6">
-
-
-        <div class="card stat-card shadow-sm">
-
-
-            <div class="card-body">
-
-
-                <div class="d-flex justify-content-between align-items-center">
-
-
-                    <div>
-
-
-                        <small class="text-muted">
-                            Sem Turma
-                        </small>
-
-
-                        <h2 class="fw-bold mt-2 mb-0 text-warning">
-
-                            {{ alunos_sem_turma }}
-
-                        </h2>
-
-
-                    </div>
-
-
-                    <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-
-                        ?
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
+</h2>
 
 
 </div>
 
-<!-- FILTROS -->
+
+
+<div class="stat-icon bg-primary bg-opacity-10 text-primary">
+
+A
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<small class="text-muted">
+
+Alunos ativos
+
+</small>
+
+
+<h2 class="fw-bold mt-2 mb-0 text-success">
+
+{{ alunos_ativos }}
+
+</h2>
+
+
+</div>
+
+
+
+<div class="stat-icon bg-success bg-opacity-10 text-success">
+
++
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<small class="text-muted">
+
+Bloqueados
+
+</small>
+
+
+<h2 class="fw-bold mt-2 mb-0 text-danger">
+
+{{ alunos_bloqueados }}
+
+</h2>
+
+
+</div>
+
+
+
+<div class="stat-icon bg-danger bg-opacity-10 text-danger">
+
+!
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="card stat-card shadow-sm">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<small class="text-muted">
+
+Sem turma
+
+</small>
+
+
+<h2 class="fw-bold mt-2 mb-0 text-warning">
+
+{{ alunos_sem_turma }}
+
+</h2>
+
+
+</div>
+
+
+
+<div class="stat-icon bg-warning bg-opacity-10 text-warning">
+
+-
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+<!-- ======================================================
+     FILTROS
+====================================================== -->
+
 
 <div class="card card-modern shadow-sm mb-4">
 
 
-    <div class="card-body p-4">
+<div class="card-body p-4">
 
 
-        <form method="GET">
+<form method="GET">
 
 
-            <div class="row g-3 align-items-end">
 
+<div class="row g-3 align-items-end">
 
-                <div class="col-lg-5">
 
 
-                    <label class="form-label fw-semibold">
 
-                        Pesquisar aluno
 
-                    </label>
+<div class="col-lg-4">
 
 
-                    <input
-                        type="text"
-                        name="buscar"
-                        value="{{ buscar }}"
-                        class="form-control search-box"
-                        placeholder="Nome, BI ou número de processo"
-                    >
+<label class="form-label fw-semibold">
 
+Pesquisar aluno
 
-                </div>
+</label>
 
 
+<input
 
-                <div class="col-lg-3">
+type="text"
 
+name="buscar"
 
-                    <label class="form-label fw-semibold">
+value="{{ buscar }}"
 
-                        Turma
+class="form-control search-box"
 
-                    </label>
+placeholder="Nome, BI ou número de processo"
 
-
-                    <select
-                        name="turma"
-                        class="form-select search-box"
-                    >
-
-
-                        <option value="">
-
-                            Todas as turmas
-
-                        </option>
-
-
-                        {% for turma in turmas %}
-
-
-                        <option
-                            value="{{ turma.id }}"
-                            {% if turma_id == turma.id|stringformat:"s" %}
-                                selected
-                            {% endif %}
-                        >
-
-
-                            {{ turma.classe }}ª
-                            {{ turma.identificador }}
-
-
-                        </option>
-
-
-                        {% endfor %}
-
-
-                    </select>
-
-
-                </div>
-
-
-
-                <div class="col-lg-2">
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary w-100"
-                    >
-
-                        Pesquisar
-
-                    </button>
-
-
-                </div>
-
-
-
-                <div class="col-lg-2">
-
-
-                    <a
-                        href="{% url 'alunos' %}"
-                        class="btn btn-outline-secondary w-100"
-                    >
-
-                        Limpar
-
-                    </a>
-
-
-                </div>
-
-
-            </div>
-
-
-        </form>
-
-
-    </div>
+>
 
 
 </div>
@@ -493,682 +485,1147 @@
 
 
 
-<!-- TABELA DE ALUNOS -->
+
+<div class="col-lg-3">
+
+
+<label class="form-label fw-semibold">
+
+Ano Letivo
+
+</label>
+
+
+
+<select
+
+name="ano"
+
+class="form-select search-box"
+
+>
+
+
+
+<option value="">
+
+Ano atual
+
+</option>
+
+
+
+
+{% for ano in anos_letivos %}
+
+
+<option
+
+value="{{ ano.id }}"
+
+{% if ano_id == ano.id|stringformat:"s" %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ ano.nome }}
+
+
+{% if ano.ativo %}
+
+(Atual)
+
+{% endif %}
+
+
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-3">
+
+
+<label class="form-label fw-semibold">
+
+Turma
+
+</label>
+
+
+
+<select
+
+name="turma"
+
+class="form-select search-box"
+
+>
+
+
+
+<option value="">
+
+Todas as turmas
+
+</option>
+
+
+
+
+{% for turma in turmas %}
+
+
+
+<option
+
+value="{{ turma.id }}"
+
+{% if turma_id == turma.id|stringformat:"s" %}
+
+selected
+
+{% endif %}
+
+>
+
+
+
+{{ turma.classe }}ª
+
+{{ turma.identificador }}
+
+
+
+{% if turma.curso %}
+
+- {{ turma.curso.nome }}
+
+{% endif %}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-2">
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary w-100"
+
+>
+
+
+Pesquisar
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-2">
+
+
+<a
+
+href="{% url 'alunos' %}"
+
+class="btn btn-outline-secondary w-100"
+
+>
+
+
+Limpar
+
+
+</a>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ======================================================
+     LISTAGEM
+====================================================== -->
 
 
 <div class="card card-modern shadow-sm">
 
 
-    <div class="card-header bg-white border-0 py-3">
 
+<div class="card-header bg-white border-0 py-3">
 
-        <div class="d-flex justify-content-between align-items-center">
 
+<div class="d-flex justify-content-between align-items-center">
 
-            <h5 class="mb-0 fw-bold">
 
-                Estudantes registados
 
-            </h5>
+<h5 class="mb-0 fw-bold">
 
 
-            <span class="badge bg-primary">
+{% if contexto_historico %}
 
-                {{ total_alunos }} alunos
+Histórico de Alunos
 
-            </span>
+{% else %}
 
+Alunos Atuais
 
-        </div>
+{% endif %}
 
 
-    </div>
 
+</h5>
 
 
 
-    <div class="card-body p-0">
+<span class="badge bg-primary">
 
 
-        <div class="table-responsive">
+{{ total_alunos }}
 
+alunos
 
-            <table class="table table-hover mb-0">
 
+</span>
 
-                <thead class="table-light">
-
-
-                    <tr>
-
-                        <th>#</th>
-
-                        <th>Aluno</th>
-
-                        <th>Nº Processo</th>
-
-                        <th>Turma</th>
-
-                        <th>Curso</th>
-
-                        <th>Ano Letivo</th>
-
-                        <th>Email</th>
-
-                        <th>Status</th>
-
-                        <th class="text-center">
-                            Ações
-                        </th>
-
-
-                    </tr>
-
-
-                </thead>
-
-
-
-                <tbody>
-
-
-                {% for aluno in alunos %}
-
-
-                    <tr>
-
-
-                        <td class="fw-semibold">
-
-
-                            {{ alunos.start_index|add:forloop.counter0 }}
-
-
-                        </td>
-
-
-
-
-                        <td>
-
-
-                            <div class="d-flex align-items-center">
-
-
-                                <div class="avatar-aluno me-3">
-
-
-                                    {{ aluno.usuario.first_name|slice:":1"|upper }}
-
-
-                                </div>
-
-
-
-                                <div>
-
-
-                                    <div class="fw-semibold">
-
-
-                                        {{ aluno.usuario.first_name }}
-
-                                        {{ aluno.usuario.last_name }}
-
-
-                                    </div>
-
-
-                                    <small class="text-muted">
-
-
-                                        BI:
-
-                                        {{ aluno.numero_bi|default:"Não informado" }}
-
-
-                                    </small>
-
-
-                                </div>
-
-
-                            </div>
-
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                            <span class="fw-semibold">
-
-
-                                {{ aluno.numero_processo|default:"-" }}
-
-
-                            </span>
-
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                            {% if aluno.turma %}
-
-
-                                <span class="badge bg-info text-dark">
-
-
-                                    {{ aluno.turma.classe }}ª
-
-                                    {{ aluno.turma.identificador }}
-
-
-                                </span>
-
-
-                            {% else %}
-
-
-                                <span class="badge bg-warning text-dark">
-
-
-                                    Sem turma
-
-
-                                </span>
-
-
-                            {% endif %}
-
-
-                        </td>
-
-
-                                        <td>
-
-
-                            {% if aluno.turma and aluno.turma.curso %}
-
-
-                                <span class="badge bg-secondary">
-
-
-                                    {{ aluno.turma.curso.nome }}
-
-
-                                </span>
-
-
-                            {% else %}
-
-
-                                <span class="text-muted">
-
-                                    Não definido
-
-                                </span>
-
-
-                            {% endif %}
-
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                            {% if aluno.ano_letivo %}
-
-
-                                {{ aluno.ano_letivo.nome }}
-
-
-                            {% else %}
-
-
-                                <span class="text-muted">
-
-                                    -
-
-                                </span>
-
-
-                            {% endif %}
-
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                            {% if aluno.usuario.email %}
-
-
-                                <span class="small">
-
-
-                                    {{ aluno.usuario.email }}
-
-
-                                </span>
-
-
-                            {% else %}
-
-
-                                <span class="text-muted">
-
-                                    Sem email
-
-                                </span>
-
-
-                            {% endif %}
-
-
-                        </td>
-
-
-
-
-
-                        <td>
-
-
-                            {% if aluno.usuario.is_active %}
-
-
-                                <span class="badge bg-success">
-
-
-                                    Ativo
-
-
-                                </span>
-
-
-                            {% else %}
-
-
-                                <span class="badge bg-danger">
-
-
-                                    Bloqueado
-
-
-                                </span>
-
-
-                            {% endif %}
-
-
-                        </td>
-
-
-
-
-
-                        <td class="text-center">
-
-
-                            <div class="d-flex justify-content-center gap-2">
-
-
-
-                                <a
-                                    href="{% url 'editar_aluno' aluno.id %}"
-                                    class="btn btn-sm btn-outline-primary action-btn"
-                                    title="Editar aluno"
-                                >
-
-
-                                    Editar
-
-
-                                </a>
-
-
-
-
-
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-danger action-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalEliminar{{ aluno.id }}"
-                                >
-
-
-                                    Excluir
-
-
-                                </button>
-
-
-
-                            </div>
-
-
-                        </td>
-
-
-                    </tr>
-
-
-
-
-
-                    <!-- MODAL CONFIRMAÇÃO -->
-
-                    <div
-                        class="modal fade"
-                        id="modalEliminar{{ aluno.id }}"
-                        tabindex="-1"
-                    >
-
-
-                        <div class="modal-dialog modal-dialog-centered">
-
-
-                            <div class="modal-content border-0 shadow">
-
-
-                                <div class="modal-header">
-
-
-                                    <h5 class="modal-title fw-bold">
-
-
-                                        Confirmar eliminação
-
-
-                                    </h5>
-
-
-
-                                    <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal"
-                                    ></button>
-
-
-                                </div>
-
-
-
-
-                                <div class="modal-body">
-
-
-                                    Tem certeza que deseja eliminar o aluno:
-
-
-                                    <strong>
-
-
-                                        {{ aluno.usuario.first_name }}
-
-                                        {{ aluno.usuario.last_name }}
-
-
-                                    </strong>
-
-
-                                    ?
-
-
-
-                                    <div class="alert alert-warning mt-3 mb-0">
-
-
-                                        Esta operação não poderá ser desfeita.
-
-
-                                    </div>
-
-
-                                </div>
-
-
-
-
-
-                                <div class="modal-footer">
-
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal"
-                                    >
-
-                                        Cancelar
-
-                                    </button>
-
-
-
-
-
-                                    <a
-                                        href="{% url 'eliminar_aluno' aluno.id %}"
-                                        class="btn btn-danger"
-                                    >
-
-                                        Confirmar eliminação
-
-                                    </a>
-
-
-                                </div>
-
-
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-
-                {% empty %}
-
-
-
-                    <tr>
-
-
-                        <td colspan="9" class="text-center py-5">
-
-
-                            <div class="text-muted">
-
-
-                                <h5 class="fw-semibold">
-
-                                    Nenhum aluno encontrado
-
-                                </h5>
-
-
-                                <p class="mb-0">
-
-
-                                    Não existem estudantes para os filtros selecionados.
-
-
-                                </p>
-
-
-                            </div>
-
-
-                        </td>
-
-
-                    </tr>
-
-
-
-                {% endfor %}
-
-
-                </tbody>
-
-
-            </table>
-
-
-        </div>
-
-
-    </div>
 
 
 </div>
-<!-- PAGINAÇÃO -->
 
-{% if alunos.has_other_pages %}
 
+</div>
 
-<nav class="mt-4">
 
 
-    <ul class="pagination justify-content-center">
 
 
 
-        {% if alunos.has_previous %}
+<div class="card-body p-0">
 
 
-        <li class="page-item">
 
+<div class="table-responsive">
 
-            <a
-                class="page-link"
-                href="?page={{ alunos.previous_page_number }}&{{ query_string }}"
-            >
 
-                Anterior
 
-            </a>
+<table class="table table-hover mb-0">
 
 
-        </li>
 
 
-        {% endif %}
 
+<thead class="table-light">
 
 
+<tr>
 
 
-        {% for num in alunos.paginator.page_range %}
+<th>
 
+#
 
+</th>
 
-            {% if alunos.number == num %}
 
 
-            <li class="page-item active">
+<th>
 
+Aluno
 
-                <span class="page-link">
+</th>
 
 
-                    {{ num }}
 
+<th>
 
-                </span>
+Nº Processo
 
+</th>
 
-            </li>
 
 
+<th>
 
+Turma
 
-            {% elif num > alunos.number|add:"-3" and num < alunos.number|add:"3" %}
+</th>
 
 
-            <li class="page-item">
 
+<th>
 
-                <a
-                    class="page-link"
-                    href="?page={{ num }}&{{ query_string }}"
-                >
+Curso
 
-                    {{ num }}
+</th>
 
 
-                </a>
 
+<th>
 
-            </li>
+Ano Letivo
 
+</th>
 
 
-            {% endif %}
 
+<th>
 
+Email
 
-        {% endfor %}
+</th>
 
 
 
+<th>
 
+Estado
 
-        {% if alunos.has_next %}
+</th>
 
 
-        <li class="page-item">
 
+<th class="text-center">
 
-            <a
-                class="page-link"
-                href="?page={{ alunos.next_page_number }}&{{ query_string }}"
-            >
+Ações
 
-                Próxima
+</th>
 
-            </a>
 
 
-        </li>
+</tr>
 
 
-        {% endif %}
 
+</thead>
 
 
-    </ul>
 
 
-</nav>
+
+
+
+<tbody>
+
+
+
+{% for aluno in alunos %}
+
+
+
+<tr>
+
+
+
+<td class="fw-semibold">
+
+
+{{ alunos.start_index|add:forloop.counter0 }}
+
+
+</td>
+
+
+
+
+
+
+
+<!-- ===========================
+     ALUNO
+=========================== -->
+
+
+<td>
+
+
+
+<div class="d-flex align-items-center">
+
+
+
+
+
+<div class="avatar-aluno me-3">
+
+
+{% if contexto_historico %}
+
+
+{{ aluno.aluno.usuario.first_name|slice:":1"|upper }}
+
+
+{% else %}
+
+
+{{ aluno.usuario.first_name|slice:":1"|upper }}
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+<div>
+
+
+
+<div class="fw-semibold">
+
+
+{% if contexto_historico %}
+
+
+{{ aluno.aluno.usuario.first_name }}
+
+{{ aluno.aluno.usuario.last_name }}
+
+
+
+{% else %}
+
+
+{{ aluno.usuario.first_name }}
+
+{{ aluno.usuario.last_name }}
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+
+<small class="text-muted">
+
+
+BI:
+
+
+{% if contexto_historico %}
+
+
+{{ aluno.aluno.numero_bi|default:"Não informado" }}
+
+
+
+{% else %}
+
+
+{{ aluno.numero_bi|default:"Não informado" }}
+
+
+
+{% endif %}
+
+
+
+</small>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+<!-- ===========================
+     PROCESSO
+=========================== -->
+
+
+<td>
+
+
+
+{% if contexto_historico %}
+
+
+{{ aluno.aluno.numero_processo|default:"-" }}
+
+
+
+{% else %}
+
+
+{{ aluno.numero_processo|default:"-" }}
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<!-- ===========================
+     TURMA
+=========================== -->
+
+
+<td>
+
+
+{% if aluno.turma %}
+
+
+
+<span class="badge bg-info text-dark">
+
+
+{{ aluno.turma.classe }}ª
+
+{{ aluno.turma.identificador }}
+
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge bg-warning text-dark">
+
+
+Sem turma
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+<!-- ===========================
+     CURSO
+=========================== -->
+
+
+<td>
+
+
+
+{% if aluno.turma and aluno.turma.curso %}
+
+
+
+<span class="badge bg-secondary">
+
+
+{{ aluno.turma.curso.nome }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+
+Ensino Geral
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+<!-- ===========================
+     ANO LETIVO
+=========================== -->
+
+
+<td>
+
+
+{% if contexto_historico %}
+
+
+
+{{ aluno.ano_letivo.nome }}
+
+
+
+{% else %}
+
+
+
+{% if aluno.ano_letivo %}
+
+
+
+{{ aluno.ano_letivo.nome }}
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+-
+
+</span>
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<!-- ===========================
+     EMAIL
+=========================== -->
+
+
+<td>
+
+
+
+{% if contexto_historico %}
+
+
+
+{% if aluno.aluno.usuario.email %}
+
+
+
+<span class="small">
+
+
+{{ aluno.aluno.usuario.email }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem email
+
+</span>
+
+
+
+{% endif %}
+
+
+
+{% else %}
+
+
+
+{% if aluno.usuario.email %}
+
+
+
+<span class="small">
+
+
+{{ aluno.usuario.email }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+Sem email
+
+</span>
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<!-- ===========================
+     ESTADO
+=========================== -->
+
+
+<td>
+
+
+
+{% if contexto_historico %}
+
+
+
+<span class="badge bg-secondary">
+
+
+Histórico
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+{% if aluno.usuario.is_active %}
+
+
+
+<span class="badge bg-success">
+
+
+Ativo
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge bg-danger">
+
+
+Bloqueado
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<!-- ===========================
+     AÇÕES
+=========================== -->
+
+
+<td class="text-center">
+
+
+
+{% if contexto_historico %}
+
+
+
+<span class="badge bg-light text-dark">
+
+
+Consulta histórica
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+
+<div class="d-flex justify-content-center gap-2">
+
+
+
+
+
+<a
+
+href="{% url 'editar_aluno' aluno.id %}"
+
+class="btn btn-sm btn-outline-primary"
+
+>
+
+
+Editar
+
+
+</a>
+
+
+
+
+
+
+
+<button
+
+type="button"
+
+class="btn btn-sm btn-outline-danger"
+
+data-bs-toggle="modal"
+
+data-bs-target="#modalEliminar{{ aluno.id }}"
+
+>
+
+
+Excluir
+
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+<!-- ======================================================
+     MODAL ELIMINAR
+====================================================== -->
+
+
+{% if not contexto_historico %}
+
+
+
+<div
+
+class="modal fade"
+
+id="modalEliminar{{ aluno.id }}"
+
+tabindex="-1"
+
+>
+
+
+
+<div class="modal-dialog modal-dialog-centered">
+
+
+
+<div class="modal-content border-0 shadow">
+
+
+
+
+
+<div class="modal-header">
+
+
+
+<h5 class="modal-title fw-bold">
+
+
+Eliminar aluno
+
+
+</h5>
+
+
+
+<button
+
+type="button"
+
+class="btn-close"
+
+data-bs-dismiss="modal"
+
+></button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="modal-body">
+
+
+
+<p>
+
+
+Deseja realmente eliminar o aluno:
+
+
+<strong>
+
+
+{{ aluno.usuario.first_name }}
+
+{{ aluno.usuario.last_name }}
+
+
+
+</strong>
+
+
+?
+
+
+</p>
+
+
+
+
+
+<div class="alert alert-warning mb-0">
+
+
+Esta operação não poderá ser revertida.
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="modal-footer">
+
+
+
+<button
+
+type="button"
+
+class="btn btn-secondary"
+
+data-bs-dismiss="modal"
+
+>
+
+
+Cancelar
+
+
+</button>
+
+
+
+
+
+
+<a
+
+href="{% url 'eliminar_aluno' aluno.id %}"
+
+class="btn btn-danger"
+
+>
+
+
+Confirmar
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
 
 
 {% endif %}
@@ -1177,7 +1634,278 @@
 
 
 
+
+
+{% empty %}
+
+
+
+
+
+<tr>
+
+
+<td colspan="9" class="text-center py-5">
+
+
+
+<div class="text-muted">
+
+
+
+<h5 class="fw-semibold">
+
+
+Nenhum aluno encontrado
+
+
+</h5>
+
+
+
+
+
+<p class="mb-0">
+
+
+Não existem estudantes para os filtros selecionados.
+
+
+</p>
+
+
+
 </div>
+
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+<!-- ======================================================
+     PAGINAÇÃO
+====================================================== -->
+
+
+{% if alunos.has_other_pages %}
+
+
+
+<nav class="mt-4">
+
+
+
+<ul class="pagination justify-content-center">
+
+
+
+
+
+{% if alunos.has_previous %}
+
+
+
+<li class="page-item">
+
+
+<a
+
+class="page-link"
+
+href="?page={{ alunos.previous_page_number }}&{{ query_string }}"
+
+>
+
+
+Anterior
+
+
+</a>
+
+
+</li>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+{% for num in alunos.paginator.page_range %}
+
+
+
+
+
+{% if alunos.number == num %}
+
+
+
+
+
+<li class="page-item active">
+
+
+
+<span class="page-link">
+
+
+{{ num }}
+
+
+</span>
+
+
+
+</li>
+
+
+
+
+
+
+{% elif num > alunos.number|add:"-3" and num < alunos.number|add:"3" %}
+
+
+
+
+
+<li class="page-item">
+
+
+
+<a
+
+class="page-link"
+
+href="?page={{ num }}&{{ query_string }}"
+
+>
+
+
+{{ num }}
+
+
+</a>
+
+
+
+</li>
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+
+{% if alunos.has_next %}
+
+
+
+
+
+<li class="page-item">
+
+
+
+<a
+
+class="page-link"
+
+href="?page={{ alunos.next_page_number }}&{{ query_string }}"
+
+>
+
+
+Próxima
+
+
+</a>
+
+
+
+</li>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+</ul>
+
+
+
+</nav>
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+</div>
+
 
 
 {% endblock %}

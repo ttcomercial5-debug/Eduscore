@@ -2625,3 +2625,507 @@ Traceback (most recent call last):
     raise self.error(
 django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1954: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
 "GET /diretor/cursos/ HTTP/1.1" 500 212764
+Internal Server Error: /diretor-pedagogico/alterar-senha/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 12639, in alterar_senha_diretor_pedagogico
+    return render(request, "alterar_senha_diretor_pedagogico.html")
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: alterar_senha_diretor_pedagogico.html
+"GET /diretor-pedagogico/alterar-senha/ HTTP/1.1" 500 88030
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13236, in dashboard_financeiro
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'alterar_senha_financeiro' not found. 'alterar_senha_financeiro' is not a valid view function or pattern name.
+"GET /financeiro/ HTTP/1.1" 500 201836
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13236, in dashboard_financeiro
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'alterar_senha_financeiro' not found. 'alterar_senha_financeiro' is not a valid view function or pattern name.
+"GET /financeiro/ HTTP/1.1" 500 202462
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13236, in dashboard_financeiro
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'despesas' not found. 'despesas' is not a valid view function or pattern name.
+"GET /financeiro/ HTTP/1.1" 500 201307
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13236, in dashboard_financeiro
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'despesas' not found. 'despesas' is not a valid view function or pattern name.
+"GET /financeiro/ HTTP/1.1" 500 201307
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1197, in lista_alunos
+    .order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /alunos/ HTTP/1.1" 500 88323
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1197, in lista_alunos
+    .order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /alunos/ HTTP/1.1" 500 88323
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1197, in lista_alunos
+    .order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /alunos/ HTTP/1.1" 500 88323
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1197, in lista_alunos
+    .order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /alunos/ HTTP/1.1" 500 88323
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1197, in lista_alunos
+    .order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /alunos/ HTTP/1.1" 500 88186
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 511, in parse
+    compile_func = self.tags[command]
+KeyError: 'empty'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1576, in lista_alunos
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 513, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1083: 'empty', expected 'elif', 'else' or 'endif'. Did you forget to register or load this tag?
+"GET /alunos/?buscar=&ano=10&turma= HTTP/1.1" 500 267860
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 511, in parse
+    compile_func = self.tags[command]
+KeyError: 'empty'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1576, in lista_alunos
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 976, in do_if
+    nodelist = parser.parse(("endif",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 513, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1075: 'empty', expected 'endif'. Did you forget to register or load this tag?
+"GET /alunos/?buscar=&ano=10&turma= HTTP/1.1" 500 267313
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1235, in lista_alunos
+    alunos = alunos.filter(
+UnboundLocalError: local variable 'alunos' referenced before assignment
+"GET /alunos/ HTTP/1.1" 500 73045
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1235, in lista_alunos
+    alunos = alunos.filter(
+UnboundLocalError: local variable 'alunos' referenced before assignment
+"GET /alunos/ HTTP/1.1" 500 73045
+Internal Server Error: /alunos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 1291, in lista_alunos
+    HistoricoMatricula.objects
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1495, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1523, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1648, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1680, in _add_q
+    child_clause, needed_inner = self.build_filter(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1528, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1335, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'escola' into field. Choices are: aluno, aluno_id, ano_letivo, ano_letivo_id, aprovado, classe, criado_em, curso, curso_id, id, matricula, media_final, numero_na_turma, total_alunos_turma, turma, turma_id
+"GET /alunos/?buscar=&ano=10&turma= HTTP/1.1" 500 121861

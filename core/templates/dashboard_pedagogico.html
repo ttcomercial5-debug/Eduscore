@@ -1,289 +1,2098 @@
-
 {% extends "base_diretor_pedagogico.html" %}
 
 {% block content %}
 
-<div class="container-fluid">
 
-    <!-- ================= CABEÇALHO ================= -->
+<style>
 
-    <div class="mb-4">
+/* ==========================================================
+        EDUSCEL - DASHBOARD DIRETOR PEDAGÓGICO
+        PREMIUM SAAS DESIGN
+========================================================== */
 
-        <h2 class="fw-bold text-dark">
-            <i class="bi bi-mortarboard-fill text-primary"></i>
-            Painel do Diretor Pedagógico
-        </h2>
 
-        <p class="text-muted mb-0">
-            Gestão académica da instituição de ensino.
-        </p>
+body{
 
-    </div>
+    background:#f4f7fb;
 
-    <!-- ================= CARDS ================= -->
+}
 
-    <div class="row g-4 mb-4">
 
-        <div class="col-md-6 col-xl-3">
+/* ==========================================================
+        CONTAINER PRINCIPAL
+========================================================== */
 
-            <div class="card border-0 shadow rounded-4 h-100">
 
-                <div class="card-body">
+.dashboard-container{
 
-                    <div class="d-flex justify-content-between align-items-center">
+    padding:30px 10px 50px;
 
-                        <div>
+    animation:fadeIn .45s ease;
 
-                            <small class="text-muted">
-                                Professores
-                            </small>
+}
 
-                            <h2 class="fw-bold mt-2">
-                                {{ total_professores }}
-                            </h2>
 
-                        </div>
 
-                        <i class="bi bi-person-workspace fs-1 text-primary"></i>
 
-                    </div>
 
-                </div>
+/* ==========================================================
+        HEADER PREMIUM
+========================================================== */
 
-            </div>
 
-        </div>
+.dashboard-hero{
 
-        <div class="col-md-6 col-xl-3">
 
-            <div class="card border-0 shadow rounded-4 h-100">
+    background:
 
-                <div class="card-body">
+    linear-gradient(
 
-                    <div class="d-flex justify-content-between align-items-center">
+        135deg,
 
-                        <div>
+        #0f172a,
 
-                            <small class="text-muted">
-                                Turmas
-                            </small>
+        #1e40af
 
-                            <h2 class="fw-bold mt-2">
-                                {{ total_turmas }}
-                            </h2>
+    );
 
-                        </div>
 
-                        <i class="bi bi-easel fs-1 text-success"></i>
+    border-radius:28px;
 
-                    </div>
+    padding:35px;
 
-                </div>
+    color:white;
 
-            </div>
 
-        </div>
+    box-shadow:
 
-        <div class="col-md-6 col-xl-3">
+    0 20px 50px rgba(15,23,42,.18);
 
-            <div class="card border-0 shadow rounded-4 h-100">
 
-                <div class="card-body">
+    position:relative;
 
-                    <div class="d-flex justify-content-between align-items-center">
+    overflow:hidden;
 
-                        <div>
 
-                            <small class="text-muted">
-                                Disciplinas
-                            </small>
+    margin-bottom:30px;
 
-                            <h2 class="fw-bold mt-2">
-                                {{ total_disciplinas }}
-                            </h2>
 
-                        </div>
+}
 
-                        <i class="bi bi-book-half fs-1 text-warning"></i>
 
-                    </div>
 
-                </div>
 
-            </div>
 
-        </div>
+.dashboard-hero::after{
 
-        <div class="col-md-6 col-xl-3">
 
-            <div class="card border-0 shadow rounded-4 h-100">
+    content:"";
 
-                <div class="card-body">
+    position:absolute;
 
-                    <div class="d-flex justify-content-between align-items-center">
+    width:280px;
 
-                        <div>
+    height:280px;
 
-                            <small class="text-muted">
-                                Alunos
-                            </small>
+    right:-80px;
 
-                            <h2 class="fw-bold mt-2">
-                                {{ total_alunos }}
-                            </h2>
+    top:-80px;
 
-                        </div>
 
-                        <i class="bi bi-people-fill fs-1 text-danger"></i>
+    background:
 
-                    </div>
+    rgba(255,255,255,.08);
 
-                </div>
 
-            </div>
+    border-radius:50%;
 
-        </div>
 
-    </div>
+}
 
-    <!-- ================= SEGUNDA LINHA ================= -->
 
-    <div class="row g-4">
 
-        <div class="col-lg-6">
 
-            <div class="card border-0 shadow rounded-4">
 
-                <div class="card-header bg-white border-0 py-3">
+.dashboard-content{
 
-                    <h5 class="fw-bold mb-0">
-                        <i class="bi bi-lightning-charge-fill text-primary"></i>
-                        Acesso Rápido
-                    </h5>
 
-                </div>
+    position:relative;
 
-                <div class="card-body">
+    z-index:2;
 
-                    <div class="d-grid gap-3">
 
-                        <a href="{% url 'adicionar_professor' %}"
-                           class="btn btn-outline-primary btn-lg">
+}
 
-                            <i class="bi bi-person-plus-fill"></i>
-                            Cadastrar Professor
 
-                        </a>
 
-                        <a href="{% url 'adicionar_turma' %}"
-                           class="btn btn-outline-success btn-lg">
 
-                            <i class="bi bi-plus-square"></i>
-                            Criar Turma
+.dashboard-title{
 
-                        </a>
 
-                        <a href="{% url 'adicionar_disciplina' %}"
-                           class="btn btn-outline-warning btn-lg">
+    font-size:32px;
 
-                            <i class="bi bi-book"></i>
-                            Criar Disciplina
+    font-weight:800;
 
-                        </a>
+    margin-bottom:8px;
 
-                        <a href="{% url 'cursos' %}"
-                           class="btn btn-outline-info btn-lg">
+    letter-spacing:-.5px;
 
-                            <i class="bi bi-mortarboard"></i>
-                            Gerir Cursos
 
-                        </a>
+}
 
-                        <a href="{% url 'horarios_turma' %}"
-                           class="btn btn-outline-dark btn-lg">
 
-                            <i class="bi bi-clock-history"></i>
-                            Gerir Horários
 
-                        </a>
 
-                    </div>
 
-                </div>
+.dashboard-subtitle{
 
-            </div>
 
-        </div>
+    color:rgba(255,255,255,.85);
 
-        <div class="col-lg-6">
+    font-size:15px;
 
-            <div class="card border-0 shadow rounded-4 h-100">
+    margin-bottom:20px;
 
-                <div class="card-header bg-white border-0 py-3">
 
-                    <h5 class="fw-bold mb-0">
-                        <i class="bi bi-info-circle-fill text-success"></i>
-                        Resumo Académico
-                    </h5>
+}
 
-                </div>
 
-                <div class="card-body">
 
-                    <table class="table table-borderless align-middle">
 
-                        <tr>
-                            <td>Total de Cursos</td>
-                            <td class="fw-bold text-end">
-                                {{ total_cursos }}
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td>Total de Horários</td>
-                            <td class="fw-bold text-end">
-                                {{ total_horarios }}
-                            </td>
-                        </tr>
+.school-info{
 
-                        <tr>
-                            <td>Total de Professores</td>
-                            <td class="fw-bold text-end">
-                                {{ total_professores }}
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td>Total de Turmas</td>
-                            <td class="fw-bold text-end">
-                                {{ total_turmas }}
-                            </td>
-                        </tr>
+    display:flex;
 
-                        <tr>
-                            <td>Total de Disciplinas</td>
-                            <td class="fw-bold text-end">
-                                {{ total_disciplinas }}
-                            </td>
-                        </tr>
+    flex-wrap:wrap;
 
-                        <tr>
-                            <td>Total de Alunos</td>
-                            <td class="fw-bold text-end">
-                                {{ total_alunos }}
-                            </td>
-                        </tr>
+    gap:12px;
 
-                    </table>
 
-                </div>
+}
 
-            </div>
 
-        </div>
 
-    </div>
+
+
+.info-pill{
+
+
+    background:
+
+    rgba(255,255,255,.12);
+
+
+    border:
+
+    1px solid rgba(255,255,255,.15);
+
+
+    padding:10px 18px;
+
+
+    border-radius:50px;
+
+
+    font-size:14px;
+
+
+    backdrop-filter:blur(10px);
+
+
+}
+
+
+
+
+
+.info-pill i{
+
+
+    margin-right:8px;
+
+
+}
+
+
+
+
+
+/* ==========================================================
+        CARD BASE
+========================================================== */
+
+
+.dashboard-card{
+
+
+    border:none;
+
+
+    border-radius:22px;
+
+
+    background:white;
+
+
+    box-shadow:
+
+
+    0 10px 30px rgba(15,23,42,.06);
+
+
+    transition:.3s ease;
+
+
+}
+
+
+
+
+
+.dashboard-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+    box-shadow:
+
+
+    0 18px 40px rgba(15,23,42,.12);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+        INDICADORES
+========================================================== */
+
+
+.metric-card{
+
+
+    padding:25px;
+
+
+    height:100%;
+
+
+}
+
+
+
+
+
+.metric-top{
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+
+}
+
+
+
+
+
+.metric-icon{
+
+
+    width:60px;
+
+
+    height:60px;
+
+
+    border-radius:18px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:28px;
+
+
+}
+
+
+
+
+
+.metric-number{
+
+
+    font-size:34px;
+
+
+    font-weight:800;
+
+
+    margin-top:20px;
+
+
+    color:#0f172a;
+
+
+}
+
+
+
+
+
+.metric-label{
+
+
+    color:#64748b;
+
+
+    font-size:14px;
+
+
+    font-weight:600;
+
+
+}
+
+
+
+
+
+.icon-blue{
+
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+
+}
+
+
+
+.icon-green{
+
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+
+}
+
+
+
+.icon-warning{
+
+
+    background:#fef3c7;
+
+    color:#d97706;
+
+
+}
+
+
+
+.icon-danger{
+
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+        ANIMAÇÃO
+========================================================== */
+
+
+@keyframes fadeIn{
+
+
+    from{
+
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+
+    }
+
+
+    to{
+
+
+        opacity:1;
+
+        transform:translateY(0);
+
+
+    }
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+        RESPONSIVO
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+
+.dashboard-title{
+
+
+    font-size:25px;
+
+
+}
+
+
+
+.dashboard-hero{
+
+
+    padding:25px;
+
+
+}
+
+
+}
+
+
+</style>
+
+
+
+
+
+<div class="container-fluid dashboard-container">
+
+
+
+
+
+<!-- ==========================================================
+        HEADER PRINCIPAL
+========================================================== -->
+
+
+<div class="dashboard-hero">
+
+
+
+<div class="dashboard-content">
+
+
+
+<h1 class="dashboard-title">
+
+
+<i class="bi bi-mortarboard-fill me-2"></i>
+
+
+Painel do Diretor Pedagógico
+
+
+</h1>
+
+
+
+
+
+<p class="dashboard-subtitle">
+
+
+Gestão académica, acompanhamento pedagógico
+e organização curricular da instituição.
+
+
+</p>
+
+
+
+
+
+
+<div class="school-info">
+
+
+
+
+
+<div class="info-pill">
+
+
+<i class="bi bi-building"></i>
+
+
+{% if request.user.escola %}
+
+
+{{ request.user.escola.nome }}
+
+
+{% else %}
+
+
+Escola não definida
+
+
+{% endif %}
+
 
 </div>
+
+
+
+
+
+
+<div class="info-pill">
+
+
+<i class="bi bi-person-badge"></i>
+
+
+{{ request.user.get_full_name|default:request.user.username }}
+
+
+</div>
+
+
+
+
+
+
+<div class="info-pill">
+
+
+<i class="bi bi-calendar-check"></i>
+
+
+Ano Letivo:
+
+
+{% if ano_letivo %}
+
+
+{{ ano_letivo.nome }}
+
+
+{% else %}
+
+
+Não definido
+
+
+{% endif %}
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+<!-- ==========================================================
+        INDICADORES ACADÉMICOS
+========================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+<!-- PROFESSORES -->
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="dashboard-card metric-card">
+
+
+
+<div class="metric-top">
+
+
+<div>
+
+
+<span class="metric-label">
+
+Professores
+
+</span>
+
+
+<div class="metric-number">
+
+
+{{ total_professores }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metric-icon icon-blue">
+
+
+<i class="bi bi-person-workspace"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted small mt-3 mb-0">
+
+
+Profissionais registados na instituição
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="dashboard-card metric-card">
+
+
+
+<div class="metric-top">
+
+
+<div>
+
+
+<span class="metric-label">
+
+Turmas
+
+</span>
+
+
+<div class="metric-number">
+
+
+{{ total_turmas }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metric-icon icon-green">
+
+
+<i class="bi bi-easel-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted small mt-3 mb-0">
+
+
+Organização das classes e cursos
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- DISCIPLINAS -->
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="dashboard-card metric-card">
+
+
+
+<div class="metric-top">
+
+
+<div>
+
+
+<span class="metric-label">
+
+Disciplinas
+
+</span>
+
+
+<div class="metric-number">
+
+
+{{ total_disciplinas }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metric-icon icon-warning">
+
+
+<i class="bi bi-book-half"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted small mt-3 mb-0">
+
+
+Componentes curriculares activos
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ALUNOS -->
+
+<div class="col-xl-3 col-md-6">
+
+
+<div class="dashboard-card metric-card">
+
+
+
+<div class="metric-top">
+
+
+<div>
+
+
+<span class="metric-label">
+
+Alunos
+
+</span>
+
+
+<div class="metric-number">
+
+
+{{ total_alunos }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="metric-icon icon-danger">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p class="text-muted small mt-3 mb-0">
+
+
+Estudantes matriculados
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+        SEGUNDA LINHA DE INFORMAÇÃO
+========================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+
+
+<!-- CURSOS -->
+
+<div class="col-lg-4">
+
+
+
+<div class="dashboard-card p-4 h-100">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+<div class="metric-icon icon-blue">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<h6 class="fw-bold mb-1">
+
+
+Cursos
+
+
+</h6>
+
+
+<h3 class="fw-bold mb-0">
+
+
+{{ total_cursos }}
+
+
+</h3>
+
+
+
+<small class="text-muted">
+
+
+Estrutura curricular
+
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- HORÁRIOS -->
+
+<div class="col-lg-4">
+
+
+
+<div class="dashboard-card p-4 h-100">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+<div class="metric-icon icon-green">
+
+
+<i class="bi bi-clock-history"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<h6 class="fw-bold mb-1">
+
+
+Horários
+
+
+</h6>
+
+
+<h3 class="fw-bold mb-0">
+
+
+{{ total_horarios }}
+
+
+</h3>
+
+
+
+<small class="text-muted">
+
+
+Gestão de horários escolares
+
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ESTADO -->
+
+<div class="col-lg-4">
+
+
+
+<div class="dashboard-card p-4 h-100">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+<div class="metric-icon icon-warning">
+
+
+<i class="bi bi-activity"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<h6 class="fw-bold mb-1">
+
+
+Estado do Sistema
+
+
+</h6>
+
+
+<h3 class="fw-bold mb-0 text-success">
+
+
+Activo
+
+
+</h3>
+
+
+
+<small class="text-muted">
+
+
+Ambiente académico operacional
+
+
+</small>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+<!-- ==========================================================
+        ÁREA DE GESTÃO RÁPIDA
+========================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+
+
+<!-- ==========================================================
+        ACESSO RÁPIDO
+========================================================== -->
+
+
+<div class="col-xl-6">
+
+
+
+<div class="dashboard-card h-100">
+
+
+
+<div class="card-header bg-white border-0 p-4">
+
+
+<h5 class="fw-bold mb-1">
+
+
+<i class="bi bi-lightning-charge-fill text-primary me-2"></i>
+
+
+Acesso Rápido
+
+
+</h5>
+
+
+
+<p class="text-muted small mb-0">
+
+
+Operações frequentes da gestão pedagógica.
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+<div class="card-body px-4 pb-4">
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<!-- PROFESSOR -->
+
+<div class="col-md-6">
+
+
+
+<a href="{% url 'adicionar_professor' %}"
+
+class="btn btn-light border w-100 py-3 rounded-4 text-start">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+<div class="metric-icon icon-blue"
+style="width:48px;height:48px;font-size:22px;">
+
+
+<i class="bi bi-person-plus-fill"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<strong class="d-block">
+
+
+Cadastrar Professor
+
+
+</strong>
+
+
+
+<small class="text-muted">
+
+
+Novo docente
+
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- TURMA -->
+
+<div class="col-md-6">
+
+
+
+<a href="{% url 'adicionar_turma' %}"
+
+class="btn btn-light border w-100 py-3 rounded-4 text-start">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+<div class="metric-icon icon-green"
+style="width:48px;height:48px;font-size:22px;">
+
+
+<i class="bi bi-easel-fill"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<strong class="d-block">
+
+
+Criar Turma
+
+
+</strong>
+
+
+
+<small class="text-muted">
+
+
+Nova classe
+
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- DISCIPLINA -->
+
+<div class="col-md-6">
+
+
+
+<a href="{% url 'adicionar_disciplina' %}"
+
+class="btn btn-light border w-100 py-3 rounded-4 text-start">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+<div class="metric-icon icon-warning"
+style="width:48px;height:48px;font-size:22px;">
+
+
+<i class="bi bi-book-fill"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<strong class="d-block">
+
+
+Criar Disciplina
+
+
+</strong>
+
+
+
+<small class="text-muted">
+
+
+Gestão curricular
+
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- CURSOS -->
+
+<div class="col-md-6">
+
+
+
+<a href="{% url 'cursos' %}"
+
+class="btn btn-light border w-100 py-3 rounded-4 text-start">
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+<div class="metric-icon icon-blue"
+style="width:48px;height:48px;font-size:22px;">
+
+
+<i class="bi bi-mortarboard-fill"></i>
+
+
+</div>
+
+
+
+<div>
+
+
+<strong class="d-block">
+
+
+Gerir Cursos
+
+
+</strong>
+
+
+
+<small class="text-muted">
+
+
+Organização académica
+
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- HORÁRIOS -->
+
+<div class="col-12">
+
+
+
+<a href="{% url 'horarios_turma' %}"
+
+class="btn btn-dark w-100 py-3 rounded-4">
+
+
+
+<i class="bi bi-calendar3 me-2"></i>
+
+
+Gerir Horários das Turmas
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+        RESUMO ACADÉMICO
+========================================================== -->
+
+
+<div class="col-xl-6">
+
+
+
+<div class="dashboard-card h-100">
+
+
+
+<div class="card-header bg-white border-0 p-4">
+
+
+
+<h5 class="fw-bold mb-1">
+
+
+<i class="bi bi-bar-chart-fill text-success me-2"></i>
+
+
+Resumo Académico
+
+
+</h5>
+
+
+
+<p class="text-muted small mb-0">
+
+
+Visão geral da instituição.
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card-body px-4">
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle">
+
+
+
+<tbody>
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-mortarboard text-primary me-2"></i>
+
+Total de Cursos
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_cursos }}
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-clock text-success me-2"></i>
+
+Total de Horários
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_horarios }}
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-person-workspace text-primary me-2"></i>
+
+Professores
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_professores }}
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-easel text-success me-2"></i>
+
+Turmas
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_turmas }}
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-book text-warning me-2"></i>
+
+Disciplinas
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_disciplinas }}
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+<td>
+
+<i class="bi bi-people text-danger me-2"></i>
+
+Alunos
+
+</td>
+
+
+<td class="text-end fw-bold">
+
+
+{{ total_alunos }}
+
+
+</td>
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+<!-- ==========================================================
+        SEGURANÇA DA CONTA
+========================================================== -->
+
+
+<div class="row mt-4">
+
+
+
+<div class="col-xl-5 col-lg-6">
+
+
+
+<a href="{% url 'alterar_senha' %}"
+
+class="text-decoration-none">
+
+
+
+
+
+<div class="dashboard-card">
+
+
+
+<div class="p-4">
+
+
+
+<div class="d-flex align-items-center gap-4">
+
+
+
+
+
+<!-- ÍCONE -->
+
+<div class="metric-icon icon-blue"
+
+style="width:75px;height:75px;font-size:32px;">
+
+
+
+<i class="bi bi-shield-lock-fill"></i>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- TEXTO -->
+
+<div>
+
+
+
+<h5 class="fw-bold text-dark mb-2">
+
+
+Segurança da Conta
+
+
+</h5>
+
+
+
+
+
+<p class="text-muted mb-3">
+
+
+Atualize a sua palavra-passe regularmente
+para garantir a proteção da sua conta no EdusCel.
+
+
+</p>
+
+
+
+
+
+
+
+<span class="btn btn-primary rounded-3 px-4 fw-bold">
+
+
+<i class="bi bi-key-fill me-2"></i>
+
+
+Alterar Palavra-passe
+
+
+</span>
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</a>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+        INFORMAÇÃO DO SISTEMA
+========================================================== -->
+
+
+<div class="row mt-4">
+
+
+
+<div class="col-12">
+
+
+
+<div class="dashboard-card p-4">
+
+
+
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+
+
+
+
+<div>
+
+
+<h6 class="fw-bold mb-1">
+
+
+<i class="bi bi-info-circle-fill text-primary me-2"></i>
+
+
+EdusCel - Sistema de Gestão Escolar
+
+
+</h6>
+
+
+
+<p class="text-muted mb-0 small">
+
+
+Plataforma integrada para gestão pedagógica,
+académica e administrativa.
+
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+
+<span class="badge bg-success rounded-pill px-4 py-2">
+
+
+Sistema Operacional
+
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================================
+        SCRIPTS
+========================================================== -->
+
+
+<script>
+
+
+/* ==========================================================
+        ANIMAÇÃO DOS CARDS
+========================================================== */
+
+
+document.addEventListener(
+"DOMContentLoaded",
+
+function(){
+
+
+const cards = document.querySelectorAll(
+".dashboard-card"
+);
+
+
+
+cards.forEach(
+function(card,index){
+
+
+card.style.animationDelay =
+(index * 0.05) + "s";
+
+
+});
+
+
+});
+
+
+
+</script>
+
+
+
+
+
+
 
 {% endblock %}
