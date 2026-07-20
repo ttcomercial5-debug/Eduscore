@@ -1,0 +1,553 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block title %}
+
+Mensalidades por Classe | EdusCel
+
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+
+
+
+<div class="section-title">
+
+<i class="bi bi-cash-stack me-2"></i>
+
+Mensalidades por Classe
+
+</div>
+
+
+
+
+
+<p class="text-muted mb-4">
+
+Consulta das propinas configuradas por classe e curso.
+
+</p>
+
+
+
+
+
+
+
+<!-- =====================================================
+     ENSINO GERAL
+===================================================== -->
+
+
+<div class="table-container mb-5">
+
+
+<div class="header">
+
+
+<h5>
+
+<i class="bi bi-mortarboard me-2"></i>
+
+Ensino Geral
+
+</h5>
+
+
+<p>
+
+Iniciação até 9ª Classe
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table mb-0">
+
+
+<thead>
+
+<tr>
+
+<th>
+
+Classe
+
+</th>
+
+
+<th>
+
+Propina
+
+</th>
+
+
+<th>
+
+Vencimento
+
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for item in ensino_geral %}
+
+
+<tr>
+
+
+<td>
+
+<strong>
+
+{{ item.get_classe_display }}
+
+</strong>
+
+
+</td>
+
+
+<td>
+
+
+<span class="fw-bold text-primary">
+
+{{ item.valor|floatformat:2 }} Kz
+
+</span>
+
+
+</td>
+
+
+<td>
+
+Dia {{ item.dia_vencimento }}
+
+</td>
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="3"
+
+class="text-center py-5">
+
+Nenhuma configuração encontrada.
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     FILTRO CURSOS
+===================================================== -->
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+
+<div>
+
+
+<h4 class="fw-bold mb-1">
+
+<i class="bi bi-book me-2"></i>
+
+Ensino Médio
+
+</h4>
+
+
+<small class="text-muted">
+
+10ª até 13ª Classe por curso
+
+</small>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card border-0 shadow-sm mb-4">
+
+
+<div class="card-body">
+
+
+<h6 class="fw-bold mb-3">
+
+Filtrar por Curso
+
+</h6>
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+
+
+
+<a href="{% url 'mensalidades_por_classe' %}"
+
+class="btn rounded-pill
+
+{% if not curso_selecionado %}
+
+btn-primary
+
+{% else %}
+
+btn-outline-primary
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-grid me-1"></i>
+
+Todos
+
+
+</a>
+
+
+
+
+
+
+{% for curso in cursos %}
+
+
+
+<a href="?curso={{ curso.id }}"
+
+class="btn rounded-pill
+
+{% if curso_selecionado and curso_selecionado.id == curso.id %}
+
+btn-primary
+
+{% else %}
+
+btn-outline-primary
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-laptop me-1"></i>
+
+
+{{ curso.nome }}
+
+
+</a>
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     TABELA CURSOS
+===================================================== -->
+
+
+
+<div class="table-container">
+
+
+
+<div class="header">
+
+
+<h5>
+
+
+<i class="bi bi-diagram-3 me-2"></i>
+
+
+Mensalidades por Curso
+
+
+</h5>
+
+
+
+<p>
+
+
+{% if curso_selecionado %}
+
+
+Visualizando:
+
+<strong>
+
+{{ curso_selecionado.nome }}
+
+</strong>
+
+
+{% else %}
+
+
+Todos os cursos configurados
+
+{% endif %}
+
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table mb-0">
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Classe
+
+</th>
+
+
+<th>
+
+Curso
+
+</th>
+
+
+<th>
+
+Valor
+
+</th>
+
+
+<th>
+
+Vencimento
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+
+
+{% for item in ensino_medio %}
+
+
+
+<tr>
+
+
+<td>
+
+<strong>
+
+{{ item.get_classe_display }}
+
+</strong>
+
+</td>
+
+
+
+<td>
+
+
+{{ item.curso.nome }}
+
+
+</td>
+
+
+
+
+<td>
+
+
+<span class="fw-bold text-success">
+
+{{ item.valor|floatformat:2 }} Kz
+
+</span>
+
+
+</td>
+
+
+
+<td>
+
+
+Dia {{ item.dia_vencimento }}
+
+</td>
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="4"
+
+class="text-center py-5">
+
+
+Nenhuma mensalidade encontrada.
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}

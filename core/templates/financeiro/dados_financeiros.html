@@ -1,0 +1,687 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+
+<div class="finance-card mb-4">
+
+
+<h2 class="fw-bold">
+
+<i class="bi bi-bank me-2"></i>
+
+Dados Financeiros
+
+</h2>
+
+
+<p class="text-muted">
+
+Informações financeiras oficiais da instituição.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+
+
+
+
+<!-- ESCOLA -->
+
+
+<div class="finance-card">
+
+
+<h5 class="fw-bold mb-4">
+
+<i class="bi bi-building me-2"></i>
+
+Identificação da Escola
+
+</h5>
+
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Nome da Escola
+
+</label>
+
+
+<input
+
+class="form-control"
+
+value="{{ escola.nome }}"
+
+readonly>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+NIF
+
+</label>
+
+
+<input
+
+class="form-control"
+
+value="{{ escola.nif|default:'' }}"
+
+readonly>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Telefone
+
+</label>
+
+
+<input
+
+class="form-control"
+
+value="{{ escola.telefone }}"
+
+readonly>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Email
+
+</label>
+
+
+<input
+
+class="form-control"
+
+value="{{ escola.email }}"
+
+readonly>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- BANCO -->
+
+
+<div class="finance-card">
+
+
+<h5 class="fw-bold mb-4">
+
+<i class="bi bi-credit-card me-2"></i>
+
+Dados Bancários
+
+</h5>
+
+
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Banco
+
+</label>
+
+
+<input
+
+name="banco"
+
+class="form-control"
+
+value="{{config.banco|default:''}}">
+
+
+</div>
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Titular da Conta
+
+</label>
+
+
+<input
+
+name="titular_conta"
+
+class="form-control"
+
+value="{{config.titular_conta|default:''}}">
+
+
+</div>
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+IBAN
+
+</label>
+
+
+<input
+
+name="iban"
+
+class="form-control"
+
+value="{{config.iban|default:''}}">
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+<label class="form-label">
+
+Número da Conta
+
+</label>
+
+
+<input
+
+name="numero_conta"
+
+class="form-control"
+
+value="{{config.numero_conta|default:''}}">
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MOEDA -->
+
+
+<div class="finance-card">
+
+
+<h5 class="fw-bold mb-4">
+
+<i class="bi bi-cash-stack me-2"></i>
+
+Configuração Monetária
+
+</h5>
+
+
+
+
+<div class="row g-4">
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Moeda
+
+</label>
+
+
+<select
+
+name="moeda"
+
+class="form-select">
+
+
+<option value="Kz">
+
+Kwanza (Kz)
+
+</option>
+
+
+<option value="USD">
+
+Dólar (USD)
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Formato
+
+</label>
+
+
+<input
+
+name="formato_valor"
+
+class="form-control"
+
+value="{{config.formato_valor}}">
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- RECIBOS -->
+
+
+<div class="finance-card">
+
+
+<h5 class="fw-bold mb-4">
+
+<i class="bi bi-receipt me-2"></i>
+
+Recibos Financeiros
+
+</h5>
+
+
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-4">
+
+<label class="form-label">
+
+Nome
+
+</label>
+
+
+<input
+
+name="nome_recibo"
+
+class="form-control"
+
+value="{{config.nome_recibo}}">
+
+
+</div>
+
+
+
+<div class="col-md-4">
+
+<label class="form-label">
+
+Prefixo
+
+</label>
+
+
+<input
+
+name="prefixo_recibo"
+
+class="form-control"
+
+value="{{config.prefixo_recibo}}">
+
+
+</div>
+
+
+
+<div class="col-md-4">
+
+<label class="form-label">
+
+Número inicial
+
+</label>
+
+
+<input
+
+name="numero_inicial_recibo"
+
+class="form-control"
+
+value="{{config.numero_inicial_recibo}}">
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<hr>
+
+
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_logo_recibo"
+
+{% if config.mostrar_logo_recibo %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label>
+
+Mostrar logotipo
+
+</label>
+
+
+</div>
+
+
+
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_assinatura"
+
+{% if config.mostrar_assinatura %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label>
+
+Mostrar assinatura
+
+</label>
+
+
+</div>
+
+
+
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_carimbo"
+
+{% if config.mostrar_carimbo %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label>
+
+Mostrar carimbo
+
+</label>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- RESPONSÁVEL -->
+
+
+<div class="finance-card">
+
+
+<h5 class="fw-bold mb-4">
+
+<i class="bi bi-person-badge me-2"></i>
+
+Responsável Financeiro
+
+</h5>
+
+
+
+<div class="row g-4">
+
+
+<div class="col-md-4">
+
+<input
+
+class="form-control"
+
+name="responsavel_financeiro"
+
+placeholder="Nome">
+
+</div>
+
+
+
+<div class="col-md-4">
+
+<input
+
+class="form-control"
+
+name="telefone_responsavel"
+
+placeholder="Telefone">
+
+</div>
+
+
+
+<div class="col-md-4">
+
+<input
+
+class="form-control"
+
+name="email_responsavel"
+
+placeholder="Email">
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="text-end mb-5">
+
+
+<button class="btn btn-eduscel btn-lg">
+
+<i class="bi bi-check-circle me-2"></i>
+
+Guardar Dados Financeiros
+
+</button>
+
+
+</div>
+
+
+
+
+
+</form>
+
+
+</div>
+
+
+
+{% endblock %}

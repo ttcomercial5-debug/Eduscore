@@ -17359,7 +17359,6 @@ from academic.models import (
     Mensalidade,
     Curso,
 )
-
 @login_required
 def mensalidades_financeiro(request):
 
@@ -17375,6 +17374,8 @@ def mensalidades_financeiro(request):
         "DIRETOR",
 
         "DIRETOR_PEDAGOGICO",
+
+        "SUPERADMIN",
 
     ]
 
@@ -17405,6 +17406,7 @@ def mensalidades_financeiro(request):
 
 
 
+
     # =====================================================
     # CONFIGURAÇÃO FINANCEIRA
     # =====================================================
@@ -17418,9 +17420,12 @@ def mensalidades_financeiro(request):
 
 
 
+
+
     # =====================================================
     # CLASSES OFICIAIS
     # =====================================================
+
 
     classes = [
 
@@ -17457,34 +17462,31 @@ def mensalidades_financeiro(request):
 
 
 
+
+
     # =====================================================
     # CURSOS DA ESCOLA
     # =====================================================
 
-    cursos_escola = list(
 
-        Curso.objects
+    cursos_escola = Curso.objects.filter(
 
-        .filter(
+        escola=escola
 
-            escola=escola
+    ).order_by(
 
-        )
-
-        .order_by(
-
-            "nome"
-
-        )
+        "nome"
 
     )
 
 
 
 
+
+
+
     # =====================================================
-    # CRIAR CONFIGURAÇÕES AUTOMÁTICAS
-    # SEM DUPLICAR
+    # CRIAÇÃO AUTOMÁTICA DAS CONFIGURAÇÕES
     # =====================================================
 
 
@@ -17494,13 +17496,14 @@ def mensalidades_financeiro(request):
         for codigo, nome in classes:
 
 
+
             numero = int(codigo)
+
 
 
 
             # =============================================
             # INICIAÇÃO ATÉ 9ª CLASSE
-            # SEM CURSO
             # =============================================
 
 
@@ -17508,51 +17511,33 @@ def mensalidades_financeiro(request):
 
 
 
-                existe = (
+                ConfiguracaoMensalidade.objects.get_or_create(
 
-                    ConfiguracaoMensalidade.objects
+                    escola=escola,
 
-                    .filter(
+                    classe=codigo,
 
-                        escola=escola,
+                    curso=None,
 
-                        classe=codigo,
+                    defaults={
 
-                        curso__isnull=True
+                        "valor":
+                            Decimal("0.00"),
 
-                    )
+                        "ordem":
+                            numero
 
-                    .exists()
+                    }
 
                 )
 
-
-
-                if not existe:
-
-
-
-                    ConfiguracaoMensalidade.objects.create(
-
-                        escola=escola,
-
-                        classe=codigo,
-
-                        curso=None,
-
-                        valor=Decimal("0.00"),
-
-                        ordem=numero
-
-                    )
 
 
 
 
 
             # =============================================
-            # 10ª ATÉ 13ª
-            # POR CURSO
+            # 10ª ATÉ 13ª POR CURSO
             # =============================================
 
 
@@ -17564,43 +17549,28 @@ def mensalidades_financeiro(request):
 
 
 
-                    existe = (
+                    ConfiguracaoMensalidade.objects.get_or_create(
 
-                        ConfiguracaoMensalidade.objects
+                        escola=escola,
 
-                        .filter(
+                        classe=codigo,
 
-                            escola=escola,
+                        curso=curso,
 
-                            classe=codigo,
+                        defaults={
 
-                            curso=curso
+                            "valor":
+                                Decimal("0.00"),
 
-                        )
+                            "ordem":
+                                numero
 
-                        .exists()
+                        }
 
                     )
 
 
 
-                    if not existe:
-
-
-
-                        ConfiguracaoMensalidade.objects.create(
-
-                            escola=escola,
-
-                            classe=codigo,
-
-                            curso=curso,
-
-                            valor=Decimal("0.00"),
-
-                            ordem=numero
-
-                        )
 
 
 
@@ -17625,21 +17595,18 @@ def mensalidades_financeiro(request):
 
 
 
-            configuracoes = (
+            configuracoes = ConfiguracaoMensalidade.objects.filter(
 
-                ConfiguracaoMensalidade.objects
-
-                .filter(
-
-                    escola=escola
-
-                )
+                escola=escola
 
             )
 
 
 
+
+
             for item in configuracoes:
+
 
 
 
@@ -17651,27 +17618,46 @@ def mensalidades_financeiro(request):
 
 
 
+
+                # =========================================
+                # IMPORTANTE:
+                # Se não veio no formulário,
+                # NÃO ALTERA
+                # =========================================
+
+
+                if campo not in request.POST:
+
+                    continue
+
+
+
+
+
                 valor_recebido = request.POST.get(
 
-                    campo,
-
-                    "0"
+                    campo
 
                 )
+
+
+
+
+
+                # Campo vazio não altera
+
+                if not valor_recebido:
+
+                    continue
+
+
+
 
 
 
                 valor_recebido = (
 
                     valor_recebido
-
-                    .replace(
-
-                        ".",
-
-                        ""
-
-                    )
 
                     .replace(
 
@@ -17685,10 +17671,12 @@ def mensalidades_financeiro(request):
 
 
 
+
+
                 try:
 
 
-                    valor_decimal = Decimal(
+                    novo_valor = Decimal(
 
                         valor_recebido
 
@@ -17700,21 +17688,24 @@ def mensalidades_financeiro(request):
 
 
 
-                    valor_decimal = Decimal(
-
-                        "0.00"
-
-                    )
+                    continue
 
 
 
 
 
-                if item.valor != valor_decimal:
+
+
+                # =========================================
+                # ALTERA SOMENTE SE MUDOU
+                # =========================================
+
+
+                if item.valor != novo_valor:
 
 
 
-                    item.valor = valor_decimal
+                    item.valor = novo_valor
 
 
 
@@ -17740,13 +17731,31 @@ def mensalidades_financeiro(request):
 
 
 
-        messages.success(
+        if alteradas > 0:
 
-            request,
 
-            f"{alteradas} configuração(ões) atualizada(s) com sucesso."
+            messages.success(
 
-        )
+                request,
+
+                f"{alteradas} mensalidade(s) atualizada(s) com sucesso."
+
+            )
+
+
+
+        else:
+
+
+            messages.info(
+
+                request,
+
+                "Nenhuma alteração foi realizada."
+
+            )
+
+
 
 
 
@@ -17762,36 +17771,28 @@ def mensalidades_financeiro(request):
 
 
 
+
+
     # =====================================================
-    # LISTAGEM FINAL
+    # LISTAGEM
     # =====================================================
 
 
-    mensalidades = (
+    mensalidades = ConfiguracaoMensalidade.objects.filter(
 
-        ConfiguracaoMensalidade.objects
+        escola=escola
 
-        .filter(
+    ).select_related(
 
-            escola=escola
+        "curso"
 
-        )
+    ).order_by(
 
-        .select_related(
+        "ordem",
 
-            "curso"
+        "classe",
 
-        )
-
-        .order_by(
-
-            "ordem",
-
-            "classe",
-
-            "curso__nome"
-
-        )
+        "curso__nome"
 
     )
 
@@ -17800,34 +17801,18 @@ def mensalidades_financeiro(request):
 
 
 
-    cursos = (
 
-        Curso.objects
+    cursos = Curso.objects.filter(
 
-        .filter(
+        escola=escola
 
-            escola=escola
+    ).order_by(
 
-        )
-
-        .order_by(
-
-            "nome"
-
-        )
+        "nome"
 
     )
 
-    print("=" * 50)
 
-    for item in mensalidades:
-        print(
-            item.id,
-            item.classe,
-            item.curso.nome if item.curso else "GERAL"
-        )
-
-    print("=" * 50)
 
 
 
@@ -17862,7 +17847,6 @@ def mensalidades_financeiro(request):
 
 
 
-
     return render(
 
         request,
@@ -17878,6 +17862,10 @@ def mensalidades_financeiro(request):
 
 @login_required
 def recibos_financeiro(request):
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
 
     if request.user.role != "FINANCEIRO":
         return redirect("dashboard")
@@ -17901,81 +17889,230 @@ def recibos_financeiro(request):
     # FILTROS
     # ======================================================
 
-    aluno_id = request.GET.get("aluno")
+    filtro_ano = request.GET.get(
+        "ano_letivo",
+        ""
+    ).strip()
 
-    turma_id = request.GET.get("turma")
 
-    ano_letivo_id = request.GET.get("ano_letivo")
+    filtro_processo = request.GET.get(
+        "processo",
+        ""
+    ).strip()
 
-    referencia = request.GET.get("referencia")
+
+
+    # ======================================================
+    # VALORES INICIAIS
+    # ======================================================
+
+    aluno = None
+
+    pagamentos = Pagamento.objects.none()
+
+    total_pago = 0
+
+    ultimo_pagamento = None
+
+
+
+    # ======================================================
+    # BUSCAR ALUNO
+    # ======================================================
+
+    if filtro_ano and filtro_processo:
+
+
+        aluno = (
+
+            Aluno.objects
+
+            .select_related(
+                "usuario",
+                "turma",
+                "curso",
+                "ano_letivo"
+            )
+
+            .filter(
+
+                escola=escola,
+
+                ano_letivo_id=filtro_ano,
+
+                numero_processo=filtro_processo
+
+            )
+
+            .first()
+
+        )
+
+
+
+        if aluno:
+
+
+            pagamentos = (
+
+                Pagamento.objects
+
+                .filter(
+
+                    aluno=aluno
+
+                )
+
+                .select_related(
+
+                    "aluno",
+
+                    "aluno__usuario"
+
+                )
+
+                .order_by(
+
+                    "-data_pagamento"
+
+                )
+
+            )
+
+
+
+            total_pago = (
+
+                pagamentos.aggregate(
+
+                    total=Sum("valor_pago")
+
+                )
+
+                ["total"]
+
+                or 0
+
+            )
+
+
+
+            ultimo_pagamento = pagamentos.first()
+
+
+
+        else:
+
+
+            messages.warning(
+
+                request,
+
+                "Aluno não encontrado. Verifique o Ano Letivo e Número de Processo."
+
+            )
 
 
 
 
     # ======================================================
-    # PAGAMENTOS
+    # ANOS LETIVOS
     # ======================================================
 
-    pagamentos = Pagamento.objects.filter(
+    anos_letivos = (
 
-        aluno__escola=escola
+        AnoLetivo.objects
 
-    ).select_related(
+        .filter(
 
-        "aluno",
-        "aluno__usuario",
-        "aluno__turma"
+            escola=escola
 
-    ).order_by(
+        )
 
-        "-data_pagamento"
+        .order_by(
+
+            "-id"
+
+        )
 
     )
 
 
 
 
-    if aluno_id:
+    context = {
 
-        pagamentos = pagamentos.filter(
 
-            aluno_id=aluno_id
+        "escola": escola,
 
+
+        "aluno": aluno,
+
+
+        "pagamentos": pagamentos,
+
+
+        "anos_letivos": anos_letivos,
+
+
+        "filtro_ano": filtro_ano,
+
+
+        "filtro_processo": filtro_processo,
+
+
+        "total_pago": total_pago,
+
+
+        "ultimo_pagamento": ultimo_pagamento,
+
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/recibos_financeiro.html",
+
+        context
+
+    )
+
+
+from django.db.models import Sum, Count
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
+
+@login_required
+def relatorios_financeiro(request):
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+
+    if request.user.role != "FINANCEIRO":
+        return redirect("dashboard")
+
+
+
+    escola = request.user.escola
+
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Usuário sem escola associada."
         )
 
-
-
-
-    if turma_id:
-
-        pagamentos = pagamentos.filter(
-
-            aluno__turma_id=turma_id
-
-        )
-
-
-
-
-    if ano_letivo_id:
-
-        pagamentos = pagamentos.filter(
-
-            aluno__ano_letivo_id=ano_letivo_id
-
-        )
-
-
-
-
-    if referencia:
-
-        pagamentos = pagamentos.filter(
-
-            referencia__icontains=referencia
-
-        )
-
+        return redirect("login")
 
 
 
@@ -17986,36 +18123,192 @@ def recibos_financeiro(request):
     # ======================================================
 
 
-    alunos = Aluno.objects.filter(
+    ano_letivo_id = request.GET.get(
+        "ano_letivo"
+    )
+
+
+
+
+
+    # ======================================================
+    # PAGAMENTOS
+    # ======================================================
+
+
+    pagamentos = Pagamento.objects.filter(
 
         escola=escola
 
     ).select_related(
 
-        "usuario"
-
-    ).order_by(
-
-        "usuario__first_name",
-        "usuario__last_name"
+        "aluno",
+        "aluno__usuario",
+        "aluno__turma",
+        "ano_letivo"
 
     )
 
 
 
 
-    turmas = Turma.objects.filter(
+
+    if ano_letivo_id:
+
+
+        pagamentos = pagamentos.filter(
+
+            ano_letivo_id=ano_letivo_id
+
+        )
+
+
+
+
+
+
+
+    # ======================================================
+    # TOTAL RECEITAS
+    # ======================================================
+
+
+    total_receitas = pagamentos.aggregate(
+
+        total=Sum(
+            "valor_pago"
+        )
+
+    )["total"] or 0
+
+
+
+
+
+
+
+    # ======================================================
+    # QUANTIDADE DE PAGAMENTOS
+    # ======================================================
+
+
+    total_pagamentos = pagamentos.count()
+
+
+
+
+
+
+
+
+    # ======================================================
+    # ALUNOS PAGANTES
+    # ======================================================
+
+
+    total_alunos_pagantes = pagamentos.values(
+
+        "aluno"
+
+    ).distinct().count()
+
+
+
+
+
+
+
+
+    # ======================================================
+    # ÚLTIMO PAGAMENTO
+    # ======================================================
+
+
+    ultimo_pagamento = pagamentos.order_by(
+
+        "-data_pagamento"
+
+    ).first()
+
+
+
+
+
+
+
+    # ======================================================
+    # DESPESAS
+    # ======================================================
+
+
+    despesas = Despesa.objects.filter(
 
         escola=escola
 
-    ).order_by(
+    )
 
-        "classe",
-        "identificador"
+
+
+
+    # Caso o campo da despesa seja diferente,
+    # alterar aqui para o nome correto.
+
+
+    total_despesas = despesas.aggregate(
+
+        total=Sum(
+            "valor"
+        )
+
+    )["total"] or 0
+
+
+
+
+
+
+
+    # ======================================================
+    # SALDO FINANCEIRO
+    # ======================================================
+
+
+    saldo = (
+
+        total_receitas
+
+        -
+
+        total_despesas
 
     )
 
 
+
+
+
+
+
+    # ======================================================
+    # ÚLTIMOS PAGAMENTOS
+    # ======================================================
+
+
+    ultimos_pagamentos = pagamentos.order_by(
+
+        "-data_pagamento"
+
+    )[:10]
+
+
+
+
+
+
+
+    # ======================================================
+    # ANOS LETIVOS
+    # ======================================================
 
 
     anos_letivos = AnoLetivo.objects.filter(
@@ -18032,34 +18325,75 @@ def recibos_financeiro(request):
 
 
 
+
+
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+
+
     context = {
 
 
-        "pagamentos": pagamentos,
+        "escola":
+
+            escola,
 
 
-        "alunos": alunos,
+
+        "total_receitas":
+
+            total_receitas,
 
 
-        "turmas": turmas,
+
+        "total_despesas":
+
+            total_despesas,
 
 
-        "anos_letivos": anos_letivos,
+
+        "saldo":
+
+            saldo,
 
 
-        "filtro_aluno": aluno_id,
+
+        "total_pagamentos":
+
+            total_pagamentos,
 
 
-        "filtro_turma": turma_id,
+
+        "total_alunos_pagantes":
+
+            total_alunos_pagantes,
 
 
-        "filtro_ano": ano_letivo_id,
+
+        "ultimo_pagamento":
+
+            ultimo_pagamento,
 
 
-        "filtro_referencia": referencia,
+
+        "ultimos_pagamentos":
+
+            ultimos_pagamentos,
 
 
-        "escola": escola,
+
+        "anos_letivos":
+
+            anos_letivos,
+
+
+
+        "filtro_ano":
+
+            ano_letivo_id,
+
 
     }
 
@@ -18071,8 +18405,450 @@ def recibos_financeiro(request):
 
         request,
 
-        "financeiro/recibos_financeiro.html",
+        "financeiro/relatorios_financeiro.html",
 
         context
+
+    )
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+from academic.models import ConfiguracaoFinanceira
+
+
+
+@login_required
+def dados_financeiros(request):
+
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+
+    permissoes = [
+        "FINANCEIRO",
+        "DIRETOR",
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+    escola = request.user.escola
+
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Usuário sem escola associada."
+        )
+
+        return redirect("dashboard")
+
+
+
+
+
+    # ======================================================
+    # CONFIGURAÇÃO FINANCEIRA
+    # ======================================================
+
+
+    config, created = ConfiguracaoFinanceira.objects.get_or_create(
+        escola=escola
+    )
+
+
+
+
+
+
+    # ======================================================
+    # SALVAR
+    # ======================================================
+
+
+    if request.method == "POST":
+
+
+
+        config.moeda = request.POST.get(
+            "moeda",
+            "Kz"
+        )
+
+
+
+        config.formato_valor = request.POST.get(
+            "formato_valor",
+            "1.500,00 Kz"
+        )
+
+
+
+        # ===============================
+        # BANCO
+        # ===============================
+
+
+        config.banco = request.POST.get(
+            "banco"
+        )
+
+
+        config.iban = request.POST.get(
+            "iban"
+        )
+
+
+        config.numero_conta = request.POST.get(
+            "numero_conta"
+        )
+
+
+        config.titular_conta = request.POST.get(
+            "titular_conta"
+        )
+
+
+        config.swift = request.POST.get(
+            "swift"
+        )
+
+
+
+
+        # ===============================
+        # RECIBOS
+        # ===============================
+
+
+        config.nome_recibo = request.POST.get(
+            "nome_recibo",
+            "Recibo"
+        )
+
+
+        config.prefixo_recibo = request.POST.get(
+            "prefixo_recibo",
+            "REC"
+        )
+
+
+        config.numero_inicial_recibo = request.POST.get(
+            "numero_inicial_recibo",
+            1
+        )
+
+
+
+        config.texto_rodape_recibo = request.POST.get(
+            "texto_rodape_recibo"
+        )
+
+
+
+
+        config.mostrar_logo_recibo = (
+
+            request.POST.get(
+                "mostrar_logo_recibo"
+            )
+            == "on"
+
+        )
+
+
+
+        config.mostrar_assinatura = (
+
+            request.POST.get(
+                "mostrar_assinatura"
+            )
+            == "on"
+
+        )
+
+
+
+        config.mostrar_carimbo = (
+
+            request.POST.get(
+                "mostrar_carimbo"
+            )
+            == "on"
+
+        )
+
+
+
+
+        # ===============================
+        # RESPONSÁVEL FINANCEIRO
+        # ===============================
+
+
+        config.responsavel_financeiro = request.POST.get(
+            "responsavel_financeiro"
+        )
+
+
+        config.telefone_responsavel = request.POST.get(
+            "telefone_responsavel"
+        )
+
+
+        config.email_responsavel = request.POST.get(
+            "email_responsavel"
+        )
+
+
+
+        config.save()
+
+
+
+        messages.success(
+            request,
+            "Dados financeiros actualizados com sucesso."
+        )
+
+
+        return redirect(
+            "dados_financeiros"
+        )
+
+
+
+
+
+
+    contexto = {
+
+        "escola":escola,
+
+        "config":config
+
+    }
+
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/dados_financeiros.html",
+
+        contexto
+
+    )
+
+
+@login_required
+def mensalidades_por_classe(request):
+
+    escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Escola não encontrada."
+        )
+
+        return redirect("dashboard_financeiro")
+
+
+
+    from academic.models import (
+        ConfiguracaoMensalidade,
+        Curso
+    )
+
+
+
+    # ======================================================
+    # CURSO SELECIONADO
+    # ======================================================
+
+
+    curso_id = request.GET.get("curso")
+
+    curso_selecionado = None
+
+
+
+    if curso_id:
+
+
+        curso_selecionado = Curso.objects.filter(
+
+            id=curso_id,
+
+            escola=escola
+
+        ).first()
+
+
+
+
+
+    # ======================================================
+    # TODAS CONFIGURAÇÕES
+    # ======================================================
+
+
+    mensalidades = ConfiguracaoMensalidade.objects.filter(
+
+        escola=escola,
+
+        ativo=True
+
+    ).select_related(
+
+        "curso"
+
+    )
+
+
+
+
+
+
+    # ======================================================
+    # ENSINO GERAL
+    # ======================================================
+
+
+    ensino_geral = mensalidades.filter(
+
+        classe__in=[
+
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+
+        ]
+
+    )
+
+
+
+
+
+
+    # ======================================================
+    # ENSINO MÉDIO
+    # ======================================================
+
+
+    ensino_medio = mensalidades.filter(
+
+        classe__in=[
+
+            "10",
+            "11",
+            "12",
+            "13"
+
+        ]
+
+    )
+
+
+
+    # FILTRAR CURSO
+
+    if curso_selecionado:
+
+
+        ensino_medio = ensino_medio.filter(
+
+            curso_id=curso_selecionado.id
+
+        )
+
+
+
+
+
+
+
+
+    # ======================================================
+    # BUSCAR CURSOS CONFIGURADOS
+    # ======================================================
+
+
+    cursos = Curso.objects.filter(
+
+        escola=escola,
+
+        configuracoes_mensalidades__isnull=False,
+
+        configuracoes_mensalidades__ativo=True
+
+    ).distinct().order_by(
+
+        "nome"
+
+    )
+
+
+
+
+
+
+    contexto = {
+
+
+        "ensino_geral":
+
+            ensino_geral,
+
+
+        "ensino_medio":
+
+            ensino_medio,
+
+
+        "cursos":
+
+            cursos,
+
+
+        "curso_selecionado":
+
+            curso_selecionado,
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/mensalidades_por_classe.html",
+
+        contexto
 
     )

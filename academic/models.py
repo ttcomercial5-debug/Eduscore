@@ -2011,6 +2011,23 @@ class ConfiguracaoFinanceira(models.Model):
         default="1.500,00 Kz"
     )
 
+    responsavel_financeiro = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    telefone_responsavel = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
+    )
+
+    email_responsavel = models.EmailField(
+        blank=True,
+        null=True
+    )
+
     ativo = models.BooleanField(
         default=True
     )

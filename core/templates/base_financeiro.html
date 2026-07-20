@@ -1797,13 +1797,15 @@ Despesas
 <li class="menu-item">
 
 
+
+
 <a
 
-href="{% url 'mensalidades_financeiro' %}"
+href="{% url 'mensalidades_por_classe' %}"
 
 class="menu-link
 
-{% if request.resolver_match.url_name == 'mensalidades_financeiro' %}
+{% if request.resolver_match.url_name == 'mensalidades_por_classe' %}
 
 active
 
@@ -1812,11 +1814,13 @@ active
 ">
 
 
-<i class="bi bi-receipt-cutoff"></i>
+<i class="bi bi-cash"></i>
 
 
 <span>
-Mensalidades
+
+Mensalidades por Classe
+
 </span>
 
 
@@ -1871,14 +1875,27 @@ Recibos
 <!-- RELATÓRIOS -->
 
 
+<!-- =====================================================
+     RELATÓRIOS FINANCEIROS
+===================================================== -->
+
+
 <li class="menu-item">
 
 
 <a
 
-href="#"
+href="{% url 'relatorios_financeiro' %}"
 
-class="menu-link">
+class="menu-link
+
+{% if request.resolver_match.url_name == 'relatorios_financeiro' %}
+
+active
+
+{% endif %}
+
+">
 
 
 <i class="bi bi-bar-chart-line"></i>
@@ -1891,11 +1908,6 @@ Relatórios
 
 
 </li>
-
-
-
-
-
 
 
 
@@ -1947,15 +1959,27 @@ id="configFinanceiro">
 
 <a
 
-href="{% url 'configuracoes_financeiras' %}"
+href="{% url 'dados_financeiros' %}"
 
-class="menu-link">
+class="menu-link
+
+{% if request.resolver_match.url_name == 'dados_financeiros' %}
+
+active
+
+{% endif %}
+
+">
 
 
 <i class="bi bi-building"></i>
 
 
+<span>
+
 Dados Financeiros
+
+</span>
 
 
 </a>
@@ -1967,17 +1991,28 @@ Dados Financeiros
 
 
 
+
 <a
 
-href="#"
+href="{% url 'mensalidades_financeiro' %}"
 
-class="menu-link">
+class="menu-link
+
+{% if request.resolver_match.url_name == 'mensalidades_financeiro' %}
+
+active
+
+{% endif %}
+
+">
 
 
-<i class="bi bi-cash"></i>
+<i class="bi bi-receipt-cutoff"></i>
 
 
-Mensalidades por Classe
+<span>
+Mensalidades
+</span>
 
 
 </a>
