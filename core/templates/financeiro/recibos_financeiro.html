@@ -1,0 +1,1147 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block title %}
+Recibos | EdusCel
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+<style>
+
+/* =====================================================
+   RECIBOS EDUSCEL PREMIUM
+===================================================== */
+
+
+.receipt-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #1d4ed8
+    );
+
+    border-radius:28px;
+
+    padding:40px;
+
+    color:white;
+
+    margin-bottom:30px;
+
+    box-shadow:
+    0 25px 50px rgba(15,23,42,.25);
+
+}
+
+
+.receipt-header h2{
+
+    font-size:32px;
+
+    font-weight:900;
+
+}
+
+
+
+.receipt-header p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+}
+
+
+
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+
+.summary-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+
+    gap:22px;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.summary-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:25px;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:
+    0 12px 35px rgba(15,23,42,.06);
+
+    transition:.3s;
+
+}
+
+
+
+.summary-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.summary-icon{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    margin-bottom:15px;
+
+}
+
+
+
+.summary-card h6{
+
+    color:#64748b;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+
+}
+
+
+
+.summary-card strong{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    color:#0f172a;
+
+}
+
+
+
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+
+.filter-box{
+
+    background:white;
+
+    border-radius:26px;
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:
+    0 12px 35px rgba(15,23,42,.06);
+
+}
+
+
+
+.filter-title{
+
+    font-size:18px;
+
+    font-weight:900;
+
+    color:#0f172a;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.form-control,
+.form-select{
+
+    height:48px;
+
+    border-radius:14px;
+
+}
+
+
+
+
+
+/* =====================================================
+   TABELA
+===================================================== */
+
+
+.receipt-table{
+
+    background:white;
+
+    border-radius:26px;
+
+    overflow:hidden;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:
+    0 12px 35px rgba(15,23,42,.06);
+
+}
+
+
+
+.receipt-table-header{
+
+    padding:28px;
+
+    border-bottom:1px solid #e2e8f0;
+
+}
+
+
+
+.receipt-table-header h5{
+
+    font-weight:900;
+
+    margin:0;
+
+}
+
+
+
+.receipt-table-header p{
+
+    color:#64748b;
+
+    margin:5px 0 0;
+
+}
+
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:16px;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+}
+
+
+
+.table tbody td{
+
+    padding:17px;
+
+    vertical-align:middle;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+
+/* =====================================================
+   ALUNO
+===================================================== */
+
+
+.student-avatar{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+    font-weight:900;
+
+    margin-right:12px;
+
+}
+
+
+
+.student-name{
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+
+
+
+
+.student-class{
+
+    font-size:12px;
+
+    color:#64748b;
+
+}
+
+
+
+
+
+.reference-badge{
+
+
+    display:inline-block;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    padding:8px 14px;
+
+    border-radius:12px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+
+.btn-receipt{
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+
+    color:white;
+
+
+    border-radius:14px;
+
+
+    padding:11px 18px;
+
+
+    border:none;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+.btn-receipt:hover{
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+
+@media(max-width:768px){
+
+
+.receipt-header{
+
+    padding:25px;
+
+}
+
+
+.receipt-header h2{
+
+    font-size:24px;
+
+}
+
+
+}
+
+
+</style>
+
+
+
+
+
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+
+<div class="receipt-header">
+
+
+<h2>
+
+<i class="bi bi-receipt-cutoff me-2"></i>
+
+Gestão de Recibos
+
+</h2>
+
+
+<p>
+
+Consulta, pesquisa e emissão de comprovativos financeiros dos alunos.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     RESUMO
+===================================================== -->
+
+
+<div class="summary-grid">
+
+
+
+<div class="summary-card">
+
+
+<div class="summary-icon bg-primary-subtle text-primary">
+
+<i class="bi bi-receipt"></i>
+
+</div>
+
+
+<h6>
+
+Recibos encontrados
+
+</h6>
+
+
+<strong>
+
+{{ pagamentos|length }}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="summary-card">
+
+
+<div class="summary-icon bg-success-subtle text-success">
+
+<i class="bi bi-cash-stack"></i>
+
+</div>
+
+
+<h6>
+
+Pagamentos registados
+
+</h6>
+
+
+<strong>
+
+{{ pagamentos|length }}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="summary-card">
+
+
+<div class="summary-icon bg-warning-subtle text-warning">
+
+<i class="bi bi-calendar3"></i>
+
+</div>
+
+
+<h6>
+
+Ano Letivo
+
+</h6>
+
+
+<strong>
+
+{% if filtro_ano %}
+
+Filtrado
+
+{% else %}
+
+Todos
+
+{% endif %}
+
+</strong>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     FILTROS
+===================================================== -->
+
+
+<div class="filter-box">
+
+
+<div class="filter-title">
+
+<i class="bi bi-funnel me-2"></i>
+
+Pesquisa Avançada
+
+</div>
+
+
+
+
+<form method="GET">
+
+
+<div class="row g-3">
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="fw-bold small">
+
+Aluno
+
+</label>
+
+
+<select name="aluno"
+
+class="form-select">
+
+
+<option value="">
+
+Todos os alunos
+
+</option>
+
+
+{% for aluno in alunos %}
+
+
+<option value="{{ aluno.id }}"
+
+{% if filtro_aluno == aluno.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ aluno.nome_completo }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="fw-bold small">
+
+Turma
+
+</label>
+
+
+<select name="turma"
+
+class="form-select">
+
+
+<option value="">
+
+Todas as turmas
+
+</option>
+
+
+
+{% for turma in turmas %}
+
+
+<option value="{{ turma.id }}"
+
+{% if filtro_turma == turma.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ turma.classe }}ª - {{ turma.identificador }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="fw-bold small">
+
+Ano Letivo
+
+</label>
+
+
+<select name="ano_letivo"
+
+class="form-select">
+
+
+<option value="">
+
+Todos
+
+</option>
+
+
+{% for ano in anos_letivos %}
+
+
+<option value="{{ ano.id }}"
+
+{% if filtro_ano == ano.id|stringformat:"s" %}
+selected
+{% endif %}
+
+>
+
+
+{{ ano.nome }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<label class="fw-bold small">
+
+Referência
+
+</label>
+
+
+<input
+
+type="text"
+
+name="referencia"
+
+value="{{ filtro_referencia }}"
+
+class="form-control"
+
+placeholder="Ex: JAN2026">
+
+
+</div>
+
+
+
+
+
+
+<div class="col-12 mt-3">
+
+
+<button class="btn btn-eduscel me-2">
+
+
+<i class="bi bi-search me-2"></i>
+
+Pesquisar
+
+
+</button>
+
+
+
+
+<a href="{% url 'recibos_financeiro' %}"
+
+class="btn btn-light">
+
+
+<i class="bi bi-arrow-clockwise me-2"></i>
+
+Limpar
+
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     LISTAGEM
+===================================================== -->
+
+
+<div class="receipt-table">
+
+
+<div class="receipt-table-header">
+
+
+<h5>
+
+Histórico Financeiro
+
+</h5>
+
+
+<p>
+
+Pagamentos realizados pelos alunos da escola.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table mb-0">
+
+
+<thead>
+
+
+<tr>
+
+<th>Nº</th>
+
+<th>Aluno</th>
+
+<th>Turma</th>
+
+<th>Referência</th>
+
+<th>Valor</th>
+
+<th>Data</th>
+
+<th>Ação</th>
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for pagamento in pagamentos %}
+
+
+<tr>
+
+
+<td>
+
+{{ forloop.counter }}
+
+</td>
+
+
+
+
+<td>
+
+
+<div class="d-flex align-items-center">
+
+
+<div class="student-avatar">
+
+{{ pagamento.aluno.nome_completo|first|upper }}
+
+</div>
+
+
+
+<div>
+
+
+<div class="student-name">
+
+{{ pagamento.aluno.nome_completo }}
+
+</div>
+
+
+<div class="student-class">
+
+Processo:
+{{ pagamento.aluno.numero_processo }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{ pagamento.aluno.turma.classe }}
+
+-
+
+{{ pagamento.aluno.turma.identificador }}
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<span class="reference-badge">
+
+{{ pagamento.referencia|default:"SEM REFERÊNCIA" }}
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{ pagamento.valor }} Kz
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+{{ pagamento.data_pagamento|date:"d/m/Y" }}
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+<a href="#"
+
+class="btn btn-receipt">
+
+
+<i class="bi bi-printer me-1"></i>
+
+Emitir
+
+</a>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="7">
+
+
+<div class="empty-state">
+
+
+<i class="bi bi-receipt-cutoff"></i>
+
+
+<h5>
+
+Nenhum recibo encontrado
+
+</h5>
+
+
+<p>
+
+Não existem pagamentos para os filtros selecionados.
+
+</p>
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}

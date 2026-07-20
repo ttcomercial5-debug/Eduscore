@@ -1838,22 +1838,25 @@ Mensalidades
 
 <li class="menu-item">
 
-
 <a
 
-href="#"
+href="{% url 'recibos_financeiro' %}"
 
-class="menu-link">
+class="menu-link
 
+{% if request.resolver_match.url_name == 'recibos_financeiro' %}
+
+active
+
+{% endif %}
+
+">
 
 <i class="bi bi-file-earmark-text"></i>
 
-
 Recibos
 
-
 </a>
-
 
 </li>
 

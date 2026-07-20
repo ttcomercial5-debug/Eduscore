@@ -17872,3 +17872,207 @@ def mensalidades_financeiro(request):
         context
 
     )
+
+
+
+
+@login_required
+def recibos_financeiro(request):
+
+    if request.user.role != "FINANCEIRO":
+        return redirect("dashboard")
+
+
+    escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Usuário sem escola associada."
+        )
+
+        return redirect("login")
+
+
+
+    # ======================================================
+    # FILTROS
+    # ======================================================
+
+    aluno_id = request.GET.get("aluno")
+
+    turma_id = request.GET.get("turma")
+
+    ano_letivo_id = request.GET.get("ano_letivo")
+
+    referencia = request.GET.get("referencia")
+
+
+
+
+    # ======================================================
+    # PAGAMENTOS
+    # ======================================================
+
+    pagamentos = Pagamento.objects.filter(
+
+        aluno__escola=escola
+
+    ).select_related(
+
+        "aluno",
+        "aluno__usuario",
+        "aluno__turma"
+
+    ).order_by(
+
+        "-data_pagamento"
+
+    )
+
+
+
+
+    if aluno_id:
+
+        pagamentos = pagamentos.filter(
+
+            aluno_id=aluno_id
+
+        )
+
+
+
+
+    if turma_id:
+
+        pagamentos = pagamentos.filter(
+
+            aluno__turma_id=turma_id
+
+        )
+
+
+
+
+    if ano_letivo_id:
+
+        pagamentos = pagamentos.filter(
+
+            aluno__ano_letivo_id=ano_letivo_id
+
+        )
+
+
+
+
+    if referencia:
+
+        pagamentos = pagamentos.filter(
+
+            referencia__icontains=referencia
+
+        )
+
+
+
+
+
+
+    # ======================================================
+    # FILTROS
+    # ======================================================
+
+
+    alunos = Aluno.objects.filter(
+
+        escola=escola
+
+    ).select_related(
+
+        "usuario"
+
+    ).order_by(
+
+        "usuario__first_name",
+        "usuario__last_name"
+
+    )
+
+
+
+
+    turmas = Turma.objects.filter(
+
+        escola=escola
+
+    ).order_by(
+
+        "classe",
+        "identificador"
+
+    )
+
+
+
+
+    anos_letivos = AnoLetivo.objects.filter(
+
+        escola=escola
+
+    ).order_by(
+
+        "-id"
+
+    )
+
+
+
+
+
+    context = {
+
+
+        "pagamentos": pagamentos,
+
+
+        "alunos": alunos,
+
+
+        "turmas": turmas,
+
+
+        "anos_letivos": anos_letivos,
+
+
+        "filtro_aluno": aluno_id,
+
+
+        "filtro_turma": turma_id,
+
+
+        "filtro_ano": ano_letivo_id,
+
+
+        "filtro_referencia": referencia,
+
+
+        "escola": escola,
+
+    }
+
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/recibos_financeiro.html",
+
+        context
+
+    )

@@ -3621,3 +3621,75 @@ Traceback (most recent call last):
     for codigo, nome in classes:
 NameError: name 'classes' is not defined
 "GET /financeiro-mensalidades/ HTTP/1.1" 500 72582
+Internal Server Error: /financeiro/recibos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 18017, in recibos_financeiro
+    ).order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'nome_completo' into field. Choices are: ano_letivo, ano_letivo_id, aprovado, ativo, atualizado_em, boletim, classe, criado_em, curso, curso_id, data_nascimento, escola, escola_id, frequencia, historico_matriculas, historicos, id, matricula, matricula_confirmada, media_final, mensalidades, minipauta, notas, numero_bi, numero_na_turma, numero_processo, pagamentos, precisa_confirmacao, sexo, turma, turma_id, ultimo_ano_confirmado, ultimo_ano_confirmado_id, usuario, usuario_id
+"GET /financeiro/recibos/ HTTP/1.1" 500 90738
+Internal Server Error: /financeiro/recibos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 18017, in recibos_financeiro
+    ).order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'nome' into field. Choices are: ano_letivo, ano_letivo_id, aprovado, ativo, atualizado_em, boletim, classe, criado_em, curso, curso_id, data_nascimento, escola, escola_id, frequencia, historico_matriculas, historicos, id, matricula, matricula_confirmada, media_final, mensalidades, minipauta, notas, numero_bi, numero_na_turma, numero_processo, pagamentos, precisa_confirmacao, sexo, turma, turma_id, ultimo_ano_confirmado, ultimo_ano_confirmado_id, usuario, usuario_id
+"GET /financeiro/recibos/ HTTP/1.1" 500 90776
+Internal Server Error: /financeiro/recibos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 18011, in recibos_financeiro
+    ).order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'nome' into field. Choices are: alunos, ano_letivo, ano_letivo_id, classe, criada_em, curso, curso_id, diretor_turma, diretor_turma_id, disciplinas, escola, escola_id, eventos, historicoacademico, historicomatricula, horarios, horarios_turma, id, identificador, minipauta, professor, professor_id, professores, sala, tarefa, turno
+"GET /financeiro/recibos/ HTTP/1.1" 500 90474
+Internal Server Error: /financeiro/recibos/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 18025, in recibos_financeiro
+    ).order_by(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\query.py", line 1727, in order_by
+    obj.query.add_ordering(*field_names)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 2312, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\db\models\sql\query.py", line 1813, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'ano' into field. Choices are: alunos, alunos_confirmados, ativo, escola, escola_id, eventos_calendario, fechamentonota, fechamentotrimestre, historicoacademico, historicomatricula, horarios, id, mensalidades, minipauta, nome, notas, pagamentos, turmas
+"GET /financeiro/recibos/ HTTP/1.1" 500 89870
