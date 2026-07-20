@@ -1,0 +1,605 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block title %}
+
+Multas e Juros | EdusCel
+
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="section-title">
+
+<i class="bi bi-percent me-2"></i>
+
+Multas e Juros
+
+</div>
+
+
+
+
+<p class="text-muted mb-4">
+
+Configuração das penalizações por atraso das mensalidades.
+
+</p>
+
+
+
+
+
+
+
+<!-- FILTRO -->
+
+<div class="card mb-4 border-0 shadow-sm">
+
+
+<div class="card-body">
+
+
+<h6 class="fw-bold mb-3">
+
+<i class="bi bi-funnel me-2"></i>
+
+Filtrar visualização
+
+</h6>
+
+
+
+
+<select
+
+id="filtroCurso"
+
+class="form-select"
+
+
+>
+
+
+
+<option value="geral">
+
+Ensino Geral
+
+</option>
+
+
+
+
+{% for curso in cursos %}
+
+
+<option value="{{curso.id}}">
+
+{{curso.nome}}
+
+</option>
+
+
+
+{% endfor %}
+
+
+</select>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<form method="post">
+
+
+{% csrf_token %}
+
+
+
+
+
+<div class="table-container">
+
+
+
+<div class="header">
+
+
+<h5>
+
+<i class="bi bi-clock-history me-2"></i>
+
+Multas e Juros
+
+</h5>
+
+
+<p>
+
+Defina regras financeiras por classe ou curso.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle mb-0">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Classe
+
+</th>
+
+
+<th>
+
+Curso
+
+</th>
+
+
+<th>
+
+Multa
+
+</th>
+
+
+<th>
+
+Dias
+
+</th>
+
+
+<th>
+
+Valor Multa
+
+</th>
+
+
+<th>
+
+Juros %
+
+</th>
+
+
+<th>
+
+Desconto %
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+
+{% for item in configuracoes %}
+
+
+
+<tr
+
+data-curso="{% if item.curso %}{{ item.curso.id }}{% else %}geral{% endif %}"
+
+data-tipo="{% if item.curso %}curso{% else %}geral{% endif %}"
+
+>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{item.get_classe_display}}
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{% if item.curso %}
+
+
+{{item.curso.nome}}
+
+
+{% else %}
+
+
+Ensino Geral
+
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<input
+
+
+type="checkbox"
+
+
+name="config_{{item.id}}_multa"
+
+
+{% if item.aplicar_multa %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<input
+
+class="form-control"
+
+type="number"
+
+name="config_{{item.id}}_tolerancia"
+
+placeholder="{{item.dias_tolerancia}}"
+
+
+>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<input
+
+class="form-control"
+
+type="number"
+
+step="0.01"
+
+name="config_{{item.id}}_valor"
+
+placeholder="{{item.valor_multa}}"
+
+
+>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<input
+
+class="form-control"
+
+type="number"
+
+step="0.01"
+
+name="config_{{item.id}}_juros"
+
+placeholder="{{item.percentual_juros}}"
+
+
+>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<input
+
+class="form-control"
+
+type="number"
+
+step="0.01"
+
+name="config_{{item.id}}_desconto"
+
+placeholder="{{item.percentual_desconto}}"
+
+
+>
+
+
+</td>
+
+
+
+
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="p-4 text-end border-top">
+
+
+<button class="btn btn-primary px-4">
+
+
+<i class="bi bi-save me-2"></i>
+
+Guardar Alterações
+
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+</form>
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+{% block scripts %}
+
+
+
+<script>
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+
+let filtro = document.getElementById(
+"filtroCurso"
+);
+
+
+
+let linhas = document.querySelectorAll(
+"tbody tr"
+);
+
+
+
+
+
+function filtrar(){
+
+
+
+let valor = filtro.value;
+
+
+
+
+
+linhas.forEach(function(linha){
+
+
+
+let curso = linha.dataset.curso;
+
+
+
+
+if(valor === "geral"){
+
+
+
+linha.style.display =
+
+curso === "geral"
+
+?
+
+""
+
+:
+
+"none";
+
+
+
+}
+
+else{
+
+
+
+linha.style.display =
+
+curso === valor
+
+?
+
+""
+
+:
+
+"none";
+
+
+
+}
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+filtro.addEventListener(
+
+"change",
+
+filtrar
+
+);
+
+
+
+filtrar();
+
+
+
+});
+
+
+
+</script>
+
+
+
+{% endblock %}

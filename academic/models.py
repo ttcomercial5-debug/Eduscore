@@ -3473,3 +3473,65 @@ class Notificacao(models.Model):
         return self.titulo
 
 
+class ConfiguracaoMultaJuros(models.Model):
+
+    escola = models.OneToOneField(
+        Escola,
+        on_delete=models.CASCADE,
+        related_name="configuracao_multa_juros"
+    )
+
+
+    aplicar_multa = models.BooleanField(
+        default=False
+    )
+
+
+    TIPO_MULTA = [
+
+        ("FIXA","Valor Fixo"),
+
+        ("PERCENTUAL","Percentual")
+
+    ]
+
+
+    tipo_multa = models.CharField(
+        max_length=20,
+        choices=TIPO_MULTA,
+        default="FIXA"
+    )
+
+
+    valor_multa = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+
+    dias_tolerancia = models.PositiveIntegerField(
+        default=5
+    )
+
+
+    percentual_juros = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+
+    ativo = models.BooleanField(
+        default=True
+    )
+
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+
+    def __str__(self):
+
+        return f"Multas e Juros - {self.escola.nome}"

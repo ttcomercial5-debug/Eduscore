@@ -18852,3 +18852,558 @@ def mensalidades_por_classe(request):
         contexto
 
     )
+@login_required
+def multas_juros_financeiro(request):
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+
+
+    # =====================================================
+    # ESCOLA ATUAL
+    # =====================================================
+
+    escola = request.user.escola
+
+
+
+    if not escola:
+
+
+        messages.error(
+
+            request,
+
+            "Utilizador sem escola associada."
+
+        )
+
+
+        return redirect("dashboard")
+
+
+
+
+
+
+
+
+    # =====================================================
+    # CURSOS DA ESCOLA
+    # =====================================================
+
+    cursos = (
+
+        Curso.objects
+
+        .filter(
+
+            escola=escola
+
+        )
+
+        .order_by(
+
+            "nome"
+
+        )
+
+    )
+
+
+
+
+
+
+
+
+    # =====================================================
+    # CONFIGURAÇÕES DE MULTAS E JUROS
+    # =====================================================
+
+
+    configuracoes = (
+
+
+        ConfiguracaoMensalidade.objects
+
+
+        .filter(
+
+            escola=escola
+
+        )
+
+
+        .select_related(
+
+            "curso"
+
+        )
+
+
+        .order_by(
+
+            "classe",
+
+            "curso__nome"
+
+        )
+
+
+    )
+
+
+
+
+
+
+
+
+
+    # =====================================================
+    # GUARDAR ALTERAÇÕES
+    # =====================================================
+
+
+    if request.method == "POST":
+
+
+
+        alteradas = 0
+
+
+
+
+        with transaction.atomic():
+
+
+
+            for item in configuracoes:
+
+
+
+                prefixo = (
+
+                    f"config_{item.id}"
+
+                )
+
+
+
+                campos_alterados = []
+
+
+
+
+
+
+
+                # =================================================
+                # APLICAR MULTA
+                # =================================================
+
+
+                campo = (
+
+                    f"{prefixo}_multa"
+
+                )
+
+
+
+                novo_valor = (
+
+                    campo in request.POST
+
+                )
+
+
+
+                if item.aplicar_multa != novo_valor:
+
+
+
+                    item.aplicar_multa = novo_valor
+
+
+                    campos_alterados.append(
+
+                        "aplicar_multa"
+
+                    )
+
+
+
+
+
+
+
+
+
+                # =================================================
+                # DIAS DE TOLERÂNCIA
+                # =================================================
+
+
+                tolerancia = request.POST.get(
+
+                    f"{prefixo}_tolerancia"
+
+                )
+
+
+
+                if tolerancia not in [
+
+                    None,
+
+                    ""
+
+                ]:
+
+
+
+                    try:
+
+
+                        valor = int(
+
+                            tolerancia
+
+                        )
+
+
+                        if item.dias_tolerancia != valor:
+
+
+                            item.dias_tolerancia = valor
+
+
+                            campos_alterados.append(
+
+                                "dias_tolerancia"
+
+                            )
+
+
+                    except ValueError:
+
+
+                        pass
+
+
+
+
+
+
+
+
+
+
+
+                # =================================================
+                # VALOR DA MULTA
+                # =================================================
+
+
+                valor_multa = request.POST.get(
+
+                    f"{prefixo}_valor"
+
+                )
+
+
+
+                if valor_multa not in [
+
+                    None,
+
+                    ""
+
+                ]:
+
+
+
+                    try:
+
+
+                        valor = Decimal(
+
+                            valor_multa
+
+                        )
+
+
+                        if item.valor_multa != valor:
+
+
+                            item.valor_multa = valor
+
+
+                            campos_alterados.append(
+
+                                "valor_multa"
+
+                            )
+
+
+                    except Exception:
+
+
+                        pass
+
+
+
+
+
+
+
+
+
+
+
+                # =================================================
+                # JUROS %
+                # =================================================
+
+
+                juros = request.POST.get(
+
+                    f"{prefixo}_juros"
+
+                )
+
+
+
+                if juros not in [
+
+                    None,
+
+                    ""
+
+                ]:
+
+
+
+                    try:
+
+
+                        valor = Decimal(
+
+                            juros
+
+                        )
+
+
+
+                        if item.percentual_juros != valor:
+
+
+                            item.percentual_juros = valor
+
+
+                            campos_alterados.append(
+
+                                "percentual_juros"
+
+                            )
+
+
+                    except Exception:
+
+
+                        pass
+
+
+
+
+
+
+
+
+
+
+
+                # =================================================
+                # DESCONTO %
+                # =================================================
+
+
+                desconto = request.POST.get(
+
+                    f"{prefixo}_desconto"
+
+                )
+
+
+
+                if desconto not in [
+
+                    None,
+
+                    ""
+
+                ]:
+
+
+
+                    try:
+
+
+                        valor = Decimal(
+
+                            desconto
+
+                        )
+
+
+
+                        if item.percentual_desconto != valor:
+
+
+                            item.percentual_desconto = valor
+
+
+                            campos_alterados.append(
+
+                                "percentual_desconto"
+
+                            )
+
+
+                    except Exception:
+
+
+                        pass
+
+
+
+
+
+
+
+
+
+
+
+                # =================================================
+                # GUARDAR APENAS SE HOUVER ALTERAÇÃO
+                # =================================================
+
+
+                if campos_alterados:
+
+
+
+                    campos_alterados.append(
+
+                        "atualizado_em"
+
+                    )
+
+
+                    item.save(
+
+                        update_fields=campos_alterados
+
+                    )
+
+
+                    alteradas += 1
+
+
+
+
+
+
+
+
+
+
+        messages.success(
+
+
+            request,
+
+
+            f"{alteradas} configuração(ões) atualizada(s) com sucesso."
+
+        )
+
+
+
+        return redirect(
+
+            "multas_juros_financeiro"
+
+        )
+
+
+
+
+
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO FINAL
+    # =====================================================
+
+
+    context = {
+
+
+        "configuracoes":
+
+            configuracoes,
+
+
+
+        "cursos":
+
+            cursos,
+
+
+    }
+
+
+
+
+
+    return render(
+
+
+        request,
+
+
+        "financeiro/multas_juros.html",
+
+
+        context
+
+
+    )

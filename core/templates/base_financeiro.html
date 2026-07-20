@@ -2011,7 +2011,7 @@ active
 
 
 <span>
-Mensalidades
+Configurações de Mensalidades
 </span>
 
 
@@ -2023,12 +2023,19 @@ Mensalidades
 
 
 
-
 <a
 
-href="#"
+href="{% url 'multas_juros_financeiro' %}"
 
-class="menu-link">
+class="menu-link
+
+{% if request.resolver_match.url_name == 'multas_juros_financeiro' %}
+
+active
+
+{% endif %}
+
+">
 
 
 <i class="bi bi-percent"></i>
@@ -2038,10 +2045,6 @@ Multas e Juros
 
 
 </a>
-
-
-
-
 
 
 

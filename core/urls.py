@@ -159,6 +159,7 @@ urlpatterns = [
     path("pagamento/novo/", views.registrar_pagamento, name="registrar_pagamento"),
     path("financeiro/recibos/", views.recibos_financeiro, name="recibos_financeiro"),
     path("dados-financeiros/", views.dados_financeiros, name="dados_financeiros"),
+    path("financeiro/multas-juros/", views.multas_juros_financeiro, name="multas_juros_financeiro"),
     path("financeiro/mensalidades-por-classe/", views.mensalidades_por_classe, name="mensalidades_por_classe"),
     path("financeiro/relatorios/", views.relatorios_financeiro, name="relatorios_financeiro"),
     path("financeiro-mensalidades/", views.mensalidades_financeiro, name="mensalidades_financeiro"),
