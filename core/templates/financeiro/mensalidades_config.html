@@ -795,41 +795,9 @@ Estado
 {% for item in mensalidades %}
 
 
-
 <tr
-
-
-data-curso="
-
-{% if item.curso %}
-
-{{ item.curso.id }}
-
-{% else %}
-
-0
-
-{% endif %}
-
-"
-
-
-data-tipo="
-
-{% if item.curso %}
-
-curso
-
-{% else %}
-
-geral
-
-{% endif %}
-
-"
-
->
-
+data-curso="{% if item.curso %}{{ item.curso.id }}{% else %}0{% endif %}"
+data-tipo="{% if item.curso %}curso{% else %}geral{% endif %}">
 
 
 

@@ -3609,3 +3609,15 @@ Traceback (most recent call last):
     raise self.error(token, msg)
 django.template.exceptions.TemplateSyntaxError: Unclosed tag on line 1676: 'block'. Looking for one of: endblock.
 "GET /financeiro-mensalidades/ HTTP/1.1" 500 191867
+Internal Server Error: /financeiro-mensalidades/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16970, in mensalidades_financeiro
+    for codigo, nome in classes:
+NameError: name 'classes' is not defined
+"GET /financeiro-mensalidades/ HTTP/1.1" 500 72582
