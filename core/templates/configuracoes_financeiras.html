@@ -1,0 +1,3413 @@
+{% extends "base_financeiro.html" %}
+{% load humanize %}
+
+{% block content %}
+
+
+<style>
+
+/* ======================================================
+   CONFIGURAÇÕES FINANCEIRAS EDUSCEL
+====================================================== */
+
+
+.settings-container{
+
+    max-width:1400px;
+
+    margin:auto;
+
+}
+
+
+/* HEADER */
+
+.settings-header{
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1d4ed8
+    );
+
+    color:white;
+
+    border-radius:25px;
+
+    padding:40px;
+
+    margin-bottom:30px;
+
+    box-shadow:
+
+    0 20px 40px rgba(15,23,42,.15);
+
+}
+
+
+.settings-header h2{
+
+    font-size:32px;
+
+    font-weight:800;
+
+}
+
+
+.settings-header p{
+
+    opacity:.85;
+
+}
+
+
+
+/* CARDS */
+
+
+.settings-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    border:1px solid #e2e8f0;
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+    box-shadow:
+
+    0 10px 25px rgba(15,23,42,.06);
+
+    transition:.3s;
+
+}
+
+
+.settings-card:hover{
+
+    box-shadow:
+
+    0 20px 40px rgba(15,23,42,.10);
+
+}
+
+
+
+/* TITULOS */
+
+
+.section-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-size:21px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    margin-bottom:25px;
+
+}
+
+
+.section-title i{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+
+
+/* INPUTS */
+
+
+.form-label{
+
+    font-weight:700;
+
+    color:#334155;
+
+}
+
+
+.form-control,
+.form-select{
+
+    height:50px;
+
+    border-radius:12px;
+
+    border:1px solid #cbd5e1;
+
+}
+
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+
+    0 0 0 .2rem rgba(37,99,235,.15);
+
+}
+
+
+
+.input-group-text{
+
+    background:#f8fafc;
+
+    font-weight:700;
+
+    border-radius:12px 0 0 12px;
+
+}
+
+
+
+/* CLASSE */
+
+
+.class-box{
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    border:1px solid #e2e8f0;
+
+    transition:.25s;
+
+}
+
+
+.class-box:hover{
+
+    transform:translateY(-3px);
+
+    background:white;
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+
+.class-name{
+
+    font-weight:700;
+
+    color:#475569;
+
+    margin-bottom:8px;
+
+}
+
+
+
+/* SWITCH */
+
+
+.form-check-input{
+
+    width:50px;
+
+    height:25px;
+
+}
+
+
+.form-check-input:checked{
+
+    background-color:#2563eb;
+
+    border-color:#2563eb;
+
+}
+
+
+
+</style>
+
+
+
+
+
+<div class="container-fluid settings-container py-4">
+
+
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+
+<div class="settings-header">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+<div>
+
+
+<h2>
+
+<i class="bi bi-gear-wide-connected me-2"></i>
+
+Configurações Financeiras
+
+</h2>
+
+
+<p class="mb-0">
+
+Configure todas as regras financeiras da instituição.
+
+</p>
+
+
+</div>
+
+
+
+<div>
+
+
+<span class="badge bg-light text-dark px-4 py-3 rounded-pill">
+
+
+{{ request.user.escola.nome }}
+
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- MENSAGENS -->
+
+
+{% if messages %}
+
+
+{% for message in messages %}
+
+
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm">
+
+
+{{ message|linebreaks }}
+
+
+<button class="btn-close"
+data-bs-dismiss="alert">
+
+</button>
+
+
+</div>
+
+
+{% endfor %}
+
+
+{% endif %}
+
+
+
+
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+
+
+
+
+<!-- ======================================================
+     1. DADOS FINANCEIROS DA ESCOLA
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+<i class="bi bi-building"></i>
+
+Dados Financeiros da Escola
+
+</div>
+
+
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Nome da Escola
+
+</label>
+
+
+<input type="text"
+
+class="form-control"
+
+value="{{ request.user.escola.nome }}"
+
+readonly>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+NIF da Escola
+
+</label>
+
+
+<input type="text"
+
+name="nif_escola"
+
+class="form-control"
+
+value="{{ config.nif_escola|default:'' }}">
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Telefone Financeiro
+
+</label>
+
+
+<input type="text"
+
+name="telefone_financeiro"
+
+class="form-control"
+
+value="{{ config.telefone_financeiro|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Email Financeiro
+
+</label>
+
+
+<input type="email"
+
+name="email_financeiro"
+
+class="form-control"
+
+value="{{ config.email_financeiro|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Moeda Padrão
+
+</label>
+
+
+<select name="moeda"
+
+class="form-select">
+
+
+<option value="Kz"
+
+{% if config.moeda == "Kz" %}
+
+selected
+
+{% endif %}
+
+>
+
+Kwanza (Kz)
+
+</option>
+
+
+
+<option value="USD">
+
+Dólar (USD)
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Dia de Vencimento
+
+</label>
+
+
+<input type="number"
+
+name="dia_vencimento"
+
+min="1"
+
+max="31"
+
+class="form-control"
+
+value="{{ config.dia_vencimento }}">
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Estado
+
+</label>
+
+
+
+<div class="form-check form-switch mt-3">
+
+
+<input class="form-check-input"
+
+type="checkbox"
+
+name="ativo"
+
+{% if config.ativo %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Configuração activa
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     2. CONFIGURAÇÃO DE MENSALIDADES
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-wallet2"></i>
+
+
+Configuração de Mensalidades
+
+
+</div>
+
+
+
+
+<p class="text-muted mb-4">
+
+Defina o valor mensal que cada classe deverá pagar.
+
+</p>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+{% for classe, campo in classes_mensalidade %}
+
+
+
+<div class="col-md-4 col-lg-3">
+
+
+<div class="class-box">
+
+
+
+<div class="class-name">
+
+{{ classe }}
+
+</div>
+
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input type="number"
+
+step="0.01"
+
+min="0"
+
+name="{{ campo }}"
+
+class="form-control"
+
+value="{{ item.valor }}">
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+{% endfor %}
+
+
+
+
+
+</div>
+
+
+
+</div>
+<!-- ======================================================
+     3. MULTAS E JUROS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+<i class="bi bi-exclamation-triangle"></i>
+
+Multas e Juros por Atraso
+
+</div>
+
+
+
+<p class="text-muted">
+
+Configure regras para pagamentos realizados fora do prazo.
+
+</p>
+
+
+
+<div class="row g-4">
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Aplicar multa por atraso
+
+</label>
+
+
+<div class="form-check form-switch mt-2">
+
+
+<input
+class="form-check-input"
+type="checkbox"
+name="aplicar_multa_atraso"
+
+{% if config.aplicar_multa_atraso %}
+
+checked
+
+{% endif %}
+>
+
+
+<label class="form-check-label fw-bold">
+
+Ativar cobrança de multa
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Dias de tolerância
+
+</label>
+
+
+<input
+
+type="number"
+
+min="0"
+
+name="dias_tolerancia"
+
+class="form-control"
+
+value="{{ config.dias_tolerancia|default:5 }}">
+
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Multa fixa
+
+</label>
+
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+min="0"
+
+name="valor_multa_mensalidade"
+
+class="form-control"
+
+value="{{ config.valor_multa_mensalidade }}">
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Juro diário (%)
+
+</label>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+min="0"
+
+name="percentual_diario"
+
+class="form-control"
+
+value="{{ config.percentual_diario|default:0 }}">
+
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Permitir pagamento atrasado
+
+</label>
+
+
+<div class="form-check form-switch mt-2">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="permitir_pagamento_atrasado"
+
+{% if config.permitir_pagamento_atrasado %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Aceitar pagamentos pendentes
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Desconto permitido
+
+</label>
+
+
+
+<div class="input-group">
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+min="0"
+
+name="percentual_desconto"
+
+class="form-control"
+
+value="{{ config.percentual_desconto }}">
+
+
+<span class="input-group-text">
+
+%
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ======================================================
+     4. OUTROS SERVIÇOS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+<i class="bi bi-file-earmark-text"></i>
+
+Serviços e Taxas
+
+</div>
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Valor da Matrícula
+
+</label>
+
+
+<div class="input-group">
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="valor_matricula"
+
+class="form-control"
+
+value="{{ config.valor_matricula }}">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Multa da Matrícula
+
+</label>
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="valor_multa_matricula"
+
+class="form-control"
+
+value="{{ config.valor_multa_matricula }}">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Declaração
+
+</label>
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="valor_declaracao"
+
+class="form-control"
+
+value="{{ config.valor_declaracao }}">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Exame
+
+</label>
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+Kz
+
+</span>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="valor_exame"
+
+class="form-control"
+
+value="{{ config.valor_exame }}">
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     5. MÉTODOS DE PAGAMENTO
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+<i class="bi bi-credit-card"></i>
+
+Métodos de Pagamento Aceites
+
+</div>
+
+
+
+<p class="text-muted">
+
+Defina as formas de pagamento disponíveis para os encarregados.
+
+</p>
+
+
+
+
+<div class="row g-3">
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="pagamento_dinheiro"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Dinheiro
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="pagamento_transferencia"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Transferência Bancária
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="pagamento_multicaixa"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Multicaixa Express
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="pagamento_tpa"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+TPA
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="pagamento_referencia"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Referência Bancária
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ======================================================
+     6. CONFIGURAÇÃO DE RECIBOS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-receipt"></i>
+
+
+Recibos e Documentos
+
+
+</div>
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Nome para assinatura
+
+</label>
+
+
+<input
+
+type="text"
+
+name="nome_assinatura"
+
+class="form-control"
+
+value="{{ config.nome_assinatura|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Texto do rodapé do recibo
+
+</label>
+
+
+<input
+
+type="text"
+
+name="texto_rodape_recibo"
+
+class="form-control"
+
+value="{{ config.texto_rodape_recibo|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_logo_recibo"
+
+{% if config.mostrar_logo_recibo %}
+
+checked
+
+{% endif %}
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Mostrar Logotipo
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_assinatura_recibo"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Mostrar Assinatura
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_carimbo_recibo"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Mostrar Carimbo
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+<!-- ======================================================
+     7. DADOS BANCÁRIOS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+<i class="bi bi-bank"></i>
+
+Dados Bancários
+
+</div>
+
+
+
+<p class="text-muted">
+
+Informações que serão apresentadas nos comprovativos e recibos.
+
+</p>
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Nome do Banco
+
+</label>
+
+
+<input
+
+type="text"
+
+name="banco"
+
+class="form-control"
+
+value="{{ config.banco|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Titular da Conta
+
+</label>
+
+
+<input
+
+type="text"
+
+name="titular_conta"
+
+class="form-control"
+
+value="{{ config.titular_conta|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+IBAN
+
+</label>
+
+
+<input
+
+type="text"
+
+name="iban"
+
+class="form-control"
+
+placeholder="AO06 XXXX XXXX XXXX XXXX XXXX X"
+
+value="{{ config.iban|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Número da Conta
+
+</label>
+
+
+<input
+
+type="text"
+
+name="numero_conta"
+
+class="form-control"
+
+value="{{ config.numero_conta|default:'' }}">
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     8. ALERTAS FINANCEIROS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-bell"></i>
+
+
+Alertas Financeiros
+
+
+</div>
+
+
+
+
+<p class="text-muted">
+
+Configure notificações automáticas do sistema.
+
+</p>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="alerta_mensalidade_vencida"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Avisar mensalidades vencidas
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="alerta_pagamento_recebido"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Avisar pagamentos recebidos
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="alerta_despesa_elevada"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Avisar despesas elevadas
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<hr class="my-4">
+
+
+
+
+
+
+<label class="form-label">
+
+Enviar avisos para:
+
+</label>
+
+
+
+
+
+<div class="row g-3">
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="aviso_diretor"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Diretor
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="aviso_financeiro"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Financeiro
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<div class="form-check">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="aviso_encarregado"
+
+checked
+
+>
+
+
+<label class="form-check-label fw-bold">
+
+Encarregado
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     9. PERMISSÕES FINANCEIRAS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-shield-lock"></i>
+
+
+Permissões Financeiras
+
+
+</div>
+
+
+
+
+<p class="text-muted">
+
+Controle de acesso às operações financeiras.
+
+</p>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle">
+
+
+<thead>
+
+
+<tr>
+
+<th>
+
+Operação
+
+</th>
+
+
+<th>
+
+Financeiro
+
+</th>
+
+
+<th>
+
+Diretor
+
+</th>
+
+
+<th>
+
+Secretaria
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+
+
+<tr>
+
+<td class="fw-bold">
+
+Criar despesas
+
+</td>
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="financeiro_criar_despesa"
+
+checked>
+
+</div>
+
+</td>
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="diretor_criar_despesa">
+
+</div>
+
+</td>
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="secretaria_criar_despesa">
+
+</div>
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+<tr>
+
+<td class="fw-bold">
+
+Excluir despesas
+
+</td>
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="financeiro_excluir_despesa">
+
+</div>
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="diretor_excluir_despesa"
+
+checked>
+
+</div>
+
+</td>
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox">
+
+</div>
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+<tr>
+
+<td class="fw-bold">
+
+Ver relatórios
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+checked>
+
+</div>
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+checked>
+
+</div>
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input">
+
+</div>
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+<tr>
+
+<td class="fw-bold">
+
+Alterar mensalidades
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input">
+
+</div>
+
+</td>
+
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input"
+
+checked>
+
+</div>
+
+</td>
+
+
+
+<td>
+
+<div class="form-check form-switch">
+
+<input
+
+class="form-check-input">
+
+</div>
+
+</td>
+
+
+</tr>
+
+
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     10. ANO FINANCEIRO
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-calendar-check"></i>
+
+
+Ano Financeiro
+
+
+</div>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Ano activo
+
+</label>
+
+
+<input
+
+type="number"
+
+name="ano_financeiro"
+
+class="form-control"
+
+value="2026">
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Data início
+
+</label>
+
+
+<input
+
+type="date"
+
+name="data_inicio_financeiro"
+
+class="form-control"
+
+value="2026-01-01">
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Data fim
+
+</label>
+
+
+<input
+
+type="date"
+
+name="data_fim_financeiro"
+
+class="form-control"
+
+value="2026-12-31">
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Estado
+
+</label>
+
+
+
+<select
+
+class="form-select"
+
+name="estado_financeiro">
+
+
+<option selected>
+
+Activo
+
+</option>
+
+
+<option>
+
+Encerrado
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+<!-- ======================================================
+     11. BACKUP FINANCEIRO
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-cloud-arrow-up"></i>
+
+
+Backup Financeiro
+
+
+</div>
+
+
+
+
+<p class="text-muted">
+
+Gestão dos backups financeiros da instituição.
+
+</p>
+
+
+
+
+
+<div class="row g-4 align-items-center">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<label class="form-label">
+
+Último Backup
+
+</label>
+
+
+<h5 class="fw-bold mb-0">
+
+{{ ultimo_backup|default:"Nenhum backup realizado" }}
+
+</h5>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<label class="form-label">
+
+Próximo Backup
+
+</label>
+
+
+<h5 class="fw-bold mb-0">
+
+{{ proximo_backup|default:"Agendado pelo sistema" }}
+
+</h5>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box text-center">
+
+
+<a href="{% url 'backup_financeiro_agora' %}"
+
+class="btn btn-primary rounded-pill px-4">
+
+
+<i class="bi bi-cloud-arrow-up me-2"></i>
+
+
+Fazer Backup Agora
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     12. CONFIGURAÇÃO DE RELATÓRIOS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-bar-chart-line"></i>
+
+
+Relatórios Financeiros
+
+
+</div>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Formato padrão dos relatórios
+
+</label>
+
+
+
+<div class="class-box">
+
+
+
+<div class="form-check">
+
+
+<input
+
+class="form-check-input"
+
+type="radio"
+
+name="formato_relatorio"
+
+value="PDF"
+
+checked>
+
+
+
+<label class="form-check-label fw-bold">
+
+PDF
+
+</label>
+
+
+</div>
+
+
+
+
+
+
+<div class="form-check mt-2">
+
+
+<input
+
+class="form-check-input"
+
+type="radio"
+
+name="formato_relatorio"
+
+value="EXCEL">
+
+
+<label class="form-check-label fw-bold">
+
+Excel
+
+</label>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<label class="form-label">
+
+Informações exibidas
+
+</label>
+
+
+
+
+
+<div class="class-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_grafico_mensal"
+
+checked>
+
+
+<label class="form-check-label fw-bold">
+
+Gráfico mensal financeiro
+
+</label>
+
+
+</div>
+
+
+
+
+
+<div class="form-check form-switch mt-3">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="comparacao_entradas_despesas"
+
+checked>
+
+
+<label class="form-check-label fw-bold">
+
+Comparação entradas/despesas
+
+</label>
+
+
+</div>
+
+
+
+
+
+
+<div class="form-check form-switch mt-3">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="mostrar_saldo_actual"
+
+checked>
+
+
+<label class="form-check-label fw-bold">
+
+Saldo actual
+
+</label>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     13. INTEGRAÇÕES FUTURAS
+====================================================== -->
+
+
+<div class="settings-card">
+
+
+<div class="section-title">
+
+
+<i class="bi bi-diagram-3"></i>
+
+
+Integrações Futuras
+
+
+</div>
+
+
+
+
+
+<p class="text-muted">
+
+Preparação do EdusCel para serviços externos.
+
+</p>
+
+
+
+
+
+
+
+<div class="row g-4">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<label class="form-label">
+
+SMS
+
+</label>
+
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="integracao_sms">
+
+
+<label class="form-check-label fw-bold">
+
+Ativar SMS
+
+</label>
+
+
+</div>
+
+
+
+
+<small class="text-muted d-block mt-3">
+
+Unitel SMS
+
+<br>
+
+EasySendSMS
+
+</small>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<label class="form-label">
+
+Pagamentos Digitais
+
+</label>
+
+
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="integracao_pagamentos">
+
+
+<label class="form-check-label fw-bold">
+
+Ativar pagamentos online
+
+</label>
+
+
+</div>
+
+
+
+
+
+<small class="text-muted d-block mt-3">
+
+Multicaixa Express
+
+<br>
+
+PayPay
+
+<br>
+
+Gateway Bancário
+
+</small>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-4">
+
+
+<div class="class-box">
+
+
+<label class="form-label">
+
+API Financeira
+
+</label>
+
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+name="api_ativa">
+
+
+<label class="form-check-label fw-bold">
+
+API Ativa
+
+</label>
+
+
+</div>
+
+
+
+
+
+<small class="text-muted d-block mt-3">
+
+Integração com sistemas externos
+
+</small>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ======================================================
+     BOTÕES
+====================================================== -->
+
+
+<div class="d-flex justify-content-end gap-3 mb-5">
+
+
+
+<a href="{% url 'dashboard_financeiro' %}"
+
+class="btn btn-outline-secondary btn-lg rounded-pill px-5">
+
+
+Cancelar
+
+
+</a>
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-lg rounded-pill px-5 shadow">
+
+
+<i class="bi bi-check-circle me-2"></i>
+
+
+Guardar Configurações
+
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+</form>
+
+
+</div>
+
+
+
+<script>
+
+
+/*
+==================================================
+CONFIRMAÇÃO ANTES DE SAIR COM ALTERAÇÕES
+==================================================
+*/
+
+
+let alterado=false;
+
+
+document.querySelectorAll(
+"input,select"
+).forEach(element=>{
+
+
+element.addEventListener(
+"change",
+()=>{
+
+alterado=true;
+
+});
+
+
+});
+
+
+
+window.addEventListener(
+"beforeunload",
+function(e){
+
+
+if(alterado){
+
+
+e.preventDefault();
+
+e.returnValue="";
+
+
+}
+
+
+});
+
+
+</script>
+
+
+
+{% endblock %}

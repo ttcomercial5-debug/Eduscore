@@ -1,0 +1,2476 @@
+{% extends "base_financeiro.html" %}
+{% load humanize %}
+
+
+{% block title %}
+Configuração de Mensalidades
+{% endblock %}
+
+
+
+{% block extra_css %}
+
+<style>
+
+/* ==========================================================
+   EDUSCEL ERP
+   FINANCEIRO PREMIUM
+   CONFIGURAÇÃO DE MENSALIDADES
+========================================================== */
+
+
+:root{
+
+    --primary:#2563eb;
+    --dark:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --background:#f8fafc;
+
+}
+
+
+
+body{
+
+    background:var(--background);
+
+}
+
+
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+
+.hero-financeiro{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+
+    border-radius:24px;
+
+    padding:35px;
+
+    margin-bottom:25px;
+
+    color:white;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:
+    0 20px 45px rgba(37,99,235,.20);
+
+}
+
+
+
+.hero-title{
+
+    font-size:32px;
+
+    font-weight:900;
+
+    margin-bottom:12px;
+
+}
+
+
+
+.hero-subtitle{
+
+    max-width:750px;
+
+    color:
+    rgba(255,255,255,.85);
+
+    line-height:1.7;
+
+}
+
+
+
+.hero-icon{
+
+    width:75px;
+
+    height:75px;
+
+    border-radius:22px;
+
+    background:
+    rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:34px;
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   CARDS
+========================================================== */
+
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:18px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.stats-card{
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:20px;
+
+    transition:.25s;
+
+}
+
+
+
+.stats-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+
+
+.stats-title{
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    font-weight:900;
+
+    color:var(--muted);
+
+}
+
+
+
+.stats-value{
+
+    margin-top:5px;
+
+    font-size:24px;
+
+    font-weight:900;
+
+    color:var(--dark);
+
+}
+
+
+
+.stats-icon{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:12px;
+
+    font-size:20px;
+
+}
+
+
+
+.icon-blue{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+
+
+.icon-green{
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+}
+
+
+
+.icon-orange{
+
+    background:#fef3c7;
+
+    color:#d97706;
+
+}
+
+
+
+.icon-red{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   CARD PRINCIPAL
+========================================================== */
+
+
+.config-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    border:1px solid var(--border);
+
+    overflow:hidden;
+
+    box-shadow:
+    0 10px 35px rgba(15,23,42,.06);
+
+}
+
+
+
+
+.card-header-premium{
+
+    padding:25px 30px;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+.card-header-premium h4{
+
+    font-weight:900;
+
+    color:var(--dark);
+
+    margin:0;
+
+}
+
+
+
+.card-header-premium p{
+
+    color:var(--muted);
+
+    margin-top:8px;
+
+}
+
+
+
+
+
+/* ==========================================================
+   FILTRO
+========================================================== */
+
+
+.filter-area{
+
+    background:#f8fafc;
+
+    padding:22px 25px;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+.form-label{
+
+    font-size:11px;
+
+    font-weight:900;
+
+    text-transform:uppercase;
+
+    color:var(--muted);
+
+}
+
+
+
+.form-select,
+.form-control{
+
+    height:45px;
+
+    border-radius:12px;
+
+    border:1px solid #dbe3ec;
+
+}
+
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+
+<div class="hero-financeiro">
+
+
+<div class="row align-items-center">
+
+
+<div class="col-lg-9">
+
+
+<h1 class="hero-title">
+
+Configuração de Mensalidades
+
+</h1>
+
+
+<p class="hero-subtitle">
+
+Gestão financeira escolar por classe e curso.
+
+O Ensino Geral utiliza valores por classe.
+
+O Ensino Médio utiliza valores personalizados
+
+por curso e classe.
+
+</p>
+
+
+</div>
+
+
+
+<div class="col-lg-3 text-end">
+
+
+<div class="hero-icon ms-auto">
+
+
+<i class="bi bi-cash-coin"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+     RESUMO
+===================================================== -->
+
+
+<div class="stats-grid">
+
+
+
+<div class="stats-card">
+
+
+<div class="stats-icon icon-blue">
+
+<i class="bi bi-mortarboard-fill"></i>
+
+</div>
+
+
+<div class="stats-title">
+
+Configurações
+
+</div>
+
+
+<div class="stats-value">
+
+{{ mensalidades|length }}
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stats-card">
+
+
+<div class="stats-icon icon-green">
+
+<i class="bi bi-currency-exchange"></i>
+
+</div>
+
+
+<div class="stats-title">
+
+Moeda
+
+</div>
+
+
+<div class="stats-value">
+
+{{ config.moeda }}
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stats-card">
+
+
+<div class="stats-icon icon-orange">
+
+<i class="bi bi-calendar-event"></i>
+
+</div>
+
+
+<div class="stats-title">
+
+Vencimento
+
+</div>
+
+
+<div class="stats-value">
+
+Dia {{ config.dia_vencimento }}
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stats-card">
+
+
+<div class="stats-icon icon-red">
+
+<i class="bi bi-shield-check"></i>
+
+</div>
+
+
+<div class="stats-title">
+
+Estado
+
+</div>
+
+
+<div class="stats-value">
+
+Ativo
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     FORMULÁRIO
+===================================================== -->
+
+
+<form method="post">
+
+
+{% csrf_token %}
+
+
+
+<div class="config-card">
+
+
+
+
+
+<div class="card-header-premium">
+
+
+<h4 id="tituloTabela">
+
+Ensino Geral
+
+</h4>
+
+
+<p id="descricaoTabela">
+
+Iniciação até 9ª Classe
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     FILTRO CURSO
+===================================================== -->
+
+
+<div class="filter-area">
+
+
+<div class="row g-3">
+
+
+
+<div class="col-lg-5">
+
+
+<label class="form-label">
+
+Visualizar
+
+</label>
+
+
+
+<select
+
+id="filtroCurso"
+
+class="form-select"
+
+>
+
+
+<option value="geral">
+
+Ensino Geral
+
+</option>
+
+
+
+
+{% for curso in cursos %}
+
+
+<option value="{{ curso.id }}">
+
+{{ curso.nome }}
+
+</option>
+
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-7">
+
+
+<label class="form-label">
+
+Informação
+
+</label>
+
+
+<div class="form-control bg-white">
+
+
+<span id="textoFiltro">
+
+Mostrando Ensino Geral
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     TABELA
+===================================================== -->
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle mb-0">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th width="70">
+
+#
+
+</th>
+
+
+<th>
+
+Curso
+
+</th>
+
+
+<th>
+
+Classe
+
+</th>
+
+
+<th width="250">
+
+Valor Mensal
+
+</th>
+
+
+<th>
+
+Estado
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+<tbody id="tabelaMensalidades">
+
+
+
+
+
+{% for item in mensalidades %}
+
+
+
+<tr
+
+
+data-curso="
+
+{% if item.curso %}
+
+{{ item.curso.id }}
+
+{% else %}
+
+0
+
+{% endif %}
+
+"
+
+
+data-tipo="
+
+{% if item.curso %}
+
+curso
+
+{% else %}
+
+geral
+
+{% endif %}
+
+"
+
+>
+
+
+
+
+
+
+
+<td>
+
+<strong>
+
+{{ forloop.counter }}
+
+</strong>
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if item.curso %}
+
+
+
+<span class="badge-curso">
+
+
+<i class="bi bi-book"></i>
+
+
+{{ item.curso.nome }}
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge-geral">
+
+
+<i class="bi bi-building"></i>
+
+
+Ensino Geral
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+{{ item.get_classe_display }}
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+<div class="input-group">
+
+
+<span class="input-group-text">
+
+
+{{ config.moeda }}
+
+
+</span>
+
+
+
+<input
+
+
+type="number"
+
+
+step="0.01"
+
+
+min="0"
+
+
+class="form-control money-input"
+
+
+name="mensalidade_{{ item.id }}"
+
+
+value="{{ item.valor|floatformat:2 }}"
+
+
+>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if item.ativo %}
+
+
+
+<span class="badge-ativo">
+
+
+<i class="bi bi-check-circle"></i>
+
+
+Ativa
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge-inativo">
+
+Inativa
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="5"
+
+class="text-center p-5 text-muted">
+
+
+Nenhuma configuração encontrada.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+<!-- =====================================================
+     ÁREA DE AÇÕES
+===================================================== -->
+
+
+<div class="p-4 border-top">
+
+
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3">
+
+
+
+
+
+<div class="small text-muted">
+
+
+<i class="bi bi-info-circle me-2"></i>
+
+
+Alterações aplicadas apenas à escola atual.
+
+
+
+<br>
+
+
+
+<span
+
+id="contadorAlteracoes"
+
+class="change-indicator mt-2">
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="d-flex gap-2">
+
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-secondary btn-finance"
+
+onclick="limparValores()"
+
+>
+
+
+<i class="bi bi-arrow-counterclockwise me-2"></i>
+
+
+Repor
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-finance px-4"
+
+>
+
+
+<i class="bi bi-save me-2"></i>
+
+
+Guardar Configuração
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</form>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     INFORMAÇÕES
+===================================================== -->
+
+
+<div class="row mt-4 g-3">
+
+
+
+
+
+<div class="col-lg-7">
+
+
+<div class="config-card p-4">
+
+
+<h5 class="fw-bold mb-3">
+
+
+<i class="bi bi-lightbulb me-2"></i>
+
+
+Regra de Configuração
+
+
+</h5>
+
+
+
+
+
+<p class="text-muted small">
+
+
+<strong>
+
+Ensino Geral
+
+</strong>
+
+
+<br>
+
+
+Iniciação até 9ª Classe.
+
+<br>
+
+
+O valor é definido apenas pela classe.
+
+
+</p>
+
+
+
+
+
+
+
+<p class="text-muted small">
+
+
+<strong>
+
+Ensino Médio
+
+</strong>
+
+
+<br>
+
+
+10ª até 13ª Classe.
+
+<br>
+
+
+O valor depende do curso + classe.
+
+
+</p>
+
+
+
+
+
+
+
+<p class="text-muted small mb-0">
+
+
+<strong>
+
+Exemplo:
+
+</strong>
+
+
+<br>
+
+
+10ª Informática pode ter mensalidade diferente
+
+de 10ª Ciências Físicas.
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-lg-5">
+
+
+<div class="config-card p-4">
+
+
+<h5 class="fw-bold mb-3">
+
+
+<i class="bi bi-shield-check me-2"></i>
+
+
+Segurança
+
+
+</h5>
+
+
+
+<p class="text-muted small">
+
+
+Cada configuração pertence exclusivamente
+
+à escola atual.
+
+
+<br><br>
+
+
+Somente utilizadores autorizados podem
+
+alterar valores financeiros.
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+{% block scripts %}
+
+
+<style>
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+
+.badge-curso{
+
+
+display:inline-flex;
+
+
+align-items:center;
+
+
+gap:6px;
+
+
+padding:7px 13px;
+
+
+border-radius:999px;
+
+
+background:#dbeafe;
+
+
+color:#1d4ed8;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+
+.badge-geral{
+
+
+display:inline-flex;
+
+
+align-items:center;
+
+
+gap:6px;
+
+
+padding:7px 13px;
+
+
+border-radius:999px;
+
+
+background:#f1f5f9;
+
+
+color:#475569;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+
+
+.badge-ativo{
+
+
+display:inline-flex;
+
+
+align-items:center;
+
+
+gap:6px;
+
+
+padding:7px 13px;
+
+
+border-radius:999px;
+
+
+background:#dcfce7;
+
+
+color:#15803d;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+
+.badge-inativo{
+
+
+display:inline-flex;
+
+
+padding:7px 13px;
+
+
+border-radius:999px;
+
+
+background:#fee2e2;
+
+
+color:#dc2626;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+
+.table thead th{
+
+
+background:#0f172a;
+
+
+color:white;
+
+
+padding:16px;
+
+
+border:none;
+
+
+font-size:12px;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:.4px;
+
+
+}
+
+
+
+
+.table tbody td{
+
+
+padding:16px;
+
+
+border-color:#eef2f7;
+
+
+vertical-align:middle;
+
+
+}
+
+
+
+
+
+.table tbody tr{
+
+
+transition:.25s;
+
+
+}
+
+
+
+
+.table tbody tr:hover{
+
+
+background:#f8fafc;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   INPUT VALOR
+========================================================== */
+
+
+.money-input{
+
+
+height:42px;
+
+
+border-radius:10px;
+
+
+text-align:right;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+.money-input:focus{
+
+
+border-color:#2563eb;
+
+
+box-shadow:
+
+0 0 0 .18rem rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+
+.input-group-text{
+
+
+background:#f8fafc;
+
+
+font-weight:800;
+
+
+color:#475569;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   LINHA ALTERADA
+========================================================== */
+
+
+.linha-configurada{
+
+
+background:
+
+linear-gradient(
+
+90deg,
+
+rgba(22,163,74,.12),
+
+transparent
+
+);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+
+.btn-finance{
+
+
+border-radius:12px;
+
+
+padding:10px 18px;
+
+
+font-weight:800;
+
+
+transition:.25s;
+
+
+}
+
+
+
+
+.btn-finance:hover{
+
+
+transform:translateY(-2px);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   CONTADOR
+========================================================== */
+
+
+.change-indicator{
+
+
+display:none;
+
+
+width:max-content;
+
+
+background:#dbeafe;
+
+
+color:#1d4ed8;
+
+
+padding:7px 14px;
+
+
+border-radius:999px;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   ANIMAÇÃO
+========================================================== */
+
+
+.config-card,
+.stats-card{
+
+
+animation:
+
+aparecer .35s ease;
+
+
+}
+
+
+
+
+
+@keyframes aparecer{
+
+
+from{
+
+
+opacity:0;
+
+
+transform:translateY(10px);
+
+
+}
+
+
+to{
+
+
+opacity:1;
+
+
+transform:translateY(0);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+
+.hero-title{
+
+
+font-size:24px;
+
+
+}
+
+
+
+.hero-icon{
+
+
+display:none;
+
+
+}
+
+
+
+
+.stats-grid{
+
+
+grid-template-columns:1fr;
+
+
+}
+
+
+
+
+.table{
+
+
+min-width:900px;
+
+
+}
+
+
+
+
+.btn-finance{
+
+
+width:100%;
+
+
+}
+
+
+
+}
+
+
+</style>
+<script>
+
+
+/* =====================================================
+   FILTRO DINÂMICO
+   ENSINO GERAL / CURSOS
+===================================================== */
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+
+const filtroCurso = document.getElementById(
+    "filtroCurso"
+);
+
+
+
+const linhas = document.querySelectorAll(
+    "#tabelaMensalidades tr"
+);
+
+
+
+const textoFiltro = document.getElementById(
+    "textoFiltro"
+);
+
+
+
+const tituloTabela = document.getElementById(
+    "tituloTabela"
+);
+
+
+
+const descricaoTabela = document.getElementById(
+    "descricaoTabela"
+);
+
+
+
+
+
+
+function atualizarTabela(){
+
+
+
+    let selecionado = filtroCurso.value;
+
+
+
+
+
+    linhas.forEach(function(linha){
+
+
+
+        let tipo = linha.dataset.tipo;
+
+
+        let curso = linha.dataset.curso;
+
+
+
+
+        let mostrar = false;
+
+
+
+
+
+
+
+        /*
+            ENSINO GERAL
+
+            Mostra apenas linhas
+            sem curso
+
+        */
+
+
+        if(selecionado === "geral"){
+
+
+
+            mostrar = (
+                tipo === "geral"
+            );
+
+
+
+        }
+
+
+
+
+
+
+
+
+        /*
+            ENSINO MÉDIO
+
+            Mostra somente
+            o curso escolhido
+
+        */
+
+
+        else{
+
+
+
+            mostrar = (
+
+                tipo === "curso"
+
+                &&
+
+                curso === selecionado
+
+            );
+
+
+
+        }
+
+
+
+
+
+
+
+        linha.style.display =
+
+        mostrar ? "" : "none";
+
+
+
+
+    });
+
+
+
+
+
+
+
+    if(selecionado === "geral"){
+
+
+
+        tituloTabela.innerHTML =
+
+        "Mensalidades do Ensino Geral";
+
+
+
+        descricaoTabela.innerHTML =
+
+        "Iniciação até 9ª Classe";
+
+
+
+        textoFiltro.innerHTML =
+
+        "Mostrando Ensino Geral";
+
+
+
+
+    }
+
+    else{
+
+
+
+        let nomeCurso =
+
+        filtroCurso.options[
+            filtroCurso.selectedIndex
+        ].text;
+
+
+
+
+
+        tituloTabela.innerHTML =
+
+        "Mensalidades do Curso";
+
+
+
+        descricaoTabela.innerHTML =
+
+        nomeCurso +
+        " - 10ª até 13ª Classe";
+
+
+
+        textoFiltro.innerHTML =
+
+        "Mostrando curso: " +
+        nomeCurso;
+
+
+
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+if(filtroCurso){
+
+
+
+    filtroCurso.addEventListener(
+
+        "change",
+
+        atualizarTabela
+
+    );
+
+
+
+    atualizarTabela();
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   LIMPAR VALORES
+===================================================== */
+
+
+window.limparValores = function(){
+
+
+
+    document
+
+    .querySelectorAll(
+
+        ".money-input"
+
+    )
+
+    .forEach(function(input){
+
+
+
+        input.value = "0.00";
+
+
+
+        input.dispatchEvent(
+
+            new Event(
+                "input"
+            )
+
+        );
+
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CONTADOR DE ALTERAÇÕES
+===================================================== */
+
+
+let alteracoes = 0;
+
+
+
+
+
+document
+
+.querySelectorAll(
+
+".money-input"
+
+)
+
+.forEach(function(input){
+
+
+
+input.addEventListener(
+
+"input",
+
+function(){
+
+
+
+    alteracoes++;
+
+
+
+
+
+    let contador =
+
+    document.getElementById(
+
+        "contadorAlteracoes"
+
+    );
+
+
+
+
+
+
+
+    if(contador){
+
+
+
+        contador.style.display =
+
+        "inline-flex";
+
+
+
+
+
+        contador.innerHTML =
+
+
+
+        `
+
+        <i class="bi bi-pencil-square me-1"></i>
+
+        ${alteracoes}
+
+        alteração(ões)
+
+        `;
+
+
+
+    }
+
+
+
+
+
+
+    destacarLinha(
+        this
+    );
+
+
+
+});
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   DESTACAR ALTERAÇÃO
+===================================================== */
+
+
+function destacarLinha(input){
+
+
+
+    let linha =
+
+    input.closest("tr");
+
+
+
+
+
+    if(!linha)
+
+        return;
+
+
+
+
+
+
+    let valor =
+
+    parseFloat(
+        input.value
+    );
+
+
+
+
+
+
+    if(valor > 0){
+
+
+
+        linha.classList.add(
+
+            "linha-configurada"
+
+        );
+
+
+
+    }
+
+    else{
+
+
+
+        linha.classList.remove(
+
+            "linha-configurada"
+
+        );
+
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CONFIRMAÇÃO AO GUARDAR
+===================================================== */
+
+
+const formulario =
+
+document.querySelector(
+    "form"
+);
+
+
+
+
+
+
+if(formulario){
+
+
+
+formulario.addEventListener(
+
+"submit",
+
+function(event){
+
+
+
+
+
+    if(alteracoes > 0){
+
+
+
+
+
+        let confirmar = confirm(
+
+        "Confirmar atualização das mensalidades?"
+
+        );
+
+
+
+
+
+
+
+        if(!confirmar){
+
+
+
+            event.preventDefault();
+
+
+
+        }
+
+
+
+
+    }
+
+
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+});
+
+
+
+</script>
+
+
+
+{% endblock %}

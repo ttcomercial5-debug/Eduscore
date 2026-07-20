@@ -1964,110 +1964,103 @@ class AulaHorario(models.Model):
         return f"{self.get_dia_display()} - {self.disciplina}"
 
 
+from django.db import models
+
+
 class ConfiguracaoFinanceira(models.Model):
 
     escola = models.OneToOneField(
         Escola,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="configuracao_financeira"
     )
 
     # ======================================================
-    # MENSALIDADES POR CLASSE
+    # DADOS FINANCEIROS
     # ======================================================
 
-    valor_mensalidade_iniciacao = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    nif = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
     )
 
-    valor_mensalidade_1 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    endereco_financeiro = models.TextField(
+        blank=True,
+        null=True
     )
 
-    valor_mensalidade_2 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    telefone_financeiro = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
     )
 
-    valor_mensalidade_3 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    email_financeiro = models.EmailField(
+        blank=True,
+        null=True
     )
 
-    valor_mensalidade_4 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    moeda = models.CharField(
+        max_length=10,
+        default="Kz"
     )
 
-    valor_mensalidade_5 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    formato_valor = models.CharField(
+        max_length=30,
+        default="1.500,00 Kz"
     )
 
-    valor_mensalidade_6 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_7 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_8 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_9 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_10 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_11 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_12 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
-    )
-
-    valor_mensalidade_13 = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        default=0
+    ativo = models.BooleanField(
+        default=True
     )
 
     # ======================================================
-    # OUTROS VALORES
+    # CONFIGURAÇÕES DE PAGAMENTO
     # ======================================================
+
+    dia_vencimento = models.PositiveIntegerField(
+        default=10,
+        help_text="Dia padrão de vencimento das mensalidades."
+    )
+
+    permitir_pagamento_atrasado = models.BooleanField(
+        default=True
+    )
+
+    # ======================================================
+    # MULTAS E JUROS (PADRÃO)
+    # ======================================================
+
+    aplicar_multa_atraso = models.BooleanField(
+        default=False
+    )
+
+    dias_tolerancia = models.PositiveIntegerField(
+        default=5
+    )
 
     valor_multa_mensalidade = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0
     )
+
+    percentual_juro_diario = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    percentual_desconto = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    # ======================================================
+    # SERVIÇOS DA ESCOLA
+    # ======================================================
 
     valor_matricula = models.DecimalField(
         max_digits=10,
@@ -2093,33 +2086,823 @@ class ConfiguracaoFinanceira(models.Model):
         default=0
     )
 
+    valor_certificado = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_historico = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    valor_transferencia = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
     # ======================================================
-    # OBTÉM A MENSALIDADE DA CLASSE
+    # RECIBOS
     # ======================================================
 
-    def obter_valor_mensalidade(self, classe):
+    nome_recibo = models.CharField(
+        max_length=100,
+        default="Recibo"
+    )
 
-        mapa = {
-            0: self.valor_mensalidade_iniciacao,
-            1: self.valor_mensalidade_1,
-            2: self.valor_mensalidade_2,
-            3: self.valor_mensalidade_3,
-            4: self.valor_mensalidade_4,
-            5: self.valor_mensalidade_5,
-            6: self.valor_mensalidade_6,
-            7: self.valor_mensalidade_7,
-            8: self.valor_mensalidade_8,
-            9: self.valor_mensalidade_9,
-            10: self.valor_mensalidade_10,
-            11: self.valor_mensalidade_11,
-            12: self.valor_mensalidade_12,
-            13: self.valor_mensalidade_13,
+    prefixo_recibo = models.CharField(
+        max_length=10,
+        default="REC"
+    )
+
+    numero_inicial_recibo = models.PositiveIntegerField(
+        default=1
+    )
+
+    mostrar_logo_recibo = models.BooleanField(
+        default=True
+    )
+
+    mostrar_assinatura = models.BooleanField(
+        default=True
+    )
+
+    mostrar_carimbo = models.BooleanField(
+        default=True
+    )
+
+    texto_rodape_recibo = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # ======================================================
+    # DADOS BANCÁRIOS
+    # ======================================================
+
+    banco = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    iban = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    numero_conta = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    titular_conta = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    swift = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    # ======================================================
+    # ALERTAS
+    # ======================================================
+
+    avisar_mensalidade_vencida = models.BooleanField(
+        default=True
+    )
+
+    avisar_pagamento_recebido = models.BooleanField(
+        default=True
+    )
+
+    avisar_despesa_alta = models.BooleanField(
+        default=True
+    )
+
+    # ======================================================
+    # RELATÓRIOS
+    # ======================================================
+
+    formato_relatorio = models.CharField(
+        max_length=10,
+        default="PDF"
+    )
+
+    mostrar_graficos = models.BooleanField(
+        default=True
+    )
+
+    mostrar_comparacao = models.BooleanField(
+        default=True
+    )
+
+    mostrar_saldo = models.BooleanField(
+        default=True
+    )
+
+    # ======================================================
+    # AUDITORIA
+    # ======================================================
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    # ======================================================
+    # MÉTODOS
+    # ======================================================
+
+    def calcular_multa(self):
+
+        if not self.aplicar_multa_atraso:
+            return 0
+
+        return self.valor_multa_mensalidade
+
+    @property
+    def simbolo_moeda(self):
+        return self.moeda or "Kz"
+
+    def resumo(self):
+
+        return {
+            "escola": self.escola.nome,
+            "moeda": self.moeda,
+            "dia_vencimento": self.dia_vencimento,
+            "multa": self.valor_multa_mensalidade,
+            "juro": self.percentual_juro_diario,
+            "desconto": self.percentual_desconto,
+            "banco": self.banco,
         }
 
-        return mapa.get(classe, 0)
+    def __str__(self):
+
+        return (
+            f"Configuração Financeira - "
+            f"{self.escola.nome}"
+        )
+
+
+# ======================================================
+# CONFIGURAÇÃO DE MENSALIDADES POR CLASSE
+# ======================================================
+from decimal import Decimal
+
+from django.db import models
+from django.db.models import Q
+
+from academic.models import Escola
+
+
+
+class ConfiguracaoMensalidade(models.Model):
+    """
+    Configuração financeira das mensalidades.
+
+    Regras:
+
+    Iniciação até 9ª Classe:
+        Classe + Escola
+
+    Exemplo:
+        1ª Classe -> 10.000 Kz
+
+
+    10ª até 13ª Classe:
+        Classe + Curso + Escola
+
+    Exemplo:
+
+        10ª Classe
+            Ciências Físicas -> 25.000 Kz
+
+        10ª Classe
+            Ciências Económicas -> 23.000 Kz
+    """
+
+
+
+    CLASSES = [
+
+        ("0", "Iniciação"),
+
+        ("1", "1ª Classe"),
+        ("2", "2ª Classe"),
+        ("3", "3ª Classe"),
+        ("4", "4ª Classe"),
+        ("5", "5ª Classe"),
+        ("6", "6ª Classe"),
+
+        ("7", "7ª Classe"),
+        ("8", "8ª Classe"),
+        ("9", "9ª Classe"),
+
+        ("10", "10ª Classe"),
+        ("11", "11ª Classe"),
+        ("12", "12ª Classe"),
+        ("13", "13ª Classe"),
+
+    ]
+
+
+
+    # ======================================================
+    # ESCOLA
+    # ======================================================
+
+
+    escola = models.ForeignKey(
+
+        Escola,
+
+        on_delete=models.CASCADE,
+
+        related_name="configuracoes_mensalidades"
+
+    )
+
+
+
+    # ======================================================
+    # CURSO
+    # OBRIGATÓRIO 10ª - 13ª
+    # ======================================================
+
+
+    curso = models.ForeignKey(
+
+        "Curso",
+
+        on_delete=models.SET_NULL,
+
+        null=True,
+
+        blank=True,
+
+        related_name="configuracoes_mensalidades",
+
+        verbose_name="Curso"
+
+    )
+
+
+
+    # ======================================================
+    # CLASSE
+    # ======================================================
+
+
+    classe = models.CharField(
+
+        max_length=10,
+
+        choices=CLASSES,
+
+        verbose_name="Classe"
+
+    )
+
+
+
+    ordem = models.PositiveIntegerField(
+
+        default=0
+
+    )
+
+
+
+    # ======================================================
+    # VALOR MENSALIDADE
+    # ======================================================
+
+
+    valor = models.DecimalField(
+
+        max_digits=10,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+
+
+
+    # ======================================================
+    # VENCIMENTO
+    # ======================================================
+
+
+    dia_vencimento = models.PositiveIntegerField(
+
+        default=10
+
+    )
+
+
+
+    # ======================================================
+    # MULTAS E JUROS
+    # ======================================================
+
+
+    aplicar_multa = models.BooleanField(
+
+        default=False
+
+    )
+
+
+    dias_tolerancia = models.PositiveIntegerField(
+
+        default=5
+
+    )
+
+
+    valor_multa = models.DecimalField(
+
+        max_digits=10,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+
+
+    percentual_juros = models.DecimalField(
+
+        max_digits=5,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+
+
+    percentual_desconto = models.DecimalField(
+
+        max_digits=5,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+
+
+
+    # ======================================================
+    # ESTADO
+    # ======================================================
+
+
+    ativo = models.BooleanField(
+
+        default=True
+
+    )
+
+
+
+    observacao = models.TextField(
+
+        blank=True,
+
+        null=True
+
+    )
+
+
+
+    # ======================================================
+    # AUDITORIA
+    # ======================================================
+
+
+    criado_em = models.DateTimeField(
+
+        auto_now_add=True
+
+    )
+
+
+    atualizado_em = models.DateTimeField(
+
+        auto_now=True
+
+    )
+
+
+
+    class Meta:
+
+
+        verbose_name = (
+
+            "Configuração de Mensalidade"
+
+        )
+
+
+        verbose_name_plural = (
+
+            "Configurações de Mensalidades"
+
+        )
+
+
+        ordering = [
+
+            "ordem",
+
+            "classe",
+
+            "curso__nome"
+
+        ]
+
+
+
+        constraints = [
+
+
+            models.UniqueConstraint(
+
+                fields=[
+
+                    "escola",
+
+                    "curso",
+
+                    "classe"
+
+                ],
+
+                name=
+
+                "unique_config_mensalidade_escola_curso_classe"
+
+            )
+
+        ]
+
+
+
+    # ======================================================
+    # VALIDAR CONFIGURAÇÃO
+    # ======================================================
+
+
+    def clean(self):
+
+
+        classe = int(self.classe)
+
+
+
+        # Até 9ª não permite curso
+
+        if classe <= 9:
+
+
+            self.curso = None
+
+
+
+        # 10ª até 13ª exige curso
+
+        if classe >= 10 and not self.curso:
+
+
+            from django.core.exceptions import ValidationError
+
+
+            raise ValidationError(
+
+                "Da 10ª à 13ª classe é obrigatório selecionar o curso."
+
+            )
+
+
+
+    # ======================================================
+    # SAVE
+    # ======================================================
+
+
+    def save(
+        self,
+        *args,
+        **kwargs
+    ):
+
+
+        self.clean()
+
+
+        super().save(
+            *args,
+            **kwargs
+        )
+
+
+
+    # ======================================================
+    # OBTER VALOR
+    # ======================================================
+
+
+    @classmethod
+    def obter_valor(
+
+        cls,
+
+        escola,
+
+        classe,
+
+        curso=None
+
+    ):
+
+
+        configuracao = cls.objects.filter(
+
+            escola=escola,
+
+            classe=classe,
+
+            curso=curso,
+
+            ativo=True
+
+        ).first()
+
+
+
+        if configuracao:
+
+            return configuracao.valor
+
+
+
+        # fallback para classe geral
+
+        if curso:
+
+
+            configuracao = cls.objects.filter(
+
+                escola=escola,
+
+                classe=classe,
+
+                curso__isnull=True,
+
+                ativo=True
+
+            ).first()
+
+
+
+            if configuracao:
+
+                return configuracao.valor
+
+
+
+        return Decimal("0.00")
+
+
+
+    # ======================================================
+    # OBTER CONFIGURAÇÃO COMPLETA
+    # ======================================================
+
+
+    @classmethod
+    def obter_configuracao(
+
+        cls,
+
+        escola,
+
+        classe,
+
+        curso=None
+
+    ):
+
+
+        configuracao = cls.objects.filter(
+
+            escola=escola,
+
+            classe=classe,
+
+            curso=curso,
+
+            ativo=True
+
+        ).first()
+
+
+
+        if configuracao:
+
+            return configuracao
+
+
+
+        if curso:
+
+
+            return cls.objects.filter(
+
+                escola=escola,
+
+                classe=classe,
+
+                curso__isnull=True,
+
+                ativo=True
+
+            ).first()
+
+
+
+        return None
+
+
+
+    # ======================================================
+    # ATUALIZAR MENSALIDADES PENDENTES
+    # ======================================================
+
+
+    def atualizar_mensalidades(self):
+
+
+        from .models import Mensalidade
+
+
+
+        mensalidades = Mensalidade.objects.filter(
+
+            aluno__escola=self.escola,
+
+            aluno__turma__classe=self.classe,
+
+            status="PENDENTE"
+
+        )
+
+
+
+        if self.curso:
+
+
+            mensalidades = mensalidades.filter(
+
+                aluno__turma__curso=self.curso
+
+            )
+
+
+
+        quantidade = mensalidades.update(
+
+            valor=self.valor
+
+        )
+
+
+
+        return quantidade
+
+
+
+    # ======================================================
+    # RESUMO
+    # ======================================================
+
+
+    def resumo(self):
+
+
+        return {
+
+
+            "classe":
+
+                self.get_classe_display(),
+
+
+
+            "curso":
+
+                self.curso.nome
+
+                if self.curso
+
+                else "Sem curso",
+
+
+
+            "valor":
+
+                self.valor,
+
+
+
+            "vencimento":
+
+                self.dia_vencimento,
+
+
+
+            "ativo":
+
+                self.ativo
+
+        }
+
+
+
+    # ======================================================
+    # STRING
+    # ======================================================
+
 
     def __str__(self):
-        return f"Financeiro - {self.escola.nome}"
+
+
+        moeda = "Kz"
+
+
+
+        if hasattr(
+            self.escola,
+            "configuracao_financeira"
+        ):
+
+
+            moeda = (
+
+                self.escola
+
+                .configuracao_financeira
+
+                .moeda
+
+            )
+
+
+
+        texto = (
+
+            f"{self.get_classe_display()}"
+
+        )
+
+
+
+        if self.curso:
+
+
+            texto += (
+
+                f" - {self.curso.nome}"
+
+            )
+
+
+
+        return (
+
+            f"{texto} | "
+
+            f"{self.valor} {moeda}"
+
+        )
 
 
 class Curso(models.Model):

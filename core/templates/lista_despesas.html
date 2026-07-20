@@ -1,143 +1,919 @@
 {% extends "base_financeiro.html" %}
+
 {% block content %}
+
 
 <style>
 
-.card-finance{
-border:none;
-border-radius:12px;
-box-shadow:0 4px 16px rgba(0,0,0,0.08);
-transition:0.25s;
+:root{
+
+    --primary:#1e40af;
+    --primary-dark:#0f172a;
+    --danger:#dc2626;
+    --success:#16a34a;
+    --gray:#64748b;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
 }
 
-.card-finance:hover{
-transform:translateY(-3px);
-box-shadow:0 8px 22px rgba(0,0,0,0.12);
+
+body{
+
+    background:#f8fafc;
+
 }
 
-.table thead{
-background:#0f172a;
-color:white;
+
+/* =====================================================
+   HEADER PREMIUM
+===================================================== */
+
+
+.finance-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1e40af
+    );
+
+    color:white;
+
+    border-radius:26px;
+
+    padding:35px;
+
+    margin-bottom:30px;
+
+    box-shadow:
+    0 20px 45px rgba(15,23,42,.18);
+
 }
+
+
+.finance-title{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-.5px;
+
+}
+
+
+.finance-subtitle{
+
+    color:rgba(255,255,255,.75);
+
+    margin-top:8px;
+
+    font-size:15px;
+
+}
+
+
+.btn-new{
+
+    background:white;
+
+    color:#1e40af;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:13px 24px;
+
+    font-weight:800;
+
+    transition:.3s;
+
+}
+
+
+.btn-new:hover{
+
+    transform:translateY(-3px);
+
+    background:#f8fafc;
+
+}
+
+
+
+/* =====================================================
+   KPI CARDS
+===================================================== */
+
+
+.kpi{
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:28px;
+
+    border:1px solid #eef2f7;
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.07);
+
+    transition:.3s;
+
+}
+
+
+.kpi:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.kpi-label{
+
+    color:#64748b;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+
+    letter-spacing:.8px;
+
+}
+
+
+
+.kpi-number{
+
+    font-size:32px;
+
+    font-weight:900;
+
+    margin-top:8px;
+
+}
+
+
+
+.kpi-icon{
+
+    width:62px;
+
+    height:62px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+}
+
+
+
+.icon-danger{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+
+.icon-primary{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+}
+
+
+
+
+
+/* =====================================================
+   CARD TABELA
+===================================================== */
+
+
+.data-card{
+
+    background:white;
+
+    border-radius:26px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 12px 35px rgba(15,23,42,.08);
+
+}
+
+
+
+.data-header{
+
+    padding:28px;
+
+    border-bottom:1px solid #edf2f7;
+
+}
+
+
+
+.data-title{
+
+    font-size:22px;
+
+    font-weight:900;
+
+    color:#0f172a;
+
+}
+
+
+
+.data-description{
+
+    color:#64748b;
+
+    font-size:14px;
+
+}
+
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+
+.table{
+
+    margin-bottom:0;
+
+}
+
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:17px;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.7px;
+
+    border:none;
+
+}
+
+
+
+.table tbody td{
+
+    padding:18px;
+
+    vertical-align:middle;
+
+}
+
+
+
+.table tbody tr{
+
+    transition:.25s;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+.description{
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+
+
+.valor{
+
+    color:#dc2626;
+
+    font-weight:900;
+
+}
+
+
+
+.date-badge{
+
+    background:#f1f5f9;
+
+    color:#334155;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+
+
+.user-badge{
+
+    background:#ecfdf5;
+
+    color:#166534;
+
+    padding:7px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+
+
+
+/* =====================================================
+   ACTION
+===================================================== */
+
+
+.btn-delete{
+
+    border-radius:12px;
+
+    padding:9px 16px;
+
+    font-weight:700;
+
+}
+
+
+
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+
+.empty{
+
+    padding:80px 20px;
+
+    text-align:center;
+
+}
+
+
+
+.empty i{
+
+    font-size:60px;
+
+    color:#cbd5e1;
+
+}
+
+
+
+.empty h5{
+
+    margin-top:20px;
+
+    font-weight:900;
+
+}
+
+
+
+.empty p{
+
+    color:#64748b;
+
+}
+
+
+
+
+@media(max-width:768px){
+
+
+.finance-title{
+
+    font-size:25px;
+
+}
+
+
+.kpi-number{
+
+    font-size:25px;
+
+}
+
+
+}
+
 
 </style>
 
-<div class="container-fluid">
-
-<h3 class="mb-4 fw-bold">
-
-Despesas Financeiras
-
-</h3>
 
 
-<div class="row mb-4">
 
-<div class="col-md-4">
 
-<div class="card card-finance">
 
-<div class="card-body">
+<div class="container-fluid py-4">
 
-<h6>Total de Despesas</h6>
 
-<h3 class="text-danger">
 
-{{ total_despesas }} Kz
 
-</h3>
 
-</div>
+<!-- HEADER -->
 
-</div>
+<div class="finance-header">
 
-</div>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+
+
+<div>
+
+
+<div class="finance-title">
+
+Gestão de Despesas
 
 </div>
 
 
-<div class="card card-finance">
+<div class="finance-subtitle">
 
-<div class="card-body">
+Controle financeiro, histórico e acompanhamento das despesas da instituição.
 
-<div class="table-responsive">
+</div>
 
-<table class="table table-bordered table-hover">
 
-<thead>
+</div>
 
-<tr>
 
-<th>Descrição</th>
-<th>Valor</th>
-<th>Data</th>
-<th>Ação</th>
 
-</tr>
+<a href="{% url 'adicionar_despesa' %}"
 
-</thead>
+class="btn-new">
 
-<tbody>
 
-{% for despesa in despesas %}
+<i class="bi bi-plus-circle me-2"></i>
 
-<tr>
+Nova Despesa
 
-<td>
-
-{{ despesa.descricao }}
-
-</td>
-
-<td class="text-danger">
-
-{{ despesa.valor }} Kz
-
-</td>
-
-<td>
-
-{{ despesa.data }}
-
-</td>
-
-<td>
-
-<a href="{% url 'excluir_despesa' despesa.id %}"
-class="btn btn-sm btn-danger">
-
-Excluir
 
 </a>
 
-</td>
 
-</tr>
 
-{% empty %}
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- KPI -->
+
+<div class="row g-4 mb-4">
+
+
+
+<div class="col-xl-4 col-md-6">
+
+
+<div class="kpi">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="kpi-label">
+
+Total de Despesas
+
+</div>
+
+
+<div class="kpi-number text-danger">
+
+{{ total_despesas|floatformat:2 }} Kz
+
+</div>
+
+
+</div>
+
+
+
+<div class="kpi-icon icon-danger">
+
+<i class="bi bi-cash-stack"></i>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-xl-4 col-md-6">
+
+
+<div class="kpi">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<div class="kpi-label">
+
+Quantidade de Registos
+
+</div>
+
+
+<div class="kpi-number text-primary">
+
+{{ despesas|length }}
+
+</div>
+
+
+</div>
+
+
+<div class="kpi-icon icon-primary">
+
+<i class="bi bi-receipt-cutoff"></i>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- LISTAGEM -->
+
+
+<div class="data-card">
+
+
+<div class="data-header">
+
+
+<div class="data-title">
+
+Histórico de Despesas
+
+</div>
+
+
+<div class="data-description">
+
+Todas as despesas registadas nesta unidade escolar.
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle">
+
+
+<thead>
+
 
 <tr>
 
-<td colspan="4" class="text-center">
+<th>
 
-Nenhuma despesa registrada
+Descrição
 
-</td>
+</th>
+
+
+<th>
+
+Valor
+
+</th>
+
+
+<th>
+
+Data
+
+</th>
+
+
+<th>
+
+Responsável
+
+</th>
+
+
+<th class="text-center">
+
+Ação
+
+</th>
+
 
 </tr>
 
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for despesa in despesas %}
+
+
+
+<tr>
+
+
+
+<td>
+
+
+<div class="description">
+
+{{ despesa.descricao }}
+
+</div>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="valor">
+
+{{ despesa.valor|floatformat:2 }} Kz
+
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="date-badge">
+
+
+{% if despesa.data %}
+
+{{ despesa.data|date:"d/m/Y" }}
+
+{% else %}
+
+-
+
+{% endif %}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+{% if despesa.criado_por %}
+
+
+<span class="user-badge">
+
+
+<i class="bi bi-person me-1"></i>
+
+{{ despesa.criado_por.username }}
+
+
+</span>
+
+
+{% else %}
+
+
+-
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+<a href="{% url 'excluir_despesa' despesa.id %}"
+
+class="btn btn-outline-danger btn-delete">
+
+
+<i class="bi bi-trash me-1"></i>
+
+Excluir
+
+
+</a>
+
+
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="5">
+
+
+<div class="empty">
+
+
+<i class="bi bi-wallet2"></i>
+
+
+<h5>
+
+Nenhuma despesa registada
+
+</h5>
+
+
+<p>
+
+Ainda não existem despesas cadastradas para esta instituição.
+
+</p>
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+
+
 {% endfor %}
+
+
+
 
 </tbody>
 
+
 </table>
 
-</div>
 
 </div>
 
-</div>
 
 </div>
+
+
+
+
+
+
+</div>
+
 
 {% endblock %}

@@ -1,0 +1,731 @@
+{% extends "base_financeiro.html" %}
+
+{% block content %}
+
+
+<style>
+
+:root{
+
+    --primary:#1e40af;
+    --danger:#dc2626;
+    --danger-dark:#991b1b;
+    --dark:#0f172a;
+    --gray:#64748b;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
+}
+
+
+
+body{
+
+    background:var(--light);
+
+}
+
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+
+.delete-wrapper{
+
+    min-height:80vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:30px;
+
+}
+
+
+
+/* =====================================================
+   CARD PRINCIPAL
+===================================================== */
+
+
+.delete-card{
+
+    width:100%;
+
+    max-width:760px;
+
+    background:white;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 25px 60px rgba(15,23,42,.12);
+
+}
+
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+
+.delete-header{
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #7f1d1d,
+        #dc2626
+    );
+
+    color:white;
+
+    padding:45px 35px;
+
+    text-align:center;
+
+}
+
+
+
+.delete-icon{
+
+    width:100px;
+
+    height:100px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:0 auto 20px;
+
+    font-size:50px;
+
+}
+
+
+
+.delete-title{
+
+    font-size:32px;
+
+    font-weight:900;
+
+}
+
+
+
+.delete-description{
+
+    margin-top:10px;
+
+    opacity:.85;
+
+    font-size:15px;
+
+}
+
+
+
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+
+.delete-body{
+
+    padding:40px;
+
+}
+
+
+
+/* =====================================================
+   INFORMAÇÕES
+===================================================== */
+
+
+.details-card{
+
+    background:#f8fafc;
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:25px;
+
+}
+
+
+
+.detail-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    padding:15px 0;
+
+    border-bottom:1px solid #e5e7eb;
+
+}
+
+
+
+.detail-row:last-child{
+
+    border-bottom:none;
+
+}
+
+
+
+.detail-label{
+
+    color:var(--gray);
+
+    font-weight:700;
+
+    font-size:14px;
+
+}
+
+
+
+.detail-value{
+
+    color:var(--dark);
+
+    font-weight:800;
+
+    text-align:right;
+
+}
+
+
+
+.money{
+
+    color:#dc2626;
+
+    font-size:18px;
+
+}
+
+
+
+
+
+.badge-user{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    padding:7px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+}
+
+
+
+
+
+/* =====================================================
+   ALERTA
+===================================================== */
+
+
+.alert-danger-custom{
+
+    margin-top:30px;
+
+    background:#fef2f2;
+
+    border-left:
+
+    5px solid #dc2626;
+
+    padding:22px;
+
+    border-radius:18px;
+
+}
+
+
+
+.alert-title{
+
+    color:#991b1b;
+
+    font-weight:900;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.alert-text{
+
+    color:#7f1d1d;
+
+    margin:0;
+
+    font-size:14px;
+
+}
+
+
+
+
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+
+
+.btn-delete{
+
+    border-radius:14px;
+
+    padding:14px;
+
+    font-weight:800;
+
+    transition:.25s;
+
+}
+
+
+
+.btn-delete:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.btn-cancel{
+
+    border-radius:14px;
+
+    padding:14px;
+
+    font-weight:800;
+
+}
+
+
+
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+
+@media(max-width:768px){
+
+
+.delete-body{
+
+    padding:25px;
+
+}
+
+
+
+.delete-title{
+
+    font-size:25px;
+
+}
+
+
+
+.detail-row{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+
+
+.detail-value{
+
+    text-align:left;
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+<div class="delete-wrapper">
+
+
+
+<div class="delete-card">
+
+
+
+
+
+<!-- HEADER -->
+
+
+<div class="delete-header">
+
+
+
+<div class="delete-icon">
+
+<i class="bi bi-trash3-fill"></i>
+
+</div>
+
+
+
+<div class="delete-title">
+
+Excluir Despesa
+
+</div>
+
+
+
+<div class="delete-description">
+
+Confirme se pretende remover este lançamento financeiro.
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- BODY -->
+
+
+<div class="delete-body">
+
+
+
+
+
+<div class="details-card">
+
+
+
+
+
+<div class="detail-row">
+
+
+<span class="detail-label">
+
+Descrição
+
+</span>
+
+
+<span class="detail-value">
+
+{{ despesa.descricao }}
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="detail-row">
+
+
+<span class="detail-label">
+
+Valor
+
+</span>
+
+
+<span class="detail-value money">
+
+{{ despesa.valor|floatformat:2 }} Kz
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="detail-row">
+
+
+<span class="detail-label">
+
+Data do registo
+
+</span>
+
+
+<span class="detail-value">
+
+
+{% if despesa.data %}
+
+{{ despesa.data|date:"d/m/Y" }}
+
+{% else %}
+
+Não informada
+
+{% endif %}
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+{% if despesa.criado_por %}
+
+
+<div class="detail-row">
+
+
+<span class="detail-label">
+
+Responsável
+
+</span>
+
+
+<span class="badge-user">
+
+
+<i class="bi bi-person me-1"></i>
+
+
+{{ despesa.criado_por.get_full_name|default:despesa.criado_por.username }}
+
+
+</span>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="alert-danger-custom">
+
+
+
+<div class="alert-title">
+
+Atenção: operação irreversível
+
+</div>
+
+
+
+<p class="alert-text">
+
+Ao confirmar, esta despesa será eliminada definitivamente do sistema financeiro da escola. Esta ação não poderá ser anulada posteriormente.
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<form method="POST" class="mt-4">
+
+
+{% csrf_token %}
+
+
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<div class="col-md-6">
+
+
+<a href="{% url 'lista_despesas' %}"
+
+class="btn btn-outline-secondary btn-cancel w-100">
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+Cancelar
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<button
+
+type="submit"
+
+class="btn btn-danger btn-delete w-100">
+
+
+<i class="bi bi-trash3-fill me-2"></i>
+
+
+Confirmar Exclusão
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</form>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}

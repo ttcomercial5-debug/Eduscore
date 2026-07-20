@@ -11392,249 +11392,6 @@ def recibo_pagamento(request):
 # CONFIGURAÇÃO FINANCEIRA
 # ==========================================================
 
-from decimal import Decimal, InvalidOperation
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.shortcuts import redirect, render
-@login_required
-def configuracao_financeira(request):
-
-    # ==========================================================
-    # PERMISSÃO
-    # ==========================================================
-
-    if getattr(request.user, "role", None) != "SECRETARIA":
-        return redirect("dashboard_secretaria")
-
-    escola = request.user.escola
-
-    # ==========================================================
-    # CONFIGURAÇÃO
-    # ==========================================================
-
-    config, created = ConfiguracaoFinanceira.objects.get_or_create(
-        escola=escola
-    )
-
-    # ==========================================================
-    # FUNÇÃO AUXILIAR
-    # ==========================================================
-
-    def converter_decimal(valor):
-
-        if not valor:
-            return Decimal("0.00")
-
-        valor = valor.replace(",", ".")
-
-        return Decimal(valor)
-
-    # ==========================================================
-    # SALVAR CONFIGURAÇÃO
-    # ==========================================================
-
-    if request.method == "POST":
-
-        try:
-
-            with transaction.atomic():
-
-                # -------------------------------
-                # MENSALIDADES POR CLASSE
-                # -------------------------------
-
-
-
-                valor_mensalidade_4 = converter_decimal(
-                    request.POST.get("valor_mensalidade_4")
-                )
-
-                valor_mensalidade_5 = converter_decimal(
-                    request.POST.get("valor_mensalidade_5")
-                )
-
-                valor_mensalidade_6 = converter_decimal(
-                    request.POST.get("valor_mensalidade_6")
-                )
-
-                valor_mensalidade_7 = converter_decimal(
-                    request.POST.get("valor_mensalidade_7")
-                )
-
-                valor_mensalidade_8 = converter_decimal(
-                    request.POST.get("valor_mensalidade_8")
-                )
-
-                valor_mensalidade_9 = converter_decimal(
-                    request.POST.get("valor_mensalidade_9")
-                )
-
-                valor_mensalidade_10 = converter_decimal(
-                    request.POST.get("valor_mensalidade_10")
-                )
-
-                valor_mensalidade_11 = converter_decimal(
-                    request.POST.get("valor_mensalidade_11")
-                )
-
-                valor_mensalidade_12 = converter_decimal(
-                    request.POST.get("valor_mensalidade_12")
-                )
-
-                valor_mensalidade_13 = converter_decimal(
-                    request.POST.get("valor_mensalidade_13")
-                )
-
-                # -------------------------------
-                # OUTROS VALORES
-                # -------------------------------
-
-                valor_matricula = converter_decimal(
-                    request.POST.get("valor_matricula")
-                )
-
-                valor_declaracao = converter_decimal(
-                    request.POST.get("valor_declaracao")
-                )
-
-                valor_exame = converter_decimal(
-                    request.POST.get("valor_exame")
-                )
-
-                valor_multa_mensalidade = converter_decimal(
-                    request.POST.get("valor_multa_mensalidade")
-                )
-
-                valor_multa_matricula = converter_decimal(
-                    request.POST.get("valor_multa_matricula")
-                )
-
-        except (InvalidOperation, TypeError):
-
-            messages.error(
-                request,
-                "Algum valor informado é inválido."
-            )
-
-            return redirect("configuracao_financeira")
-
-        # ==========================================================
-        # VALIDAÇÕES
-        # ==========================================================
-
-        campos = [
-
-
-            valor_mensalidade_4,
-            valor_mensalidade_5,
-            valor_mensalidade_6,
-            valor_mensalidade_7,
-            valor_mensalidade_8,
-            valor_mensalidade_9,
-            valor_mensalidade_10,
-            valor_mensalidade_11,
-            valor_mensalidade_12,
-            valor_mensalidade_13,
-
-            valor_matricula,
-            valor_declaracao,
-            valor_exame,
-            valor_multa_mensalidade,
-            valor_multa_matricula,
-
-        ]
-
-        if any(valor < 0 for valor in campos):
-
-            messages.error(
-                request,
-                "Nenhum valor pode ser negativo."
-            )
-
-            return redirect("configuracao_financeira")
-
-        # ==========================================================
-        # SALVAR
-        # ==========================================================
-
-
-        config.valor_mensalidade_4 = valor_mensalidade_4
-        config.valor_mensalidade_5 = valor_mensalidade_5
-        config.valor_mensalidade_6 = valor_mensalidade_6
-        config.valor_mensalidade_7 = valor_mensalidade_7
-        config.valor_mensalidade_8 = valor_mensalidade_8
-        config.valor_mensalidade_9 = valor_mensalidade_9
-        config.valor_mensalidade_10 = valor_mensalidade_10
-        config.valor_mensalidade_11 = valor_mensalidade_11
-        config.valor_mensalidade_12 = valor_mensalidade_12
-        config.valor_mensalidade_13 = valor_mensalidade_13
-
-        config.valor_matricula = valor_matricula
-        config.valor_declaracao = valor_declaracao
-        config.valor_exame = valor_exame
-        config.valor_multa_mensalidade = valor_multa_mensalidade
-        config.valor_multa_matricula = valor_multa_matricula
-
-        config.save()
-
-        # ==========================================================
-        # ATUALIZAR MENSALIDADES SEM VALOR
-        # ==========================================================
-
-        mensalidades_sem_valor = Mensalidade.objects.filter(
-            aluno__escola=escola,
-            valor__lte=0
-        ).select_related("aluno__turma")
-
-        mensalidades_atualizadas = 0
-
-        for mensalidade in mensalidades_sem_valor:
-
-            classe = mensalidade.aluno.turma.classe
-
-            mensalidade.valor = config.obter_valor_mensalidade(classe)
-
-            mensalidade.save(update_fields=["valor"])
-
-            mensalidade.atualizar_status()
-
-            mensalidades_atualizadas += 1
-
-        # ==========================================================
-        # SUCESSO
-        # ==========================================================
-
-        messages.success(
-            request,
-            f"""
-Configuração financeira salva com sucesso.
-
-Mensalidades por classe atualizadas.
-Valor da matrícula: {valor_matricula} Kz
-Valor da declaração: {valor_declaracao} Kz
-Valor do exame: {valor_exame} Kz
-
-Mensalidades corrigidas: {mensalidades_atualizadas}
-"""
-        )
-
-        return redirect("configuracao_financeira")
-
-    # ==========================================================
-    # TEMPLATE
-    # ==========================================================
-
-    context = {
-        "config": config
-    }
-
-    return render(
-        request,
-        "configuracao_financeira.html",
-        context
-    )
 
 
 
@@ -13261,179 +13018,617 @@ def excluir_plano(request, plano_id):
 #   FINANCEIRO
 #===========================================================
 
-
 from decimal import Decimal
 import json
+from datetime import datetime, date
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Count, Avg, Max
 from django.db.models.functions import TruncMonth
 from django.shortcuts import redirect, render
 
+
 from .services import dados_financeiros_da_secretaria
+
 
 
 @login_required
 def dashboard_financeiro(request):
     """
-    Dashboard do Financeiro.
-    Apresenta indicadores financeiros, gráfico mensal e últimos movimentos.
+    Dashboard Financeiro Eduscore.
+
+    Apresenta:
+    - Entradas financeiras
+    - Despesas
+    - Saldo
+    - Gráfico mensal
+    - Últimos movimentos
+    - Indicadores financeiros
     """
 
-    if getattr(request.user, "role", None) != "FINANCEIRO":
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    if request.user.role not in [
+        "FINANCEIRO",
+        "DIRETOR"
+    ]:
         return redirect("dashboard")
 
-    escola = getattr(request.user, "escola", None)
 
-    if escola is None:
-        return redirect("dashboard")
+
+    escola = getattr(
+        request.user,
+        "escola",
+        None
+    )
+
+
+    if not escola:
+
+        return redirect(
+            "dashboard"
+        )
+
+
 
     # =====================================================
-    # CONSULTAS
+    # CONSULTAS BASE
     # =====================================================
+
 
     pagamentos = (
         Pagamento.objects
-        .filter(aluno__escola=escola)
+        .filter(
+            aluno__escola=escola
+        )
+        .select_related(
+            "aluno"
+        )
     )
+
+
 
     despesas = (
         Despesa.objects
-        .filter(escola=escola)
+        .filter(
+            escola=escola
+        )
     )
 
+
+
     # =====================================================
-    # TOTAIS
+    # INDICADORES PRINCIPAIS
     # =====================================================
+
 
     total_entradas = (
-        pagamentos.aggregate(total=Sum("valor_pago"))["total"]
+        pagamentos
+        .aggregate(
+            total=Sum(
+                "valor_pago"
+            )
+        )
+        ["total"]
         or Decimal("0.00")
     )
+
+
 
     total_saidas = (
-        despesas.aggregate(total=Sum("valor"))["total"]
+        despesas
+        .aggregate(
+            total=Sum(
+                "valor"
+            )
+        )
+        ["total"]
         or Decimal("0.00")
     )
 
-    saldo = total_entradas - total_saidas
+
+
+    saldo = (
+        total_entradas
+        -
+        total_saidas
+    )
+
+
+
+    quantidade_pagamentos = (
+        pagamentos.count()
+    )
+
+
+
+    quantidade_despesas = (
+        despesas.count()
+    )
+
+
+
+    media_despesa = (
+        despesas
+        .aggregate(
+            media=Avg("valor")
+        )
+        ["media"]
+        or Decimal("0.00")
+    )
+
+
+
+    maior_despesa = (
+        despesas
+        .aggregate(
+            maior=Max("valor")
+        )
+        ["maior"]
+        or Decimal("0.00")
+    )
+
+
+
+
 
     # =====================================================
     # ÚLTIMOS MOVIMENTOS
     # =====================================================
 
-    ultimos_pagamentos = pagamentos.order_by("-data_pagamento")[:10]
-    ultimas_despesas = despesas.order_by("-data")[:10]
+
+    ultimos_pagamentos = (
+        pagamentos
+        .order_by(
+            "-data_pagamento"
+        )
+        [:10]
+    )
+
+
+
+    ultimas_despesas = (
+        despesas
+        .order_by(
+            "-data"
+        )
+        [:10]
+    )
+
+
+
+
 
     # =====================================================
     # RELATÓRIO MENSAL
     # =====================================================
 
+
     pagamentos_mensais = (
         pagamentos
-        .annotate(mes=TruncMonth("data_pagamento"))
-        .values("mes")
-        .annotate(total=Sum("valor_pago"))
-        .order_by("mes")
+        .annotate(
+            mes=TruncMonth(
+                "data_pagamento"
+            )
+        )
+        .values(
+            "mes"
+        )
+        .annotate(
+            total=Sum(
+                "valor_pago"
+            )
+        )
+        .order_by(
+            "mes"
+        )
     )
+
+
 
     despesas_mensais = (
         despesas
-        .annotate(mes=TruncMonth("data"))
-        .values("mes")
-        .annotate(total=Sum("valor"))
-        .order_by("mes")
+        .annotate(
+            mes=TruncMonth(
+                "data"
+            )
+        )
+        .values(
+            "mes"
+        )
+        .annotate(
+            total=Sum(
+                "valor"
+            )
+        )
+        .order_by(
+            "mes"
+        )
     )
+
+
+
+
+
+    # =====================================================
+    # NORMALIZAÇÃO DOS MESES
+    # =====================================================
+
 
     dados_por_mes = {}
 
+
+
+    def normalizar_mes(valor):
+
+        """
+        Converte datetime para date.
+        Mantém date sem alterações.
+        """
+
+        if isinstance(
+            valor,
+            datetime
+        ):
+
+            return valor.date()
+
+
+        return valor
+
+
+
+
     for item in pagamentos_mensais:
-        chave = item["mes"]
-        dados_por_mes.setdefault(
-            chave,
-            {
-                "entradas": 0,
-                "despesas": 0,
-            },
+
+
+        chave = normalizar_mes(
+            item["mes"]
         )
-        dados_por_mes[chave]["entradas"] = float(item["total"])
+
+
+        if chave:
+
+
+            dados_por_mes.setdefault(
+                chave,
+                {
+                    "entradas":0,
+                    "despesas":0
+                }
+            )
+
+
+            dados_por_mes[chave][
+                "entradas"
+            ] = float(
+                item["total"]
+            )
+
+
+
 
     for item in despesas_mensais:
-        chave = item["mes"]
-        dados_por_mes.setdefault(
-            chave,
-            {
-                "entradas": 0,
-                "despesas": 0,
-            },
+
+
+        chave = normalizar_mes(
+            item["mes"]
         )
-        dados_por_mes[chave]["despesas"] = float(item["total"])
+
+
+        if chave:
+
+
+            dados_por_mes.setdefault(
+                chave,
+                {
+                    "entradas":0,
+                    "despesas":0
+                }
+            )
+
+
+            dados_por_mes[chave][
+                "despesas"
+            ] = float(
+                item["total"]
+            )
+
+
+
+
 
     meses = []
+
     entradas_chart = []
+
     despesas_chart = []
 
-    for mes in sorted(dados_por_mes.keys()):
-        meses.append(mes.strftime("%b"))
-        entradas_chart.append(dados_por_mes[mes]["entradas"])
-        despesas_chart.append(dados_por_mes[mes]["despesas"])
+
+
+    for mes in sorted(
+        dados_por_mes.keys(),
+        key=lambda x: (
+            x.year,
+            x.month
+        )
+    ):
+
+
+        meses.append(
+            mes.strftime(
+                "%b/%Y"
+            )
+        )
+
+
+        entradas_chart.append(
+            dados_por_mes[mes][
+                "entradas"
+            ]
+        )
+
+
+        despesas_chart.append(
+            dados_por_mes[mes][
+                "despesas"
+            ]
+        )
+
+
+
+
 
     # =====================================================
     # DADOS DA SECRETARIA
     # =====================================================
 
-    dados_secretaria = dados_financeiros_da_secretaria(escola)
+
+    dados_secretaria = (
+        dados_financeiros_da_secretaria(
+            escola
+        )
+    )
+
+
+
+
 
     # =====================================================
-    # CONTEXTO
+    # CONTEXTO FINAL
     # =====================================================
+
 
     context = {
-        "total_entradas": total_entradas,
-        "total_saidas": total_saidas,
-        "saldo": saldo,
 
-        "pagamentos": ultimos_pagamentos,
-        "despesas": ultimas_despesas,
 
-        "meses": json.dumps(meses),
-        "entradas_mensais": json.dumps(entradas_chart),
-        "despesas_mensais": json.dumps(despesas_chart),
+        # Financeiro
+
+        "total_entradas":
+            total_entradas,
+
+
+        "total_saidas":
+            total_saidas,
+
+
+        "saldo":
+            saldo,
+
+
+
+        # Indicadores
+
+        "quantidade_pagamentos":
+            quantidade_pagamentos,
+
+
+        "quantidade_despesas":
+            quantidade_despesas,
+
+
+        "media_despesa":
+            media_despesa,
+
+
+        "maior_despesa":
+            maior_despesa,
+
+
+
+        # Movimentos
+
+        "pagamentos":
+            ultimos_pagamentos,
+
+
+        "despesas":
+            ultimas_despesas,
+
+
+
+        # Gráfico
+
+        "meses":
+            json.dumps(
+                meses
+            ),
+
+
+        "entradas_mensais":
+            json.dumps(
+                entradas_chart
+            ),
+
+
+        "despesas_mensais":
+            json.dumps(
+                despesas_chart
+            ),
+
+
+
+        # Secretaria
 
         **dados_secretaria,
+
     }
+
+
 
     return render(
         request,
         "dashboard_financeiro.html",
-        context,
+        context
     )
+
+
+from decimal import Decimal, InvalidOperation
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import redirect, render
 
 
 @login_required
 def adicionar_despesa(request):
+
+    # ======================================================
+    # PERMISSÕES
+    # ======================================================
 
     if request.user.role not in ["FINANCEIRO", "DIRETOR"]:
         return redirect("dashboard")
 
     escola = request.user.escola
 
+    if not escola:
+        messages.error(
+            request,
+            "Nenhuma escola está associada ao utilizador."
+        )
+        return redirect("dashboard")
+
+    # ======================================================
+    # TEMPLATE BASE
+    # ======================================================
+
+    base_template = (
+        "base_financeiro.html"
+        if request.user.role == "FINANCEIRO"
+        else "base.html"
+    )
+
+    # ======================================================
+    # PROCESSAMENTO DO FORMULÁRIO
+    # ======================================================
+
     if request.method == "POST":
 
-        descricao = request.POST.get("descricao")
-        valor = request.POST.get("valor")
+        descricao = request.POST.get("descricao", "").strip()
+        valor = request.POST.get("valor", "").replace(",", ".").strip()
 
-        Despesa.objects.create(
-            escola=escola,
-            descricao=descricao,
-            valor=valor,
-            criado_por=request.user
-        )
+        # -----------------------------
+        # Validação da descrição
+        # -----------------------------
 
-        messages.success(request, "Despesa registrada com sucesso.")
-        return redirect("dashboard_financeiro")
+        if not descricao:
 
-    return render(request, "adicionar_despesa.html")
+            messages.error(
+                request,
+                "Informe a descrição da despesa."
+            )
+
+            return render(
+                request,
+                "adicionar_despesa.html",
+                {
+                    "base_template": base_template
+                }
+            )
+
+        # -----------------------------
+        # Validação do valor
+        # -----------------------------
+
+        try:
+
+            valor = Decimal(valor)
+
+        except (InvalidOperation, ValueError):
+
+            messages.error(
+                request,
+                "Informe um valor válido."
+            )
+
+            return render(
+                request,
+                "adicionar_despesa.html",
+                {
+                    "base_template": base_template
+                }
+            )
+
+        if valor <= 0:
+
+            messages.error(
+                request,
+                "O valor da despesa deve ser maior que zero."
+            )
+
+            return render(
+                request,
+                "adicionar_despesa.html",
+                {
+                    "base_template": base_template
+                }
+            )
+
+        # ======================================================
+        # GRAVAR DESPESA
+        # ======================================================
+
+        try:
+
+            with transaction.atomic():
+
+                Despesa.objects.create(
+                    escola=escola,
+                    descricao=descricao,
+                    valor=valor,
+                    criado_por=request.user
+                )
+
+            messages.success(
+                request,
+                "Despesa registada com sucesso."
+            )
+
+            return redirect("dashboard_financeiro")
+
+        except Exception:
+
+            messages.error(
+                request,
+                "Ocorreu um erro ao registar a despesa. Tente novamente."
+            )
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+
+    contexto = {
+        "base_template": base_template
+    }
+
+    return render(
+        request,
+        "adicionar_despesa.html",
+        contexto
+    )
 
 
 
@@ -13561,42 +13756,187 @@ def adicionar_entrada(request):
     return render(request, "adicionar_entrada.html")
 
 
+from decimal import Decimal
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404, redirect, render
+
+
+# ==========================================================
+# LISTA DE DESPESAS
+# ==========================================================
 @login_required
 def lista_despesas(request):
 
-    if getattr(request.user, "role", None) != "FINANCEIRO":
-        return redirect("login")
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+
+    if request.user.role not in [
+        "FINANCEIRO",
+        "DIRETOR"
+    ]:
+        return redirect("dashboard")
 
     escola = request.user.escola
 
+    if not escola:
+
+        messages.error(
+            request,
+            "Nenhuma escola está associada ao utilizador."
+        )
+
+        return redirect("dashboard")
+
+    # ======================================================
+    # TEMPLATE BASE
+    # ======================================================
+
+    base_template = (
+        "base_financeiro.html"
+        if request.user.role == "FINANCEIRO"
+        else "base.html"
+    )
+
+    # ======================================================
+    # FILTROS
+    # ======================================================
+
+    pesquisa = request.GET.get("q", "").strip()
+
     despesas = Despesa.objects.filter(
         escola=escola
-    ).order_by("-data")
+    ).select_related(
+        "criado_por"
+    )
+
+    if pesquisa:
+
+        despesas = despesas.filter(
+            descricao__icontains=pesquisa
+        )
+
+    despesas = despesas.order_by("-data")
+
+    # ======================================================
+    # ESTATÍSTICAS
+    # ======================================================
 
     total_despesas = despesas.aggregate(
         total=Sum("valor")
-    )["total"] or 0
+    )["total"] or Decimal("0.00")
 
-    context = {
+    quantidade_despesas = despesas.count()
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+
+    contexto = {
+
+        "base_template": base_template,
+
         "despesas": despesas,
-        "total_despesas": total_despesas
+
+        "total_despesas": total_despesas,
+
+        "quantidade_despesas": quantidade_despesas,
+
+        "pesquisa": pesquisa,
+
     }
 
-    return render(request, "lista_despesas.html", context)
+    return render(
+        request,
+        "lista_despesas.html",
+        contexto
+    )
 
+
+# ==========================================================
+# EXCLUIR DESPESA
+# ==========================================================
 @login_required
 def excluir_despesa(request, id):
 
-    despesa = get_object_or_404(Despesa, id=id)
+    # ======================================================
+    # PERMISSÕES
+    # ======================================================
 
-    if request.user.role != "FINANCEIRO":
-        return redirect("dashboard_financeiro")
+    if request.user.role not in [
+        "FINANCEIRO",
+        "DIRETOR"
+    ]:
+        return redirect("dashboard")
 
-    despesa.delete()
+    escola = request.user.escola
 
-    messages.success(request, "Despesa removida.")
+    if not escola:
 
-    return redirect("lista_despesas")
+        messages.error(
+            request,
+            "Nenhuma escola associada ao utilizador."
+        )
+
+        return redirect("dashboard")
+
+    # ======================================================
+    # DESPESA
+    # ======================================================
+
+    despesa = get_object_or_404(
+        Despesa,
+        id=id,
+        escola=escola
+    )
+
+    # ======================================================
+    # EXCLUSÃO
+    # ======================================================
+
+    if request.method == "POST":
+
+        descricao = despesa.descricao
+
+        despesa.delete()
+
+        messages.success(
+            request,
+            f'A despesa "{descricao}" foi removida com sucesso.'
+        )
+
+        return redirect("lista_despesas")
+
+    # ======================================================
+    # TEMPLATE BASE
+    # ======================================================
+
+    templates = {
+        "FINANCEIRO": "base_financeiro.html",
+        "DIRETOR": "base.html",
+    }
+
+    base_template = templates.get(
+        request.user.role,
+        "base.html"
+    )
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+
+    contexto = {
+        "base_template": base_template,
+        "despesa": despesa,
+    }
+
+    return render(
+        request,
+        "confirmar_exclusao_despesa.html",
+        contexto
+    )
 
 
 # ==========================================================
@@ -16087,5 +16427,945 @@ def pauta_final_ano(request):
         "pauta_final_ano.html",
 
         context,
+
+    )
+
+
+
+from decimal import Decimal, InvalidOperation
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import render, redirect
+
+from academic.models import (
+    ConfiguracaoFinanceira,
+    ConfiguracaoMensalidade,
+    Mensalidade
+)
+
+
+
+@login_required
+def configuracoes_financeiras(request):
+
+
+    # ======================================================
+    # PERMISSÕES
+    # ======================================================
+
+    roles_permitidas = [
+        "FINANCEIRO",
+        "DIRETOR",
+    ]
+
+
+    if getattr(request.user, "role", None) not in roles_permitidas:
+
+        return redirect("dashboard")
+
+
+
+    escola = request.user.escola
+
+
+
+    # ======================================================
+    # CONFIG FINANCEIRA
+    # ======================================================
+
+    config, created = ConfiguracaoFinanceira.objects.get_or_create(
+        escola=escola
+    )
+
+
+
+    # ======================================================
+    # CLASSES
+    # ======================================================
+
+    classes = [
+
+        ("Iniciação", "iniciacao"),
+
+        ("1ª Classe","1"),
+        ("2ª Classe","2"),
+        ("3ª Classe","3"),
+        ("4ª Classe","4"),
+        ("5ª Classe","5"),
+        ("6ª Classe","6"),
+        ("7ª Classe","7"),
+        ("8ª Classe","8"),
+        ("9ª Classe","9"),
+        ("10ª Classe","10"),
+        ("11ª Classe","11"),
+        ("12ª Classe","12"),
+        ("13ª Classe","13"),
+
+    ]
+
+
+
+    def decimal(valor):
+
+        if not valor:
+
+            return Decimal("0.00")
+
+
+        return Decimal(
+            valor.replace(",", ".")
+        )
+
+
+
+    # ======================================================
+    # SALVAR
+    # ======================================================
+
+    if request.method == "POST":
+
+
+        try:
+
+
+            with transaction.atomic():
+
+
+
+                # -------------------------------
+                # FINANCEIRO GERAL
+                # -------------------------------
+
+
+                config.moeda = request.POST.get(
+                    "moeda",
+                    "Kz"
+                )
+
+
+                config.dia_vencimento = int(
+                    request.POST.get(
+                        "dia_vencimento",
+                        10
+                    )
+                )
+
+
+
+                config.telefone_financeiro = request.POST.get(
+                    "telefone_financeiro"
+                )
+
+
+                config.email_financeiro = request.POST.get(
+                    "email_financeiro"
+                )
+
+
+
+                # -------------------------------
+                # MENSALIDADES POR CLASSE
+                # -------------------------------
+
+
+                for nome, codigo in classes:
+
+
+                    valor = decimal(
+                        request.POST.get(
+                            f"mensalidade_{codigo}"
+                        )
+                    )
+
+
+                    ConfiguracaoMensalidade.objects.update_or_create(
+
+                        escola=escola,
+
+                        classe=codigo,
+
+                        defaults={
+
+                            "valor":valor,
+
+                            "ativo":True
+
+                        }
+
+                    )
+
+
+
+                # -------------------------------
+                # MULTAS
+                # -------------------------------
+
+
+                config.aplicar_multa_atraso = (
+
+                    request.POST.get(
+                        "aplicar_multa_atraso"
+                    )
+                    == "on"
+
+                )
+
+
+
+                config.valor_multa_mensalidade = decimal(
+
+                    request.POST.get(
+                        "valor_multa_mensalidade"
+                    )
+
+                )
+
+
+
+                config.percentual_desconto = decimal(
+
+                    request.POST.get(
+                        "percentual_desconto"
+                    )
+
+                )
+
+
+
+                config.save()
+
+
+
+                # ==================================================
+                # ATUALIZA MENSALIDADES SEM VALOR
+                # ==================================================
+
+
+                mensalidades = Mensalidade.objects.filter(
+
+                    aluno__escola=escola,
+
+                    valor__lte=0
+
+                ).select_related(
+                    "aluno",
+                    "aluno__turma"
+                )
+
+
+
+                atualizadas = 0
+
+
+
+                for mensalidade in mensalidades:
+
+
+                    classe = (
+                        mensalidade.aluno.turma.classe
+                    )
+
+
+
+                    configuracao = (
+                        ConfiguracaoMensalidade.objects.filter(
+
+                            escola=escola,
+
+                            classe=str(classe)
+
+                        )
+                        .first()
+                    )
+
+
+
+                    if configuracao:
+
+
+                        mensalidade.valor = (
+                            configuracao.valor
+                        )
+
+
+                        mensalidade.save(
+
+                            update_fields=[
+                                "valor"
+                            ]
+
+                        )
+
+
+                        mensalidade.atualizar_status()
+
+
+                        atualizadas += 1
+
+
+
+
+
+            messages.success(
+
+                request,
+
+                f"Configurações atualizadas. {atualizadas} mensalidades sincronizadas."
+
+            )
+
+
+            return redirect(
+                "configuracoes_financeiras"
+            )
+
+
+
+        except InvalidOperation:
+
+
+            messages.error(
+
+                request,
+
+                "Valor financeiro inválido."
+
+            )
+
+
+
+    # ======================================================
+    # CONTEXTO
+    # ======================================================
+
+
+    mensalidades = []
+
+
+
+    for nome,codigo in classes:
+
+
+        configuracao = (
+            ConfiguracaoMensalidade.objects.filter(
+
+                escola=escola,
+
+                classe=codigo
+
+            )
+            .first()
+        )
+
+
+
+        mensalidades.append({
+
+            "nome":nome,
+
+            "campo":f"mensalidade_{codigo}",
+
+            "valor": configuracao.valor if configuracao else 0
+
+        })
+
+
+
+
+    context = {
+
+
+        "config":config,
+
+
+        "mensalidades":mensalidades
+
+
+    }
+
+
+
+    return render(
+
+        request,
+
+        "configuracoes_financeiras.html",
+
+        context
+
+    )
+
+
+
+@login_required
+def backup_financeiro_agora(request):
+
+    # ======================================================
+    # PERMISSÃO
+    # ======================================================
+
+    if getattr(request.user, "role", None) not in [
+        "FINANCEIRO",
+        "DIRETOR",
+        "SUPERADMIN"
+    ]:
+        return redirect("dashboard_financeiro")
+
+
+    escola = request.user.escola
+
+
+    try:
+
+        # chama o serviço de backup existente
+        from core.services.school_backup_service import (
+            backup_escola
+        )
+
+
+        resultado = backup_escola(
+            escola
+        )
+
+
+        messages.success(
+            request,
+            "Backup financeiro realizado com sucesso."
+        )
+
+
+    except Exception as e:
+
+
+        messages.error(
+            request,
+            f"Erro ao realizar backup: {e}"
+        )
+
+
+    return redirect(
+        "configuracoes_financeiras"
+    )
+
+
+
+
+from decimal import Decimal, InvalidOperation
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import render, redirect
+
+from academic.models import (
+    ConfiguracaoFinanceira,
+    ConfiguracaoMensalidade,
+    Mensalidade,
+    Curso,
+)
+
+@login_required
+def mensalidades_financeiro(request):
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+
+    # =====================================================
+    # ESCOLA ATUAL
+    # =====================================================
+
+    escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Utilizador sem escola associada."
+        )
+
+        return redirect("dashboard")
+
+
+
+
+    # =====================================================
+    # CONFIGURAÇÃO FINANCEIRA
+    # =====================================================
+
+    config, created = ConfiguracaoFinanceira.objects.get_or_create(
+
+        escola=escola
+
+    )
+
+
+
+
+    # =====================================================
+    # CLASSES OFICIAIS
+    # =====================================================
+
+    classes = [
+
+        ("0", "Iniciação"),
+
+        ("1", "1ª Classe"),
+
+        ("2", "2ª Classe"),
+
+        ("3", "3ª Classe"),
+
+        ("4", "4ª Classe"),
+
+        ("5", "5ª Classe"),
+
+        ("6", "6ª Classe"),
+
+        ("7", "7ª Classe"),
+
+        ("8", "8ª Classe"),
+
+        ("9", "9ª Classe"),
+
+        ("10", "10ª Classe"),
+
+        ("11", "11ª Classe"),
+
+        ("12", "12ª Classe"),
+
+        ("13", "13ª Classe"),
+
+    ]
+
+
+
+
+    # =====================================================
+    # CURSOS DA ESCOLA
+    # =====================================================
+
+    cursos_escola = list(
+
+        Curso.objects
+
+        .filter(
+
+            escola=escola
+
+        )
+
+        .order_by(
+
+            "nome"
+
+        )
+
+    )
+
+
+
+
+    # =====================================================
+    # CRIAR CONFIGURAÇÕES AUTOMÁTICAS
+    # SEM DUPLICAR
+    # =====================================================
+
+
+    with transaction.atomic():
+
+
+        for codigo, nome in classes:
+
+
+            numero = int(codigo)
+
+
+
+            # =============================================
+            # INICIAÇÃO ATÉ 9ª CLASSE
+            # SEM CURSO
+            # =============================================
+
+
+            if numero <= 9:
+
+
+
+                existe = (
+
+                    ConfiguracaoMensalidade.objects
+
+                    .filter(
+
+                        escola=escola,
+
+                        classe=codigo,
+
+                        curso__isnull=True
+
+                    )
+
+                    .exists()
+
+                )
+
+
+
+                if not existe:
+
+
+
+                    ConfiguracaoMensalidade.objects.create(
+
+                        escola=escola,
+
+                        classe=codigo,
+
+                        curso=None,
+
+                        valor=Decimal("0.00"),
+
+                        ordem=numero
+
+                    )
+
+
+
+
+
+            # =============================================
+            # 10ª ATÉ 13ª
+            # POR CURSO
+            # =============================================
+
+
+            else:
+
+
+
+                for curso in cursos_escola:
+
+
+
+                    existe = (
+
+                        ConfiguracaoMensalidade.objects
+
+                        .filter(
+
+                            escola=escola,
+
+                            classe=codigo,
+
+                            curso=curso
+
+                        )
+
+                        .exists()
+
+                    )
+
+
+
+                    if not existe:
+
+
+
+                        ConfiguracaoMensalidade.objects.create(
+
+                            escola=escola,
+
+                            classe=codigo,
+
+                            curso=curso,
+
+                            valor=Decimal("0.00"),
+
+                            ordem=numero
+
+                        )
+
+
+
+
+
+
+
+    # =====================================================
+    # GUARDAR ALTERAÇÕES
+    # =====================================================
+
+
+    if request.method == "POST":
+
+
+
+        alteradas = 0
+
+
+
+        with transaction.atomic():
+
+
+
+            configuracoes = (
+
+                ConfiguracaoMensalidade.objects
+
+                .filter(
+
+                    escola=escola
+
+                )
+
+            )
+
+
+
+            for item in configuracoes:
+
+
+
+                campo = (
+
+                    f"mensalidade_{item.id}"
+
+                )
+
+
+
+                valor_recebido = request.POST.get(
+
+                    campo,
+
+                    "0"
+
+                )
+
+
+
+                valor_recebido = (
+
+                    valor_recebido
+
+                    .replace(
+
+                        ".",
+
+                        ""
+
+                    )
+
+                    .replace(
+
+                        ",",
+
+                        "."
+
+                    )
+
+                )
+
+
+
+                try:
+
+
+                    valor_decimal = Decimal(
+
+                        valor_recebido
+
+                    )
+
+
+
+                except:
+
+
+
+                    valor_decimal = Decimal(
+
+                        "0.00"
+
+                    )
+
+
+
+
+
+                if item.valor != valor_decimal:
+
+
+
+                    item.valor = valor_decimal
+
+
+
+                    item.save(
+
+                        update_fields=[
+
+                            "valor",
+
+                            "atualizado_em"
+
+                        ]
+
+                    )
+
+
+
+                    alteradas += 1
+
+
+
+
+
+
+
+        messages.success(
+
+            request,
+
+            f"{alteradas} configuração(ões) atualizada(s) com sucesso."
+
+        )
+
+
+
+        return redirect(
+
+            "mensalidades_financeiro"
+
+        )
+
+
+
+
+
+
+
+    # =====================================================
+    # LISTAGEM FINAL
+    # =====================================================
+
+
+    mensalidades = (
+
+        ConfiguracaoMensalidade.objects
+
+        .filter(
+
+            escola=escola
+
+        )
+
+        .select_related(
+
+            "curso"
+
+        )
+
+        .order_by(
+
+            "ordem",
+
+            "classe",
+
+            "curso__nome"
+
+        )
+
+    )
+
+
+
+
+
+
+    cursos = (
+
+        Curso.objects
+
+        .filter(
+
+            escola=escola
+
+        )
+
+        .order_by(
+
+            "nome"
+
+        )
+
+    )
+
+
+
+
+
+
+
+    context = {
+
+
+
+        "config":
+
+            config,
+
+
+
+        "mensalidades":
+
+            mensalidades,
+
+
+
+        "cursos":
+
+            cursos,
+
+
+
+    }
+
+
+
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/mensalidades_config.html",
+
+        context
 
     )

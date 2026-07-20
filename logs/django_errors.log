@@ -3129,3 +3129,483 @@ Traceback (most recent call last):
     raise FieldError(
 django.core.exceptions.FieldError: Cannot resolve keyword 'escola' into field. Choices are: aluno, aluno_id, ano_letivo, ano_letivo_id, aprovado, classe, criado_em, curso, curso_id, id, matricula, media_final, numero_na_turma, total_alunos_turma, turma, turma_id
 "GET /alunos/?buscar=&ano=10&turma= HTTP/1.1" 500 121861
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13376, in dashboard_financeiro
+    for mes in sorted(dados_por_mes.keys()):
+TypeError: can't compare datetime.datetime to datetime.date
+"GET /financeiro/ HTTP/1.1" 500 76370
+Internal Server Error: /financeiro/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 13376, in dashboard_financeiro
+    chave = chave.date()
+AttributeError: 'datetime.date' object has no attribute 'date'
+"GET /financeiro/ HTTP/1.1" 500 75662
+Internal Server Error: /financeiro/despesas/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 14094, in lista_despesas
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1077, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 750, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaultfilters.py", line 784, in date
+    return formats.date_format(value, arg)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\formats.py", line 155, in date_format
+    return dateformat.format(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\dateformat.py", line 325, in format
+    return df.format(format_string)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\dateformat.py", line 45, in format
+    raise TypeError(
+TypeError: The format for date objects may not contain time-related format specifiers (found 'H').
+"GET /financeiro/despesas/ HTTP/1.1" 500 195718
+Internal Server Error: /financeiro/despesa/excluir/1/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 14178, in excluir_despesa
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1077, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 750, in resolve
+    new_obj = func(obj, *arg_vals)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaultfilters.py", line 784, in date
+    return formats.date_format(value, arg)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\formats.py", line 155, in date_format
+    return dateformat.format(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\dateformat.py", line 325, in format
+    return df.format(format_string)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\utils\dateformat.py", line 45, in format
+    raise TypeError(
+TypeError: The format for date objects may not contain time-related format specifiers (found 'H').
+"GET /financeiro/despesa/excluir/1/ HTTP/1.1" 500 179521
+Internal Server Error: /financeiro/configuracoes-financeiras/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16799, in configuracoes_financeiras
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 490, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 488, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 610, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 706, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 616, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'getattr'
+"GET /financeiro/configuracoes-financeiras/ HTTP/1.1" 500 262321
+Internal Server Error: /financeiro/configuracoes-financeiras/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16799, in configuracoes_financeiras
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 490, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 488, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 610, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 706, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 616, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'getattr'
+"GET /financeiro/configuracoes-financeiras/ HTTP/1.1" 500 262321
+Internal Server Error: /financeiro/configuracoes-financeiras/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16799, in configuracoes_financeiras
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 862, in do_for
+    nodelist_loop = parser.parse(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 490, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 488, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 610, in compile_filter
+    return FilterExpression(token, self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 706, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 616, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'getattr'
+"GET /financeiro/configuracoes-financeiras/ HTTP/1.1" 500 262321
+Internal Server Error: /financeiro/configuracoes-financeiras/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16884, in configuracoes_financeiras
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'backup_financeiro_agora' not found. 'backup_financeiro_agora' is not a valid view function or pattern name.
+"GET /financeiro/configuracoes-financeiras/ HTTP/1.1" 500 221207
+Internal Server Error: /secretaria/dashboard
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 6643, in dashboard_secretaria
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'configuracao_financeira' not found. 'configuracao_financeira' is not a valid view function or pattern name.
+"GET /secretaria/dashboard HTTP/1.1" 500 163053
+Internal Server Error: /financeiro/configuracoes-financeiras/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 16798, in configuracoes_financeiras
+    "valor": config.valor_mensalidade_iniciacao
+AttributeError: 'ConfiguracaoFinanceira' object has no attribute 'valor_mensalidade_iniciacao'
+"GET /financeiro/configuracoes-financeiras/ HTTP/1.1" 500 73404
+Internal Server Error: /financeiro-mensalidades/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 17399, in mensalidades_financeiro
+    return render(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 155, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 197, in compile_nodelist
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 519, in parse
+    raise self.error(token, e)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 517, in parse
+    compiled_result = compile_func(self, token)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 524, in parse
+    self.unclosed_block_tag(parse_until)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\template\base.py", line 591, in unclosed_block_tag
+    raise self.error(token, msg)
+django.template.exceptions.TemplateSyntaxError: Unclosed tag on line 1676: 'block'. Looking for one of: endblock.
+"GET /financeiro-mensalidades/ HTTP/1.1" 500 191867

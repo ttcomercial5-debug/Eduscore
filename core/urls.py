@@ -143,7 +143,7 @@ urlpatterns = [
     path("matricula/", views.criar_matricula, name="criar_matricula"),
     path("mensalidades/", views.lista_mensalidades, name="lista_mensalidades"),
     path("mensalidades/nova/", views.nova_mensalidade, name="nova_mensalidade"),
-    path("secretaria/configuracao-financeira/", views.configuracao_financeira, name="configuracao_financeira"),
+
     path('secretaria/relatorio-mensalidades/', views.relatorio_mensalidades, name='relatorio_mensalidades'),
     path("secretaria/relatorio-turma-pdf/", views.exportar_estado_turma_pdf, name="exportar_estado_turma_pdf"),
     path("recibo/<int:pagamento_id>/", views.gerar_recibo, name="gerar_recibo"),
@@ -155,13 +155,17 @@ urlpatterns = [
 #FINANCEIRO
 #=============================================================
     path("financeiro/", views.dashboard_financeiro, name="dashboard_financeiro"),
+    path("financeiro/configuracoes-financeiras/", views.configuracoes_financeiras, name="configuracoes_financeiras"),
     path("pagamento/novo/", views.registrar_pagamento, name="registrar_pagamento"),
+    path("financeiro-mensalidades/", views.mensalidades_financeiro, name="mensalidades_financeiro"),
+    path("backup-financeiro-agora/", views.backup_financeiro_agora, name="backup_financeiro_agora"),
     path("recibo/<int:pagamento_id>/", views.recibo_pagamento, name="recibo_pagamento"),
     path("caixa/", views.caixa_diario, name="caixa_diario"),
     path("despesa/nova/", views.adicionar_despesa, name="adicionar_despesa"),
     path("financeiro/entradas/", views.entradas_financeiro, name="entradas_financeiro"),
     path("financeiro/entradas/nova/", views.adicionar_entrada, name="adicionar_entrada"),
     path("financeiro/despesas/", views.lista_despesas, name="lista_despesas"),
+    path("despesas/<int:id>/excluir/", views.excluir_despesa, name="excluir_despesa",),
     path("financeiro/despesa/excluir/<int:id>/", views.excluir_despesa, name="excluir_despesa"),
 
 
