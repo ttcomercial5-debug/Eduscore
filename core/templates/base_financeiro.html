@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1">
+content="width=device-width, initial-scale=1">
 
 
 <title>
@@ -16,7 +16,6 @@ Painel Financeiro | EdusCel
 {% endblock %}
 
 </title>
-
 
 
 <!-- =====================================================
@@ -30,7 +29,7 @@ rel="stylesheet">
 
 
 <!-- =====================================================
-     ICONS
+     BOOTSTRAP ICONS
 ===================================================== -->
 
 <link
@@ -40,7 +39,7 @@ rel="stylesheet">
 
 
 <!-- =====================================================
-     FONT
+     FONTE
 ===================================================== -->
 
 <link
@@ -55,33 +54,45 @@ rel="stylesheet">
 
 
 /* =====================================================
-   VARIÁVEIS EDUSCEL
+   EDUSCEL FINANCEIRO PREMIUM
 ===================================================== */
 
 
 :root{
 
+
     --primary:#2563eb;
 
-    --primary-light:#3b82f6;
+    --primary-dark:#1d4ed8;
+
+    --primary-soft:#60a5fa;
+
 
     --dark:#0f172a;
 
-    --dark-soft:#1e293b;
+    --dark-2:#1e293b;
+
 
     --background:#f8fafc;
 
+
     --white:#ffffff;
+
 
     --text:#334155;
 
+
     --muted:#64748b;
+
 
     --border:#e2e8f0;
 
+
     --success:#16a34a;
 
+
     --danger:#dc2626;
+
 
 }
 
@@ -96,29 +107,45 @@ rel="stylesheet">
 
 *{
 
+
     margin:0;
+
 
     padding:0;
 
+
     box-sizing:border-box;
+
 
 }
 
 
 
+html{
+
+
+    scroll-behavior:smooth;
+
+
+}
+
+
+
+
 body{
 
-    font-family:
-    'Inter',
-    sans-serif;
 
-    background:
-    var(--background);
+    font-family:'Inter',sans-serif;
 
-    color:
-    var(--text);
+
+    background:var(--background);
+
+
+    color:var(--text);
+
 
     overflow-x:hidden;
+
 
 }
 
@@ -126,9 +153,46 @@ body{
 
 a{
 
+
     text-decoration:none;
 
+
 }
+
+
+
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+
+::-webkit-scrollbar{
+
+
+    width:7px;
+
+
+}
+
+
+
+::-webkit-scrollbar-thumb{
+
+
+    background:#cbd5e1;
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
 
 
 
@@ -142,12 +206,14 @@ a{
 
     position:fixed;
 
+
     top:0;
+
 
     left:0;
 
 
-    width:280px;
+    width:265px;
 
 
     height:100vh;
@@ -162,14 +228,14 @@ a{
 
         #020617,
 
-        #0f172a 50%,
+        #0f172a 55%,
 
-        #1e293b
+        #172554
 
     );
 
 
-    padding:28px 18px;
+    padding:22px 15px;
 
 
     z-index:2000;
@@ -181,7 +247,7 @@ a{
     box-shadow:
 
 
-    10px 0 40px rgba(0,0,0,.25);
+    10px 0 35px rgba(15,23,42,.25);
 
 
     transition:.35s ease;
@@ -193,7 +259,9 @@ a{
 
 .sidebar::-webkit-scrollbar{
 
-    width:6px;
+
+    width:5px;
+
 
 }
 
@@ -201,9 +269,12 @@ a{
 
 .sidebar::-webkit-scrollbar-thumb{
 
+
     background:#334155;
 
+
     border-radius:20px;
+
 
 }
 
@@ -211,8 +282,11 @@ a{
 
 
 
+
+
+
 /* =====================================================
-   LOGO
+   LOGO EDUSCEL
 ===================================================== */
 
 
@@ -221,27 +295,40 @@ a{
 
     display:flex;
 
+
     align-items:center;
+
 
     gap:12px;
 
 
-    padding:0 12px;
+    padding:12px;
 
 
-    margin-bottom:40px;
+    margin-bottom:28px;
+
+
+    background:
+
+
+    rgba(255,255,255,.04);
+
+
+    border-radius:18px;
 
 
 }
 
 
 
+
 .logo-icon{
 
 
-    width:48px;
+    width:46px;
 
-    height:48px;
+
+    height:46px;
 
 
     border-radius:15px;
@@ -249,7 +336,9 @@ a{
 
     display:flex;
 
+
     align-items:center;
+
 
     justify-content:center;
 
@@ -263,7 +352,7 @@ a{
 
         #2563eb,
 
-        #60a5fa
+        #38bdf8
 
     );
 
@@ -271,7 +360,7 @@ a{
     color:white;
 
 
-    font-size:22px;
+    font-size:21px;
 
 
     box-shadow:
@@ -284,16 +373,20 @@ a{
 
 
 
+
 .logo-text{
 
 
-    font-size:25px;
+    color:white;
+
+
+    font-size:24px;
+
 
     font-weight:900;
 
-    color:white;
 
-    letter-spacing:-.5px;
+    letter-spacing:-1px;
 
 
 }
@@ -302,9 +395,14 @@ a{
 
 .logo-text span{
 
+
     color:#60a5fa;
 
+
 }
+
+
+
 
 
 
@@ -317,9 +415,15 @@ a{
 
 .menu{
 
+
     list-style:none;
 
+
     padding:0;
+
+
+    margin:0;
+
 
 }
 
@@ -327,7 +431,9 @@ a{
 
 .menu-item{
 
-    margin-bottom:8px;
+
+    margin-bottom:7px;
+
 
 }
 
@@ -343,13 +449,13 @@ a{
     align-items:center;
 
 
-    gap:14px;
+    gap:13px;
 
 
-    padding:14px 16px;
+    padding:13px 14px;
 
 
-    border-radius:15px;
+    border-radius:14px;
 
 
     color:#cbd5e1;
@@ -361,7 +467,7 @@ a{
     font-weight:600;
 
 
-    transition:.25s;
+    transition:.25s ease;
 
 
 }
@@ -371,7 +477,14 @@ a{
 .menu-link i{
 
 
-    font-size:19px;
+    width:22px;
+
+
+    font-size:18px;
+
+
+    text-align:center;
+
 
 }
 
@@ -382,13 +495,14 @@ a{
 
     background:
 
+
     rgba(255,255,255,.08);
 
 
     color:white;
 
 
-    transform:translateX(5px);
+    transform:translateX(4px);
 
 
 }
@@ -419,7 +533,7 @@ a{
     box-shadow:
 
 
-    0 12px 30px rgba(37,99,235,.35);
+    0 10px 25px rgba(37,99,235,.35);
 
 
 }
@@ -429,7 +543,7 @@ a{
 
 
 /* =====================================================
-   SUBMENU CONFIGURAÇÕES
+   SUBMENU
 ===================================================== */
 
 
@@ -439,15 +553,20 @@ a{
     margin-top:8px;
 
 
-    padding-left:15px;
+    margin-left:15px;
+
+
+    padding-left:12px;
 
 
     border-left:
 
-    2px solid rgba(255,255,255,.1);
+
+    2px solid rgba(255,255,255,.12);
 
 
 }
+
 
 
 
@@ -457,26 +576,29 @@ a{
     font-size:13px;
 
 
-    padding:11px 14px;
+    padding:11px 12px;
 
 
 }
+
 
 
 
 
 
 /* =====================================================
-   SAIR
+   LOGOUT
 ===================================================== */
 
 
 .logout{
 
 
-    margin-top:35px;
+    margin-top:30px;
+
 
 }
+
 
 
 
@@ -495,6 +617,7 @@ a{
 
     background:
 
+
     rgba(220,38,38,.15);
 
 
@@ -504,25 +627,24 @@ a{
 }
 
 
-
-
-
-
 /* =====================================================
-   MAIN
+   ÁREA PRINCIPAL
 ===================================================== */
 
 
 .main{
 
 
-    margin-left:280px;
+    margin-left:265px;
 
 
     min-height:100vh;
 
 
-    padding:30px 40px;
+    padding:25px 35px;
+
+
+    transition:.3s ease;
 
 
 }
@@ -534,7 +656,7 @@ a{
 
 
 /* =====================================================
-   TOPBAR
+   TOPBAR FINANCEIRO PREMIUM
 ===================================================== */
 
 
@@ -550,15 +672,18 @@ a{
 
         #0f172a,
 
-        #1e293b
+        #1e3a8a
 
     );
 
 
-    padding:25px 30px;
-
-
     border-radius:24px;
+
+
+    padding:22px 28px;
+
+
+    color:white;
 
 
     display:flex;
@@ -570,16 +695,13 @@ a{
     align-items:center;
 
 
-    color:white;
-
-
-    margin-bottom:30px;
+    margin-bottom:25px;
 
 
     box-shadow:
 
 
-    0 20px 45px rgba(15,23,42,.18);
+    0 18px 40px rgba(15,23,42,.18);
 
 
 }
@@ -587,33 +709,154 @@ a{
 
 
 
-.topbar h3{
+.topbar-left{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:8px;
+
+
+}
+
+
+
+.topbar-title{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+}
+
+
+
+.topbar-title h3{
 
 
     margin:0;
 
 
+    font-size:23px;
+
+
+    font-weight:900;
+
+
+    letter-spacing:-.5px;
+
+
+}
+
+
+
+
+.topbar-title i{
+
+
+    color:#38bdf8;
+
+
     font-size:25px;
 
 
-    font-weight:800;
-
-
 }
 
 
 
-.topbar small{
-
-
-    color:#cbd5e1;
-
-
-}
 
 
 /* =====================================================
-   PERFIL DO UTILIZADOR
+   ESCOLA EM DESTAQUE
+===================================================== */
+
+
+.school-box{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    width:max-content;
+
+
+    max-width:100%;
+
+
+    padding:8px 15px;
+
+
+    border-radius:50px;
+
+
+    background:
+
+
+    rgba(255,255,255,.12);
+
+
+    backdrop-filter:blur(10px);
+
+
+    border:
+
+
+    1px solid rgba(255,255,255,.12);
+
+
+}
+
+
+
+.school-box i{
+
+
+    color:#38bdf8;
+
+
+    font-size:16px;
+
+
+}
+
+
+
+.school-box span{
+
+
+    font-size:13px;
+
+
+    font-weight:700;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   PERFIL FINANCEIRO
 ===================================================== */
 
 
@@ -626,20 +869,21 @@ a{
     align-items:center;
 
 
-    gap:14px;
+    gap:13px;
 
 
 }
 
 
 
+
 .avatar{
 
 
-    width:52px;
+    width:50px;
 
 
-    height:52px;
+    height:50px;
 
 
     border-radius:50%;
@@ -652,9 +896,9 @@ a{
 
         135deg,
 
-        #2563eb,
+        #38bdf8,
 
-        #60a5fa
+        #2563eb
 
     );
 
@@ -662,25 +906,35 @@ a{
     display:flex;
 
 
-    justify-content:center;
-
-
     align-items:center;
+
+
+    justify-content:center;
 
 
     color:white;
 
 
-    font-size:20px;
+    font-size:19px;
 
 
-    font-weight:800;
+    font-weight:900;
 
 
     box-shadow:
 
 
     0 10px 25px rgba(37,99,235,.35);
+
+
+}
+
+
+
+.user-info{
+
+
+    line-height:1.3;
 
 
 }
@@ -696,7 +950,10 @@ a{
     color:white;
 
 
-    font-size:15px;
+    font-size:14px;
+
+
+    font-weight:800;
 
 
 }
@@ -730,6 +987,7 @@ a{
 
     animation:
 
+
     fadeIn .35s ease;
 
 
@@ -740,30 +998,28 @@ a{
 @keyframes fadeIn{
 
 
-    from{
+from{
 
 
-        opacity:0;
-
-        transform:
-
-        translateY(10px);
+    opacity:0;
 
 
-    }
+    transform:translateY(12px);
 
 
-    to{
+}
 
 
-        opacity:1;
-
-        transform:
-
-        translateY(0);
+to{
 
 
-    }
+    opacity:1;
+
+
+    transform:translateY(0);
+
+
+}
 
 
 }
@@ -773,8 +1029,9 @@ a{
 
 
 
+
 /* =====================================================
-   CARDS FINANCEIROS
+   GRID FINANCEIRO
 ===================================================== */
 
 
@@ -791,15 +1048,15 @@ a{
 
         auto-fit,
 
-        minmax(240px,1fr)
+        minmax(220px,1fr)
 
     );
 
 
-    gap:22px;
+    gap:18px;
 
 
-    margin-bottom:35px;
+    margin-bottom:25px;
 
 
 }
@@ -808,19 +1065,27 @@ a{
 
 
 
+
+
+/* =====================================================
+   CARD FINANCEIRO COMPACTO
+===================================================== */
+
+
 .finance-card{
 
 
     background:white;
 
 
-    border-radius:22px;
+    border-radius:18px;
 
 
-    padding:25px;
+    padding:20px;
 
 
     border:
+
 
     1px solid var(--border);
 
@@ -828,10 +1093,10 @@ a{
     box-shadow:
 
 
-    0 10px 30px rgba(15,23,42,.06);
+    0 8px 25px rgba(15,23,42,.06);
 
 
-    transition:.3s;
+    transition:.25s ease;
 
 
 }
@@ -841,18 +1106,17 @@ a{
 .finance-card:hover{
 
 
-    transform:
-
-    translateY(-6px);
+    transform:translateY(-4px);
 
 
     box-shadow:
 
 
-    0 20px 45px rgba(15,23,42,.12);
+    0 15px 35px rgba(15,23,42,.12);
 
 
 }
+
 
 
 
@@ -869,7 +1133,7 @@ a{
     align-items:center;
 
 
-    margin-bottom:20px;
+    margin-bottom:15px;
 
 
 }
@@ -877,16 +1141,17 @@ a{
 
 
 
+
 .finance-title{
 
 
-    font-size:13px;
-
-
-    font-weight:700;
+    font-size:12px;
 
 
     color:var(--muted);
+
+
+    font-weight:800;
 
 
     text-transform:uppercase;
@@ -897,10 +1162,11 @@ a{
 
 
 
+
 .finance-value{
 
 
-    font-size:30px;
+    font-size:27px;
 
 
     font-weight:900;
@@ -914,29 +1180,45 @@ a{
 
 
 
+.finance-value small{
+
+
+    font-size:13px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+
 
 .finance-icon{
 
 
-    width:55px;
+    width:48px;
 
 
-    height:55px;
+    height:48px;
 
 
-    border-radius:18px;
+    border-radius:14px;
 
 
     display:flex;
 
 
-    justify-content:center;
-
-
     align-items:center;
 
 
-    font-size:24px;
+    justify-content:center;
+
+
+    font-size:21px;
 
 
 }
@@ -1002,25 +1284,23 @@ a{
 
 
 /* =====================================================
-   TÍTULOS DE SEÇÃO
+   TÍTULOS
 ===================================================== */
 
 
 .section-title{
 
 
-    font-size:22px;
-
-
-    font-weight:800;
+    margin:30px 0 18px;
 
 
     color:var(--dark);
 
 
-    margin:
+    font-size:21px;
 
-    35px 0 20px;
+
+    font-weight:900;
 
 
 }
@@ -1030,8 +1310,10 @@ a{
 
 
 
+
+
 /* =====================================================
-   TABELAS
+   CONTAINERS
 ===================================================== */
 
 
@@ -1041,15 +1323,16 @@ a{
     background:white;
 
 
-    border-radius:22px;
+    border-radius:20px;
+
+
+    overflow:hidden;
 
 
     border:
 
+
     1px solid var(--border);
-
-
-    overflow:hidden;
 
 
     box-shadow:
@@ -1062,13 +1345,15 @@ a{
 
 
 
+
 .table-container .header{
 
 
-    padding:24px;
+    padding:20px;
 
 
     border-bottom:
+
 
     1px solid var(--border);
 
@@ -1080,10 +1365,13 @@ a{
 .table-container h5{
 
 
-    font-weight:800;
-
-
     margin:0;
+
+
+    font-size:17px;
+
+
+    font-weight:900;
 
 
 }
@@ -1103,8 +1391,18 @@ a{
 
 
 }
+/* =====================================================
+   TABELAS PREMIUM
+===================================================== */
 
 
+.table{
+
+
+    margin:0;
+
+
+}
 
 
 
@@ -1117,34 +1415,53 @@ a{
     color:white;
 
 
-    padding:15px;
+    border:none;
 
 
-    font-size:12px;
+    padding:14px;
+
+
+    font-size:11px;
 
 
     text-transform:uppercase;
 
 
-    letter-spacing:.5px;
+    letter-spacing:.6px;
 
 
 }
+
 
 
 
 .table tbody td{
 
 
-    padding:15px;
+    padding:14px;
 
 
     vertical-align:middle;
 
 
+    color:#334155;
+
+
+    border-color:#f1f5f9;
+
+
 }
 
 
+
+
+.table tbody tr{
+
+
+    transition:.2s ease;
+
+
+}
 
 
 
@@ -1160,8 +1477,94 @@ a{
 
 
 
+
+
 /* =====================================================
-   BOTÕES
+   BADGES FINANCEIROS
+===================================================== */
+
+
+.badge-success{
+
+
+    background:#dcfce7;
+
+
+    color:#166534;
+
+
+    padding:6px 12px;
+
+
+    border-radius:20px;
+
+
+    font-size:12px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+.badge-danger{
+
+
+    background:#fee2e2;
+
+
+    color:#991b1b;
+
+
+    padding:6px 12px;
+
+
+    border-radius:20px;
+
+
+    font-size:12px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+.badge-warning{
+
+
+    background:#fef3c7;
+
+
+    color:#92400e;
+
+
+    padding:6px 12px;
+
+
+    border-radius:20px;
+
+
+    font-size:12px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   BOTÃO EDUSCEL
 ===================================================== */
 
 
@@ -1191,28 +1594,30 @@ a{
     border-radius:12px;
 
 
-    padding:12px 20px;
+    padding:11px 20px;
+
+
+    font-size:14px;
 
 
     font-weight:700;
 
 
-    transition:.25s;
+    transition:.25s ease;
 
 
 }
 
 
 
+
 .btn-eduscel:hover{
 
 
-    transform:
-
-    translateY(-2px);
-
-
     color:white;
+
+
+    transform:translateY(-2px);
 
 
     box-shadow:
@@ -1222,6 +1627,48 @@ a{
 
 
 }
+
+
+
+
+
+.btn-outline-eduscel{
+
+
+    background:white;
+
+
+    color:#2563eb;
+
+
+    border:1px solid #2563eb;
+
+
+    border-radius:12px;
+
+
+    padding:10px 18px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+.btn-outline-eduscel:hover{
+
+
+    background:#2563eb;
+
+
+    color:white;
+
+
+}
+
+
 
 
 
@@ -1239,7 +1686,7 @@ a{
     border:none;
 
 
-    border-radius:18px;
+    border-radius:16px;
 
 
     padding:16px 20px;
@@ -1248,10 +1695,11 @@ a{
     box-shadow:
 
 
-    0 10px 25px rgba(0,0,0,.05);
+    0 8px 25px rgba(15,23,42,.06);
 
 
 }
+
 
 
 
@@ -1266,7 +1714,7 @@ a{
 .empty-state{
 
 
-    padding:70px 20px;
+    padding:60px 20px;
 
 
     text-align:center;
@@ -1279,13 +1727,13 @@ a{
 .empty-state i{
 
 
-    font-size:60px;
+    font-size:55px;
 
 
     color:#cbd5e1;
 
 
-    margin-bottom:20px;
+    margin-bottom:18px;
 
 
 }
@@ -1295,10 +1743,13 @@ a{
 .empty-state h5{
 
 
-    font-weight:800;
+    font-size:18px;
 
 
-    color:var(--dark);
+    font-weight:900;
+
+
+    color:#0f172a;
 
 
 }
@@ -1308,10 +1759,14 @@ a{
 .empty-state p{
 
 
-    color:var(--muted);
+    color:#64748b;
+
+
+    font-size:14px;
 
 
 }
+
 
 
 
@@ -1360,7 +1815,7 @@ a{
     box-shadow:
 
 
-    0 5px 20px rgba(0,0,0,.08);
+    0 5px 20px rgba(15,23,42,.12);
 
 
 }
@@ -1370,103 +1825,216 @@ a{
 .mobile-header button{
 
 
-    border:none;
-
-
     background:none;
 
 
-    font-size:28px;
+    border:none;
+
+
+    font-size:27px;
+
+
+    color:#0f172a;
 
 
 }
 
 
+
+.mobile-header strong{
+
+
+    font-size:16px;
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+}
+
+
+
+
+
+
+
+
 /* =====================================================
-   RESPONSIVIDADE
+   OVERLAY MOBILE
 ===================================================== */
 
 
-@media(max-width:992px){
+.sidebar-overlay{
 
 
-    .mobile-header{
+    display:none;
 
 
-        display:flex;
+    position:fixed;
 
 
-    }
+    inset:0;
+
+
+    background:
+
+
+    rgba(15,23,42,.55);
+
+
+    z-index:1500;
+
+
+}
 
 
 
-    .sidebar{
-
-
-        transform:
-
-        translateX(-100%);
-
-
-    }
 
 
 
-    .sidebar.show{
 
 
-        transform:
 
-        translateX(0);
+/* =====================================================
+   RESPONSIVIDADE TABLET
+===================================================== */
 
 
-    }
+@media(max-width:1100px){
 
 
 
     .main{
 
 
-        margin-left:0;
-
-
-        padding:
-
-        85px 18px 30px;
+        padding:25px;
 
 
     }
 
-
-
-    .topbar{
-
-
-        flex-direction:column;
-
-
-        align-items:flex-start;
-
-
-        gap:20px;
-
-
-    }
-
-
-
-    .user-area{
-
-
-        width:100%;
-
-
-    }
 
 
 }
 
 
+
+
+
+
+
+
+/* =====================================================
+   RESPONSIVIDADE MOBILE
+===================================================== */
+
+
+@media(max-width:992px){
+
+
+
+.mobile-header{
+
+
+    display:flex;
+
+
+}
+
+
+
+.sidebar{
+
+
+    transform:translateX(-100%);
+
+
+}
+
+
+
+.sidebar.show{
+
+
+    transform:translateX(0);
+
+
+}
+
+
+
+.main{
+
+
+    margin-left:0;
+
+
+    padding:
+
+
+    85px 18px 30px;
+
+
+}
+
+
+
+
+.topbar{
+
+
+    flex-direction:column;
+
+
+    align-items:flex-start;
+
+
+    gap:20px;
+
+
+}
+
+
+
+.user-area{
+
+
+    width:100%;
+
+
+}
+
+
+
+
+.school-box{
+
+
+    max-width:100%;
+
+
+}
+
+
+
+
+.finance-grid{
+
+
+    grid-template-columns:
+
+
+    1fr;
+
+
+}
+
+
+
+
+}
 
 
 
@@ -1475,62 +2043,64 @@ a{
 @media(max-width:576px){
 
 
-    .main{
+
+.topbar{
 
 
-        padding-left:15px;
+    padding:20px;
 
 
-        padding-right:15px;
-
-
-    }
-
-
-
-    .topbar{
-
-
-        padding:22px;
-
-
-    }
-
-
-
-    .topbar h3{
-
-
-        font-size:21px;
-
-
-    }
-
-
-
-    .finance-value{
-
-
-        font-size:25px;
-
-
-    }
-
+    border-radius:18px;
 
 
 }
 
 
 
+.topbar-title h3{
+
+
+    font-size:20px;
+
+
+}
 
 
 
+.finance-card{
 
+
+    padding:18px;
+
+
+}
+
+
+
+.finance-value{
+
+
+    font-size:24px;
+
+
+}
+
+
+
+.table-container{
+
+
+    border-radius:16px;
+
+
+}
+
+
+}
 </style>
 
 
 {% block extra_css %}
-
 {% endblock %}
 
 
@@ -1538,13 +2108,7 @@ a{
 
 
 
-
-
-
 <body>
-
-
-
 
 
 
@@ -1558,9 +2122,7 @@ a{
 
 <button onclick="openSidebar()">
 
-
 <i class="bi bi-list"></i>
-
 
 </button>
 
@@ -1579,33 +2141,14 @@ EdusCel Financeiro
 
 
 
-
-
-
 <!-- =====================================================
      OVERLAY
 ===================================================== -->
 
 
-<div
-
-id="sidebarOverlay"
-
-onclick="closeSidebar()"
-
-style="
-
-display:none;
-
-position:fixed;
-
-inset:0;
-
-background:rgba(15,23,42,.55);
-
-z-index:1500;
-
-">
+<div id="sidebarOverlay"
+class="sidebar-overlay"
+onclick="closeSidebar()">
 
 </div>
 
@@ -1616,16 +2159,12 @@ z-index:1500;
 
 
 
-
 <!-- =====================================================
-     SIDEBAR FINANCEIRO
+     SIDEBAR
 ===================================================== -->
 
 
 <aside class="sidebar" id="sidebar">
-
-
-
 
 
 
@@ -1634,9 +2173,7 @@ z-index:1500;
 
 <div class="logo-icon">
 
-
-<i class="bi bi-bank"></i>
-
+<i class="bi bi-bank2"></i>
 
 </div>
 
@@ -1644,16 +2181,12 @@ z-index:1500;
 
 <div class="logo-text">
 
-
 Edus<span>Cel</span>
 
-
 </div>
 
 
 </div>
-
-
 
 
 
@@ -1667,37 +2200,25 @@ Edus<span>Cel</span>
 
 
 
-
-
-<!-- DASHBOARD -->
-
 <li class="menu-item">
 
-
-<a
-
-href="{% url 'dashboard_financeiro' %}"
+<a href="{% url 'dashboard_financeiro' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'dashboard_financeiro' %}
-
 active
-
 {% endif %}
-
 ">
 
 
 <i class="bi bi-speedometer2"></i>
-
 
 Resumo
 
 
 </a>
 
-
 </li>
 
 
@@ -1705,38 +2226,25 @@ Resumo
 
 
 
-
-
-
-<!-- ENTRADAS -->
-
 <li class="menu-item">
 
-
-<a
-
-href="{% url 'entradas_financeiro' %}"
+<a href="{% url 'entradas_financeiro' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'entradas_financeiro' %}
-
 active
-
 {% endif %}
-
 ">
 
 
 <i class="bi bi-arrow-down-circle"></i>
-
 
 Entradas
 
 
 </a>
 
-
 </li>
 
 
@@ -1745,38 +2253,25 @@ Entradas
 
 
 
-
-
-<!-- DESPESAS -->
-
-
 <li class="menu-item">
 
-
-<a
-
-href="{% url 'lista_despesas' %}"
+<a href="{% url 'lista_despesas' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'lista_despesas' %}
-
 active
-
 {% endif %}
-
 ">
 
 
 <i class="bi bi-wallet2"></i>
-
 
 Despesas
 
 
 </a>
 
-
 </li>
 
 
@@ -1785,47 +2280,24 @@ Despesas
 
 
 
-
-
-<!-- MENSALIDADES -->
-
-
-<!-- =====================================================
-     CONFIGURAÇÃO DE MENSALIDADES
-===================================================== -->
-
 <li class="menu-item">
 
-
-
-
-<a
-
-href="{% url 'mensalidades_por_classe' %}"
+<a href="{% url 'mensalidades_por_classe' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'mensalidades_por_classe' %}
-
 active
-
 {% endif %}
-
 ">
 
 
-<i class="bi bi-cash"></i>
-
-
-<span>
+<i class="bi bi-cash-stack"></i>
 
 Preços das Mensalidades
 
-</span>
-
 
 </a>
-
 
 </li>
 
@@ -1836,30 +2308,23 @@ Preços das Mensalidades
 
 
 
-
-<!-- RECIBOS -->
-
-
 <li class="menu-item">
 
-<a
-
-href="{% url 'recibos_financeiro' %}"
+<a href="{% url 'recibos_financeiro' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'recibos_financeiro' %}
-
 active
-
 {% endif %}
-
 ">
+
 
 <i class="bi bi-file-earmark-text"></i>
 
 Recibos
 
+
 </a>
 
 </li>
@@ -1870,56 +2335,42 @@ Recibos
 
 
 
-
-
-<!-- RELATÓRIOS -->
-
-
-<!-- =====================================================
-     RELATÓRIOS FINANCEIROS
-===================================================== -->
-
-
 <li class="menu-item">
 
-
-<a
-
-href="{% url 'relatorios_financeiro' %}"
+<a href="{% url 'relatorios_financeiro' %}"
 
 class="menu-link
 
 {% if request.resolver_match.url_name == 'relatorios_financeiro' %}
-
 active
-
 {% endif %}
-
 ">
 
 
 <i class="bi bi-bar-chart-line"></i>
-
 
 Relatórios
 
 
 </a>
 
-
 </li>
 
 
 
 
-<!-- CONFIGURAÇÕES FINANCEIRAS -->
+
+
+
+
+
+<!-- CONFIGURAÇÕES -->
+
 
 <li class="menu-item">
 
 
-<a
-
-class="menu-link"
+<a class="menu-link"
 
 data-bs-toggle="collapse"
 
@@ -1929,7 +2380,7 @@ href="#configFinanceiro">
 <i class="bi bi-gear"></i>
 
 
-Configurações Financeiras
+Configurações
 
 
 <i class="bi bi-chevron-down ms-auto"></i>
@@ -1942,12 +2393,9 @@ Configurações Financeiras
 
 
 
-<div
-
-class="collapse"
+<div class="collapse"
 
 id="configFinanceiro">
-
 
 
 <div class="submenu">
@@ -1957,29 +2405,32 @@ id="configFinanceiro">
 
 
 
-<a
+<a href="{% url 'dados_financeiros' %}"
 
-href="{% url 'dados_financeiros' %}"
-
-class="menu-link
-
-{% if request.resolver_match.url_name == 'dados_financeiros' %}
-
-active
-
-{% endif %}
-
-">
+class="menu-link">
 
 
 <i class="bi bi-building"></i>
 
-
-<span>
-
 Dados Financeiros
 
-</span>
+
+</a>
+
+
+
+
+
+
+
+<a href="{% url 'mensalidades_financeiro' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-receipt"></i>
+
+Configuração Mensalidades
 
 
 </a>
@@ -1990,56 +2441,12 @@ Dados Financeiros
 
 
 
+<a href="{% url 'multas_juros_financeiro' %}"
 
-
-<a
-
-href="{% url 'mensalidades_financeiro' %}"
-
-class="menu-link
-
-{% if request.resolver_match.url_name == 'mensalidades_financeiro' %}
-
-active
-
-{% endif %}
-
-">
-
-
-<i class="bi bi-receipt-cutoff"></i>
-
-
-<span>
-Configurações de Mensalidades
-</span>
-
-
-</a>
-
-
-
-
-
-
-
-<a
-
-href="{% url 'multas_juros_financeiro' %}"
-
-class="menu-link
-
-{% if request.resolver_match.url_name == 'multas_juros_financeiro' %}
-
-active
-
-{% endif %}
-
-">
+class="menu-link">
 
 
 <i class="bi bi-percent"></i>
-
 
 Multas e Juros
 
@@ -2049,23 +2456,15 @@ Multas e Juros
 
 
 
-<a
 
-href="{% url 'metodos_pagamento' %}"
 
-class="menu-link
 
-{% if request.resolver_match.url_name == 'metodos_pagamento' %}
+<a href="{% url 'metodos_pagamento' %}"
 
-active
-
-{% endif %}
-
-">
+class="menu-link">
 
 
 <i class="bi bi-credit-card"></i>
-
 
 Métodos de Pagamento
 
@@ -2078,16 +2477,17 @@ Métodos de Pagamento
 
 
 
+<a href="{% url 'dados_bancarios_financeiro' %}"
 
-<a
+class="menu-link
 
-href="#"
-
-class="menu-link">
+{% if request.resolver_match.url_name == 'dados_bancarios_financeiro' %}
+active
+{% endif %}
+">
 
 
 <i class="bi bi-bank"></i>
-
 
 Dados Bancários
 
@@ -2100,16 +2500,12 @@ Dados Bancários
 
 
 
-
-<a
-
-href="#"
+<a href="#"
 
 class="menu-link">
 
 
 <i class="bi bi-shield-check"></i>
-
 
 Permissões
 
@@ -2136,14 +2532,11 @@ Permissões
 
 
 
-<!-- SAIR -->
 
 <li class="menu-item logout">
 
 
-<a
-
-href="{% url 'logout' %}"
+<a href="{% url 'logout' %}"
 
 class="menu-link">
 
@@ -2163,14 +2556,14 @@ Sair
 
 
 
-
 </ul>
 
 
 
-
-
 </aside>
+
+
+
 
 
 
@@ -2189,51 +2582,69 @@ Sair
 
 
 
+<!-- TOPBAR -->
+
+
 <div class="topbar">
 
 
 
 
 
+<div class="topbar-left">
 
-<div>
+
+
+<div class="topbar-title">
+
+
+<i class="bi bi-cash-stack"></i>
 
 
 <h3>
 
-
-<i class="bi bi-cash-stack me-2"></i>
-
-
 Painel Financeiro
-
 
 </h3>
 
 
+</div>
 
-<small>
+
+
+
+
+
+<div class="school-box">
+
+
+<i class="bi bi-mortarboard-fill"></i>
+
+
+<span>
 
 
 {% if request.user.escola %}
 
-
 {{ request.user.escola.nome }}
-
 
 {% else %}
 
-
-Gestão financeira escolar
-
+Gestão Financeira Escolar
 
 {% endif %}
 
 
-</small>
+</span>
 
 
 </div>
+
+
+
+
+</div>
+
 
 
 
@@ -2249,7 +2660,15 @@ Gestão financeira escolar
 <div class="avatar">
 
 
+{% if request.user.get_full_name %}
+
 {{ request.user.get_full_name|first|upper }}
+
+{% else %}
+
+{{ request.user.username|first|upper }}
+
+{% endif %}
 
 
 </div>
@@ -2264,30 +2683,30 @@ Gestão financeira escolar
 <strong>
 
 
+{% if request.user.get_full_name %}
+
 {{ request.user.get_full_name }}
+
+{% else %}
+
+{{ request.user.username }}
+
+{% endif %}
 
 
 </strong>
 
 
+
 <small>
 
-
 Departamento Financeiro
-
 
 </small>
 
 
-</div>
-
-
-
 
 </div>
-
-
-
 
 
 
@@ -2297,13 +2716,23 @@ Departamento Financeiro
 
 
 
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CONTEÚDO -->
 
 
 <div class="content-area">
 
 
 {% block content %}
-
 
 {% endblock %}
 
@@ -2317,8 +2746,7 @@ Departamento Financeiro
 
 
 
-
-<footer class="mt-5 py-4 text-center">
+<footer class="text-center py-4 mt-5">
 
 
 <span class="text-muted small">
@@ -2326,8 +2754,7 @@ Departamento Financeiro
 
 © <span id="anoAtual"></span>
 
-
-EdusCel - Gestão Financeira Escolar
+EdusCel - Gestão Escolar Inteligente
 
 
 </span>
@@ -2347,19 +2774,15 @@ EdusCel - Gestão Financeira Escolar
 
 
 
+
+
+
 <!-- =====================================================
-     BOOTSTRAP JS
+     JAVASCRIPT
 ===================================================== -->
 
 
-<script
-
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-
-</script>
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
@@ -2368,33 +2791,25 @@ src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.j
 <script>
 
 
-/* =====================================================
-   SIDEBAR MOBILE
-===================================================== */
+/* MENU MOBILE */
 
 
 function openSidebar(){
 
 
-    document
-
-    .getElementById("sidebar")
-
-    .classList
-
-    .add("show");
+document
+.getElementById("sidebar")
+.classList
+.add("show");
 
 
 
-    document
-
-    .getElementById("sidebarOverlay")
-
-    .style.display="block";
+document
+.getElementById("sidebarOverlay")
+.style.display="block";
 
 
 }
-
 
 
 
@@ -2403,21 +2818,16 @@ function openSidebar(){
 function closeSidebar(){
 
 
-    document
-
-    .getElementById("sidebar")
-
-    .classList
-
-    .remove("show");
+document
+.getElementById("sidebar")
+.classList
+.remove("show");
 
 
 
-    document
-
-    .getElementById("sidebarOverlay")
-
-    .style.display="none";
+document
+.getElementById("sidebarOverlay")
+.style.display="none";
 
 
 }
@@ -2429,18 +2839,12 @@ function closeSidebar(){
 
 
 
-
-/* =====================================================
-   ANO AUTOMÁTICO
-===================================================== */
+/* ANO AUTOMÁTICO */
 
 
 document
-
 .getElementById("anoAtual")
-
 .innerHTML =
-
 new Date().getFullYear();
 
 
@@ -2451,39 +2855,25 @@ new Date().getFullYear();
 
 
 
-/* =====================================================
-   FECHAR MENU MOBILE AO CLICAR
-===================================================== */
+/* FECHAR MENU AO CLICAR */
 
 
 document
-
 .querySelectorAll(".menu-link")
-
 .forEach(function(link){
 
 
-
-    link.addEventListener(
-
-    "click",
-
-    function(){
+link.addEventListener("click",function(){
 
 
+if(window.innerWidth <= 992){
 
-        if(window.innerWidth <= 992){
+closeSidebar();
 
-
-            closeSidebar();
-
-
-        }
+}
 
 
-
-    });
-
+});
 
 
 });
@@ -2494,21 +2884,11 @@ document
 
 
 
-</script>
 
 
-
-
-
-
-
-<!-- =====================================================
-     CONTROLO DE SESSÃO
-     LOGOUT POR INATIVIDADE
-===================================================== -->
-
-
-<script>
+/* =====================================================
+   CONTROLE DE SESSÃO
+===================================================== */
 
 
 let inactivityTimer;
@@ -2518,24 +2898,10 @@ let warningTimer;
 
 
 
-
-
 const SESSION_LIMIT = 300000;
 
 
-// 5 minutos
-
-
-
-
-
-
 const WARNING_LIMIT = 290000;
-
-
-// aviso aos 4 minutos e 50 segundos
-
-
 
 
 
@@ -2546,26 +2912,21 @@ const WARNING_LIMIT = 290000;
 function resetTimer(){
 
 
+clearTimeout(inactivityTimer);
 
-    clearTimeout(inactivityTimer);
-
-
-    clearTimeout(warningTimer);
+clearTimeout(warningTimer);
 
 
 
 
 
-
-    warningTimer = setTimeout(function(){
-
+warningTimer=setTimeout(function(){
 
 
-        showWarning();
+showWarning();
 
 
-
-    },WARNING_LIMIT);
+},WARNING_LIMIT);
 
 
 
@@ -2573,21 +2934,13 @@ function resetTimer(){
 
 
 
-
-    inactivityTimer = setTimeout(function(){
-
+inactivityTimer=setTimeout(function(){
 
 
-        window.location.href =
-
-        "{% url 'logout' %}";
+window.location.href="{% url 'logout' %}";
 
 
-
-    },SESSION_LIMIT);
-
-
-
+},SESSION_LIMIT);
 
 
 
@@ -2605,64 +2958,57 @@ function showWarning(){
 
 
 
-    let box = document.createElement("div");
+let alertBox=document.createElement("div");
 
 
 
-    box.style.position="fixed";
+alertBox.style.position="fixed";
 
-    box.style.bottom="25px";
+alertBox.style.bottom="25px";
 
-    box.style.right="25px";
+alertBox.style.right="25px";
 
-    box.style.background="#0f172a";
+alertBox.style.background="#0f172a";
 
-    box.style.color="white";
+alertBox.style.color="white";
 
-    box.style.padding="18px 25px";
+alertBox.style.padding="18px 22px";
 
-    box.style.borderRadius="16px";
+alertBox.style.borderRadius="15px";
 
-    box.style.zIndex="9999";
+alertBox.style.zIndex="9999";
 
-    box.style.boxShadow=
-
-    "0 15px 35px rgba(0,0,0,.25)";
-
-
-
-    box.innerHTML = `
-
-
-
-    <i class="bi bi-clock me-2"></i>
-
-
-    A sessão irá terminar por inatividade.
-
-
-    `;
-
-
-
-    document.body.appendChild(box);
+alertBox.style.boxShadow="0 15px 35px rgba(0,0,0,.25)";
 
 
 
 
-    setTimeout(function(){
+alertBox.innerHTML=
+
+`
+<i class="bi bi-clock me-2"></i>
+
+Sessão será encerrada por inatividade.
+`;
 
 
-        box.remove();
+
+document.body.appendChild(alertBox);
 
 
 
-    },8000);
+
+setTimeout(function(){
+
+
+alertBox.remove();
+
+
+},7000);
 
 
 
 }
-
 
 
 
@@ -2683,15 +3029,10 @@ function showWarning(){
 .forEach(function(event){
 
 
-
-    document.addEventListener(
-
-        event,
-
-        resetTimer
-
-    );
-
+document.addEventListener(
+event,
+resetTimer
+);
 
 
 });
@@ -2699,10 +3040,7 @@ function showWarning(){
 
 
 
-
 resetTimer();
-
-
 
 
 
@@ -2714,11 +3052,9 @@ resetTimer();
 
 
 
-
 {% block scripts %}
 
 {% endblock %}
-
 
 
 

@@ -4443,3 +4443,15 @@ Traceback (most recent call last):
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'recibos' not found. 'recibos' is not a valid view function or pattern name.
 "GET /secretaria/dashboard HTTP/1.1" 500 167731
+Internal Server Error: /dados-bancarios/
+Traceback (most recent call last):
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\LENOVO\AppData\Local\Programs\Python\Python310\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\LENOVO\Desktop\PROJETO\NOVO\school_system\school_system\core\views.py", line 21447, in dados_bancarios_financeiro
+    DadosBancarios.objects.create(
+NameError: name 'DadosBancarios' is not defined
+"POST /dados-bancarios/ HTTP/1.1" 500 74903

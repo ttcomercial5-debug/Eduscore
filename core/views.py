@@ -21365,3 +21365,246 @@ def gerar_mensalidades(request):
         "mensalidades_por_classe"
 
     )
+
+
+from academic.models import DadosBancarios
+
+
+@login_required
+def dados_bancarios_financeiro(request):
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+
+
+    # =====================================================
+    # ESCOLA ASSOCIADA
+    # =====================================================
+
+    escola = request.user.escola
+
+
+
+    if not escola:
+
+
+        messages.error(
+
+            request,
+
+            "Utilizador sem escola associada."
+
+        )
+
+
+        return redirect("dashboard")
+
+
+
+
+
+
+    # =====================================================
+    # BUSCAR CONTAS BANCÁRIAS DA ESCOLA
+    # =====================================================
+
+
+    dados = DadosBancarios.objects.filter(
+
+        escola=escola
+
+    ).order_by("-criado_em")
+
+
+
+
+
+
+
+    # =====================================================
+    # GUARDAR NOVA CONTA / ACTUALIZAR PRINCIPAL
+    # =====================================================
+
+
+    if request.method == "POST":
+
+
+
+        banco = request.POST.get("banco")
+
+
+        titular = request.POST.get("titular")
+
+
+        numero_conta = request.POST.get("numero_conta")
+
+
+        iban = request.POST.get("iban")
+
+
+        agencia = request.POST.get("agencia")
+
+
+        moeda = request.POST.get("moeda")
+
+
+        observacoes = request.POST.get("observacoes")
+
+
+
+
+        tipo_conta = request.POST.get(
+
+            "tipo_conta",
+
+            "PRINCIPAL"
+
+        )
+
+
+
+
+
+
+
+        # =====================================================
+        # ATUALIZA CONTA PRINCIPAL OU CRIA
+        # =====================================================
+
+
+        conta, criada = DadosBancarios.objects.update_or_create(
+
+
+            escola=escola,
+
+
+            tipo_conta=tipo_conta,
+
+
+
+            defaults={
+
+
+                "banco": banco,
+
+
+                "titular": titular,
+
+
+                "numero_conta": numero_conta,
+
+
+                "iban": iban,
+
+
+                "agencia": agencia,
+
+
+                "moeda": moeda,
+
+
+                "observacoes": observacoes,
+
+
+                "ativo": True,
+
+
+            }
+
+
+        )
+
+
+
+
+
+
+
+        if criada:
+
+
+            mensagem = "Dados bancários registados com sucesso."
+
+
+        else:
+
+
+            mensagem = "Dados bancários actualizados com sucesso."
+
+
+
+
+
+        messages.success(
+
+            request,
+
+            mensagem
+
+        )
+
+
+
+
+        return redirect(
+
+            "dados_bancarios_financeiro"
+
+        )
+
+
+
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+
+
+    contexto = {
+
+
+        "dados": dados,
+
+
+    }
+
+
+
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/dados_bancarios.html",
+
+        contexto
+
+    )

@@ -165,6 +165,7 @@ urlpatterns = [
     path("metodos-pagamento/<int:id>/estado/",views.ativar_desativar_metodo,name="ativar_desativar_metodo"),
     path("metodos-pagamento/<int:id>/eliminar/", views.eliminar_metodo_pagamento, name="eliminar_metodo_pagamento"),
     path("dados-financeiros/", views.dados_financeiros, name="dados_financeiros"),
+    path("dados-bancarios/", views.dados_bancarios_financeiro, name="dados_bancarios_financeiro"),
     path("metodos-pagamento/", views.metodos_pagamento, name="metodos_pagamento"),
     path("financeiro/multas-juros/", views.multas_juros_financeiro, name="multas_juros_financeiro"),
     path("financeiro/mensalidades-por-classe/", views.mensalidades_por_classe, name="mensalidades_por_classe"),

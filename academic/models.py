@@ -4217,3 +4217,85 @@ METODOS_PADRAO = [
     ("EKWANZA", "e-Kwanza"),
     ("OUTRO", "Outro"),
 ]
+
+class DadosBancarios(models.Model):
+
+    escola = models.ForeignKey(
+        Escola,
+        on_delete=models.CASCADE,
+        related_name="dados_bancarios"
+    )
+
+
+    banco = models.CharField(
+        max_length=100
+    )
+
+
+    titular = models.CharField(
+        max_length=150
+    )
+
+
+    numero_conta = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+
+    iban = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+
+    agencia = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+
+    moeda = models.CharField(
+        max_length=20,
+        default="AOA"
+    )
+
+
+    tipo_conta = models.CharField(
+        max_length=50,
+        choices=[
+            ("PRINCIPAL","Conta Principal"),
+            ("MENSALIDADES","Recebimento de Mensalidades"),
+            ("SALARIOS","Pagamento de Salários"),
+            ("OUTRA","Outra"),
+        ],
+        default="PRINCIPAL"
+    )
+
+
+    ativo = models.BooleanField(
+        default=True
+    )
+
+
+    observacoes = models.TextField(
+        blank=True,
+        null=True
+    )
+
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+
+    def __str__(self):
+        return f"{self.banco} - {self.escola.nome}"
