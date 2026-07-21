@@ -30,7 +30,7 @@ import random
 import string
 import qrcode
 from io import BytesIO
-
+from academic.models import MetodoPagamento
 
 
 
@@ -7119,15 +7119,6 @@ def enviar_notificacao_realtime(notificacao):
 # =========================================================
 # REGISTRAR PAGAMENTO
 # =========================================================
-
-from decimal import Decimal, InvalidOperation
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
-
 @login_required
 def registrar_pagamento(request):
 
@@ -7136,9 +7127,31 @@ def registrar_pagamento(request):
     # =====================================================
 
     if getattr(request.user, "role", None) != "SECRETARIA":
-        return redirect("dashboard_secretaria")
+
+        return redirect(
+            "dashboard_secretaria"
+        )
+
+
+    # =====================================================
+    # ESCOLA
+    # =====================================================
 
     escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Usuário sem escola associada."
+        )
+
+        return redirect(
+            "dashboard_secretaria"
+        )
+
+
 
     # =====================================================
     # CONFIGURAÇÃO FINANCEIRA
@@ -7148,8 +7161,24 @@ def registrar_pagamento(request):
         escola=escola
     )
 
+
+
     # =====================================================
-    # DADOS INICIAIS
+    # MÉTODOS DE PAGAMENTO
+    # =====================================================
+
+    metodos_pagamento = MetodoPagamento.objects.filter(
+        escola=escola,
+        ativo=True
+    ).order_by(
+        "ordem",
+        "nome"
+    )
+
+
+
+    # =====================================================
+    # VARIÁVEIS
     # =====================================================
 
     aluno = None
@@ -7158,45 +7187,101 @@ def registrar_pagamento(request):
 
     tipo_pagamento = ""
 
+
     meses_lista = [
-        "Janeiro", "Fevereiro", "Março", "Abril",
-        "Maio", "Junho", "Julho", "Agosto",
-        "Setembro", "Outubro", "Novembro", "Dezembro"
+
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+
     ]
+
+
 
     valores_pagamentos = {
 
-        "MATRICULA": float(config.valor_matricula or 0),
+        "MATRICULA": float(
+            config.valor_matricula or 0
+        ),
 
-        "MULTA": float(config.valor_multa_mensalidade or 0),
+        "MULTA": float(
+            config.valor_multa_mensalidade or 0
+        ),
 
-        "DECLARACAO": float(config.valor_declaracao or 0),
+        "DECLARACAO": float(
+            config.valor_declaracao or 0
+        ),
 
-        "EXAME": float(config.valor_exame or 0),
+        "EXAME": float(
+            config.valor_exame or 0
+        ),
 
     }
 
+
+
     # =====================================================
-    # FUNÇÃO AUXILIAR
+    # FUNÇÃO RENDER
     # =====================================================
 
     def render_page():
 
-        return render(request, "registrar_pagamento.html", {
+        mensalidades_disponiveis = []
 
-            "aluno": aluno,
 
-            "numero_processo": numero_processo,
+        if aluno:
 
-            "tipo_pagamento": tipo_pagamento,
+            mensalidades_disponiveis = Mensalidade.objects.filter(
 
-            "meses_lista": meses_lista,
+                aluno=aluno,
 
-            "config": config,
 
-            "valores_pagamentos": valores_pagamentos,
 
-        })
+            ).exclude(
+
+                status="PAGA"
+
+            ).order_by(
+
+                "id"
+
+            )
+
+
+        return render(
+            request,
+            "registrar_pagamento.html",
+            {
+
+                "aluno": aluno,
+
+                "numero_processo": numero_processo,
+
+                "tipo_pagamento": tipo_pagamento,
+
+                "meses_lista": meses_lista,
+
+                "mensalidades": mensalidades_disponiveis,
+
+                "config": config,
+
+                "valores_pagamentos": valores_pagamentos,
+
+                "metodos_pagamento": metodos_pagamento,
+
+            }
+        )
+
+
 
     # =====================================================
     # BUSCAR ALUNO
@@ -7204,38 +7289,79 @@ def registrar_pagamento(request):
 
     if request.method == "POST" and "buscar_aluno" in request.POST:
 
+
         numero_processo = request.POST.get(
             "numero_processo",
             ""
         ).strip()
 
+
+
         if not numero_processo:
+
 
             messages.error(
                 request,
                 "Informe o número de processo."
             )
 
+
             return render_page()
 
+
+
+
         aluno = Aluno.objects.select_related(
+
             "usuario",
             "turma",
             "curso",
             "ano_letivo"
+
         ).filter(
-            numero_processo=numero_processo,
-            escola=escola
+
+            escola=escola,
+
+            numero_processo=numero_processo
+
         ).first()
 
+
+
         if not aluno:
+
 
             messages.error(
                 request,
                 "Aluno não encontrado."
             )
 
+
             return render_page()
+
+
+
+        # =====================================================
+        # GARANTIR QUE EXISTEM MENSALIDADES
+        # =====================================================
+
+        mensalidades = Mensalidade.objects.filter(
+
+            aluno=aluno,
+
+
+        )
+
+
+
+        if not mensalidades.exists():
+
+
+            messages.warning(
+                request,
+                "Este aluno não possui mensalidades cadastradas."
+            )
+
 
         return render_page()
 
@@ -7245,36 +7371,45 @@ def registrar_pagamento(request):
 
     if request.method == "POST" and "confirmar_pagamento" in request.POST:
 
-        aluno_id = request.POST.get("aluno_id")
 
-        numero_processo = request.POST.get(
-            "numero_processo",
-            ""
-        ).strip()
+
+        aluno_id = request.POST.get(
+            "aluno_id"
+        )
+
 
         tipo_pagamento = request.POST.get(
             "tipo_pagamento"
         )
 
-        forma_pagamento = request.POST.get(
+
+        forma_pagamento_id = request.POST.get(
             "forma_pagamento"
         )
+
 
         observacao = request.POST.get(
             "observacao",
             ""
         ).strip()
 
+
         referencia = request.POST.get(
             "referencia",
             ""
         ).strip()
 
+
         valor_pago = request.POST.get(
             "valor_pago"
         )
 
-        meses = request.POST.getlist("meses")
+
+        meses = request.POST.getlist(
+            "meses"
+        )
+
+
 
         # =====================================================
         # VALIDAR ALUNO
@@ -7282,271 +7417,639 @@ def registrar_pagamento(request):
 
         if not aluno_id:
 
+
             messages.error(
                 request,
                 "Aluno inválido."
             )
 
-            return redirect("registrar_pagamento")
+
+            return redirect(
+                "registrar_pagamento"
+            )
+
+
 
         aluno = get_object_or_404(
 
             Aluno.objects.select_related(
+
                 "usuario",
                 "turma",
                 "curso",
                 "ano_letivo"
+
             ),
 
             id=aluno_id,
+
             escola=escola
 
         )
 
+
+
         # =====================================================
-        # PAGAMENTO MENSALIDADE
+        # VALIDAR MÉTODO
+        # =====================================================
+
+        metodo_pagamento = get_object_or_404(
+
+            MetodoPagamento,
+
+            id=forma_pagamento_id,
+
+            escola=escola,
+
+            ativo=True
+
+        )
+
+
+
+        # =====================================================
+        # PAGAMENTO DE MENSALIDADE
         # =====================================================
 
         if tipo_pagamento == "MENSALIDADE":
 
+
+
             if not meses:
 
+
                 messages.error(
+
                     request,
+
                     "Selecione pelo menos um mês."
+
                 )
 
+
                 return render_page()
+
+
+
 
             pagamentos_ids = []
 
             pagamentos_criados = 0
 
+
+
+
+            # MAPA DE MESES
+            # Aceita português e inglês
+
+            mapa_meses = {
+
+
+                "Janeiro":
+                    [
+                        "Janeiro",
+                        "January"
+                    ],
+
+
+                "Fevereiro":
+                    [
+                        "Fevereiro",
+                        "February"
+                    ],
+
+
+                "Março":
+                    [
+                        "Março",
+                        "Marco",
+                        "March"
+                    ],
+
+
+                "Abril":
+                    [
+                        "Abril",
+                        "April"
+                    ],
+
+
+                "Maio":
+                    [
+                        "Maio",
+                        "May"
+                    ],
+
+
+                "Junho":
+                    [
+                        "Junho",
+                        "June"
+                    ],
+
+
+                "Julho":
+                    [
+                        "Julho",
+                        "July"
+                    ],
+
+
+                "Agosto":
+                    [
+                        "Agosto",
+                        "August"
+                    ],
+
+
+                "Setembro":
+                    [
+                        "Setembro",
+                        "September"
+                    ],
+
+
+                "Outubro":
+                    [
+                        "Outubro",
+                        "October"
+                    ],
+
+
+                "Novembro":
+                    [
+                        "Novembro",
+                        "November"
+                    ],
+
+
+                "Dezembro":
+                    [
+                        "Dezembro",
+                        "December"
+                    ],
+
+            }
+
+
+
+
             with transaction.atomic():
+
+
 
                 for mes in meses:
 
+
+
+                    nomes_mes = mapa_meses.get(
+
+                        mes,
+
+                        [
+                            mes
+                        ]
+
+                    )
+
+
+
+                    # =====================================================
+                    # BUSCAR MENSALIDADE
+                    # CORRIGIDO
+                    # =====================================================
+
                     mensalidade = Mensalidade.objects.filter(
+
                         aluno=aluno,
-                        mes=mes
+
+                        mes__in=nomes_mes
+
+                    ).exclude(
+
+                        status="PAGA"
+
                     ).first()
 
+
+
+
                     if not mensalidade:
+
+
                         continue
+
+
+
+
+                    # Atualiza atraso automaticamente
 
                     mensalidade.atualizar_status()
 
+
                     mensalidade.refresh_from_db()
 
+
+
                     if mensalidade.status == "PAGA":
+
+
                         continue
+
+
+
+
+                    # =====================================================
+                    # CRIAR PAGAMENTO
+                    # =====================================================
 
                     pagamento = Pagamento.objects.create(
 
+
                         aluno=aluno,
+
 
                         escola=escola,
 
+
                         mensalidade=mensalidade,
+
 
                         ano_letivo=mensalidade.ano_letivo,
 
+
                         tipo="MENSALIDADE",
+
 
                         valor_pago=mensalidade.valor,
 
-                        forma_pagamento=forma_pagamento,
+
+                        forma_pagamento=metodo_pagamento,
+
 
                         referencia=referencia,
 
+
                         observacao=observacao,
 
+
                         recebido_por=request.user,
+
 
                         data_pagamento=timezone.now()
 
                     )
 
+
+
+
                     pagamentos_ids.append(
+
                         pagamento.id
+
                     )
 
-                    mensalidade.atualizar_status()
+
+
+                    # Atualiza mensalidade
+
+                    mensalidade.status = "PAGA"
+
+                    mensalidade.data_pagamento = timezone.now()
+
+                    mensalidade.save()
+
+
+
+
+                    # =====================================================
+                    # MOVIMENTO CAIXA
+                    # =====================================================
 
                     MovimentoCaixa.objects.create(
 
+
                         escola=escola,
+
 
                         tipo="ENTRADA",
 
+
                         descricao=(
-                            f"Mensalidade {mes} - "
+
+                            f"Mensalidade {mensalidade.mes} - "
+
                             f"{aluno.usuario.get_full_name()}"
+
                         ),
+
 
                         valor=mensalidade.valor,
 
+
                         usuario=request.user,
+
 
                         origem="SECRETARIA"
 
                     )
 
+
+
                     pagamentos_criados += 1
 
-            if pagamentos_criados <= 0:
+
+
+
+            # =====================================================
+            # VALIDAR RESULTADO
+            # =====================================================
+
+            if pagamentos_criados == 0:
+
 
                 messages.warning(
+
                     request,
+
                     "Nenhuma mensalidade disponível para pagamento."
+
                 )
+
 
                 return render_page()
 
+
+
+
             request.session["recibos_ids"] = pagamentos_ids
+
+
 
             messages.success(
 
                 request,
 
-                f"{pagamentos_criados} pagamento(s) "
-                f"registrado(s) com sucesso."
+                f"{pagamentos_criados} mensalidade(s) paga(s) com sucesso."
 
             )
 
-            return redirect("recibo_pagamento")
 
+
+            return redirect(
+
+                "recibo_pagamento"
+
+            )
         # =====================================================
-        # OUTROS PAGAMENTOS
+        # OUTROS TIPOS DE PAGAMENTO
         # =====================================================
+
 
         valores_config = {
 
-            "MATRICULA": config.valor_matricula,
 
-            "MULTA": config.valor_multa_mensalidade,
+            "MATRICULA":
+                config.valor_matricula,
 
-            "EXAME": config.valor_exame,
 
-            "DECLARACAO": config.valor_declaracao,
+            "MULTA":
+                config.valor_multa_mensalidade,
+
+
+            "DECLARACAO":
+                config.valor_declaracao,
+
+
+            "EXAME":
+                config.valor_exame,
+
 
         }
 
+
+
         valor_configurado = valores_config.get(
+
             tipo_pagamento
+
         )
+
+
 
         if valor_configurado:
 
+
             valor_pago = valor_configurado
+
+
 
         else:
 
+
+
             if not valor_pago:
 
+
                 messages.error(
+
                     request,
+
                     "Informe o valor do pagamento."
+
                 )
 
+
                 return render_page()
+
+
+
 
             try:
 
-                valor_pago = Decimal(valor_pago)
 
-            except (InvalidOperation, TypeError):
+                valor_pago = Decimal(
 
-                messages.error(
-                    request,
-                    "Valor inválido."
+                    valor_pago
+
                 )
 
+
+
+            except (
+
+                InvalidOperation,
+
+                TypeError
+
+            ):
+
+
+                messages.error(
+
+                    request,
+
+                    "Valor informado inválido."
+
+                )
+
+
                 return render_page()
+
+
+
 
         # =====================================================
         # ANO LETIVO
         # =====================================================
 
+
         ano_letivo = AnoLetivo.objects.filter(
+
             escola=escola,
+
             ativo=True
+
         ).first()
+
+
 
         if not ano_letivo:
 
+
             messages.error(
+
                 request,
+
                 "Nenhum ano letivo ativo encontrado."
+
             )
 
+
             return render_page()
+
+
+
 
         # =====================================================
         # CRIAR PAGAMENTO
         # =====================================================
 
+
         pagamento = Pagamento.objects.create(
+
 
             aluno=aluno,
 
+
             escola=escola,
+
 
             ano_letivo=ano_letivo,
 
+
             tipo=tipo_pagamento,
+
 
             valor_pago=valor_pago,
 
-            forma_pagamento=forma_pagamento,
+
+            forma_pagamento=metodo_pagamento,
+
 
             referencia=referencia,
 
+
             observacao=observacao,
+
 
             recebido_por=request.user,
 
+
             data_pagamento=timezone.now()
+
 
         )
 
+
+
+
         # =====================================================
-        # MOVIMENTO DE CAIXA
+        # MOVIMENTO CAIXA
         # =====================================================
+
 
         MovimentoCaixa.objects.create(
 
+
             escola=escola,
+
 
             tipo="ENTRADA",
 
+
             descricao=(
+
+
                 f"{tipo_pagamento} - "
+
                 f"{aluno.usuario.get_full_name()}"
+
+
             ),
+
 
             valor=valor_pago,
 
+
             usuario=request.user,
+
 
             origem="SECRETARIA"
 
+
         )
 
+
+
+
         # =====================================================
-        # RECIBO
+        # GERAR RECIBO
         # =====================================================
+
 
         request.session["recibos_ids"] = [
+
+
             pagamento.id
+
+
         ]
 
+
+
         messages.success(
+
             request,
+
             "Pagamento registrado com sucesso."
+
         )
 
-        return redirect("recibo_pagamento")
+
+
+        return redirect(
+
+            "recibo_pagamento"
+
+        )
+
+
+
+
+    # =====================================================
+    # ACESSO NORMAL
+    # =====================================================
 
     return render_page()
 
@@ -7788,10 +8291,10 @@ def lista_mensalidades(request):
 # ==========================================================
 # LISTA DE PAGAMENTOS
 # ==========================================================
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 from django.shortcuts import render, redirect
+
 
 @login_required
 def lista_pagamentos(request):
@@ -7801,60 +8304,136 @@ def lista_pagamentos(request):
     # ==========================================================
 
     if getattr(request.user, "role", None) != "SECRETARIA":
-        return redirect("dashboard_secretaria")
+
+        return redirect(
+            "dashboard_secretaria"
+        )
+
 
     escola = request.user.escola
+
+
+
+    # ==========================================================
+    # MÉTODOS DE PAGAMENTO DA ESCOLA
+    # ==========================================================
+
+    metodos_pagamento = MetodoPagamento.objects.filter(
+
+        escola=escola,
+
+        ativo=True
+
+    ).order_by(
+
+        "ordem",
+
+        "nome"
+
+    )
+
+
 
     # ==========================================================
     # FILTROS
     # ==========================================================
 
-    numero_processo = request.GET.get("numero_processo", "").strip()
-    tipo = request.GET.get("tipo", "").strip()
-    forma = request.GET.get("forma", "").strip()
-    data = request.GET.get("data", "").strip()
+    numero_processo = request.GET.get(
+        "numero_processo",
+        ""
+    ).strip()
+
+
+    tipo = request.GET.get(
+        "tipo",
+        ""
+    ).strip()
+
+
+    forma = request.GET.get(
+        "forma",
+        ""
+    ).strip()
+
+
+    data = request.GET.get(
+        "data",
+        ""
+    ).strip()
+
+
 
     # ==========================================================
-    # QUERY
+    # QUERY PRINCIPAL
     # ==========================================================
 
     pagamentos = Pagamento.objects.select_related(
+
         "aluno",
+
         "aluno__usuario",
+
         "mensalidade",
+
         "ano_letivo",
-        "recebido_por"
+
+        "recebido_por",
+
+        "forma_pagamento"
+
     ).filter(
+
         escola=escola
-    ).order_by("-data_pagamento")
+
+    ).order_by(
+
+        "-data_pagamento"
+
+    )
+
+
 
     # ==========================================================
-    # FILTRO PROCESSO
+    # FILTRO NÚMERO PROCESSO
     # ==========================================================
 
     if numero_processo:
 
         pagamentos = pagamentos.filter(
+
             aluno__numero_processo__icontains=numero_processo
+
         )
 
+
+
     # ==========================================================
-    # FILTRO TIPO
+    # FILTRO TIPO PAGAMENTO
     # ==========================================================
 
     if tipo:
 
-        pagamentos = pagamentos.filter(tipo=tipo)
+        pagamentos = pagamentos.filter(
+
+            tipo=tipo
+
+        )
+
+
 
     # ==========================================================
-    # FILTRO FORMA PAGAMENTO
+    # FILTRO MÉTODO PAGAMENTO
     # ==========================================================
 
     if forma:
 
         pagamentos = pagamentos.filter(
-            forma_pagamento=forma
+
+            forma_pagamento_id=forma
+
         )
+
+
 
     # ==========================================================
     # FILTRO DATA
@@ -7863,20 +8442,54 @@ def lista_pagamentos(request):
     if data:
 
         pagamentos = pagamentos.filter(
+
             data_pagamento__date=data
+
         )
+
+
 
     # ==========================================================
     # ESTATÍSTICAS
     # ==========================================================
 
     total_recebido = pagamentos.aggregate(
+
         total=Sum("valor_pago")
+
     )["total"] or 0
 
+
+
     total_pagamentos = pagamentos.aggregate(
+
         total=Count("id")
+
     )["total"] or 0
+
+
+
+    # ==========================================================
+    # TIPOS DE PAGAMENTO
+    # ==========================================================
+
+    tipos_pagamento = [
+
+        ("MENSALIDADE", "Mensalidade"),
+
+        ("MATRICULA", "Matrícula"),
+
+        ("MULTA", "Multa"),
+
+        ("DECLARACAO", "Declaração"),
+
+        ("EXAME", "Exame"),
+
+        ("OUTRO", "Outro"),
+
+    ]
+
+
 
     # ==========================================================
     # CONTEXT
@@ -7884,30 +8497,46 @@ def lista_pagamentos(request):
 
     context = {
 
+
         "pagamentos": pagamentos,
+
 
         "total_recebido": total_recebido,
 
+
         "total_pagamentos": total_pagamentos,
+
 
         "numero_processo": numero_processo,
 
+
         "tipo": tipo,
+
 
         "forma": forma,
 
+
         "data": data,
 
-        "tipos_pagamento": Pagamento.TIPOS,
 
-        "formas_pagamento": Pagamento.FORMAS_PAGAMENTO,
+        "tipos_pagamento": tipos_pagamento,
+
+
+        "metodos_pagamento": metodos_pagamento,
+
 
     }
 
+
+
     return render(
+
         request,
+
         "pagamentos.html",
+
         context
+
     )
 
 
@@ -11795,19 +12424,36 @@ from django.utils import timezone
 
 
 
-
 @login_required
 def recibo_pagamento(request):
 
-    # IDs guardados na sessão
-    pagamentos_ids = request.session.get("recibos_ids", [])
+    # =====================================================
+    # PAGAMENTOS DA SESSÃO
+    # =====================================================
 
-    # Se não houver pagamentos
+    pagamentos_ids = request.session.get(
+        "recibos_ids",
+        []
+    )
+
+
     if not pagamentos_ids:
-        messages.error(request, "Nenhum pagamento encontrado.")
-        return redirect("registrar_pagamento")
 
-    # Buscar pagamentos
+        messages.error(
+            request,
+            "Nenhum pagamento encontrado."
+        )
+
+        return redirect(
+            "registrar_pagamento"
+        )
+
+
+
+    # =====================================================
+    # BUSCAR PAGAMENTOS
+    # =====================================================
+
     pagamentos = (
         Pagamento.objects
         .select_related(
@@ -11815,71 +12461,130 @@ def recibo_pagamento(request):
             "aluno__usuario",
             "aluno__turma",
             "escola",
-            "mensalidade"
+            "ano_letivo",
+            "mensalidade",
+            "forma_pagamento",
+            "recebido_por",
         )
-        .filter(id__in=pagamentos_ids)
-        .order_by("id")
+        .filter(
+            id__in=pagamentos_ids
+        )
+        .order_by(
+            "id"
+        )
     )
 
-    # Validar existência
-    if not pagamentos.exists():
-        messages.error(request, "Pagamentos não encontrados.")
-        return redirect("registrar_pagamento")
 
-    # Referência principal
+
+    if not pagamentos.exists():
+
+        messages.error(
+            request,
+            "Pagamentos não encontrados."
+        )
+
+        return redirect(
+            "registrar_pagamento"
+        )
+
+
+
+
+    # =====================================================
+    # DADOS PRINCIPAIS
+    # =====================================================
+
     pagamento_ref = pagamentos.first()
 
+
     aluno = pagamento_ref.aluno
+
     escola = pagamento_ref.escola
-    turma = getattr(aluno, "turma", None)
 
-    pagamentos_detalhados = []
-
-    total_pago = Decimal("0.00")
-
-    # Processar pagamentos
-    for p in pagamentos:
-
-        # Tipo do pagamento
-        tipo = "Mensalidade"
-
-        if not p.mensalidade:
-            tipo = "Pagamento"
-
-        pagamentos_detalhados.append({
-            "tipo": tipo,
-            "mes": p.mensalidade.mes if p.mensalidade else None,
-            "ano_letivo": p.mensalidade.ano_letivo if p.mensalidade else None,
-            "valor": p.valor_pago,
-        })
-
-        total_pago += p.valor_pago
-
-    # Número do recibo
-    numero_recibo = f"REC-{timezone.now().year}-{random.randint(10000, 99999)}"
-
-    # Contexto
-    context = {
-        "pagamentos": pagamentos_detalhados,
-        "aluno": aluno,
-        "escola": escola,
-        "turma": turma,
-        "total_pago": total_pago,
-        "data_emissao": timezone.localtime(),
-        "numero_recibo": numero_recibo,
-    }
-
-    # Limpar sessão após gerar recibo
-    request.session.pop("recibos_ids", None)
-
-    # Renderizar template
-    return render(
-        request,
-        "financeiro/recibo.html",
-        context
+    turma = getattr(
+        aluno,
+        "turma",
+        None
     )
 
 
+
+    # =====================================================
+    # TOTAL
+    # =====================================================
+
+    total = pagamentos.aggregate(
+        total=models.Sum(
+            "valor_pago"
+        )
+    )["total"] or Decimal("0.00")
+
+
+
+    # =====================================================
+    # NÚMERO RECIBO
+    # =====================================================
+
+    numero_recibo = (
+        pagamento_ref.numero_recibo
+        or
+        f"REC-{timezone.now().year}-{pagamento_ref.id:05d}"
+    )
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+
+    context = {
+
+
+        "pagamentos": pagamentos,
+
+
+        "aluno": aluno,
+
+
+        "escola": escola,
+
+
+        "turma": turma,
+
+
+        "total": total,
+
+
+        "numero_recibo": numero_recibo,
+
+
+        "data_emissao": timezone.localtime(),
+
+
+    }
+
+
+
+    # =====================================================
+    # LIMPAR SESSÃO
+    # =====================================================
+
+    request.session.pop(
+        "recibos_ids",
+        None
+    )
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/recibo.html",
+
+        context
+
+    )
 
 
 # ==========================================================
@@ -15185,8 +15890,6 @@ from django.db import transaction
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-
-
 @login_required
 def registrar_pagamento_mensalidade(request, mensalidade_id):
 
@@ -15195,61 +15898,199 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
     # =====================================================
 
     if getattr(request.user, "role", None) != "SECRETARIA":
-        return redirect("dashboard_secretaria")
+
+        return redirect(
+            "dashboard_secretaria"
+        )
+
 
     escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Usuário sem escola associada."
+        )
+
+        return redirect(
+            "dashboard_secretaria"
+        )
+
+
+    # =====================================================
+    # MÉTODOS DE PAGAMENTO DA ESCOLA
+    # =====================================================
+
+    metodos_pagamento = MetodoPagamento.objects.filter(
+
+        escola=escola,
+
+        ativo=True
+
+    ).order_by(
+
+        "ordem",
+
+        "nome"
+
+    )
+
+
 
     # =====================================================
     # BUSCAR MENSALIDADE
     # =====================================================
 
     mensalidade = get_object_or_404(
+
         Mensalidade.objects.select_related(
+
             "aluno",
+
+            "aluno__usuario",
+
             "aluno__turma",
+
             "ano_letivo"
+
         ).prefetch_related(
-            "pagamentos"
+
+            "pagamentos__forma_pagamento"
+
         ),
+
         id=mensalidade_id,
+
         aluno__escola=escola
+
     )
+
+
 
     # =====================================================
     # TOTAL PAGO
     # =====================================================
 
     total_pago = mensalidade.pagamentos.aggregate(
-        total=Sum("valor_pago")
+
+        total=Sum(
+            "valor_pago"
+        )
+
     )["total"] or Decimal("0.00")
+
+
 
     restante = mensalidade.valor - total_pago
 
+
+
+    if restante < 0:
+
+        restante = Decimal("0.00")
+
+
+
+
     # =====================================================
-    # SE JÁ ESTIVER PAGA
+    # MENSALIDADE JÁ PAGA
     # =====================================================
 
     if restante <= 0:
 
+
         mensalidade.atualizar_status()
 
+
         messages.info(
+
             request,
+
             "Esta mensalidade já está totalmente paga."
+
         )
 
-        return redirect("mensalidades")
+
+        return redirect(
+            "mensalidades"
+        )
+
+
+
 
     # =====================================================
-    # REGISTRO PAGAMENTO
+    # PROCESSAR PAGAMENTO
     # =====================================================
 
     if request.method == "POST":
 
-        valor_pago = request.POST.get("valor_pago")
-        forma_pagamento = request.POST.get("forma_pagamento")
-        observacao = request.POST.get("observacao", "").strip()
-        referencia = request.POST.get("referencia", "").strip()
+
+        valor_pago_input = request.POST.get(
+            "valor_pago"
+        )
+
+
+        forma_pagamento_id = request.POST.get(
+            "forma_pagamento"
+        )
+
+
+        observacao = request.POST.get(
+            "observacao",
+            ""
+        ).strip()
+
+
+        referencia = request.POST.get(
+            "referencia",
+            ""
+        ).strip()
+
+
+
+
+        # =====================================================
+        # VALIDAR MÉTODO
+        # =====================================================
+
+        if not forma_pagamento_id:
+
+
+            messages.error(
+
+                request,
+
+                "Selecione o método de pagamento."
+
+            )
+
+
+            return redirect(
+
+                "registrar_pagamento_mensalidade",
+
+                mensalidade_id=mensalidade.id
+
+            )
+
+
+
+        metodo_pagamento = get_object_or_404(
+
+            MetodoPagamento,
+
+            id=forma_pagamento_id,
+
+            escola=escola,
+
+            ativo=True
+
+        )
+
+
+
 
         # =====================================================
         # VALIDAR VALOR
@@ -15257,55 +16098,97 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
 
         try:
 
-            valor_pago = Decimal(valor_pago)
+            valor_pago = Decimal(
+                valor_pago_input
+            )
 
-        except (InvalidOperation, TypeError):
+
+        except (
+            InvalidOperation,
+            TypeError,
+            ValueError
+        ):
+
 
             messages.error(
+
                 request,
-                "Valor inválido."
+
+                "Informe um valor válido."
+
             )
+
 
             return redirect(
+
                 "registrar_pagamento_mensalidade",
+
                 mensalidade_id=mensalidade.id
+
             )
 
+
+
+
         # =====================================================
-        # VALIDAÇÕES
+        # REGRAS DO PAGAMENTO
         # =====================================================
 
         if valor_pago <= 0:
 
+
             messages.error(
+
                 request,
+
                 "O valor deve ser maior que zero."
+
             )
 
+
             return redirect(
+
                 "registrar_pagamento_mensalidade",
+
                 mensalidade_id=mensalidade.id
+
             )
+
+
 
         if valor_pago > restante:
 
+
             messages.error(
+
                 request,
-                f"O valor excede o restante da mensalidade ({restante} Kz)."
+
+                f"O valor máximo permitido é {restante} Kz."
+
             )
+
 
             return redirect(
+
                 "registrar_pagamento_mensalidade",
+
                 mensalidade_id=mensalidade.id
+
             )
 
+
+
+
+
         # =====================================================
-        # SALVAR PAGAMENTO
+        # CRIAR PAGAMENTO
         # =====================================================
 
         try:
 
+
             with transaction.atomic():
+
 
                 pagamento = Pagamento.objects.create(
 
@@ -15321,7 +16204,7 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
 
                     valor_pago=valor_pago,
 
-                    forma_pagamento=forma_pagamento,
+                    forma_pagamento=metodo_pagamento,
 
                     referencia=referencia,
 
@@ -15333,60 +16216,147 @@ def registrar_pagamento_mensalidade(request, mensalidade_id):
 
                 )
 
-                # Atualizar status automaticamente
+
+
+                # Atualiza estado da mensalidade
+
                 mensalidade.atualizar_status()
+
+
+
+                # =====================================================
+                # MOVIMENTO DE CAIXA
+                # =====================================================
+
+                MovimentoCaixa.objects.create(
+
+                    escola=escola,
+
+                    tipo="ENTRADA",
+
+                    descricao=(
+
+                        f"Mensalidade {mensalidade.mes} - "
+
+                        f"{mensalidade.aluno.usuario.get_full_name()}"
+
+                    ),
+
+                    valor=valor_pago,
+
+                    usuario=request.user,
+
+                    origem="SECRETARIA"
+
+                )
+
+
+
 
         except Exception as e:
 
+
             messages.error(
+
                 request,
+
                 f"Erro ao registrar pagamento: {str(e)}"
+
             )
 
+
             return redirect(
+
                 "registrar_pagamento_mensalidade",
+
                 mensalidade_id=mensalidade.id
+
             )
+
+
+
+
 
         # =====================================================
         # SUCESSO
         # =====================================================
 
         messages.success(
+
             request,
-            f"Pagamento registrado com sucesso. Recibo Nº {pagamento.numero_recibo}"
+
+            (
+
+                "Pagamento registrado com sucesso. "
+
+                f"Recibo Nº {pagamento.numero_recibo}"
+
+            )
+
         )
 
-        return redirect("mensalidades")
+
+        return redirect(
+            "mensalidades"
+        )
+
+
+
+
 
     # =====================================================
-    # HISTÓRICO DE PAGAMENTOS
+    # HISTÓRICO
     # =====================================================
 
     pagamentos = mensalidade.pagamentos.select_related(
-        "recebido_por"
-    ).order_by("-data_pagamento")
+
+        "recebido_por",
+
+        "forma_pagamento"
+
+    ).order_by(
+
+        "-data_pagamento"
+
+    )
+
+
+
 
     # =====================================================
-    # CONTEXT
+    # CONTEXTO
     # =====================================================
 
     context = {
 
+
         "mensalidade": mensalidade,
+
 
         "total_pago": total_pago,
 
+
         "restante": restante,
+
 
         "pagamentos": pagamentos,
 
+
+        "metodos_pagamento": metodos_pagamento,
+
+
     }
 
+
+
     return render(
+
         request,
+
         "registrar_pagamento_mensalidade.html",
+
         context
+
     )
 
 
@@ -19405,5 +20375,993 @@ def multas_juros_financeiro(request):
 
         context
 
+
+    )
+
+# ============================================================
+# MÉTODOS DE PAGAMENTO
+# EDUSCEL FINANCEIRO
+# ============================================================
+
+
+@login_required
+def metodos_pagamento(request):
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+
+    # =====================================================
+    # ESCOLA ATUAL
+    # =====================================================
+
+
+    escola = request.user.escola
+
+
+
+    if not escola:
+
+
+        messages.error(
+
+            request,
+
+            "Utilizador sem escola associada."
+
+        )
+
+
+        return redirect("dashboard")
+
+
+
+
+
+
+
+    # =====================================================
+    # MÉTODOS DA ESCOLA
+    # =====================================================
+
+
+    metodos = (
+
+        MetodoPagamento.objects
+
+        .filter(
+
+            escola=escola
+
+        )
+
+        .order_by(
+
+            "ordem",
+
+            "nome"
+
+        )
+
+    )
+
+
+
+
+
+
+
+    # =====================================================
+    # INDICADORES
+    # =====================================================
+
+
+    total_metodos = metodos.count()
+
+
+
+    metodos_ativos = (
+
+        metodos
+
+        .filter(
+
+            ativo=True
+
+        )
+
+        .count()
+
+    )
+
+
+
+    metodos_inativos = (
+
+        metodos
+
+        .filter(
+
+            ativo=False
+
+        )
+
+        .count()
+
+    )
+
+
+
+    metodo_padrao = (
+
+        metodos
+
+        .filter(
+
+            metodo_padrao=True
+
+        )
+
+        .first()
+
+    )
+
+
+
+
+
+
+
+    # =====================================================
+    # CONTEXTO
+    # =====================================================
+
+
+    context = {
+
+
+        "metodos": metodos,
+
+
+        "total_metodos":
+
+            total_metodos,
+
+
+        "metodos_ativos":
+
+            metodos_ativos,
+
+
+        "metodos_inativos":
+
+            metodos_inativos,
+
+
+        "metodo_padrao":
+
+            metodo_padrao,
+
+
+
+    }
+
+
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/metodos_pagamento.html",
+
+        context
+
+    )
+
+# ============================================================
+# CRIAR MÉTODO DE PAGAMENTO
+# ============================================================
+
+
+@login_required
+def criar_metodo_pagamento(request):
+
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+    escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+
+            request,
+
+            "Utilizador sem escola associada."
+
+        )
+
+        return redirect("dashboard")
+
+
+
+
+
+    if request.method == "POST":
+
+
+        nome = request.POST.get(
+            "nome"
+        )
+
+
+        codigo = request.POST.get(
+            "codigo"
+        )
+
+
+
+        if not codigo:
+
+
+            codigo = nome.upper().replace(
+                " ",
+                "_"
+            )
+
+
+
+
+
+        if MetodoPagamento.objects.filter(
+
+            escola=escola,
+
+            codigo=codigo
+
+        ).exists():
+
+
+            messages.error(
+
+                request,
+
+                "Já existe um método com este código."
+
+            )
+
+
+            return redirect(
+                "metodos_pagamento"
+            )
+
+
+
+
+
+        with transaction.atomic():
+
+
+            metodo = MetodoPagamento.objects.create(
+
+
+                escola=escola,
+
+
+                nome=nome,
+
+
+                codigo=codigo,
+
+
+                descricao=request.POST.get(
+                    "descricao",
+                    ""
+                ),
+
+
+
+                ativo=True
+                if "ativo" in request.POST
+                else False,
+
+
+
+                metodo_padrao=True
+                if "metodo_padrao" in request.POST
+                else False,
+
+
+
+                exige_comprovativo=True
+                if "exige_comprovativo" in request.POST
+                else False,
+
+
+
+                permite_pagamento_parcial=True
+                if "permite_pagamento_parcial" in request.POST
+                else False,
+
+
+
+                permite_troco=True
+                if "permite_troco" in request.POST
+                else False,
+
+
+
+                cobra_taxa=True
+                if "cobra_taxa" in request.POST
+                else False,
+
+
+
+                percentual_taxa=request.POST.get(
+
+                    "percentual_taxa"
+
+                ) or 0,
+
+
+
+                ordem=request.POST.get(
+
+                    "ordem"
+
+                ) or 1,
+
+
+
+                cor=request.POST.get(
+
+                    "cor",
+
+                    "#2563eb"
+
+                ),
+
+
+
+                icone=request.POST.get(
+
+                    "icone",
+
+                    "bi-credit-card"
+
+                )
+
+            )
+
+
+
+
+        messages.success(
+
+            request,
+
+            f"Método {metodo.nome} criado com sucesso."
+
+        )
+
+
+    return redirect(
+        "metodos_pagamento"
+    )
+
+# ============================================================
+# EDITAR MÉTODO DE PAGAMENTO
+# ============================================================
+
+
+@login_required
+def editar_metodo_pagamento(request, id):
+
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
+        return redirect("dashboard")
+
+
+
+    escola = request.user.escola
+
+
+
+    metodo = get_object_or_404(
+
+        MetodoPagamento,
+
+        id=id,
+
+        escola=escola
+
+    )
+
+
+
+
+    if request.method == "POST":
+
+
+
+        metodo.nome = request.POST.get(
+            "nome"
+        )
+
+
+        metodo.descricao = request.POST.get(
+            "descricao",
+            ""
+        )
+
+
+
+        metodo.ativo = (
+            "ativo" in request.POST
+        )
+
+
+        metodo.metodo_padrao = (
+            "metodo_padrao" in request.POST
+        )
+
+
+        metodo.exige_comprovativo = (
+            "exige_comprovativo" in request.POST
+        )
+
+
+        metodo.permite_pagamento_parcial = (
+            "permite_pagamento_parcial" in request.POST
+        )
+
+
+        metodo.permite_troco = (
+            "permite_troco" in request.POST
+        )
+
+
+        metodo.cobra_taxa = (
+            "cobra_taxa" in request.POST
+        )
+
+
+
+        metodo.percentual_taxa = (
+
+            request.POST.get(
+                "percentual_taxa"
+            ) or 0
+
+        )
+
+
+
+        metodo.ordem = (
+
+            request.POST.get(
+                "ordem"
+            ) or 1
+
+        )
+
+
+
+        metodo.cor = request.POST.get(
+            "cor"
+        )
+
+
+        metodo.icone = request.POST.get(
+            "icone"
+        )
+
+
+
+        metodo.save()
+
+
+
+        messages.success(
+
+            request,
+
+            "Método atualizado com sucesso."
+
+        )
+
+
+
+        return redirect(
+            "metodos_pagamento"
+        )
+
+
+
+
+    return render(
+
+        request,
+
+        "financeiro/editar_metodo_pagamento.html",
+
+        {
+
+            "metodo": metodo
+
+        }
+
+    )
+
+# ============================================================
+# ATIVAR / DESATIVAR MÉTODO
+# ============================================================
+
+
+@login_required
+def ativar_desativar_metodo(request, id):
+
+
+    escola = request.user.escola
+
+
+
+    metodo = get_object_or_404(
+
+        MetodoPagamento,
+
+        id=id,
+
+        escola=escola
+
+    )
+
+
+
+    metodo.ativo = not metodo.ativo
+
+
+    metodo.save(
+        update_fields=[
+            "ativo",
+            "atualizado_em"
+        ]
+    )
+
+
+
+    estado = (
+
+        "ativado"
+
+        if metodo.ativo
+
+        else "desativado"
+
+    )
+
+
+
+    messages.success(
+
+        request,
+
+        f"Método {estado} com sucesso."
+
+    )
+
+
+
+    return redirect(
+        "metodos_pagamento"
+    )
+
+
+# ============================================================
+# ELIMINAR MÉTODO DE PAGAMENTO
+# ============================================================
+
+
+@login_required
+def eliminar_metodo_pagamento(request, id):
+
+
+    escola = request.user.escola
+
+
+
+    metodo = get_object_or_404(
+
+        MetodoPagamento,
+
+        id=id,
+
+        escola=escola
+
+    )
+
+
+
+    if request.method == "POST":
+
+
+        nome = metodo.nome
+
+
+        metodo.delete()
+
+
+
+        messages.success(
+
+            request,
+
+            f"Método {nome} eliminado."
+
+        )
+
+
+
+    return redirect(
+        "metodos_pagamento"
+    )
+
+@login_required
+@transaction.atomic
+def gerar_mensalidades(request):
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    permissoes = [
+
+        "FINANCEIRO",
+        "DIRETOR",
+        "SUPERADMIN",
+
+    ]
+
+
+    if getattr(request.user, "role", None) not in permissoes:
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+    # =====================================================
+    # ESCOLA
+    # =====================================================
+
+    escola = request.user.escola
+
+
+    if not escola:
+
+        messages.error(
+            request,
+            "Utilizador sem escola associada."
+        )
+
+        return redirect(
+            "dashboard"
+        )
+
+
+
+    # =====================================================
+    # ANO LETIVO ATIVO
+    # =====================================================
+
+    ano_letivo = AnoLetivo.objects.filter(
+
+        escola=escola,
+
+        ativo=True
+
+    ).first()
+
+
+
+    if not ano_letivo:
+
+        messages.error(
+
+            request,
+
+            "Não existe ano letivo ativo."
+
+        )
+
+        return redirect(
+            "mensalidades_por_classe"
+        )
+
+
+
+
+    # =====================================================
+    # MÊS ATUAL EM PORTUGUÊS
+    # =====================================================
+
+    hoje = timezone.now().date()
+
+
+    meses_portugues = {
+
+        "January": "Janeiro",
+
+        "February": "Fevereiro",
+
+        "March": "Março",
+
+        "April": "Abril",
+
+        "May": "Maio",
+
+        "June": "Junho",
+
+        "July": "Julho",
+
+        "August": "Agosto",
+
+        "September": "Setembro",
+
+        "October": "Outubro",
+
+        "November": "Novembro",
+
+        "December": "Dezembro",
+
+    }
+
+
+    mes_ingles = hoje.strftime("%B")
+
+
+    mes_atual = meses_portugues.get(
+
+        mes_ingles,
+
+        mes_ingles
+
+    )
+
+
+
+    # =====================================================
+    # ALUNOS DA ESCOLA
+    # =====================================================
+
+    alunos = Aluno.objects.filter(
+
+        escola=escola,
+
+        ativo=True
+
+    ).select_related(
+
+        "turma"
+
+    )
+
+
+
+    criadas = 0
+
+
+
+    # =====================================================
+    # GERAR MENSALIDADES
+    # =====================================================
+
+    for aluno in alunos:
+
+
+
+        if not aluno.turma:
+
+            continue
+
+
+
+
+        classe = str(
+
+            aluno.turma.classe
+
+        )
+
+
+
+
+        curso = getattr(
+
+            aluno.turma,
+
+            "curso",
+
+            None
+
+        )
+
+
+
+
+        # =================================================
+        # CONFIGURAÇÃO DA MENSALIDADE
+        # =================================================
+
+        configuracao = ConfiguracaoMensalidade.obter_configuracao(
+
+            escola,
+
+            classe,
+
+            curso
+
+        )
+
+
+
+        if not configuracao:
+
+            continue
+
+
+
+
+        # =================================================
+        # DATA DE VENCIMENTO
+        # =================================================
+
+        try:
+
+            vencimento = timezone.datetime(
+
+                hoje.year,
+
+                hoje.month,
+
+                configuracao.dia_vencimento
+
+            ).date()
+
+
+        except ValueError:
+
+            vencimento = timezone.datetime(
+
+                hoje.year,
+
+                hoje.month,
+
+                28
+
+            ).date()
+
+
+
+
+        # =================================================
+        # EVITAR DUPLICAÇÃO
+        # =================================================
+
+        existe = Mensalidade.objects.filter(
+
+            aluno=aluno,
+
+            ano_letivo=ano_letivo,
+
+            mes=mes_atual
+
+        ).exists()
+
+
+
+        if existe:
+
+            continue
+
+
+
+
+        # =================================================
+        # CRIAR MENSALIDADE
+        # =================================================
+
+        Mensalidade.objects.create(
+
+            aluno=aluno,
+
+            ano_letivo=ano_letivo,
+
+            mes=mes_atual,
+
+            valor=configuracao.valor,
+
+            vencimento=vencimento,
+
+            status="PENDENTE"
+
+        )
+
+
+
+        criadas += 1
+
+
+
+
+    # =====================================================
+    # RESULTADO
+    # =====================================================
+
+    messages.success(
+
+        request,
+
+        f"{criadas} mensalidade(s) gerada(s) para {mes_atual}."
+
+    )
+
+
+    return redirect(
+
+        "mensalidades_por_classe"
 
     )

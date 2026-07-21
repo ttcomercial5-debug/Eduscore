@@ -1,0 +1,1158 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block title %}
+Editar Método de Pagamento | EdusCel
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<style>
+
+
+/* ==========================================================
+   EDUSCEL - EDITAR MÉTODO PAGAMENTO PREMIUM
+========================================================== */
+
+
+.edit-wrapper{
+
+
+    max-width:1000px;
+
+    margin:auto;
+
+    animation:fade .35s ease;
+
+
+}
+
+
+
+@keyframes fade{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(15px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+
+
+
+.edit-card{
+
+
+    background:white;
+
+    border-radius:28px;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:
+
+    0 20px 50px rgba(15,23,42,.08);
+
+    overflow:hidden;
+
+
+}
+
+
+
+
+
+.edit-header{
+
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #0f172a,
+
+        #1e293b
+
+    );
+
+
+    color:white;
+
+    padding:30px;
+
+
+}
+
+
+
+
+
+.edit-header h3{
+
+
+    font-weight:900;
+
+    margin:0;
+
+
+}
+
+
+
+
+
+.edit-header p{
+
+
+    margin:8px 0 0;
+
+    opacity:.75;
+
+
+}
+
+
+
+
+
+.edit-body{
+
+
+    padding:35px;
+
+
+}
+
+
+
+
+
+.form-control,
+
+
+.form-select{
+
+
+    border-radius:14px;
+
+    padding:13px;
+
+    border:1px solid #cbd5e1;
+
+
+}
+
+
+
+.form-control:focus{
+
+
+    border-color:#2563eb;
+
+
+    box-shadow:
+
+    0 0 0 .25rem rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+.switch-box{
+
+
+    background:#f8fafc;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    border:1px solid #e2e8f0;
+
+
+}
+
+
+
+
+
+.btn-eduscel{
+
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #1d4ed8
+
+    );
+
+
+    border:none;
+
+    color:white;
+
+    border-radius:15px;
+
+    padding:13px 25px;
+
+    font-weight:700;
+
+
+}
+
+
+
+
+.btn-eduscel:hover{
+
+
+    color:white;
+
+    transform:translateY(-2px);
+
+
+}
+
+
+
+
+</style>
+
+
+
+
+
+
+
+<div class="edit-wrapper">
+
+
+
+
+
+<div class="edit-card">
+
+
+
+
+
+<!-- HEADER -->
+
+
+<div class="edit-header">
+
+
+<h3>
+
+
+<i class="bi bi-pencil-square me-2"></i>
+
+
+Editar Método de Pagamento
+
+
+</h3>
+
+
+
+<p>
+
+
+Atualize as configurações financeiras deste método.
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- FORM -->
+
+
+<form method="post">
+
+
+{% csrf_token %}
+
+
+
+
+
+<div class="edit-body">
+
+
+
+<div class="row g-4">
+
+
+
+
+
+
+<!-- NOME -->
+
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Nome do método
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="nome"
+
+
+class="form-control"
+
+
+value="{{ metodo.nome }}"
+
+
+required
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- DESCRIÇÃO -->
+
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Código
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="descricao"
+
+
+class="form-control"
+
+
+value="{{ metodo.descricao }}"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ORDEM -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Ordem
+
+
+</label>
+
+
+
+<input
+
+
+type="number"
+
+
+name="ordem"
+
+
+class="form-control"
+
+
+value="{{ metodo.ordem }}"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ÍCONE -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Ícone Bootstrap
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="icone"
+
+
+class="form-control"
+
+
+value="{{ metodo.icone }}"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- COR -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Cor
+
+
+</label>
+
+
+
+<input
+
+
+type="color"
+
+
+name="cor"
+
+
+class="form-control form-control-color"
+
+
+value="{{ metodo.cor }}"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- TAXA -->
+
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Percentual de taxa
+
+
+</label>
+
+
+
+<div class="input-group">
+
+
+<input
+
+
+type="number"
+
+
+step="0.01"
+
+
+name="percentual_taxa"
+
+
+class="form-control"
+
+
+value="{{ metodo.percentual_taxa }}"
+
+
+>
+
+
+<span class="input-group-text">
+
+
+%
+
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- COBRAR TAXA -->
+
+
+<div class="col-md-6">
+
+
+<div class="switch-box mt-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="cobra_taxa"
+
+
+id="taxa"
+
+
+{% if metodo.cobra_taxa %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="taxa"
+
+
+>
+
+
+Aplicar taxa
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+<div class="col-12">
+
+
+<h6 class="fw-bold">
+
+
+<i class="bi bi-sliders me-2"></i>
+
+
+Configurações
+
+
+</h6>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ATIVO -->
+
+
+<div class="col-md-4">
+
+
+<div class="switch-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="ativo"
+
+
+id="ativo"
+
+
+{% if metodo.ativo %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="ativo"
+
+
+>
+
+
+Método ativo
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PADRÃO -->
+
+
+<div class="col-md-4">
+
+
+<div class="switch-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="metodo_padrao"
+
+
+id="padrao"
+
+
+{% if metodo.metodo_padrao %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="padrao"
+
+
+>
+
+
+Método padrão
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- COMPROVATIVO -->
+
+
+<div class="col-md-4">
+
+
+<div class="switch-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="exige_comprovativo"
+
+
+id="comprovativo"
+
+
+{% if metodo.exige_comprovativo %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="comprovativo"
+
+
+>
+
+
+Exige comprovativo
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PARCIAL -->
+
+
+<div class="col-md-6">
+
+
+<div class="switch-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="permite_pagamento_parcial"
+
+
+id="parcial"
+
+
+{% if metodo.permite_pagamento_parcial %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="parcial"
+
+
+>
+
+
+Permite pagamento parcial
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TROCO -->
+
+
+<div class="col-md-6">
+
+
+<div class="switch-box">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="permite_troco"
+
+
+id="troco"
+
+
+{% if metodo.permite_troco %}
+
+checked
+
+{% endif %}
+
+
+>
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="troco"
+
+
+>
+
+
+Permite troco
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- FOOTER -->
+
+
+<div class="p-4 border-top d-flex justify-content-between flex-wrap gap-3">
+
+
+<a
+
+
+href="{% url 'metodos_pagamento' %}"
+
+
+class="btn btn-light px-4 rounded-3"
+
+
+>
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+Voltar
+
+
+</a>
+
+
+
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn btn-eduscel"
+
+
+>
+
+
+<i class="bi bi-check-circle me-2"></i>
+
+
+Guardar alterações
+
+
+</button>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}

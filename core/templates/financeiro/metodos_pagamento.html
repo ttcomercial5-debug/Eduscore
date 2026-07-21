@@ -1,0 +1,2808 @@
+{% extends "base_financeiro.html" %}
+
+
+{% block title %}
+Métodos de Pagamento | EdusCel
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<style>
+
+/* ==========================================================
+   EDUSCEL FINANCEIRO
+   MÉTODOS DE PAGAMENTO PREMIUM UI
+========================================================== */
+
+
+:root{
+
+    --edus-primary:#2563eb;
+    --edus-dark:#0f172a;
+    --edus-muted:#64748b;
+    --edus-border:#e2e8f0;
+    --edus-bg:#f8fafc;
+
+}
+
+
+
+/* ==========================================================
+   CONTAINER PRINCIPAL
+========================================================== */
+
+
+.finance-wrapper{
+
+    animation:fadePage .35s ease;
+
+}
+
+
+
+@keyframes fadePage{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+
+
+
+
+/* ==========================================================
+   HEADER PREMIUM
+========================================================== */
+
+
+.page-header{
+
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #ffffff,
+
+        #f8fafc
+
+    );
+
+
+    border-radius:28px;
+
+    padding:32px;
+
+    border:1px solid var(--edus-border);
+
+    box-shadow:
+
+    0 15px 40px rgba(15,23,42,.06);
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+
+
+.page-header h3{
+
+
+    font-size:28px;
+
+    font-weight:900;
+
+    color:var(--edus-dark);
+
+    letter-spacing:-.5px;
+
+
+}
+
+
+
+.page-header p{
+
+
+    margin:0;
+
+    color:var(--edus-muted);
+
+    font-size:15px;
+
+
+}
+
+
+
+
+/* ==========================================================
+   BOTÃO PRINCIPAL
+========================================================== */
+
+
+.btn-eduscel{
+
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #1d4ed8
+
+    );
+
+
+    color:white;
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:14px 24px;
+
+    font-weight:700;
+
+    box-shadow:
+
+    0 10px 25px rgba(37,99,235,.25);
+
+    transition:.3s;
+
+
+}
+
+
+
+.btn-eduscel:hover{
+
+
+    color:white;
+
+    transform:translateY(-3px);
+
+
+    box-shadow:
+
+    0 18px 35px rgba(37,99,235,.35);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   CARDS INDICADORES
+========================================================== */
+
+
+.payment-card{
+
+
+    background:white;
+
+    border-radius:26px;
+
+    padding:28px;
+
+    border:1px solid var(--edus-border);
+
+    height:100%;
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.05);
+
+    transition:.35s;
+
+
+}
+
+
+
+.payment-card:hover{
+
+
+    transform:translateY(-6px);
+
+
+    box-shadow:
+
+    0 20px 45px rgba(15,23,42,.12);
+
+
+}
+
+
+
+
+
+.payment-card h2{
+
+
+    font-size:34px;
+
+    font-weight:900;
+
+    color:var(--edus-dark);
+
+
+}
+
+
+
+.payment-card h5{
+
+
+    color:var(--edus-dark);
+
+}
+
+
+
+
+
+.payment-icon{
+
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================================================
+   TABELA PREMIUM
+========================================================== */
+
+
+.table-container{
+
+
+    background:white;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    border:1px solid var(--edus-border);
+
+
+    box-shadow:
+
+    0 15px 40px rgba(15,23,42,.06);
+
+
+}
+
+
+
+
+.table-header{
+
+
+    padding:28px;
+
+    border-bottom:1px solid var(--edus-border);
+
+
+}
+
+
+
+.table-header h5{
+
+
+    font-size:20px;
+
+    font-weight:900;
+
+    color:var(--edus-dark);
+
+
+}
+
+
+
+.table-header p{
+
+
+    color:var(--edus-muted);
+
+    margin:5px 0 0;
+
+
+}
+
+
+
+
+
+
+.table{
+
+
+    margin:0;
+
+
+}
+
+
+
+.table thead th{
+
+
+    background:#0f172a;
+
+    color:white;
+
+    font-size:12px;
+
+    padding:18px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.6px;
+
+
+}
+
+
+
+
+.table tbody td{
+
+
+    padding:18px;
+
+    vertical-align:middle;
+
+    border-bottom:1px solid #f1f5f9;
+
+
+}
+
+
+
+
+.table tbody tr{
+
+
+    transition:.25s;
+
+
+}
+
+
+
+
+.table tbody tr:hover{
+
+
+    background:#f8fafc;
+
+}
+
+
+
+
+
+/* ==========================================================
+   ICON MÉTODO
+========================================================== */
+
+
+.method-icon{
+
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-size:22px;
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.12);
+
+
+}
+
+
+
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+
+.badge-active{
+
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+
+}
+
+
+
+
+.badge-inactive{
+
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   MODAL PREMIUM
+========================================================== */
+
+
+.modal-content{
+
+
+    border:none;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 30px 70px rgba(15,23,42,.25);
+
+
+}
+
+
+
+
+.modal-header{
+
+
+    padding:25px 30px;
+
+
+}
+
+
+
+.modal-body{
+
+
+    padding:35px;
+
+
+}
+
+
+
+
+.form-control,
+
+
+.form-select{
+
+
+    border-radius:14px;
+
+    padding:13px 15px;
+
+    border:1px solid #cbd5e1;
+
+
+}
+
+
+
+.form-control:focus{
+
+
+    border-color:var(--edus-primary);
+
+
+    box-shadow:
+
+    0 0 0 .25rem rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+.page-header{
+
+
+    padding:22px;
+
+
+}
+
+
+
+.page-header h3{
+
+
+    font-size:22px;
+
+
+}
+
+
+
+.btn-eduscel{
+
+
+    width:100%;
+
+
+}
+
+
+
+.payment-card{
+
+
+    padding:22px;
+
+
+}
+
+
+}
+
+/* ==========================================================
+   CORREÇÃO MODAL SOBRE BASE_FINANCEIRO
+========================================================== */
+
+
+.modal{
+
+    z-index:20000 !important;
+
+}
+
+
+
+.modal-backdrop{
+
+    z-index:19990 !important;
+
+}
+
+
+
+.modal-dialog{
+
+    z-index:20001 !important;
+
+}
+
+
+
+.modal-content{
+
+    position:relative;
+
+    z-index:20002 !important;
+
+}
+
+</style>
+
+
+
+
+<div class="finance-wrapper">
+
+
+
+<div class="page-header">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+
+<div>
+
+
+<h3>
+
+<i class="bi bi-credit-card-2-front me-2 text-primary"></i>
+
+Métodos de Pagamento
+
+</h3>
+
+
+
+<p>
+
+Configure todas as formas de recebimento financeiro da instituição.
+
+</p>
+
+
+</div>
+
+
+
+<button
+
+class="btn btn-eduscel"
+
+data-bs-toggle="modal"
+
+data-bs-target="#modalNovoMetodo"
+
+>
+
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Novo Método
+
+
+</button>
+
+
+
+</div>
+
+
+</div>
+<!-- ==========================================================
+     INDICADORES FINANCEIROS
+========================================================== -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+<!-- TOTAL MÉTODOS -->
+
+<div class="col-xl-4 col-md-6">
+
+
+<div class="payment-card">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<span class="text-muted small fw-semibold">
+
+Total de métodos
+
+</span>
+
+
+<h2 class="mt-2 mb-0">
+
+{{ total_metodos }}
+
+</h2>
+
+
+</div>
+
+
+
+<div class="payment-icon bg-primary bg-opacity-10 text-primary">
+
+
+<i class="bi bi-credit-card-2-front"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- MÉTODOS ATIVOS -->
+
+
+<div class="col-xl-4 col-md-6">
+
+
+<div class="payment-card">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<span class="text-muted small fw-semibold">
+
+Métodos ativos
+
+</span>
+
+
+<h2 class="mt-2 mb-0">
+
+{{ metodos_ativos }}
+
+</h2>
+
+
+</div>
+
+
+
+<div class="payment-icon bg-success bg-opacity-10 text-success">
+
+
+<i class="bi bi-check-circle"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- MÉTODO PADRÃO -->
+
+
+<div class="col-xl-4 col-md-6">
+
+
+<div class="payment-card">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<span class="text-muted small fw-semibold">
+
+Método padrão
+
+</span>
+
+
+
+<h5 class="fw-bold mt-3 mb-0">
+
+
+{% if metodo_padrao %}
+
+
+{{ metodo_padrao.nome }}
+
+
+{% else %}
+
+
+Não definido
+
+
+{% endif %}
+
+
+
+</h5>
+
+
+
+</div>
+
+
+
+
+<div class="payment-icon bg-warning bg-opacity-10 text-warning">
+
+
+<i class="bi bi-star-fill"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+     MODAL NOVO MÉTODO DE PAGAMENTO
+========================================================== -->
+
+
+<div
+
+class="modal fade"
+
+id="modalNovoMetodo"
+
+tabindex="-1"
+
+aria-hidden="true"
+
+>
+
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+
+
+<div class="modal-content">
+
+
+
+
+
+<form method="post"
+
+action="{% url 'criar_metodo_pagamento' %}"
+
+>
+
+
+{% csrf_token %}
+
+
+
+
+
+<!-- HEADER MODAL -->
+
+
+<div class="modal-header bg-dark text-white">
+
+
+<div>
+
+
+<h5 class="modal-title fw-bold mb-1">
+
+
+<i class="bi bi-wallet2 me-2"></i>
+
+
+Novo Método Financeiro
+
+
+</h5>
+
+
+<small class="opacity-75">
+
+
+Cadastre uma nova forma de recebimento
+
+
+</small>
+
+
+</div>
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+class="btn-close btn-close-white"
+
+
+data-bs-dismiss="modal"
+
+
+>
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- CORPO -->
+
+
+<div class="modal-body">
+
+
+<div class="row g-4">
+
+
+
+
+
+
+
+<!-- NOME -->
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Nome do método
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="nome"
+
+
+class="form-control"
+
+
+placeholder="Ex: Multicaixa, Dinheiro, Transferência"
+
+
+required
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CÓDIGO -->
+
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Código interno
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="codigo"
+
+
+class="form-control"
+
+
+placeholder="Ex: MULTICAIXA"
+
+
+>
+
+
+<small class="text-muted">
+
+
+Se vazio será criado automaticamente.
+
+
+</small>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- ORDEM -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Ordem
+
+
+</label>
+
+
+
+<input
+
+
+type="number"
+
+
+name="ordem"
+
+
+class="form-control"
+
+
+value="1"
+
+
+min="1"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ÍCONE -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Ícone Bootstrap
+
+
+</label>
+
+
+
+<input
+
+
+type="text"
+
+
+name="icone"
+
+
+class="form-control"
+
+
+value="bi-credit-card"
+
+
+>
+
+
+<small class="text-muted">
+
+
+Ex: bi-bank, bi-cash, bi-wallet2
+
+
+</small>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- COR -->
+
+
+<div class="col-md-4">
+
+
+<label class="form-label fw-bold">
+
+
+Cor visual
+
+
+</label>
+
+
+
+<input
+
+
+type="color"
+
+
+name="cor"
+
+
+class="form-control form-control-color"
+
+
+value="#2563eb"
+
+
+>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TAXA -->
+
+<div class="col-md-6">
+
+
+<label class="form-label fw-bold">
+
+
+Taxa percentual
+
+
+</label>
+
+
+
+<div class="input-group">
+
+
+<input
+
+
+type="number"
+
+
+step="0.01"
+
+
+name="percentual_taxa"
+
+
+class="form-control"
+
+
+value="0"
+
+
+>
+
+
+<span class="input-group-text">
+
+
+%
+
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- COBRAR TAXA -->
+
+
+<div class="col-md-6 d-flex align-items-center">
+
+
+<div class="form-check form-switch mt-4">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="cobra_taxa"
+
+
+id="cobraTaxa"
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="cobraTaxa"
+
+
+>
+
+
+Aplicar taxa automaticamente
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-12">
+
+
+<hr>
+
+
+<h6 class="fw-bold text-dark">
+
+
+<i class="bi bi-sliders me-2"></i>
+
+
+Configurações avançadas
+
+
+</h6>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ATIVO -->
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="ativo"
+
+
+id="ativo"
+
+
+checked
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="ativo"
+
+
+>
+
+
+Método ativo
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PADRÃO -->
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="metodo_padrao"
+
+
+id="padrao"
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="padrao"
+
+
+>
+
+
+Definir padrão
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- COMPROVATIVO -->
+
+
+<div class="col-md-4">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="exige_comprovativo"
+
+
+id="comprovativo"
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="comprovativo"
+
+
+>
+
+
+Exige comprovativo
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PARCIAL -->
+
+
+<div class="col-md-6">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="permite_pagamento_parcial"
+
+
+id="parcial"
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="parcial"
+
+
+>
+
+
+Permite pagamento parcial
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TROCO -->
+
+
+<div class="col-md-6">
+
+
+<div class="form-check form-switch">
+
+
+<input
+
+
+class="form-check-input"
+
+
+type="checkbox"
+
+
+name="permite_troco"
+
+
+id="troco"
+
+
+>
+
+
+
+<label
+
+
+class="form-check-label fw-semibold"
+
+
+for="troco"
+
+
+>
+
+
+Permite troco
+
+
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- FOOTER -->
+
+
+<div class="modal-footer px-4 py-3">
+
+
+<button
+
+
+type="button"
+
+
+class="btn btn-light rounded-3"
+
+
+data-bs-dismiss="modal"
+
+
+>
+
+
+Cancelar
+
+
+</button>
+
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn btn-eduscel"
+
+
+>
+
+
+<i class="bi bi-save me-2"></i>
+
+
+Guardar método
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+</form>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+<!-- ==========================================================
+     LISTAGEM DOS MÉTODOS DE PAGAMENTO
+========================================================== -->
+
+
+<div class="table-container">
+
+
+
+
+
+<!-- CABEÇALHO DA TABELA -->
+
+
+<div class="table-header">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+<div>
+
+
+<h5 class="mb-1">
+
+
+<i class="bi bi-list-check me-2 text-primary"></i>
+
+
+Métodos cadastrados
+
+
+</h5>
+
+
+
+<p class="mb-0">
+
+
+Gerencie todas as formas de recebimento financeiro da escola.
+
+
+</p>
+
+
+</div>
+
+
+
+
+<div>
+
+
+<span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+
+
+{{ total_metodos }} registros
+
+
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- TABELA -->
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle mb-0">
+
+
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Método
+
+</th>
+
+
+<th>
+
+Código
+
+</th>
+
+
+<th>
+
+Taxa
+
+</th>
+
+
+<th>
+
+Estado
+
+</th>
+
+
+<th>
+
+Padrão
+
+</th>
+
+
+<th class="text-end">
+
+Ações
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+
+{% for metodo in metodos %}
+
+
+
+
+
+<tr>
+
+
+
+
+
+
+
+<!-- MÉTODO -->
+
+
+<td>
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+
+
+<div
+
+
+class="method-icon"
+
+
+style="background:{{ metodo.cor|default:'#2563eb' }}"
+
+>
+
+
+<i class="bi {{ metodo.icone|default:'bi-credit-card' }}"></i>
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+<div class="fw-bold text-dark">
+
+
+{{ metodo.nome }}
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- CÓDIGO -->
+
+
+<td>
+
+
+<span class="badge bg-light text-dark px-3 py-2">
+
+
+{{ metodo.codigo|default:"-" }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- TAXA -->
+
+
+<td>
+
+
+
+{% if metodo.cobra_taxa %}
+
+
+
+
+
+<div class="fw-bold text-danger">
+
+
+{{ metodo.percentual_taxa }}%
+
+
+</div>
+
+
+<small class="text-muted">
+
+
+Taxa aplicada
+
+
+</small>
+
+
+
+
+
+{% else %}
+
+
+
+
+<span class="text-muted">
+
+
+Sem taxa
+
+
+</span>
+
+
+
+
+
+{% endif %}
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- ESTADO -->
+
+
+<td>
+
+
+
+{% if metodo.ativo %}
+
+
+
+<span class="badge-active">
+
+
+<i class="bi bi-check-circle me-1"></i>
+
+
+Ativo
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+
+<span class="badge-inactive">
+
+
+<i class="bi bi-x-circle me-1"></i>
+
+
+Inativo
+
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- PADRÃO -->
+
+
+<td>
+
+
+
+{% if metodo.metodo_padrao %}
+
+
+
+<span class="text-warning fw-bold">
+
+
+<i class="bi bi-star-fill me-1"></i>
+
+
+Padrão
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="text-muted">
+
+
+Não definido
+
+
+</span>
+
+
+
+
+{% endif %}
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- AÇÕES -->
+
+
+<td class="text-end">
+
+
+
+
+
+<div class="btn-group shadow-sm">
+
+
+
+
+
+
+
+<!-- EDITAR -->
+
+
+<a
+
+
+href="{% url 'editar_metodo_pagamento' metodo.id %}"
+
+
+class="btn btn-sm btn-outline-primary"
+
+
+data-bs-toggle="tooltip"
+
+
+title="Editar método"
+
+
+>
+
+
+<i class="bi bi-pencil-square"></i>
+
+
+</a>
+
+
+
+
+
+
+
+
+
+<!-- ESTADO -->
+
+
+<a
+
+
+href="{% url 'ativar_desativar_metodo' metodo.id %}"
+
+
+class="btn btn-sm btn-outline-success"
+
+
+data-bs-toggle="tooltip"
+
+
+title="Alterar estado"
+
+
+>
+
+
+
+{% if metodo.ativo %}
+
+
+
+<i class="bi bi-toggle-on"></i>
+
+
+
+{% else %}
+
+
+
+<i class="bi bi-toggle-off"></i>
+
+
+
+{% endif %}
+
+
+
+
+</a>
+
+
+
+
+
+
+
+
+
+<!-- ELIMINAR -->
+
+
+<form
+
+
+method="post"
+
+
+action="{% url 'eliminar_metodo_pagamento' metodo.id %}"
+
+
+class="d-inline"
+
+
+>
+
+
+
+{% csrf_token %}
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn btn-sm btn-outline-danger"
+
+
+data-bs-toggle="tooltip"
+
+
+title="Eliminar método"
+
+
+onclick="return confirm('Deseja realmente eliminar este método de pagamento?')"
+
+
+>
+
+
+<i class="bi bi-trash3"></i>
+
+
+</button>
+
+
+
+</form>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</td>
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+
+
+<tr>
+
+
+<td colspan="6">
+
+
+<div class="text-center py-5">
+
+
+
+
+
+<div class="mb-3">
+
+
+<div class="payment-icon bg-light text-secondary mx-auto">
+
+
+<i class="bi bi-credit-card"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<h5 class="fw-bold">
+
+
+Nenhum método cadastrado
+
+
+</h5>
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Comece adicionando as formas de pagamento utilizadas pela instituição.
+
+
+</p>
+
+
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+<!-- ==========================================================
+     FINAL DO WRAPPER
+========================================================== -->
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block scripts %}
+
+
+
+<script>
+
+
+/* ==========================================================
+   TOOLTIP BOOTSTRAP
+========================================================== */
+
+
+document
+
+.querySelectorAll('[data-bs-toggle="tooltip"]')
+
+.forEach(function(element){
+
+
+    new bootstrap.Tooltip(element);
+
+
+});
+
+
+
+
+
+
+
+
+/* ==========================================================
+   CONFIRMAÇÃO DE ELIMINAÇÃO PREMIUM
+========================================================== */
+
+
+document
+
+.querySelectorAll("form[action*='eliminar']")
+
+.forEach(function(form){
+
+
+
+    form.addEventListener(
+
+        "submit",
+
+        function(event){
+
+
+
+            let confirmar = confirm(
+
+                "Tem certeza que deseja eliminar este método de pagamento?\n\nEsta ação não poderá ser revertida."
+
+            );
+
+
+
+            if(!confirmar){
+
+
+                event.preventDefault();
+
+
+            }
+
+
+
+        }
+
+
+    );
+
+
+
+});
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   FECHAR MODAL APÓS SUCESSO (PREPARADO PARA MESSAGES)
+========================================================== */
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+
+
+    const modal = document.getElementById(
+
+        "modalNovoMetodo"
+
+    );
+
+
+
+    if(modal){
+
+
+        modal.addEventListener(
+
+            "hidden.bs.modal",
+
+            function(){
+
+
+                const form = modal.querySelector("form");
+
+
+                if(form){
+
+
+                    form.reset();
+
+
+                }
+
+
+
+            }
+
+
+        );
+
+
+    }
+
+
+
+});
+
+
+
+
+
+
+
+/* ==========================================================
+   PREVIEW DINÂMICO DA COR DO MÉTODO
+========================================================== */
+
+
+const colorInput = document.querySelector(
+
+"input[name='cor']"
+
+);
+
+
+
+const iconInput = document.querySelector(
+
+"input[name='icone']"
+
+);
+
+
+
+
+
+if(colorInput){
+
+
+    colorInput.addEventListener(
+
+        "change",
+
+        function(){
+
+
+            console.log(
+
+                "Nova cor selecionada:",
+
+                this.value
+
+            );
+
+
+        }
+
+
+    );
+
+
+}
+
+
+
+
+
+
+</script>
+
+
+
+
+
+{% endblock %}

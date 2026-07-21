@@ -1492,203 +1492,640 @@ class Mensalidade(models.Model):
 # ==========================================================
 #                    PAGAMENTO
 # ==========================================================
-
 from django.db import models
 from django.contrib.auth import get_user_model
+from decimal import Decimal
+
 
 User = get_user_model()
 
 
+
 class Pagamento(models.Model):
 
-    FORMAS_PAGAMENTO = [
-        ("DINHEIRO", "Dinheiro"),
-        ("TRANSFERENCIA", "Transferência"),
-        ("TPA", "TPA"),
-        ("MULTICAIXA", "Multicaixa"),
-        ("OUTRO", "Outro"),
-    ]
+
+    # ======================================================
+    # TIPOS DE PAGAMENTO
+    # ======================================================
+
 
     TIPOS = [
+
+
         ("MENSALIDADE", "Mensalidade"),
+
         ("INSCRICAO", "Inscrição"),
+
         ("UNIFORME", "Uniforme"),
+
         ("EXAME", "Exame"),
+
         ("DECLARACAO", "Declaração"),
+
         ("MULTA", "Multa"),
+
         ("OUTRO", "Outro"),
+
     ]
 
+
+
+    # ======================================================
+    # ALUNO
+    # ======================================================
+
+
     aluno = models.ForeignKey(
+
         "Aluno",
+
         on_delete=models.CASCADE,
+
         related_name="pagamentos",
+
         verbose_name="Aluno"
+
     )
+
+
+
+    # ======================================================
+    # ESCOLA
+    # ======================================================
+
 
     escola = models.ForeignKey(
+
         "Escola",
+
         on_delete=models.CASCADE,
+
         related_name="pagamentos",
+
         verbose_name="Escola"
+
     )
+
+
+
+    # ======================================================
+    # MENSALIDADE RELACIONADA
+    # ======================================================
+
 
     mensalidade = models.ForeignKey(
+
         "Mensalidade",
+
         on_delete=models.SET_NULL,
+
         null=True,
+
         blank=True,
+
         related_name="pagamentos",
+
         verbose_name="Mensalidade"
+
     )
+
+
+
+    # ======================================================
+    # ANO LETIVO
+    # ======================================================
+
 
     ano_letivo = models.ForeignKey(
+
         "AnoLetivo",
+
         on_delete=models.CASCADE,
+
         related_name="pagamentos",
+
         verbose_name="Ano Letivo"
+
     )
+
+
+
+    # ======================================================
+    # TIPO
+    # ======================================================
+
 
     tipo = models.CharField(
-        max_length=20,
+
+        max_length=30,
+
         choices=TIPOS,
+
         default="MENSALIDADE"
+
     )
+
+
+
+    # ======================================================
+    # VALOR BASE
+    # ======================================================
+
 
     valor_pago = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
+
+        max_digits=12,
+
+        decimal_places=2,
+
+        verbose_name="Valor Pago"
+
     )
 
-    forma_pagamento = models.CharField(
-        max_length=20,
-        choices=FORMAS_PAGAMENTO
+
+
+    # ======================================================
+    # MÉTODO DE PAGAMENTO
+    # CONFIGURADO PELO FINANCEIRO
+    # ======================================================
+
+
+    forma_pagamento = models.ForeignKey(
+
+        "MetodoPagamento",
+
+        on_delete=models.PROTECT,
+
+        related_name="pagamentos",
+
+        verbose_name="Método de Pagamento"
+
     )
+
+
+
+    # ======================================================
+    # TAXA DO MÉTODO
+    # Ex: TPA 2%
+    # ======================================================
+
+
+    taxa_percentual = models.DecimalField(
+
+        max_digits=5,
+
+        decimal_places=2,
+
+        default=0,
+
+        verbose_name="Taxa (%)"
+
+    )
+
+
+
+    taxa_valor = models.DecimalField(
+
+        max_digits=12,
+
+        decimal_places=2,
+
+        default=0,
+
+        verbose_name="Valor da Taxa"
+
+    )
+
+
+
+    # ======================================================
+    # TOTAL RECEBIDO
+    # ======================================================
+
+
+    total_recebido = models.DecimalField(
+
+        max_digits=12,
+
+        decimal_places=2,
+
+        default=0,
+
+        verbose_name="Total Recebido"
+
+    )
+
+
+
+    # ======================================================
+    # RECIBO
+    # ======================================================
+
 
     numero_recibo = models.CharField(
-        max_length=30,
+
+        max_length=40,
+
         unique=True,
+
         blank=True
+
     )
+
+
+
+    # ======================================================
+    # REFERÊNCIA
+    # ======================================================
+
 
     referencia = models.CharField(
+
         max_length=100,
+
         blank=True,
+
         null=True
+
     )
+
+
+
+    # ======================================================
+    # OBSERVAÇÃO
+    # ======================================================
+
 
     observacao = models.TextField(
+
         blank=True,
+
         null=True
+
     )
+
+
+
+    # ======================================================
+    # UTILIZADOR QUE RECEBEU
+    # ======================================================
+
 
     recebido_por = models.ForeignKey(
+
         User,
+
         on_delete=models.SET_NULL,
+
         null=True,
+
         blank=True,
+
         related_name="pagamentos_recebidos"
+
     )
+
+
+
+    # ======================================================
+    # DATAS
+    # ======================================================
+
 
     data_pagamento = models.DateTimeField(
+
         auto_now_add=True
+
     )
+
 
     criado_em = models.DateTimeField(
+
         auto_now_add=True
+
     )
 
+
+
+
     class Meta:
-        ordering = ["-criado_em"]
+
+
+        ordering = [
+
+            "-criado_em"
+
+        ]
+
+
+        indexes = [
+
+
+            models.Index(
+
+                fields=[
+
+                    "escola",
+
+                    "tipo"
+
+                ]
+
+            ),
+
+
+            models.Index(
+
+                fields=[
+
+                    "aluno",
+
+                    "criado_em"
+
+                ]
+
+            ),
+
+
+            models.Index(
+
+                fields=[
+
+                    "numero_recibo"
+
+                ]
+
+            ),
+
+        ]
+
+
 
     # ======================================================
-    # GERAR RECIBO
+    # GERAR NÚMERO RECIBO
     # ======================================================
+
 
     def gerar_numero_recibo(self):
 
-        if not self.ano_letivo:
 
-            ano = "0000"
+        ano = "0000"
 
-        else:
+
+
+        if self.ano_letivo:
+
 
             try:
+
                 ano = self.ano_letivo.nome.split("/")[-1]
 
+
             except:
+
+
                 ano = self.ano_letivo.nome
 
-        ultimo = Pagamento.objects.filter(
-            numero_recibo__startswith=f"REC-{ano}"
-        ).order_by("-id").first()
 
-        if not ultimo or not ultimo.numero_recibo:
+
+
+        ultimo = Pagamento.objects.filter(
+
+            escola=self.escola,
+
+            numero_recibo__startswith=f"REC-{ano}"
+
+        ).order_by(
+
+            "-id"
+
+        ).first()
+
+
+
+
+        if not ultimo:
+
 
             return f"REC-{ano}-00001"
 
+
+
+
         try:
 
-            ultimo_numero = int(
+
+            numero = int(
+
                 ultimo.numero_recibo.split("-")[-1]
+
             )
+
 
         except:
 
-            ultimo_numero = 0
 
-        novo = ultimo_numero + 1
+            numero = 0
 
-        return f"REC-{ano}-{str(novo).zfill(5)}"
+
+
+
+        return (
+
+            f"REC-{ano}-"
+
+            f"{str(numero + 1).zfill(5)}"
+
+        )
+
+
+
+
+    # ======================================================
+    # CALCULAR TAXA
+    # ======================================================
+
+
+    def calcular_taxa(self):
+
+
+        if not self.forma_pagamento:
+
+            return Decimal("0.00")
+
+
+
+        if not self.forma_pagamento.cobra_taxa:
+
+
+            return Decimal("0.00")
+
+
+
+        percentual = Decimal(
+
+            self.forma_pagamento.percentual_taxa
+
+            or 0
+
+        )
+
+
+
+        return (
+
+            self.valor_pago *
+
+            percentual /
+
+            Decimal("100")
+
+        )
+
+
+
 
     # ======================================================
     # SAVE
     # ======================================================
 
+
     def save(self, *args, **kwargs):
 
+
+
         # escola automática
+
         if not self.escola and self.aluno:
+
 
             self.escola = self.aluno.escola
 
+
+
+
+        # validar método da escola
+
+
+        if self.forma_pagamento:
+
+
+            if self.forma_pagamento.escola != self.escola:
+
+
+                raise ValueError(
+
+                    "Método de pagamento inválido para esta escola."
+
+                )
+
+
+
+
         # ano letivo automático
+
+
         if not self.ano_letivo and self.escola:
+
 
             from .models import AnoLetivo
 
+
+
             ano = AnoLetivo.objects.filter(
+
                 escola=self.escola,
+
                 ativo=True
+
             ).first()
 
+
+
             if ano:
+
                 self.ano_letivo = ano
 
-        # recibo automático
+
+
+
+        # calcular taxa
+
+
+        self.taxa_percentual = (
+
+            self.forma_pagamento.percentual_taxa
+
+            if self.forma_pagamento
+
+            else 0
+
+        )
+
+
+
+        self.taxa_valor = self.calcular_taxa()
+
+
+
+        self.total_recebido = (
+
+            self.valor_pago +
+
+            self.taxa_valor
+
+        )
+
+
+
+
+        # gerar recibo
+
+
         if not self.numero_recibo:
 
+
             self.numero_recibo = (
+
                 self.gerar_numero_recibo()
+
             )
+
+
+
 
         super().save(*args, **kwargs)
 
-        # atualiza status da mensalidade
+
+
+
+        # atualizar mensalidade
+
+
         if self.mensalidade:
 
+
             self.mensalidade.atualizar_status()
+
+
+
 
     # ======================================================
     # STRING
     # ======================================================
 
+
     def __str__(self):
 
+
         return (
+
             f"{self.numero_recibo} | "
+
             f"{self.aluno} | "
+
             f"{self.valor_pago} Kz"
+
         )
 
 
@@ -3535,3 +3972,248 @@ class ConfiguracaoMultaJuros(models.Model):
     def __str__(self):
 
         return f"Multas e Juros - {self.escola.nome}"
+
+
+# ============================================================
+# MÉTODOS DE PAGAMENTO
+# EDUSCEL - ICA SYSTEMS
+# ============================================================
+
+from django.db import models
+
+
+class MetodoPagamento(models.Model):
+    """
+    Métodos de pagamento disponíveis para cada escola.
+
+    Exemplos:
+    - Dinheiro
+    - Transferência Bancária
+    - Multicaixa Express
+    - TPA
+    - Cheque
+    - Unitel Money
+    """
+
+    escola = models.ForeignKey(
+        Escola,
+        on_delete=models.CASCADE,
+        related_name="metodos_pagamento",
+        verbose_name="Escola",
+    )
+
+    nome = models.CharField(
+        max_length=100,
+        verbose_name="Nome"
+    )
+
+    codigo = models.CharField(
+        max_length=50,
+        verbose_name="Código"
+    )
+
+    descricao = models.TextField(
+        blank=True,
+        verbose_name="Descrição"
+    )
+
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name="Ativo"
+    )
+
+    metodo_padrao = models.BooleanField(
+        default=False,
+        verbose_name="Método padrão"
+    )
+
+    exige_comprovativo = models.BooleanField(
+        default=False,
+        verbose_name="Exigir comprovativo"
+    )
+
+    permite_pagamento_parcial = models.BooleanField(
+        default=True,
+        verbose_name="Permitir pagamento parcial"
+    )
+
+    permite_troco = models.BooleanField(
+        default=False,
+        verbose_name="Permitir troco"
+    )
+
+    cobra_taxa = models.BooleanField(
+        default=False,
+        verbose_name="Cobrar taxa"
+    )
+
+    percentual_taxa = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        verbose_name="Percentual da taxa (%)"
+    )
+
+    ordem = models.PositiveIntegerField(
+        default=1,
+        verbose_name="Ordem de exibição"
+    )
+
+    cor = models.CharField(
+        max_length=20,
+        default="#2563eb",
+        verbose_name="Cor"
+    )
+
+    icone = models.CharField(
+        max_length=50,
+        default="bi-credit-card",
+        verbose_name="Ícone Bootstrap"
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "Método de Pagamento"
+        verbose_name_plural = "Métodos de Pagamento"
+        ordering = [
+            "ordem",
+            "nome"
+        ]
+        unique_together = [
+            "escola",
+            "codigo"
+        ]
+
+    def __str__(self):
+        return f"{self.nome} ({self.escola.nome})"
+
+    def save(self, *args, **kwargs):
+        """
+        Garante apenas um método padrão por escola.
+        """
+        super().save(*args, **kwargs)
+
+        if self.metodo_padrao:
+            MetodoPagamento.objects.filter(
+                escola=self.escola
+            ).exclude(
+                pk=self.pk
+            ).update(
+                metodo_padrao=False
+            )
+
+
+# ============================================================
+# DADOS BANCÁRIOS
+# ============================================================
+
+class ContaBancaria(models.Model):
+    """
+    Contas bancárias utilizadas pela escola.
+
+    Podem ser usadas por:
+    - Transferência Bancária
+    - TPA
+    - Multicaixa Express
+    """
+
+    escola = models.ForeignKey(
+        Escola,
+        on_delete=models.CASCADE,
+        related_name="contas_bancarias",
+        verbose_name="Escola"
+    )
+
+    banco = models.CharField(
+        max_length=150,
+        verbose_name="Banco"
+    )
+
+    titular = models.CharField(
+        max_length=200,
+        verbose_name="Titular"
+    )
+
+    numero_conta = models.CharField(
+        max_length=80,
+        blank=True,
+        verbose_name="Número da Conta"
+    )
+
+    iban = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="IBAN"
+    )
+
+    swift = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="SWIFT"
+    )
+
+    numero_telefone = models.CharField(
+        max_length=30,
+        blank=True,
+        verbose_name="Telefone associado"
+    )
+
+    qr_code = models.ImageField(
+        upload_to="financeiro/qr_codes/",
+        blank=True,
+        null=True,
+        verbose_name="QR Code"
+    )
+
+    ativa = models.BooleanField(
+        default=True,
+        verbose_name="Ativa"
+    )
+
+    observacoes = models.TextField(
+        blank=True,
+        verbose_name="Observações"
+    )
+
+    criado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "Conta Bancária"
+        verbose_name_plural = "Contas Bancárias"
+        ordering = [
+            "banco",
+            "titular"
+        ]
+
+    def __str__(self):
+        return f"{self.banco} - {self.titular}"
+
+
+# ============================================================
+# MÉTODOS PADRÃO DO SISTEMA
+# ============================================================
+
+METODOS_PADRAO = [
+    ("DINHEIRO", "Dinheiro"),
+    ("TRANSFERENCIA", "Transferência Bancária"),
+    ("MULTICAIXA_EXPRESS", "Multicaixa Express"),
+    ("TPA", "TPA"),
+    ("CHEQUE", "Cheque"),
+    ("UNITEL_MONEY", "Unitel Money"),
+    ("AFRIMONEY", "Afrimoney"),
+    ("EKWANZA", "e-Kwanza"),
+    ("OUTRO", "Outro"),
+]

@@ -1,26 +1,1144 @@
-<h2>RECIBO DE PAGAMENTO</h2>
+{% extends "base_secretaria.html" %}
 
-<table border="1" width="100%">
+
+{% block content %}
+
+
+<style>
+
+
+/* =====================================================
+   RECIBO PREMIUM EDUSCEL
+===================================================== */
+
+
+.recibo-container{
+
+
+    max-width:950px;
+
+    margin:35px auto;
+
+    background:#ffffff;
+
+    padding:45px;
+
+    border-radius:22px;
+
+    box-shadow:
+    0 15px 40px rgba(15,23,42,.12);
+
+
+    font-family:
+    "Inter",
+    Arial,
+    sans-serif;
+
+
+}
+
+
+
+
+/* =====================================================
+   CABEÇALHO
+===================================================== */
+
+
+.recibo-top{
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border-bottom:3px solid #2563eb;
+
+    padding-bottom:25px;
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+.logo-area{
+
+
+    width:100px;
+
+    height:100px;
+
+    border-radius:18px;
+
+    background:#f1f5f9;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+
+}
+
+
+
+.logo-area img{
+
+
+    max-width:90px;
+
+    max-height:90px;
+
+
+}
+
+
+
+
+.titulo{
+
+
+    text-align:center;
+
+    flex:1;
+
+
+}
+
+
+
+.titulo h1{
+
+
+    font-size:32px;
+
+    font-weight:900;
+
+    color:#0f172a;
+
+    margin:0;
+
+
+}
+
+
+
+.titulo p{
+
+
+    color:#64748b;
+
+    margin-top:8px;
+
+
+}
+
+
+
+
+
+.numero-recibo{
+
+
+    text-align:right;
+
+
+}
+
+
+
+.numero-recibo small{
+
+
+    color:#64748b;
+
+    display:block;
+
+
+}
+
+
+
+.numero-recibo strong{
+
+
+    font-size:18px;
+
+    color:#2563eb;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   ESCOLA
+===================================================== */
+
+
+.escola-box{
+
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+.escola-box h3{
+
+
+    font-size:24px;
+
+    font-weight:900;
+
+    margin-bottom:5px;
+
+    color:#0f172a;
+
+
+}
+
+
+
+.escola-box p{
+
+
+    margin:0;
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   INFORMAÇÕES
+===================================================== */
+
+
+.info-grid{
+
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(230px,1fr));
+
+
+    gap:18px;
+
+    margin-bottom:35px;
+
+
+}
+
+
+
+
+.info-card{
+
+
+    background:#f8fafc;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:16px;
+
+    padding:18px;
+
+
+}
+
+
+
+.info-card span{
+
+
+    display:block;
+
+    color:#64748b;
+
+    font-size:13px;
+
+    margin-bottom:7px;
+
+
+}
+
+
+
+.info-card strong{
+
+
+    font-size:16px;
+
+    color:#0f172a;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   TABELA
+===================================================== */
+
+
+.table-container{
+
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    border:1px solid #e2e8f0;
+
+
+}
+
+
+
+.table{
+
+
+    margin:0;
+
+
+}
+
+
+
+.table thead th{
+
+
+    background:#1d4ed8;
+
+    color:white;
+
+    padding:15px;
+
+    font-size:14px;
+
+
+}
+
+
+
+.table tbody td{
+
+
+    padding:15px;
+
+    vertical-align:middle;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   TOTAL
+===================================================== */
+
+
+.total-area{
+
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+
+}
+
+
+
+
+.total-box{
+
+
+    background:#f0fdf4;
+
+    border:1px solid #bbf7d0;
+
+    padding:20px 35px;
+
+    border-radius:18px;
+
+    font-size:26px;
+
+    font-weight:900;
+
+    color:#15803d;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   ASSINATURA
+===================================================== */
+
+
+.assinaturas{
+
+
+    margin-top:70px;
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(2,1fr);
+
+
+    gap:80px;
+
+    text-align:center;
+
+
+}
+
+
+
+.assinatura{
+
+
+    border-top:1px solid #94a3b8;
+
+    padding-top:10px;
+
+    color:#475569;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   BOTÃO
+===================================================== */
+
+
+.btn-print{
+
+
+    margin-top:40px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 35px;
+
+    border-radius:14px;
+
+    font-weight:800;
+
+    font-size:16px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   IMPRESSÃO
+===================================================== */
+
+
+@media print{
+
+
+
+    body{
+
+        background:white!important;
+
+    }
+
+
+
+    .btn-print,
+
+    .sidebar,
+
+    .navbar,
+
+    header{
+
+
+        display:none!important;
+
+
+    }
+
+
+
+
+    .recibo-container{
+
+
+        box-shadow:none;
+
+        margin:0;
+
+        max-width:none;
+
+        width:100%;
+
+        padding:20px;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+@media(max-width:700px){
+
+
+
+    .recibo-container{
+
+        padding:20px;
+
+    }
+
+
+
+    .recibo-top{
+
+        flex-direction:column;
+
+        gap:20px;
+
+    }
+
+
+
+    .numero-recibo{
+
+        text-align:center;
+
+    }
+
+
+
+    .assinaturas{
+
+        grid-template-columns:1fr;
+
+        gap:50px;
+
+    }
+
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+<div class="recibo-container">
+
+
+
+
+
+<!-- =====================================================
+     CABEÇALHO
+===================================================== -->
+
+
+<div class="recibo-top">
+
+
+
+    <div class="logo-area">
+
+
+        {% if escola.logo %}
+
+
+            <img src="{{ escola.logo.url }}">
+
+
+        {% else %}
+
+
+            EDUSCEL
+
+
+        {% endif %}
+
+
+
+    </div>
+
+
+
+
+
+
+    <div class="titulo">
+
+
+        <h1>
+
+            RECIBO DE PAGAMENTO
+
+
+        </h1>
+
+
+        <p>
+
+            Comprovativo oficial de pagamento escolar
+
+
+        </p>
+
+
+
+    </div>
+
+
+
+
+
+
+    <div class="numero-recibo">
+
+
+        <small>
+
+            Nº Recibo
+
+
+        </small>
+
+
+        <strong>
+
+            {{ numero_recibo }}
+
+
+        </strong>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+     ESCOLA
+===================================================== -->
+
+
+<div class="escola-box">
+
+
+    <h3>
+
+        {{ escola.nome }}
+
+    </h3>
+
+
+    <p>
+
+        Ano Letivo:
+
+        {% if pagamentos.first.ano_letivo %}
+
+            {{ pagamentos.first.ano_letivo.nome }}
+
+        {% endif %}
+
+
+    </p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+     DADOS ALUNO
+===================================================== -->
+
+
+<div class="info-grid">
+
+
+
+    <div class="info-card">
+
+
+        <span>
+
+            Aluno
+
+
+        </span>
+
+
+        <strong>
+
+            {{ aluno.usuario.get_full_name }}
+
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <span>
+
+            Número Processo
+
+
+        </span>
+
+
+        <strong>
+
+            {{ aluno.numero_processo }}
+
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <span>
+
+            Turma
+
+
+        </span>
+
+
+        <strong>
+
+
+            {{ turma|default:"-" }}
+
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <span>
+
+            Recebido por
+
+
+        </span>
+
+
+        <strong>
+
+            {{ pagamentos.first.recebido_por.get_full_name }}
+
+
+        </strong>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     PAGAMENTOS
+===================================================== -->
+
+
+
+<div class="table-container">
+
+
+<table class="table table-bordered">
+
+
+
+<thead>
+
+
 <tr>
-<th>Aluno</th>
-<th>Tipo</th>
-<th>Valor</th>
-<th>Data</th>
+
+
+<th>
+
+Descrição
+
+</th>
+
+
+
+<th>
+
+Método
+
+</th>
+
+
+
+<th>
+
+Referência
+
+</th>
+
+
+
+<th>
+
+Valor
+
+</th>
+
+
+
+<th>
+
+Data
+
+</th>
+
+
+
 </tr>
+
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
 
 {% for p in pagamentos %}
 
+
+
 <tr>
-<td>{{ p.aluno.usuario.get_full_name }}</td>
-<td>{{ p.tipo }}</td>
-<td>{{ p.valor_pago }} Kz</td>
-<td>{{ p.data_pagamento }}</td>
+
+
+<td>
+
+
+{{ p.get_tipo_display }}
+
+
+{% if p.mensalidade %}
+
+
+<br>
+
+<small class="text-muted">
+
+{{ p.mensalidade.mes }}
+
+</small>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+{% if p.forma_pagamento %}
+
+
+{{ p.forma_pagamento.nome }}
+
+
+{% else %}
+
+
+-
+
+
+{% endif %}
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+{{ p.referencia|default:"-" }}
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<strong>
+
+
+{{ p.valor_pago|floatformat:2 }} Kz
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+{{ p.data_pagamento|date:"d/m/Y H:i" }}
+
+
+</td>
+
+
+
 </tr>
+
+
+
 
 {% endfor %}
 
+
+
+</tbody>
+
+
 </table>
 
-<h3>Total: {{ total }} Kz</h3>
 
-<button onclick="window.print()">Imprimir Recibo</button>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     TOTAL
+===================================================== -->
+
+
+<div class="total-area">
+
+
+<div class="total-box">
+
+
+Total:
+
+{{ total|floatformat:2 }} Kz
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     ASSINATURAS
+===================================================== -->
+
+
+<div class="assinaturas">
+
+
+<div class="assinatura">
+
+
+Responsável Financeiro
+
+
+</div>
+
+
+
+<div class="assinatura">
+
+
+Encarregado de Educação
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="text-center">
+
+
+<button
+
+onclick="window.print()"
+
+class="btn-print"
+
+
+>
+
+
+<i class="bi bi-printer me-2"></i>
+
+
+Imprimir Recibo
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}

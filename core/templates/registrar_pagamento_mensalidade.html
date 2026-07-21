@@ -640,35 +640,29 @@
 
                         </label>
 
-                        <select
-                            name="forma_pagamento"
-                            class="form-select"
-                            required
-                        >
+                        <select name="forma_pagamento" class="form-select" required>
 
                             <option value="">
-                                Selecione
+                                Selecione o método de pagamento
                             </option>
 
-                            <option value="DINHEIRO">
-                                Dinheiro
-                            </option>
+                            {% for metodo in metodos_pagamento %}
 
-                            <option value="TRANSFERENCIA">
-                                Transferência
-                            </option>
+                                <option value="{{ metodo.id }}">
 
-                            <option value="MULTICAIXA">
-                                Multicaixa
-                            </option>
+                                    {{ metodo.nome }}
 
-                            <option value="TPA">
-                                TPA
-                            </option>
+                                </option>
 
-                            <option value="OUTRO">
-                                Outro
-                            </option>
+                            {% empty %}
+
+                                <option disabled>
+
+                                    Nenhum método de pagamento configurado
+
+                                </option>
+
+                            {% endfor %}
 
                         </select>
 
@@ -776,10 +770,24 @@
 
                                     <span class="payment-method">
 
-                                        {{ pagamento.forma_pagamento }}
+                                        {% if pagamento.forma_pagamento %}
+
+                                            {{ pagamento.forma_pagamento.nome }}
+
+                                            {% if pagamento.forma_pagamento.codigo %}
+                                            <br>
+                                            <small class="text-muted">
+                                                {{ pagamento.forma_pagamento.codigo }}
+                                            </small>
+                                            {% endif %}
+
+                                        {% else %}
+
+                                            Não informado
+
+                                        {% endif %}
 
                                     </span>
-
                                 </td>
 
                                 <td>

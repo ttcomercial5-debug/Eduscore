@@ -303,27 +303,42 @@
 
                 <label class="form-label fw-semibold">
 
-                    Forma
+                    Forma de Pagamento
 
                 </label>
+
 
                 <select name="forma"
                         class="form-select">
 
+
                     <option value="">
+
                         Todas
-                    </option>
-
-                    {% for value, label in formas_pagamento %}
-
-                    <option value="{{ value }}"
-                    {% if forma == value %}selected{% endif %}>
-
-                        {{ label }}
 
                     </option>
+
+
+                    {% for metodo in metodos_pagamento %}
+
+
+                    <option value="{{ metodo.id }}"
+
+                    {% if forma == metodo.id|stringformat:"s" %}
+
+                        selected
+
+                    {% endif %}
+
+                    >
+
+                        {{ metodo.nome }}
+
+                    </option>
+
 
                     {% endfor %}
+
 
                 </select>
 
@@ -382,7 +397,7 @@
 
                     <th>Valor</th>
 
-                    <th>Forma</th>
+                    <th>Método Pagamento</th>
 
                     <th>Status</th>
 
@@ -434,11 +449,19 @@
 
                         {% if pagamento.mensalidade %}
 
-                            {{ pagamento.mensalidade.mes }}
+                            <span class="badge bg-light text-dark">
+
+                                {{ pagamento.mensalidade.mes }}
+
+                            </span>
 
                         {% else %}
 
-                            —
+                            <span class="text-muted">
+
+                                —
+
+                            </span>
 
                         {% endif %}
 
@@ -456,7 +479,23 @@
 
                     <td>
 
-                        {{ pagamento.get_forma_pagamento_display }}
+                        {% if pagamento.forma_pagamento %}
+
+                            <span class="badge bg-primary rounded-pill px-3 py-2">
+
+                                {{ pagamento.forma_pagamento.nome }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-muted">
+
+                                Não informado
+
+                            </span>
+
+                        {% endif %}
 
                     </td>
 

@@ -17,6 +17,18 @@ Mensalidades por Classe | EdusCel
 
 
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+
+
+<div>
+
+
 <div class="section-title">
 
 <i class="bi bi-cash-stack me-2"></i>
@@ -28,13 +40,92 @@ Mensalidades por Classe
 
 
 
-
-<p class="text-muted mb-4">
+<p class="text-muted mb-0">
 
 Consulta das propinas configuradas por classe e curso.
 
 </p>
 
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+<a href="{% url 'gerar_mensalidades' %}"
+
+class="btn btn-success rounded-pill px-4 shadow-sm">
+
+
+<i class="bi bi-calendar-plus me-2"></i>
+
+
+Gerar Mensalidades
+
+
+</a>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<!-- =====================================================
+     ALERTA INFORMATIVO
+===================================================== -->
+
+
+<div class="alert alert-primary border-0 shadow-sm rounded-4 mb-4">
+
+
+<div class="d-flex align-items-center">
+
+
+<i class="bi bi-info-circle-fill fs-4 me-3"></i>
+
+
+<div>
+
+
+<strong>
+
+Gestão automática de mensalidades
+
+</strong>
+
+
+<br>
+
+
+<span class="small">
+
+As mensalidades dos alunos são criadas com base nas configurações
+financeiras por classe e curso.
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+</div>
 
 
 
@@ -196,7 +287,6 @@ Nenhuma configuração encontrada.
 
 
 
-
 <!-- =====================================================
      FILTRO CURSOS
 ===================================================== -->
@@ -229,6 +319,8 @@ Ensino Médio
 
 
 </div>
+
+
 
 
 
@@ -281,6 +373,7 @@ Todos
 
 
 </a>
+
 
 
 

@@ -1819,7 +1819,7 @@ active
 
 <span>
 
-Mensalidades por Classe
+Preços das Mensalidades
 
 </span>
 
@@ -2051,9 +2051,17 @@ Multas e Juros
 
 <a
 
-href="#"
+href="{% url 'metodos_pagamento' %}"
 
-class="menu-link">
+class="menu-link
+
+{% if request.resolver_match.url_name == 'metodos_pagamento' %}
+
+active
+
+{% endif %}
+
+">
 
 
 <i class="bi bi-credit-card"></i>
