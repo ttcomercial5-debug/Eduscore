@@ -6,95 +6,222 @@
 <style>
 
 /* =====================================================
-   EDUSCEL FINANCEIRO PREMIUM DASHBOARD
+   EDUSCEL FINANCEIRO PREMIUM
+   DASHBOARD COMPACTO PROFISSIONAL
 ===================================================== */
 
 
 .finance-wrapper{
 
-    padding:25px 0 50px;
+    padding:18px 0 40px;
 
-    animation:fade .4s ease;
+    animation:
+    fadeFinance .35s ease;
 
 }
 
 
 
-/* HEADER */
+@keyframes fadeFinance{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+
+
+/* =====================================================
+   HEADER INSTITUCIONAL
+===================================================== */
+
 
 .finance-header{
 
     background:
+
     linear-gradient(
         135deg,
-        #0f172a,
+        #020617,
         #1e3a8a
     );
 
-    border-radius:28px;
 
-    padding:35px;
+    border-radius:22px;
+
+
+    padding:25px 28px;
+
 
     color:white;
 
-    margin-bottom:30px;
+
+    margin-bottom:22px;
+
 
     box-shadow:
-    0 20px 45px rgba(15,23,42,.18);
+
+    0 15px 35px rgba(15,23,42,.18);
+
 
 }
+
+
 
 
 .finance-header h2{
 
-    font-weight:800;
 
-    margin-bottom:8px;
+    font-size:25px;
+
+    font-weight:900;
+
+    margin-bottom:5px;
+
 
 }
+
+
 
 
 .finance-header p{
 
+
     margin:0;
 
-    opacity:.85;
+    font-size:14px;
+
+    opacity:.8;
+
 
 }
 
 
-.finance-user{
 
-    margin-top:20px;
 
-    display:flex;
+/* =====================================================
+   IDENTIDADE DA ESCOLA
+===================================================== */
 
-    gap:15px;
+
+.school-highlight{
+
+
+    margin-top:18px;
+
+
+    padding:14px 18px;
+
+
+    border-radius:16px;
+
+
+    background:
+
+    rgba(255,255,255,.10);
+
+
+    border:
+
+    1px solid rgba(255,255,255,.15);
+
+
+    display:inline-flex;
+
 
     align-items:center;
 
+
+    gap:12px;
+
+
 }
 
 
 
-.finance-avatar{
+.school-highlight i{
 
-    width:60px;
 
-    height:60px;
+    width:42px;
 
-    border-radius:50%;
 
-    background:
-    rgba(255,255,255,.15);
+    height:42px;
+
+
+    border-radius:12px;
+
 
     display:flex;
+
+
+    align-items:center;
+
 
     justify-content:center;
 
-    align-items:center;
 
-    font-size:26px;
+    background:
+
+    linear-gradient(
+        135deg,
+        #38bdf8,
+        #2563eb
+    );
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+.school-info small{
+
+
+    display:block;
+
+
+    font-size:11px;
+
+    color:#cbd5e1;
+
+    text-transform:uppercase;
+
+    letter-spacing:.8px;
+
+
+}
+
+
+
+.school-info strong{
+
+
+    display:block;
+
+
+    font-size:18px;
+
+
+    font-weight:900;
+
+
+    color:white;
+
 
 }
 
@@ -103,43 +230,141 @@
 
 
 /* =====================================================
-   KPI CARDS
+   UTILIZADOR
 ===================================================== */
 
 
-.kpi-grid{
+.finance-user{
 
-    display:grid;
 
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
+    display:flex;
 
-    gap:22px;
 
-    margin-bottom:35px;
+    align-items:center;
+
+
+    gap:12px;
+
+
+    margin-top:18px;
+
 
 }
 
 
 
+
+.finance-avatar{
+
+
+    width:48px;
+
+
+    height:48px;
+
+
+    border-radius:50%;
+
+
+    background:
+
+    rgba(255,255,255,.15);
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+.finance-user strong{
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+.finance-user small{
+
+
+    opacity:.75;
+
+
+    font-size:12px;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   GRID KPIs COMPACTOS
+===================================================== */
+
+
+.kpi-grid{
+
+
+    display:grid;
+
+
+    grid-template-columns:
+
+    repeat(
+        auto-fit,
+        minmax(210px,1fr)
+    );
+
+
+    gap:16px;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+
 .kpi-card{
+
 
     background:white;
 
-    border-radius:22px;
 
-    padding:25px;
+    border-radius:18px;
 
-    border:none;
+
+    padding:18px;
+
 
     box-shadow:
-    0 12px 35px rgba(15,23,42,.08);
 
-    transition:.3s;
 
-    position:relative;
+    0 8px 25px rgba(15,23,42,.07);
 
-    overflow:hidden;
+
+    transition:.25s;
+
 
 }
 
@@ -147,34 +372,26 @@
 
 .kpi-card:hover{
 
-    transform:translateY(-6px);
 
-    box-shadow:
-    0 20px 45px rgba(15,23,42,.15);
+    transform:translateY(-3px);
+
 
 }
 
-
-
-.kpi-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
 
 
 
 .kpi-title{
 
-    font-size:14px;
+
+    font-size:12px;
+
 
     color:#64748b;
 
+
     font-weight:700;
+
 
 }
 
@@ -182,25 +399,35 @@
 
 .kpi-value{
 
-    font-size:30px;
+
+    margin-top:8px;
+
+
+    font-size:24px;
+
 
     font-weight:900;
 
+
     color:#0f172a;
 
-    margin-top:12px;
 
 }
 
 
 
+
 .kpi-description{
 
-    margin-top:8px;
+
+    font-size:12px;
+
 
     color:#94a3b8;
 
-    font-size:13px;
+
+    margin-top:5px;
+
 
 }
 
@@ -208,129 +435,60 @@
 
 .kpi-icon{
 
-    width:60px;
 
-    height:60px;
+    width:45px;
 
-    border-radius:18px;
+
+    height:45px;
+
+
+    border-radius:14px;
+
 
     display:flex;
 
+
     align-items:center;
+
 
     justify-content:center;
 
-    font-size:28px;
+
+    font-size:20px;
+
 
 }
-
-
 
 
 
 .icon-blue{
 
-    background:#dbeafe;
-
-    color:#2563eb;
+background:#dbeafe;
+color:#2563eb;
 
 }
-
 
 
 .icon-green{
 
-    background:#dcfce7;
-
-    color:#16a34a;
+background:#dcfce7;
+color:#16a34a;
 
 }
-
 
 
 .icon-red{
 
-    background:#fee2e2;
-
-    color:#dc2626;
+background:#fee2e2;
+color:#dc2626;
 
 }
-
 
 
 .icon-yellow{
 
-    background:#fef3c7;
-
-    color:#d97706;
-
-}
-
-
-
-
-
-/* =====================================================
-   SALDO PRINCIPAL
-===================================================== */
-
-
-.balance-card{
-
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #1d4ed8
-    );
-
-
-    color:white;
-
-    border-radius:25px;
-
-    padding:30px;
-
-
-    box-shadow:
-    0 20px 40px rgba(37,99,235,.25);
-
-}
-
-
-
-.balance-title{
-
-    opacity:.8;
-
-    font-size:14px;
-
-}
-
-
-
-.balance-value{
-
-    font-size:40px;
-
-    font-weight:900;
-
-    margin-top:10px;
-
-}
-
-
-
-.balance-footer{
-
-    margin-top:20px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    font-size:14px;
+background:#fef3c7;
+color:#d97706;
 
 }
 
@@ -339,79 +497,37 @@
 
 
 /* =====================================================
-   BOTÕES
+   RESPONSIVO
 ===================================================== */
 
 
-.action-card{
+@media(max-width:768px){
 
-    background:white;
 
-    border-radius:22px;
+.finance-header{
 
-    padding:25px;
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.08);
+padding:20px;
 
 }
 
 
+.school-highlight strong{
 
-.action-btn{
-
-
-    padding:15px;
-
-    border-radius:14px;
-
-    font-weight:700;
-
-    transition:.25s;
+font-size:15px;
 
 }
 
 
-.action-btn:hover{
-
-    transform:translateY(-3px);
-
 }
-
-
-
-
-@keyframes fade{
-
-from{
-
-opacity:0;
-
-transform:translateY(15px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-
 
 </style>
-
 
 
 <div class="container-fluid finance-wrapper">
 
 
 <!-- =====================================================
- HEADER
+ HEADER EDUSCEL
 ===================================================== -->
 
 
@@ -421,7 +537,7 @@ transform:translateY(0);
 <div class="row align-items-center">
 
 
-<div class="col-lg-8">
+<div class="col-lg-7">
 
 
 <h2>
@@ -433,7 +549,7 @@ Dashboard Financeiro
 
 <p>
 
-Gestão financeira inteligente da instituição.
+Gestão financeira inteligente através do EdusCel.
 
 </p>
 
@@ -444,14 +560,12 @@ Gestão financeira inteligente da instituição.
 
 <div class="finance-avatar">
 
-<i class="bi bi-wallet2"></i>
+<i class="bi bi-wallet-fill"></i>
 
 </div>
 
 
-
 <div>
-
 
 <strong>
 
@@ -473,32 +587,49 @@ Responsável Financeiro
 </div>
 
 
-
-</div>
-
-
 </div>
 
 
 
-<div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+</div>
 
 
-<h6>
-
-Escola
-
-</h6>
 
 
-<h4 class="fw-bold">
+<div class="col-lg-5 mt-3 mt-lg-0 text-lg-end">
+
+
+<div class="school-highlight">
+
+
+<i class="bi bi-building-fill"></i>
+
+
+<div class="school-info">
+
+
+<small>
+
+Instituição activa
+
+</small>
+
+
+<strong>
 
 {{ request.user.escola.nome }}
 
-</h4>
+</strong>
 
 
 </div>
+
+
+</div>
+
+
+</div>
+
 
 
 </div>
@@ -506,377 +637,28 @@ Escola
 
 </div>
 <!-- =====================================================
-     BLOCO DE SEGURANÇA DA CONTA
+     SEGURANÇA DA CONTA
 ===================================================== -->
 
-<div class="row g-4 mb-5">
 
-    <div class="col-12">
-
-        <a href="{% url 'alterar_senha' %}"
-           class="security-banner text-decoration-none">
+<div class="security-banner mb-4">
 
 
-            <div class="security-left">
-
-                <div class="security-icon">
-
-                    <i class="bi bi-shield-lock-fill"></i>
-
-                </div>
+<a href="{% url 'alterar_senha' %}"
+   class="text-decoration-none text-white w-100">
 
 
-                <div>
-
-                    <h5>
-                        Segurança da Conta Financeira
-                    </h5>
+<div class="security-content">
 
 
-                    <p>
-                        Atualize regularmente a sua palavra-passe
-                        para proteger os dados financeiros da instituição.
-                    </p>
+<div class="security-icon">
 
 
-                </div>
-
-
-            </div>
-
-
-
-            <div class="security-action">
-
-                <span>
-                    Alterar Palavra-passe
-                </span>
-
-
-                <i class="bi bi-arrow-right-circle-fill"></i>
-
-
-            </div>
-
-
-        </a>
-
-
-    </div>
+<i class="bi bi-shield-lock-fill"></i>
 
 
 </div>
 
-
-
-
-
-<!-- =====================================================
-     RESUMO FINANCEIRO
-===================================================== -->
-
-
-<div class="section-header">
-
-
-    <div>
-
-        <h4>
-            Resumo Financeiro
-        </h4>
-
-
-        <p>
-            Indicadores gerais da situação financeira actual.
-        </p>
-
-    </div>
-
-
-</div>
-
-
-
-
-<div class="row g-4 mb-5">
-
-
-
-    <div class="col-md-6 col-xl-4">
-
-
-        <div class="summary-card">
-
-
-            <div class="summary-top">
-
-
-                <div>
-
-                    <small>
-                        Receitas Confirmadas
-                    </small>
-
-
-                    <h3>
-                        {{ total_recebido|intcomma }}
-                        <span>Kz</span>
-                    </h3>
-
-
-                </div>
-
-
-                <div class="summary-icon success">
-
-                    <i class="bi bi-cash-coin"></i>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="summary-footer">
-
-                Pagamentos recebidos dos alunos
-
-
-            </div>
-
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-
-
-    <div class="col-md-6 col-xl-4">
-
-
-        <div class="summary-card">
-
-
-            <div class="summary-top">
-
-
-                <div>
-
-                    <small>
-                        Valores Pendentes
-                    </small>
-
-
-                    <h3>
-                        {{ total_divida|intcomma }}
-                        <span>Kz</span>
-                    </h3>
-
-
-                </div>
-
-
-                <div class="summary-icon warning">
-
-                    <i class="bi bi-hourglass-split"></i>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="summary-footer">
-
-                Mensalidades ainda não liquidadas
-
-
-            </div>
-
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-
-
-    <div class="col-md-6 col-xl-4">
-
-
-        <div class="summary-card">
-
-
-            <div class="summary-top">
-
-
-                <div>
-
-                    <small>
-                        Alunos em Dívida
-                    </small>
-
-
-                    <h3>
-
-                        {{ alunos_devedores }}
-
-                    </h3>
-
-
-                </div>
-
-
-                <div class="summary-icon danger">
-
-                    <i class="bi bi-person-x-fill"></i>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="summary-footer">
-
-                Acompanhar cobranças pendentes
-
-
-            </div>
-
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-</div>
-
-
-
-
-
-
-<!-- =====================================================
-     EVOLUÇÃO FINANCEIRA
-===================================================== -->
-
-
-<div class="card-premium mb-5">
-
-
-    <div class="card-header-premium">
-
-
-        <div>
-
-
-            <h5>
-
-                <i class="bi bi-graph-up-arrow me-2"></i>
-
-                Evolução Financeira
-
-            </h5>
-
-
-            <small>
-
-                Comparação entre receitas e despesas mensais
-
-            </small>
-
-
-        </div>
-
-
-
-        <span class="period-badge">
-
-            Ano Actual
-
-        </span>
-
-
-
-    </div>
-
-
-
-
-
-    <div class="chart-container">
-
-
-        <canvas id="financialChart"></canvas>
-
-
-    </div>
-
-
-
-</div>
-<!-- =====================================================
-     ÚLTIMOS MOVIMENTOS FINANCEIROS
-===================================================== -->
-
-
-<div class="section-header mb-4">
-
-
-    <div>
-
-        <h4>
-            Movimentos Recentes
-        </h4>
-
-
-        <p>
-            Últimas operações financeiras registadas no sistema.
-        </p>
-
-    </div>
-
-
-</div>
-
-
-
-
-
-<div class="row g-4">
-
-
-
-<!-- =====================================================
-     PAGAMENTOS
-===================================================== -->
-
-
-<div class="col-xl-6">
-
-
-<div class="table-card">
-
-
-
-<div class="table-card-header">
 
 
 <div>
@@ -884,28 +666,36 @@ Escola
 
 <h5>
 
-<i class="bi bi-credit-card-fill text-success me-2"></i>
-
-Últimos Pagamentos
+Segurança da Conta
 
 </h5>
 
 
-<small>
+<p>
 
-Receitas recentes da instituição
+Proteja os dados financeiros da instituição mantendo
+a palavra-passe actualizada.
 
-</small>
+</p>
 
 
 </div>
 
 
-<a href="{% url 'pagamentos' %}"
-   class="btn btn-sm btn-outline-primary">
+
+<div class="security-button">
 
 
-Ver todos
+Alterar Palavra-passe
+
+
+<i class="bi bi-arrow-right"></i>
+
+
+</div>
+
+
+</div>
 
 
 </a>
@@ -917,11 +707,944 @@ Ver todos
 
 
 
+
+<!-- =====================================================
+     RESUMO FINANCEIRO
+===================================================== -->
+
+
+<div class="section-title">
+
+
+<h4>
+
+Resumo Financeiro
+
+</h4>
+
+
+<p>
+
+Indicadores gerais da situação financeira da escola.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="row g-3 mb-4">
+
+
+
+<!-- RECEITAS -->
+
+
+<div class="col-md-4">
+
+
+<div class="summary-card">
+
+
+<div class="summary-header">
+
+
+<div>
+
+
+<span>
+
+Receitas Confirmadas
+
+</span>
+
+
+<h3>
+
+{{ total_recebido|intcomma }}
+
+<small>Kz</small>
+
+</h3>
+
+
+</div>
+
+
+
+<div class="summary-icon success">
+
+<i class="bi bi-cash-stack"></i>
+
+</div>
+
+
+
+</div>
+
+
+<p>
+
+Pagamentos recebidos dos alunos.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- DIVIDAS -->
+
+
+<div class="col-md-4">
+
+
+<div class="summary-card">
+
+
+<div class="summary-header">
+
+
+<div>
+
+
+<span>
+
+Valores Pendentes
+
+</span>
+
+
+<h3>
+
+{{ total_divida|intcomma }}
+
+<small>Kz</small>
+
+</h3>
+
+
+</div>
+
+
+
+<div class="summary-icon warning">
+
+
+<i class="bi bi-clock-history"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p>
+
+Mensalidades aguardando pagamento.
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ALUNOS -->
+
+
+<div class="col-md-4">
+
+
+<div class="summary-card">
+
+
+<div class="summary-header">
+
+
+<div>
+
+
+<span>
+
+Alunos em Dívida
+
+</span>
+
+
+<h3>
+
+{{ alunos_devedores }}
+
+</h3>
+
+
+</div>
+
+
+
+<div class="summary-icon danger">
+
+
+<i class="bi bi-person-x-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+
+<p>
+
+Acompanhamento de cobranças pendentes.
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- =====================================================
+     EVOLUÇÃO FINANCEIRA
+===================================================== -->
+
+
+<div class="finance-panel mb-4">
+
+
+<div class="panel-header">
+
+
+<div>
+
+
+<h5>
+
+<i class="bi bi-graph-up-arrow"></i>
+
+Evolução Financeira
+
+</h5>
+
+
+<span>
+
+Comparação mensal entre entradas e despesas.
+
+</span>
+
+
+</div>
+
+
+
+<div class="period-label">
+
+Ano Actual
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="chart-box">
+
+
+<canvas id="financialChart"></canvas>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<style>
+
+
+/* =====================================================
+   SECURITY BANNER
+===================================================== */
+
+
+.security-banner{
+
+
+background:
+
+linear-gradient(
+135deg,
+#2563eb,
+#1d4ed8
+);
+
+
+border-radius:18px;
+
+
+padding:18px 22px;
+
+
+box-shadow:
+
+0 10px 30px rgba(37,99,235,.22);
+
+
+transition:.3s;
+
+
+}
+
+
+
+.security-banner:hover{
+
+
+transform:translateY(-3px);
+
+
+}
+
+
+
+.security-content{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:space-between;
+
+
+gap:20px;
+
+
+}
+
+
+
+.security-icon{
+
+
+width:48px;
+
+
+height:48px;
+
+
+border-radius:14px;
+
+
+background:
+
+rgba(255,255,255,.15);
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+font-size:22px;
+
+
+}
+
+
+
+
+.security-content h5{
+
+
+margin:0 0 4px;
+
+
+font-weight:800;
+
+
+font-size:16px;
+
+
+}
+
+
+
+.security-content p{
+
+
+margin:0;
+
+
+font-size:13px;
+
+
+opacity:.85;
+
+
+}
+
+
+
+
+.security-button{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:8px;
+
+
+font-weight:700;
+
+
+font-size:13px;
+
+
+white-space:nowrap;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+
+.section-title{
+
+
+margin-bottom:18px;
+
+
+}
+
+
+
+.section-title h4{
+
+
+font-size:20px;
+
+
+font-weight:900;
+
+
+margin:0;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+.section-title p{
+
+
+font-size:13px;
+
+
+color:#64748b;
+
+
+margin:4px 0;
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   SUMMARY CARDS
+===================================================== */
+
+
+.summary-card{
+
+
+background:white;
+
+
+border-radius:18px;
+
+
+padding:18px;
+
+
+box-shadow:
+
+0 8px 25px rgba(15,23,42,.07);
+
+
+height:100%;
+
+
+transition:.25s;
+
+
+}
+
+
+
+
+.summary-card:hover{
+
+
+transform:translateY(-4px);
+
+
+}
+
+
+
+
+
+.summary-header{
+
+
+display:flex;
+
+
+justify-content:space-between;
+
+
+align-items:center;
+
+
+}
+
+
+
+.summary-header span{
+
+
+font-size:12px;
+
+
+font-weight:700;
+
+
+color:#64748b;
+
+
+}
+
+
+
+
+.summary-header h3{
+
+
+font-size:25px;
+
+
+font-weight:900;
+
+
+margin:8px 0 0;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+
+.summary-header small{
+
+
+font-size:12px;
+
+
+}
+
+
+
+.summary-card p{
+
+
+margin:
+
+15px 0 0;
+
+
+font-size:12px;
+
+
+color:#94a3b8;
+
+
+}
+
+
+
+
+.summary-icon{
+
+
+width:45px;
+
+
+height:45px;
+
+
+border-radius:14px;
+
+
+display:flex;
+
+
+justify-content:center;
+
+
+align-items:center;
+
+
+font-size:20px;
+
+
+}
+
+
+
+.summary-icon.success{
+
+
+background:#dcfce7;
+
+color:#16a34a;
+
+
+}
+
+
+
+.summary-icon.warning{
+
+
+background:#fef3c7;
+
+color:#d97706;
+
+
+}
+
+
+
+.summary-icon.danger{
+
+
+background:#fee2e2;
+
+color:#dc2626;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   PAINEL GRÁFICO
+===================================================== */
+
+
+.finance-panel{
+
+
+background:white;
+
+
+border-radius:20px;
+
+
+overflow:hidden;
+
+
+box-shadow:
+
+0 8px 30px rgba(15,23,42,.08);
+
+
+}
+
+
+
+.panel-header{
+
+
+padding:20px 22px;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:space-between;
+
+
+}
+
+
+
+.panel-header h5{
+
+
+font-weight:900;
+
+
+margin:0;
+
+
+font-size:17px;
+
+
+}
+
+
+
+.panel-header span{
+
+
+font-size:12px;
+
+
+color:#64748b;
+
+
+}
+
+
+
+.period-label{
+
+
+background:#dbeafe;
+
+
+color:#2563eb!important;
+
+
+padding:7px 14px;
+
+
+border-radius:30px;
+
+
+font-weight:700;
+
+
+}
+
+
+
+.chart-box{
+
+
+height:320px;
+
+
+padding:15px 25px 25px;
+
+
+}
+
+
+
+
+
+
+
+@media(max-width:768px){
+
+
+.security-content{
+
+
+flex-direction:column;
+
+
+align-items:flex-start;
+
+
+}
+
+
+}
+
+</style>
+<!-- =====================================================
+     MOVIMENTOS FINANCEIROS RECENTES
+===================================================== -->
+
+
+<div class="section-title mt-4">
+
+
+<h4>
+
+Movimentos Recentes
+
+</h4>
+
+
+<p>
+
+Últimas operações financeiras registadas no sistema.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<!-- =====================================================
+     PAGAMENTOS RECENTES
+===================================================== -->
+
+
+<div class="col-xl-6">
+
+
+<div class="finance-table-card">
+
+
+
+<div class="finance-table-header">
+
+
+<div>
+
+
+<h5>
+
+<i class="bi bi-credit-card-fill text-success"></i>
+
+
+Últimos Pagamentos
+
+</h5>
+
+
+<span>
+
+Receitas confirmadas recentemente
+
+</span>
+
+
+</div>
+
+
+
+<a href="{% url 'pagamentos' %}"
+
+class="btn btn-sm btn-outline-primary">
+
+
+Ver todos
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
 <div class="table-responsive">
 
 
-<table class="table premium-table align-middle mb-0">
-
+<table class="table compact-table align-middle mb-0">
 
 
 <thead>
@@ -956,8 +1679,9 @@ Estado
 
 
 
-<tbody>
 
+
+<tbody>
 
 
 {% for pagamento in pagamentos %}
@@ -970,17 +1694,16 @@ Estado
 <td>
 
 
-<div class="user-finance">
+<div class="student-finance">
 
 
+<div class="student-avatar">
 
+
+{{ pagamento.aluno.nome_completo|first|upper }}
 
 
 </div>
-
-
-
-<div>
 
 
 <strong>
@@ -990,12 +1713,6 @@ Estado
 </strong>
 
 
-
-
-
-</div>
-
-
 </div>
 
 
@@ -1004,14 +1721,13 @@ Estado
 
 
 
+
 <td>
 
 
-<span class="value-positive">
-
+<span class="money-positive">
 
 {{ pagamento.valor_pago|intcomma }} Kz
-
 
 </span>
 
@@ -1021,21 +1737,21 @@ Estado
 
 
 
+
 <td>
 
-
 {{ pagamento.data_pagamento|date:"d/m/Y" }}
-
 
 </td>
 
 
 
 
+
 <td>
 
 
-<span class="status-success">
+<span class="status-paid">
 
 
 Confirmado
@@ -1051,20 +1767,23 @@ Confirmado
 
 
 
+
 {% empty %}
+
 
 
 <tr>
 
 
 <td colspan="4"
-class="text-center py-5 text-muted">
+
+class="text-center text-muted py-4">
 
 
-<i class="bi bi-inbox fs-2 d-block mb-2"></i>
+<i class="bi bi-inbox fs-4 d-block"></i>
 
 
-Nenhum pagamento registado.
+Nenhum pagamento encontrado.
 
 
 </td>
@@ -1088,7 +1807,6 @@ Nenhum pagamento registado.
 </div>
 
 
-
 </div>
 
 
@@ -1102,18 +1820,18 @@ Nenhum pagamento registado.
 
 
 <!-- =====================================================
-     DESPESAS
+     DESPESAS RECENTES
 ===================================================== -->
 
 
 <div class="col-xl-6">
 
 
-<div class="table-card">
+<div class="finance-table-card">
 
 
 
-<div class="table-card-header">
+<div class="finance-table-header">
 
 
 <div>
@@ -1122,7 +1840,7 @@ Nenhum pagamento registado.
 <h5>
 
 
-<i class="bi bi-receipt-cutoff text-danger me-2"></i>
+<i class="bi bi-receipt-cutoff text-danger"></i>
 
 
 Últimas Despesas
@@ -1131,17 +1849,21 @@ Nenhum pagamento registado.
 </h5>
 
 
-<small>
 
-Custos recentes da instituição
+<span>
 
-</small>
+Custos registados pela instituição
+
+</span>
 
 
 </div>
 
 
+
+
 <a href="{% url 'lista_despesas' %}"
+
 class="btn btn-sm btn-outline-danger">
 
 
@@ -1161,8 +1883,7 @@ Ver todas
 <div class="table-responsive">
 
 
-<table class="table premium-table align-middle mb-0">
-
+<table class="table compact-table align-middle mb-0">
 
 
 <thead>
@@ -1207,17 +1928,17 @@ Estado
 
 
 
+
+
 <tbody>
-
-
 
 
 {% for despesa in despesas %}
 
 
 
-<tr>
 
+<tr>
 
 
 <td>
@@ -1235,21 +1956,18 @@ Estado
 
 
 
-
 <td>
 
 
-<span class="value-negative">
+<span class="money-negative">
 
 
 {{ despesa.valor|intcomma }} Kz
-
 
 </span>
 
 
 </td>
-
 
 
 
@@ -1265,11 +1983,10 @@ Estado
 
 
 
-
 <td>
 
 
-<span class="status-danger">
+<span class="status-expense">
 
 
 Pago
@@ -1285,6 +2002,7 @@ Pago
 
 
 
+
 {% empty %}
 
 
@@ -1293,13 +2011,14 @@ Pago
 
 
 <td colspan="4"
-class="text-center py-5 text-muted">
+
+class="text-center text-muted py-4">
 
 
-<i class="bi bi-inbox fs-2 d-block mb-2"></i>
+<i class="bi bi-inbox fs-4 d-block"></i>
 
 
-Nenhuma despesa registada.
+Nenhuma despesa encontrada.
 
 
 </td>
@@ -1310,7 +2029,6 @@ Nenhuma despesa registada.
 
 
 {% endfor %}
-
 
 
 
@@ -1328,7 +2046,10 @@ Nenhuma despesa registada.
 </div>
 
 
+
 </div>
+
+
 
 
 
@@ -1347,50 +2068,7 @@ Nenhuma despesa registada.
 ===================================================== -->
 
 
-<div class="row g-4 mt-5">
 
-
-
-<div class="col-md-4">
-
-
-<div class="operation-card">
-
-
-<div class="operation-icon blue">
-
-
-<i class="bi bi-calendar-check"></i>
-
-
-</div>
-
-
-<div>
-
-
-<span>
-
-Gestão Mensal
-
-</span>
-
-
-<strong>
-
-Mensalidades
-
-</strong>
-
-
-<p>
-
-Acompanhe pagamentos por período.
-
-</p>
-
-
-</div>
 
 
 </div>
@@ -1403,52 +2081,6 @@ Acompanhe pagamentos por período.
 
 
 
-
-<div class="col-md-4">
-
-
-<div class="operation-card">
-
-
-<div class="operation-icon green">
-
-
-<i class="bi bi-bar-chart-fill"></i>
-
-
-</div>
-
-
-<div>
-
-
-<span>
-
-Análise
-
-</span>
-
-
-<strong>
-
-Relatórios Financeiros
-
-</strong>
-
-
-<p>
-
-Controle entradas e saídas.
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
 </div>
 
 
@@ -1457,337 +2089,173 @@ Controle entradas e saídas.
 
 
 
-<div class="col-md-4">
-
-
-<div class="operation-card">
-
-
-<div class="operation-icon orange">
-
-
-<i class="bi bi-shield-check"></i>
-
-
-</div>
-
-
-<div>
-
-
-<span>
-
-Segurança
-
-</span>
-
-
-<strong>
-
-Dados Protegidos
-
-</strong>
-
-
-<p>
-
-Informações financeiras seguras.
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-</div>
-<!-- =====================================================
-     CSS DOS COMPONENTES RESTANTES
-===================================================== -->
 
 
 <style>
 
 
 /* =====================================================
-   SECURITY BANNER
+   TABELAS
 ===================================================== */
 
 
-.security-banner{
+.finance-table-card{
 
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #1d4ed8
-    );
 
-    color:white;
+background:white;
 
-    padding:25px 30px;
 
-    border-radius:22px;
+border-radius:18px;
 
-    display:flex;
 
-    justify-content:space-between;
+overflow:hidden;
 
-    align-items:center;
 
-    transition:.3s ease;
+box-shadow:
 
-    box-shadow:
-    0 15px 35px rgba(37,99,235,.25);
+0 8px 25px rgba(15,23,42,.07);
+
 
 }
 
 
 
-.security-banner:hover{
+.finance-table-header{
 
-    transform:translateY(-4px);
 
-    color:white;
+padding:18px 20px;
+
+
+display:flex;
+
+
+justify-content:space-between;
+
+
+align-items:center;
+
 
 }
 
 
 
-.security-left{
+.finance-table-header h5{
 
-    display:flex;
 
-    align-items:center;
+font-size:16px;
 
-    gap:20px;
+
+font-weight:900;
+
+
+margin:0;
+
 
 }
 
 
 
-.security-icon{
-
-    width:65px;
-
-    height:65px;
-
-    background:
-    rgba(255,255,255,.15);
-
-    border-radius:18px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:30px;
-
-}
+.finance-table-header span{
 
 
-
-.security-banner h5{
-
-    font-weight:800;
-
-    margin-bottom:8px;
-
-}
+font-size:12px;
 
 
+color:#64748b;
 
-.security-banner p{
-
-    margin:0;
-
-    opacity:.85;
-
-}
-
-
-
-.security-action{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    font-weight:700;
 
 }
 
 
 
 
-
-/* =====================================================
-   SECTION HEADER
-===================================================== */
+.compact-table thead th{
 
 
-.section-header h4{
+background:#f8fafc;
 
-    font-weight:800;
 
-    color:#0f172a;
+font-size:11px;
 
-    margin-bottom:5px;
+
+text-transform:uppercase;
+
+
+color:#64748b;
+
+
+padding:12px;
+
+
+border:none;
+
 
 }
 
 
 
-.section-header p{
+.compact-table tbody td{
 
-    color:#64748b;
 
-    margin:0;
+padding:13px;
+
+
+font-size:13px;
+
 
 }
 
 
 
 
-
-/* =====================================================
-   SUMMARY CARDS
-===================================================== */
+.student-finance{
 
 
-.summary-card{
+display:flex;
 
-    background:white;
 
-    border-radius:22px;
+align-items:center;
 
-    padding:25px;
 
-    box-shadow:
+gap:10px;
 
-    0 12px 30px rgba(15,23,42,.08);
-
-    transition:.3s;
 
 }
 
 
 
-.summary-card:hover{
-
-    transform:translateY(-5px);
-
-}
+.student-avatar{
 
 
-
-.summary-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
+width:32px;
 
 
-
-.summary-top small{
-
-    color:#64748b;
-
-    font-weight:700;
-
-}
+height:32px;
 
 
-
-.summary-top h3{
-
-    margin-top:10px;
-
-    font-size:28px;
-
-    font-weight:900;
-
-}
+border-radius:50%;
 
 
-
-.summary-top h3 span{
-
-    font-size:15px;
-
-}
+background:#dbeafe;
 
 
-
-.summary-icon{
-
-    width:55px;
-
-    height:55px;
-
-    border-radius:16px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:25px;
-
-}
+color:#2563eb;
 
 
-
-.summary-icon.success{
-
-    background:#dcfce7;
-
-    color:#16a34a;
-
-}
+font-weight:800;
 
 
-.summary-icon.warning{
-
-    background:#fef3c7;
-
-    color:#d97706;
-
-}
+font-size:13px;
 
 
-.summary-icon.danger{
-
-    background:#fee2e2;
-
-    color:#dc2626;
-
-}
+display:flex;
 
 
+align-items:center;
 
-.summary-footer{
 
-    margin-top:20px;
+justify-content:center;
 
-    color:#94a3b8;
-
-    font-size:13px;
 
 }
 
@@ -1795,82 +2263,82 @@ Informações financeiras seguras.
 
 
 
-/* =====================================================
-   CARD PREMIUM
-===================================================== */
+.money-positive{
 
 
-.card-premium{
+color:#16a34a;
 
-    background:white;
 
-    border-radius:25px;
+font-weight:800;
 
-    box-shadow:
-
-    0 12px 35px rgba(15,23,42,.08);
-
-    overflow:hidden;
 
 }
 
 
 
-.card-header-premium{
+.money-negative{
 
-    padding:25px;
 
-    display:flex;
+color:#dc2626;
 
-    justify-content:space-between;
 
-    align-items:center;
+font-weight:800;
+
 
 }
 
 
 
-.card-header-premium h5{
 
-    font-weight:800;
 
-    margin:0;
+.status-paid{
+
+
+background:#dcfce7;
+
+
+color:#166534;
+
+
+padding:5px 10px;
+
+
+border-radius:20px;
+
+
+font-size:11px;
+
+
+font-weight:700;
+
 
 }
 
 
 
-.card-header-premium small{
+.status-expense{
 
-    color:#64748b;
+
+background:#fee2e2;
+
+
+color:#991b1b;
+
+
+padding:5px 10px;
+
+
+border-radius:20px;
+
+
+font-size:11px;
+
+
+font-weight:700;
+
 
 }
 
-
-
-.period-badge{
-
-    background:#dbeafe;
-
-    color:#2563eb;
-
-    padding:8px 16px;
-
-    border-radius:30px;
-
-    font-weight:700;
-
-}
-
-
-
-.chart-container{
-
-    height:360px;
-
-    padding:25px;
-
-}
 
 
 
@@ -1878,196 +2346,35 @@ Informações financeiras seguras.
 
 
 /* =====================================================
-   TABLE CARDS
-===================================================== */
-
-
-.table-card{
-
-    background:white;
-
-    border-radius:22px;
-
-    overflow:hidden;
-
-    box-shadow:
-
-    0 12px 35px rgba(15,23,42,.08);
-
-}
-
-
-
-.table-card-header{
-
-    padding:22px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
-
-
-
-.table-card-header h5{
-
-    font-weight:800;
-
-    margin:0;
-
-}
-
-
-
-.table-card-header small{
-
-    color:#64748b;
-
-}
-
-
-
-.premium-table thead th{
-
-    background:#f8fafc;
-
-    color:#64748b;
-
-    font-size:12px;
-
-    text-transform:uppercase;
-
-    padding:15px;
-
-}
-
-
-
-.premium-table tbody td{
-
-    padding:16px;
-
-}
-
-
-
-.user-finance{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-
-
-.avatar-payment{
-
-    width:40px;
-
-    height:40px;
-
-    border-radius:50%;
-
-    background:#dbeafe;
-
-    color:#2563eb;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-
-
-.value-positive{
-
-    color:#16a34a;
-
-    font-weight:800;
-
-}
-
-
-
-.value-negative{
-
-    color:#dc2626;
-
-    font-weight:800;
-
-}
-
-
-
-.status-success{
-
-    background:#dcfce7;
-
-    color:#166534;
-
-    padding:6px 12px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-}
-
-
-
-.status-danger{
-
-    background:#fee2e2;
-
-    color:#991b1b;
-
-    padding:6px 12px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-}
-
-
-
-
-
-/* =====================================================
-   OPERATION CARDS
+   OPERAÇÕES
 ===================================================== */
 
 
 .operation-card{
 
-    background:white;
 
-    border-radius:20px;
+background:white;
 
-    padding:22px;
 
-    display:flex;
+border-radius:18px;
 
-    align-items:center;
 
-    gap:18px;
+padding:18px;
 
-    box-shadow:
 
-    0 10px 30px rgba(0,0,0,.08);
+display:flex;
+
+
+align-items:center;
+
+
+gap:15px;
+
+
+box-shadow:
+
+0 8px 25px rgba(15,23,42,.07);
+
 
 }
 
@@ -2075,19 +2382,27 @@ Informações financeiras seguras.
 
 .operation-icon{
 
-    width:55px;
 
-    height:55px;
+width:45px;
 
-    border-radius:16px;
 
-    display:flex;
+height:45px;
 
-    justify-content:center;
 
-    align-items:center;
+border-radius:14px;
 
-    font-size:25px;
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+font-size:20px;
+
 
 }
 
@@ -2095,27 +2410,35 @@ Informações financeiras seguras.
 
 .operation-icon.blue{
 
-    background:#dbeafe;
 
-    color:#2563eb;
+background:#dbeafe;
+
+color:#2563eb;
+
 
 }
+
 
 
 .operation-icon.green{
 
-    background:#dcfce7;
 
-    color:#16a34a;
+background:#dcfce7;
+
+color:#16a34a;
+
 
 }
 
 
+
 .operation-icon.orange{
 
-    background:#fef3c7;
 
-    color:#d97706;
+background:#fef3c7;
+
+color:#d97706;
+
 
 }
 
@@ -2123,11 +2446,15 @@ Informações financeiras seguras.
 
 .operation-card span{
 
-    display:block;
 
-    color:#64748b;
+display:block;
 
-    font-size:13px;
+
+font-size:11px;
+
+
+color:#64748b;
+
 
 }
 
@@ -2135,9 +2462,15 @@ Informações financeiras seguras.
 
 .operation-card strong{
 
-    display:block;
 
-    font-size:16px;
+display:block;
+
+
+font-size:15px;
+
+
+font-weight:900;
+
 
 }
 
@@ -2145,11 +2478,15 @@ Informações financeiras seguras.
 
 .operation-card p{
 
-    margin:5px 0 0;
 
-    color:#94a3b8;
+margin:3px 0 0;
 
-    font-size:13px;
+
+font-size:12px;
+
+
+color:#94a3b8;
+
 
 }
 
@@ -2161,39 +2498,32 @@ Informações financeiras seguras.
 @media(max-width:768px){
 
 
-.security-banner{
-
-    flex-direction:column;
-
-    align-items:flex-start;
-
-    gap:20px;
-
-}
+.finance-table-header{
 
 
+flex-direction:column;
 
-.chart-container{
 
-    height:280px;
+align-items:flex-start;
+
+
+gap:12px;
+
 
 }
 
 
 
 }
-
 
 
 </style>
-
-
-
-
-
 <!-- =====================================================
-     CHART JS
+     GRÁFICO FINANCEIRO
 ===================================================== -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 <script>
@@ -2205,20 +2535,21 @@ document.addEventListener(
 function(){
 
 
-
-const canvas =
+const chartElement =
 document.getElementById(
 "financialChart"
 );
 
 
 
-if(canvas){
+if(chartElement){
 
 
 
 new Chart(
-canvas.getContext("2d"),
+
+chartElement.getContext("2d"),
+
 {
 
 
@@ -2230,6 +2561,7 @@ data:{
 
 
 labels:
+
 {{ meses|safe }},
 
 
@@ -2240,11 +2572,13 @@ datasets:[
 {
 
 
-label:"Entradas",
+label:"Receitas",
 
 
 data:
+
 {{ entradas_mensais|safe }},
+
 
 
 borderWidth:3,
@@ -2256,16 +2590,29 @@ tension:.4,
 fill:true,
 
 
+
 backgroundColor:
-"rgba(37,99,235,.12)",
+
+"rgba(37,99,235,.10)",
+
 
 
 borderColor:
-"#2563eb"
+
+"#2563eb",
+
+
+
+pointRadius:4,
+
+
+pointHoverRadius:6
 
 
 
 },
+
+
 
 
 
@@ -2276,7 +2623,9 @@ label:"Despesas",
 
 
 data:
+
 {{ despesas_mensais|safe }},
+
 
 
 borderWidth:3,
@@ -2288,21 +2637,35 @@ tension:.4,
 fill:true,
 
 
+
 backgroundColor:
-"rgba(220,38,38,.10)",
+
+"rgba(220,38,38,.08)",
+
 
 
 borderColor:
-"#dc2626"
+
+"#dc2626",
+
+
+
+pointRadius:4,
+
+
+pointHoverRadius:6
 
 
 
 }
 
 
+
 ]
 
 },
+
+
 
 
 
@@ -2316,13 +2679,87 @@ maintainAspectRatio:false,
 
 
 
+interaction:{
+
+
+mode:"index",
+
+
+intersect:false
+
+
+},
+
+
+
+
+
 plugins:{
+
 
 
 legend:{
 
 
-position:"top"
+position:"top",
+
+
+labels:{
+
+
+font:{
+
+
+weight:"600"
+
+
+}
+
+
+}
+
+
+},
+
+
+
+
+
+tooltip:{
+
+
+callbacks:{
+
+
+
+label:function(context){
+
+
+
+return context.dataset.label
+
++
+
+": "
+
++
+
+context.raw.toLocaleString(
+"pt-PT"
+)
+
++
+
+" Kz";
+
+
+
+}
+
+
+
+}
+
 
 
 }
@@ -2333,33 +2770,39 @@ position:"top"
 
 
 
+
+
+
+
 scales:{
+
 
 
 y:{
 
 
+
 beginAtZero:true,
+
 
 
 ticks:{
 
 
+
 callback:function(value){
+
 
 
 return value.toLocaleString(
 "pt-PT"
 )
+
 +
+
 " Kz";
 
 
-}
-
-
-}
-
 
 }
 
@@ -2369,12 +2812,40 @@ return value.toLocaleString(
 
 
 
+
+
+},
+
+
+
+
+x:{
+
+
+
+grid:{
+
+
+display:false
+
+
 }
 
 
 
 }
 
+
+
+}
+
+
+
+}
+
+
+
+}
 
 );
 
@@ -2384,13 +2855,126 @@ return value.toLocaleString(
 
 
 
-}
-
-);
-
+});
 
 
 </script>
+
+
+
+
+
+
+
+<!-- =====================================================
+     AJUSTES FINAIS RESPONSIVOS
+===================================================== -->
+
+
+<style>
+
+
+@media(max-width:992px){
+
+
+
+.finance-header .text-lg-end{
+
+
+text-align:left!important;
+
+
+}
+
+
+
+.school-highlight{
+
+
+width:100%;
+
+
+}
+
+
+
+
+}
+
+
+
+
+
+@media(max-width:576px){
+
+
+
+.summary-header h3{
+
+
+font-size:21px;
+
+
+}
+
+
+
+.panel-header{
+
+
+flex-direction:column;
+
+
+align-items:flex-start;
+
+
+gap:12px;
+
+
+}
+
+
+
+.chart-box{
+
+
+height:260px;
+
+
+padding:10px;
+
+
+}
+
+
+
+.operation-card{
+
+
+padding:15px;
+
+
+}
+
+
+
+.compact-table{
+
+
+font-size:12px;
+
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
 
 
 

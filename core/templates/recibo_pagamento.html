@@ -1,38 +1,53 @@
 {% extends "base_secretaria.html" %}
 
+{% load humanize %}
 
 {% block content %}
 
 
 <style>
 
+/* =========================================================
+   RECIBO PAGAMENTO PREMIUM
+   EDUSCEL - MODELO PROFISSIONAL ESCOLAR
+========================================================= */
 
-/* =====================================================
-   RECIBO PREMIUM EDUSCEL
-===================================================== */
+
+.recibo-wrapper{
+
+    padding:25px;
+
+}
+
 
 
 .recibo-container{
 
 
-    max-width:950px;
+    max-width:1000px;
 
-    margin:35px auto;
+    margin:30px auto;
 
     background:#ffffff;
 
+    border-radius:24px;
+
     padding:45px;
 
-    border-radius:22px;
 
     box-shadow:
-    0 15px 40px rgba(15,23,42,.12);
+
+    0 20px 50px rgba(15,23,42,.12);
 
 
     font-family:
+
     "Inter",
     Arial,
     sans-serif;
+
+
+    color:#0f172a;
 
 
 }
@@ -40,12 +55,47 @@
 
 
 
-/* =====================================================
-   CABEÇALHO
-===================================================== */
+/* =========================================================
+   BARRA SUPERIOR
+========================================================= */
 
 
-.recibo-top{
+.top-accent{
+
+
+    height:6px;
+
+    width:100%;
+
+    background:
+
+    linear-gradient(
+        90deg,
+        #1d4ed8,
+        #2563eb,
+        #16a34a
+    );
+
+
+    border-radius:
+
+    20px 20px 0 0;
+
+
+    margin-bottom:35px;
+
+
+}
+
+
+
+
+/* =========================================================
+   CABEÇALHO PRINCIPAL
+========================================================= */
+
+
+.recibo-header{
 
 
     display:flex;
@@ -54,11 +104,13 @@
 
     align-items:center;
 
-    border-bottom:3px solid #2563eb;
+    gap:25px;
 
-    padding-bottom:25px;
+    padding-bottom:30px;
 
-    margin-bottom:30px;
+    border-bottom:
+
+    1px solid #e2e8f0;
 
 
 }
@@ -68,19 +120,28 @@
 .logo-area{
 
 
-    width:100px;
+    width:110px;
 
-    height:100px;
+    height:110px;
 
-    border-radius:18px;
 
-    background:#f1f5f9;
+    background:#f8fafc;
+
+
+    border-radius:22px;
+
 
     display:flex;
 
+    justify-content:center;
+
     align-items:center;
 
-    justify-content:center;
+
+    border:
+
+    1px solid #e2e8f0;
+
 
     overflow:hidden;
 
@@ -92,84 +153,21 @@
 .logo-area img{
 
 
-    max-width:90px;
+    max-width:95px;
 
-    max-height:90px;
-
-
-}
-
-
-
-
-.titulo{
-
-
-    text-align:center;
-
-    flex:1;
+    max-height:95px;
 
 
 }
 
 
 
-.titulo h1{
+.logo-text{
 
 
-    font-size:32px;
+    font-size:22px;
 
     font-weight:900;
-
-    color:#0f172a;
-
-    margin:0;
-
-
-}
-
-
-
-.titulo p{
-
-
-    color:#64748b;
-
-    margin-top:8px;
-
-
-}
-
-
-
-
-
-.numero-recibo{
-
-
-    text-align:right;
-
-
-}
-
-
-
-.numero-recibo small{
-
-
-    color:#64748b;
-
-    display:block;
-
-
-}
-
-
-
-.numero-recibo strong{
-
-
-    font-size:18px;
 
     color:#2563eb;
 
@@ -179,32 +177,32 @@
 
 
 
-
-/* =====================================================
-   ESCOLA
-===================================================== */
+.recibo-title{
 
 
-.escola-box{
-
+    flex:1;
 
     text-align:center;
-
-    margin-bottom:30px;
 
 
 }
 
 
 
-.escola-box h3{
+.recibo-title h1{
 
 
-    font-size:24px;
+    margin:0;
+
+
+    font-size:34px;
+
 
     font-weight:900;
 
-    margin-bottom:5px;
+
+    letter-spacing:.5px;
+
 
     color:#0f172a;
 
@@ -213,12 +211,19 @@
 
 
 
-.escola-box p{
+.recibo-title p{
 
 
-    margin:0;
+    margin-top:8px;
+
+
+    margin-bottom:0;
+
 
     color:#64748b;
+
+
+    font-size:15px;
 
 
 }
@@ -227,10 +232,139 @@
 
 
 
+.recibo-number{
 
-/* =====================================================
-   INFORMAÇÕES
-===================================================== */
+
+    text-align:right;
+
+
+    min-width:150px;
+
+
+}
+
+
+
+.recibo-number span{
+
+
+    display:block;
+
+
+    color:#64748b;
+
+
+    font-size:13px;
+
+
+    margin-bottom:5px;
+
+
+}
+
+
+
+.recibo-number strong{
+
+
+    color:#2563eb;
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+
+/* =========================================================
+   IDENTIFICAÇÃO ESCOLA
+========================================================= */
+
+
+.escola-header{
+
+
+    margin-top:35px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+.escola-header h2{
+
+
+    margin:0;
+
+
+    font-size:26px;
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+}
+
+
+
+.escola-header p{
+
+
+    margin-top:8px;
+
+
+    color:#64748b;
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+/* =========================================================
+   BLOCO INFORMAÇÕES
+========================================================= */
+
+
+.info-section{
+
+
+    margin-top:35px;
+
+
+}
+
+
+
+.section-label{
+
+
+    font-size:18px;
+
+
+    font-weight:800;
+
+
+    margin-bottom:18px;
+
+
+    color:#0f172a;
+
+
+}
+
 
 
 .info-grid{
@@ -238,17 +372,16 @@
 
     display:grid;
 
+
     grid-template-columns:
-    repeat(auto-fit,minmax(230px,1fr));
+
+    repeat(auto-fit,minmax(220px,1fr));
 
 
     gap:18px;
 
-    margin-bottom:35px;
-
 
 }
-
 
 
 
@@ -257,9 +390,14 @@
 
     background:#f8fafc;
 
-    border:1px solid #e2e8f0;
 
-    border-radius:16px;
+    border:
+
+    1px solid #e2e8f0;
+
+
+    border-radius:18px;
+
 
     padding:18px;
 
@@ -268,16 +406,19 @@
 
 
 
-.info-card span{
+.info-card small{
 
 
     display:block;
 
+
     color:#64748b;
 
-    font-size:13px;
 
-    margin-bottom:7px;
+    font-size:12px;
+
+
+    margin-bottom:8px;
 
 
 }
@@ -289,7 +430,43 @@
 
     font-size:16px;
 
+
+    font-weight:800;
+
+
     color:#0f172a;
+
+
+}
+
+/* =========================================================
+   ÁREA FINANCEIRA / PAGAMENTOS
+========================================================= */
+
+
+.pagamento-section{
+
+
+    margin-top:40px;
+
+
+}
+
+
+
+.pagamento-title{
+
+
+    font-size:20px;
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+    margin-bottom:20px;
 
 
 }
@@ -298,20 +475,18 @@
 
 
 
-
-/* =====================================================
-   TABELA
-===================================================== */
+.table-wrapper{
 
 
-.table-container{
+    border-radius:20px;
 
-
-    border-radius:18px;
 
     overflow:hidden;
 
-    border:1px solid #e2e8f0;
+
+    border:
+
+    1px solid #e2e8f0;
 
 
 }
@@ -321,7 +496,7 @@
 .table{
 
 
-    margin:0;
+    margin:0!important;
 
 
 }
@@ -331,13 +506,28 @@
 .table thead th{
 
 
-    background:#1d4ed8;
+    background:
+
+    linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    );
+
 
     color:white;
 
-    padding:15px;
 
-    font-size:14px;
+    font-size:13px;
+
+
+    font-weight:800;
+
+
+    padding:16px;
+
+
+    border:none;
 
 
 }
@@ -347,52 +537,150 @@
 .table tbody td{
 
 
-    padding:15px;
+    padding:16px;
+
 
     vertical-align:middle;
 
 
-}
+    color:#334155;
 
 
-
-
-
-
-/* =====================================================
-   TOTAL
-===================================================== */
-
-
-.total-area{
-
-
-    margin-top:30px;
-
-    display:flex;
-
-    justify-content:flex-end;
+    font-size:14px;
 
 
 }
 
 
 
+.table tbody tr{
 
-.total-box{
+
+    border-bottom:
+
+    1px solid #e2e8f0;
 
 
-    background:#f0fdf4;
+}
 
-    border:1px solid #bbf7d0;
 
-    padding:20px 35px;
 
-    border-radius:18px;
+.table tbody tr:last-child{
 
-    font-size:26px;
+
+    border-bottom:none;
+
+
+}
+
+
+
+
+
+/* =========================================================
+   BADGE TIPO PAGAMENTO
+========================================================= */
+
+
+.tipo-badge{
+
+
+    display:inline-flex;
+
+
+    align-items:center;
+
+
+    padding:6px 12px;
+
+
+    border-radius:12px;
+
+
+    background:#dbeafe;
+
+
+    color:#1d4ed8;
+
+
+    font-size:12px;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+/* =========================================================
+   MENSALIDADE - MÊS DESTACADO
+========================================================= */
+
+
+.mensalidade-box{
+
+
+    margin-top:8px;
+
+
+    display:inline-flex;
+
+
+    align-items:center;
+
+
+    gap:8px;
+
+
+    background:#ecfdf5;
+
+
+    color:#15803d;
+
+
+    padding:7px 12px;
+
+
+    border-radius:12px;
+
+
+    font-size:13px;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+.mensalidade-box i{
+
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+/* =========================================================
+   VALOR
+========================================================= */
+
+
+.valor-destaque{
+
+
+    font-size:16px;
+
 
     font-weight:900;
+
 
     color:#15803d;
 
@@ -403,24 +691,187 @@
 
 
 
-/* =====================================================
-   ASSINATURA
-===================================================== */
+
+/* =========================================================
+   TOTAL DO RECIBO
+========================================================= */
+
+
+.total-section{
+
+
+    margin-top:35px;
+
+
+    display:flex;
+
+
+    justify-content:flex-end;
+
+
+}
+
+
+
+.total-card{
+
+
+    min-width:280px;
+
+
+    padding:25px;
+
+
+    border-radius:22px;
+
+
+    background:
+
+
+    linear-gradient(
+        135deg,
+        #f0fdf4,
+        #dcfce7
+    );
+
+
+    border:
+
+    1px solid #bbf7d0;
+
+
+    text-align:right;
+
+
+}
+
+
+
+.total-card small{
+
+
+    display:block;
+
+
+    color:#64748b;
+
+
+    font-size:13px;
+
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+.total-card strong{
+
+
+    font-size:32px;
+
+
+    font-weight:900;
+
+
+    color:#15803d;
+
+
+}
+
+
+
+
+
+
+
+/* =========================================================
+   OBSERVAÇÃO
+========================================================= */
+
+
+.observacao-box{
+
+
+    margin-top:30px;
+
+
+    padding:20px;
+
+
+    background:#f8fafc;
+
+
+    border-radius:18px;
+
+
+    border:
+
+    1px solid #e2e8f0;
+
+
+}
+
+
+
+.observacao-box span{
+
+
+    display:block;
+
+
+    font-size:13px;
+
+
+    color:#64748b;
+
+
+    margin-bottom:8px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+.observacao-box p{
+
+
+    margin:0;
+
+
+    color:#334155;
+
+
+}
+
+
+
+
+/* =========================================================
+   ASSINATURAS
+========================================================= */
 
 
 .assinaturas{
 
 
-    margin-top:70px;
+    margin-top:80px;
+
 
     display:grid;
+
 
     grid-template-columns:
 
     repeat(2,1fr);
 
 
-    gap:80px;
+    gap:90px;
+
 
     text-align:center;
 
@@ -432,150 +883,93 @@
 .assinatura{
 
 
-    border-top:1px solid #94a3b8;
+    padding-top:12px;
 
-    padding-top:10px;
+
+    border-top:
+
+    1px solid #94a3b8;
+
 
     color:#475569;
+
+
+    font-weight:700;
 
 
 }
 
 
 
+.assinatura small{
 
 
-/* =====================================================
-   BOTÃO
-===================================================== */
+    display:block;
+
+
+    margin-top:5px;
+
+
+    color:#94a3b8;
+
+
+}
+
+
+/* =========================================================
+   BOTÃO IMPRESSÃO
+========================================================= */
 
 
 .btn-print{
 
 
-    margin-top:40px;
+    margin-top:45px;
 
-    background:#2563eb;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
 
     color:white;
 
+
     border:none;
 
-    padding:14px 35px;
 
-    border-radius:14px;
+    padding:15px 35px;
+
+
+    border-radius:16px;
+
 
     font-weight:800;
+
 
     font-size:16px;
 
 
-}
-
-
-
-
-
-/* =====================================================
-   IMPRESSÃO
-===================================================== */
-
-
-@media print{
-
-
-
-    body{
-
-        background:white!important;
-
-    }
-
-
-
-    .btn-print,
-
-    .sidebar,
-
-    .navbar,
-
-    header{
-
-
-        display:none!important;
-
-
-    }
-
-
-
-
-    .recibo-container{
-
-
-        box-shadow:none;
-
-        margin:0;
-
-        max-width:none;
-
-        width:100%;
-
-        padding:20px;
-
-
-    }
-
+    transition:.25s;
 
 
 }
 
 
 
+.btn-print:hover{
 
 
-
-@media(max-width:700px){
-
-
-
-    .recibo-container{
-
-        padding:20px;
-
-    }
-
-
-
-    .recibo-top{
-
-        flex-direction:column;
-
-        gap:20px;
-
-    }
-
-
-
-    .numero-recibo{
-
-        text-align:center;
-
-    }
-
-
-
-    .assinaturas{
-
-        grid-template-columns:1fr;
-
-        gap:50px;
-
-    }
-
+    transform:translateY(-3px);
 
 
 }
+
+
 
 
 
@@ -585,8 +979,13 @@
 
 
 
+<div class="recibo-wrapper">
+
+
 <div class="recibo-container">
 
+
+<div class="top-accent"></div>
 
 
 
@@ -596,7 +995,7 @@
 ===================================================== -->
 
 
-<div class="recibo-top">
+<div class="recibo-header">
 
 
 
@@ -606,17 +1005,20 @@
         {% if escola.logo %}
 
 
-            <img src="{{ escola.logo.url }}">
+            <img src="{{ escola.logo.url }}" alt="Logo">
 
 
         {% else %}
 
 
-            EDUSCEL
+            <div class="logo-text">
+
+                EDUSCEL
+
+            </div>
 
 
         {% endif %}
-
 
 
     </div>
@@ -625,14 +1027,12 @@
 
 
 
-
-    <div class="titulo">
+    <div class="recibo-title">
 
 
         <h1>
 
             RECIBO DE PAGAMENTO
-
 
         </h1>
 
@@ -641,9 +1041,7 @@
 
             Comprovativo oficial de pagamento escolar
 
-
         </p>
-
 
 
     </div>
@@ -653,24 +1051,21 @@
 
 
 
-    <div class="numero-recibo">
+    <div class="recibo-number">
 
 
-        <small>
+        <span>
 
-            Nº Recibo
+            Número do Recibo
 
-
-        </small>
+        </span>
 
 
         <strong>
 
             {{ numero_recibo }}
 
-
         </strong>
-
 
 
     </div>
@@ -678,7 +1073,6 @@
 
 
 </div>
-
 
 
 
@@ -690,14 +1084,14 @@
 ===================================================== -->
 
 
-<div class="escola-box">
+<div class="escola-header">
 
 
-    <h3>
+    <h2>
 
         {{ escola.nome }}
 
-    </h3>
+    </h2>
 
 
     <p>
@@ -708,10 +1102,14 @@
 
             {{ pagamentos.first.ano_letivo.nome }}
 
+        {% else %}
+
+            -
+
         {% endif %}
 
-
     </p>
+
 
 
 </div>
@@ -723,30 +1121,44 @@
 
 
 <!-- =====================================================
-     DADOS ALUNO
+     DADOS DO ALUNO
 ===================================================== -->
+
+
+<div class="info-section">
+
+
+
+<div class="section-label">
+
+    Dados do Aluno
+
+</div>
+
+
+
 
 
 <div class="info-grid">
 
 
 
+
+
     <div class="info-card">
 
 
-        <span>
+        <small>
 
-            Aluno
+            Nome Completo
 
-
-        </span>
+        </small>
 
 
         <strong>
 
             {{ aluno.usuario.get_full_name }}
 
-
         </strong>
 
 
@@ -760,19 +1172,17 @@
     <div class="info-card">
 
 
-        <span>
+        <small>
 
-            Número Processo
+            Número de Processo
 
-
-        </span>
+        </small>
 
 
         <strong>
 
             {{ aluno.numero_processo }}
 
-
         </strong>
 
 
@@ -783,22 +1193,20 @@
 
 
 
+
     <div class="info-card">
 
 
-        <span>
+        <small>
 
             Turma
 
-
-        </span>
+        </small>
 
 
         <strong>
 
-
             {{ turma|default:"-" }}
-
 
         </strong>
 
@@ -814,24 +1222,27 @@
     <div class="info-card">
 
 
-        <span>
+        <small>
 
             Recebido por
 
-
-        </span>
+        </small>
 
 
         <strong>
 
-            {{ pagamentos.first.recebido_por.get_full_name }}
-
+            {{ pagamentos.first.recebido_por.get_full_name|default:"-" }}
 
         </strong>
 
 
     </div>
 
+
+
+
+
+</div>
 
 
 </div>
@@ -843,13 +1254,26 @@
 
 
 
+
 <!-- =====================================================
-     PAGAMENTOS
+     LISTA DE PAGAMENTOS
 ===================================================== -->
 
 
+<div class="pagamento-section">
 
-<div class="table-container">
+
+<div class="pagamento-title">
+
+    Detalhes do Pagamento
+
+</div>
+
+
+
+
+
+<div class="table-wrapper">
 
 
 <table class="table table-bordered">
@@ -869,13 +1293,11 @@ Descrição
 </th>
 
 
-
 <th>
 
-Método
+Forma
 
 </th>
-
 
 
 <th>
@@ -885,7 +1307,6 @@ Referência
 </th>
 
 
-
 <th>
 
 Valor
@@ -893,13 +1314,11 @@ Valor
 </th>
 
 
-
 <th>
 
 Data
 
 </th>
-
 
 
 </tr>
@@ -910,8 +1329,8 @@ Data
 
 
 
-
 <tbody>
+
 
 
 
@@ -922,22 +1341,41 @@ Data
 <tr>
 
 
+
 <td>
+
+
+
+<span class="tipo-badge">
 
 
 {{ p.get_tipo_display }}
 
 
+</span>
+
+
+
+
+
 {% if p.mensalidade %}
 
 
-<br>
 
-<small class="text-muted">
+<div class="mensalidade-box">
+
+
+<i class="bi bi-calendar-check"></i>
+
+
+Mensalidade:
 
 {{ p.mensalidade.mes }}
 
-</small>
+
+
+</div>
+
 
 
 {% endif %}
@@ -968,6 +1406,7 @@ Data
 {% endif %}
 
 
+
 </td>
 
 
@@ -989,13 +1428,13 @@ Data
 <td>
 
 
-<strong>
+<span class="valor-destaque">
 
 
 {{ p.valor_pago|floatformat:2 }} Kz
 
 
-</strong>
+</span>
 
 
 </td>
@@ -1014,12 +1453,35 @@ Data
 
 
 
+
+
 </tr>
 
 
 
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="5" class="text-center">
+
+
+Nenhum pagamento encontrado.
+
+
+</td>
+
+
+</tr>
+
+
 
 {% endfor %}
+
+
 
 
 
@@ -1033,6 +1495,38 @@ Data
 
 
 
+</div>
+<!-- =====================================================
+     TOTAL
+===================================================== -->
+
+
+<div class="total-section">
+
+
+    <div class="total-card">
+
+
+        <small>
+
+            Valor Total Recebido
+
+        </small>
+
+
+        <strong>
+
+            {{ total|floatformat:2 }} Kz
+
+        </strong>
+
+
+    </div>
+
+
+</div>
+
+
 
 
 
@@ -1040,19 +1534,161 @@ Data
 
 
 <!-- =====================================================
-     TOTAL
+     OBSERVAÇÃO
 ===================================================== -->
 
 
-<div class="total-area">
+{% if pagamentos.first.observacao %}
 
 
-<div class="total-box">
+<div class="observacao-box">
 
 
-Total:
+    <span>
 
-{{ total|floatformat:2 }} Kz
+        Observação
+
+    </span>
+
+
+    <p>
+
+        {{ pagamentos.first.observacao }}
+
+    </p>
+
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     INFORMAÇÕES FINAIS
+===================================================== -->
+
+
+<div class="info-section">
+
+
+<div class="section-label">
+
+    Informações do Recebimento
+
+</div>
+
+
+
+
+
+<div class="info-grid">
+
+
+
+    <div class="info-card">
+
+
+        <small>
+
+            Data de Emissão
+
+        </small>
+
+
+        <strong>
+
+            {% now "d/m/Y H:i" %}
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <small>
+
+            Estado do Pagamento
+
+        </small>
+
+
+        <strong style="color:#15803d;">
+
+
+            CONFIRMADO
+
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <small>
+
+            Quantidade de Pagamentos
+
+        </small>
+
+
+        <strong>
+
+
+            {{ pagamentos|length }}
+
+
+        </strong>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="info-card">
+
+
+        <small>
+
+            Sistema
+
+        </small>
+
+
+        <strong>
+
+
+            EDUSCEL
+
+
+        </strong>
+
+
+    </div>
 
 
 
@@ -1077,32 +1713,56 @@ Total:
 <div class="assinaturas">
 
 
-<div class="assinatura">
+    <div class="assinatura">
 
 
-Responsável Financeiro
+        Responsável Financeiro
+
+
+        <small>
+
+            Assinatura e carimbo
+
+        </small>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="assinatura">
+
+
+        Encarregado de Educação
+
+
+        <small>
+
+            Confirmação do pagamento
+
+        </small>
+
+
+    </div>
+
 
 
 </div>
 
 
 
-<div class="assinatura">
-
-
-Encarregado de Educação
-
-
-</div>
-
-
-
-</div>
 
 
 
 
 
+
+<!-- =====================================================
+     BOTÃO IMPRIMIR
+===================================================== -->
 
 
 <div class="text-center">
@@ -1110,10 +1770,9 @@ Encarregado de Educação
 
 <button
 
-onclick="window.print()"
+    onclick="window.print()"
 
-class="btn-print"
-
+    class="btn-print"
 
 >
 
@@ -1127,8 +1786,62 @@ Imprimir Recibo
 </button>
 
 
-
 </div>
+<style>
+
+
+/* =========================================================
+   IMPRESSÃO PROFISSIONAL
+========================================================= */
+
+
+@media print{
+
+
+
+    body{
+
+
+        background:#ffffff!important;
+
+
+    }
+
+
+
+    .sidebar,
+
+    .navbar,
+
+    .topbar,
+
+    header,
+
+    footer,
+
+    .btn-print{
+
+
+        display:none!important;
+
+
+    }
+
+
+
+
+
+
+    .recibo-wrapper{
+
+
+        padding:0!important;
+
+
+        margin:0!important;
+
+
+    }
 
 
 
@@ -1136,8 +1849,297 @@ Imprimir Recibo
 
 
 
-</div>
+    .recibo-container{
 
+
+        max-width:none!important;
+
+
+        width:100%!important;
+
+
+        margin:0!important;
+
+
+        padding:20px!important;
+
+
+        box-shadow:none!important;
+
+
+        border-radius:0!important;
+
+
+    }
+
+
+
+
+
+
+    .top-accent{
+
+
+        height:4px;
+
+
+    }
+
+
+
+
+
+
+    .table thead th{
+
+
+        -webkit-print-color-adjust:exact;
+
+        print-color-adjust:exact;
+
+
+    }
+
+
+
+
+
+    .total-card{
+
+
+        -webkit-print-color-adjust:exact;
+
+        print-color-adjust:exact;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+
+@media(max-width:900px){
+
+
+
+    .recibo-container{
+
+
+        padding:30px;
+
+
+    }
+
+
+
+
+    .recibo-header{
+
+
+        flex-direction:column;
+
+
+        text-align:center;
+
+
+    }
+
+
+
+
+
+    .recibo-number{
+
+
+        text-align:center;
+
+
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+
+@media(max-width:600px){
+
+
+
+    .recibo-wrapper{
+
+
+        padding:10px;
+
+
+    }
+
+
+
+
+
+    .recibo-container{
+
+
+        padding:20px;
+
+
+        border-radius:18px;
+
+
+    }
+
+
+
+
+
+
+
+    .recibo-title h1{
+
+
+        font-size:24px;
+
+
+    }
+
+
+
+
+
+    .escola-header h2{
+
+
+        font-size:20px;
+
+
+    }
+
+
+
+
+
+
+
+    .info-grid{
+
+
+        grid-template-columns:1fr;
+
+
+    }
+
+
+
+
+
+
+
+    .table-wrapper{
+
+
+        overflow-x:auto;
+
+
+    }
+
+
+
+
+
+
+    .table{
+
+
+        min-width:750px;
+
+
+    }
+
+
+
+
+
+
+    .total-section{
+
+
+        justify-content:center;
+
+
+    }
+
+
+
+
+
+
+    .total-card{
+
+
+        width:100%;
+
+
+        text-align:center;
+
+
+    }
+
+
+
+
+
+
+    .assinaturas{
+
+
+        grid-template-columns:1fr;
+
+
+        gap:60px;
+
+
+    }
+
+
+
+}
+
+
+
+
+</style>
+
+
+</div> <!-- fecha recibo-container -->
+
+
+</div> <!-- fecha recibo-wrapper -->
 
 
 

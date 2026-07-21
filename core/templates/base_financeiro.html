@@ -1692,7 +1692,7 @@ active
 <i class="bi bi-speedometer2"></i>
 
 
-Dashboard
+Resumo
 
 
 </a>
@@ -2249,7 +2249,7 @@ Gestão financeira escolar
 <div class="avatar">
 
 
-{{ request.user.username|first|upper }}
+{{ request.user.get_full_name|first|upper }}
 
 
 </div>
@@ -2264,7 +2264,7 @@ Gestão financeira escolar
 <strong>
 
 
-{{ request.user.get_full_name|default:request.user.username }}
+{{ request.user.get_full_name }}
 
 
 </strong>
