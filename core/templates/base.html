@@ -651,6 +651,53 @@ color:white;
 
 
 <div class="eduscel-wrapper">
+
+
+<!-- =====================================================
+     MOBILE HEADER
+===================================================== -->
+
+
+<div class="mobile-header">
+
+
+<button
+data-bs-toggle="offcanvas"
+data-bs-target="#mobileMenu">
+
+
+<i class="bi bi-list"></i>
+
+
+</button>
+
+
+
+<strong class="ms-3">
+
+EdusCel Direção Geral
+
+</strong>
+
+
+
+</div>
+
+
+
+
+
+<!-- =====================================================
+     OVERLAY MOBILE
+===================================================== -->
+
+
+<div class="sidebar-overlay"
+id="sidebarOverlay">
+
+</div>
+
+
 <!-- =====================================================
      SIDEBAR DESKTOP
 ===================================================== -->
@@ -1517,49 +1564,115 @@ box-shadow:
    MOBILE BUTTON
 ===================================================== */
 
+/* =====================================================
+   MOBILE HEADER ADMINISTRAÇÃO
+===================================================== */
 
-.mobile-menu-btn{
+
+.mobile-header{
+
+
+display:none;
 
 
 position:fixed;
 
 
-top:15px;
+top:0;
 
 
-left:15px;
+left:0;
 
+
+right:0;
+
+
+height:65px;
+
+
+background:white;
 
 
 z-index:3000;
 
 
-
-width:45px;
-
-
-height:45px;
-
-
-
-border-radius:14px;
-
-
-
-display:flex;
-
-
 align-items:center;
 
 
-justify-content:center;
-
+padding:0 18px;
 
 
 box-shadow:
 
 
-0 10px 25px rgba(0,0,0,.18);
+0 5px 20px rgba(15,23,42,.12);
+
+
+
+}
+
+
+
+
+.mobile-header button{
+
+
+background:none;
+
+
+border:none;
+
+
+font-size:27px;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+.mobile-header strong{
+
+
+font-size:16px;
+
+
+font-weight:900;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+
+
+/* OVERLAY */
+
+
+.sidebar-overlay{
+
+
+display:none;
+
+
+position:fixed;
+
+
+inset:0;
+
+
+background:
+
+
+rgba(15,23,42,.55);
+
+
+z-index:1500;
 
 
 }
@@ -1569,8 +1682,47 @@ box-shadow:
 
 
 
+@media(max-width:992px){
 
 
+
+.mobile-header{
+
+
+display:flex;
+
+
+}
+
+
+
+.eduscel-main{
+
+
+margin-left:0;
+
+
+width:100%;
+
+
+}
+
+
+
+.page-content{
+
+
+padding:
+
+
+85px 15px 25px;
+
+
+}
+
+
+
+}
 
 
 /* =====================================================
