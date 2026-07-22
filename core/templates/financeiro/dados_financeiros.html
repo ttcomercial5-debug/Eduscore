@@ -8,28 +8,32 @@
 <div class="container-fluid">
 
 
-<div class="finance-card mb-4">
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<div class="receipt-hero">
+
+    <div class="hero-content">
+
+        <div>
+
+            <h1>
+
+                <i class="bi bi-bank me-2"></i>
+
+                DADOS FINANCEIROS
+
+            </h1>
 
 
-<h2 class="fw-bold">
-
-<i class="bi bi-bank me-2"></i>
-
-Dados Financeiros
-
-</h2>
+        </div>
 
 
-<p class="text-muted">
 
-Informações financeiras oficiais da instituição.
-
-</p>
-
+    </div>
 
 </div>
-
-
 
 
 
@@ -153,133 +157,6 @@ readonly>
 
 
 </div>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- BANCO -->
-
-
-<div class="finance-card">
-
-
-<h5 class="fw-bold mb-4">
-
-<i class="bi bi-credit-card me-2"></i>
-
-Dados Bancários
-
-</h5>
-
-
-
-
-<div class="row g-4">
-
-
-
-<div class="col-md-6">
-
-<label class="form-label">
-
-Banco
-
-</label>
-
-
-<input
-
-name="banco"
-
-class="form-control"
-
-value="{{config.banco|default:''}}">
-
-
-</div>
-
-
-
-
-<div class="col-md-6">
-
-<label class="form-label">
-
-Titular da Conta
-
-</label>
-
-
-<input
-
-name="titular_conta"
-
-class="form-control"
-
-value="{{config.titular_conta|default:''}}">
-
-
-</div>
-
-
-
-
-<div class="col-md-6">
-
-<label class="form-label">
-
-IBAN
-
-</label>
-
-
-<input
-
-name="iban"
-
-class="form-control"
-
-value="{{config.iban|default:''}}">
-
-
-</div>
-
-
-
-
-
-<div class="col-md-6">
-
-<label class="form-label">
-
-Número da Conta
-
-</label>
-
-
-<input
-
-name="numero_conta"
-
-class="form-control"
-
-value="{{config.numero_conta|default:''}}">
-
-
-</div>
-
 
 
 
@@ -683,5 +560,102 @@ Guardar Dados Financeiros
 </div>
 
 
+<style>
+/* =====================================================
+   HERO PREMIUM
+===================================================== */
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    margin-bottom:35px;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+.hero-content{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+    flex-wrap:wrap;
+
+}
+
+.receipt-hero h1{
+
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    margin:0;
+    color:#cbd5e1;
+    max-width:700px;
+
+}
+
+.hero-btn{
+
+    background:#fff;
+
+    color:#2563eb;
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:14px 28px;
+
+    font-weight:800;
+
+    transition:.25s;
+
+}
+
+.hero-btn:hover{
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:28px;
+
+    }
+
+}
+</style>
 
 {% endblock %}

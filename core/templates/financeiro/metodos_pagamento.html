@@ -70,133 +70,146 @@ Métodos de Pagamento | EdusCel
    HEADER PREMIUM
 ========================================================== */
 
+/* ==========================================================
+   HEADER PREMIUM
+========================================================== */
 
 .page-header{
 
-
     background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1d4ed8,
+            #2563eb
+        );
 
-    linear-gradient(
+    color:white;
 
-        135deg,
+    border-radius:30px;
 
-        #ffffff,
-
-        #f8fafc
-
-    );
-
-
-    border-radius:28px;
-
-    padding:32px;
-
-    border:1px solid var(--edus-border);
-
-    box-shadow:
-
-    0 15px 40px rgba(15,23,42,.06);
+    padding:38px;
 
     margin-bottom:30px;
 
+    position:relative;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 25px 55px rgba(37,99,235,.22);
 
 }
 
+.page-header::before{
 
+    content:"";
 
+    position:absolute;
 
+    width:420px;
+    height:420px;
+
+    right:-150px;
+    top:-180px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.08);
+
+}
 
 .page-header h3{
 
+    color:white;
 
-    font-size:28px;
+    font-size:30px;
 
     font-weight:900;
 
-    color:var(--edus-dark);
-
-    letter-spacing:-.5px;
-
+    margin-bottom:8px;
 
 }
-
-
 
 .page-header p{
 
-
-    margin:0;
-
-    color:var(--edus-muted);
+    color:rgba(255,255,255,.88);
 
     font-size:15px;
 
+    line-height:1.7;
+
+    max-width:700px;
 
 }
 
+.hero-icon{
 
+    width:78px;
+
+    height:78px;
+
+    border-radius:22px;
+
+    background:
+        rgba(255,255,255,.18);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:34px;
+
+    color:white;
+
+    backdrop-filter:blur(8px);
+
+}
 
 
 /* ==========================================================
    BOTÃO PRINCIPAL
 ========================================================== */
 
-
 .btn-eduscel{
 
+    background:white;
 
-    background:
-
-    linear-gradient(
-
-        135deg,
-
-        #2563eb,
-
-        #1d4ed8
-
-    );
-
-
-    color:white;
+    color:#1d4ed8;
 
     border:none;
 
     border-radius:16px;
 
-    padding:14px 24px;
+    padding:14px 28px;
 
-    font-weight:700;
+    font-weight:800;
+
+    font-size:15px;
 
     box-shadow:
+        0 15px 35px rgba(0,0,0,.18);
 
-    0 10px 25px rgba(37,99,235,.25);
-
-    transition:.3s;
-
+    transition:.30s;
 
 }
-
-
 
 .btn-eduscel:hover{
 
+    background:#f8fafc;
 
-    color:white;
+    color:#1d4ed8;
 
-    transform:translateY(-3px);
-
+    transform:
+        translateY(-3px);
 
     box-shadow:
-
-    0 18px 35px rgba(37,99,235,.35);
-
+        0 22px 40px rgba(0,0,0,.22);
 
 }
-
-
-
-
 
 
 
@@ -689,65 +702,60 @@ Métodos de Pagamento | EdusCel
 
 
 
-<div class="finance-wrapper">
-
-
+<!-- ==========================================================
+     HEADER PREMIUM
+========================================================== -->
 
 <div class="page-header">
 
+    <div class="row align-items-center">
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="col-lg-8 col-md-8">
 
+            <div class="d-flex align-items-center">
 
+                <div class="hero-icon me-4">
+                    <i class="bi bi-credit-card-2-front-fill"></i>
+                </div>
 
-<div>
+                <div>
 
-
-<h3>
-
-<i class="bi bi-credit-card-2-front me-2 text-primary"></i>
-
-Métodos de Pagamento
-
-</h3>
-
-
-
-<p>
-
-Configure todas as formas de recebimento financeiro da instituição.
-
-</p>
-
-
-</div>
+                    <h3 class="mb-2">
+                        MÉTODOS DE PAGAMENTO
+                    </h3>
 
 
 
-<button
+                </div>
 
-class="btn btn-eduscel"
+            </div>
 
-data-bs-toggle="modal"
+        </div>
 
-data-bs-target="#modalNovoMetodo"
+        <div class="col-lg-4 col-md-4">
 
->
+            <div class="d-flex justify-content-lg-end justify-content-md-end justify-content-start mt-4 mt-md-0">
 
+                <button
+                    class="btn btn-eduscel btn-lg px-4"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalNovoMetodo">
 
-<i class="bi bi-plus-circle me-2"></i>
+                    <i class="bi bi-plus-circle-fill me-2"></i>
 
-Novo Método
+                    Novo Método
 
+                </button>
 
-</button>
+            </div>
 
+        </div>
 
+    </div>
 
 </div>
 
 
-</div>
 <!-- ==========================================================
      INDICADORES FINANCEIROS
 ========================================================== -->

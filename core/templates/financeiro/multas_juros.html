@@ -12,27 +12,20 @@ Multas e Juros | EdusCel
 {% block content %}
 
 
+<!-- =====================================================
+     HERO
+===================================================== -->
 
-<div class="section-title">
+<div class="receipt-hero">
 
-<i class="bi bi-percent me-2"></i>
+    <h1>
+        <i class="bi bi-percent me-2"></i>
+        MULTAS & JUROS
+    </h1>
 
-Multas e Juros
+
 
 </div>
-
-
-
-
-<p class="text-muted mb-4">
-
-Configuração das penalizações por atraso das mensalidades.
-
-</p>
-
-
-
-
 
 
 
@@ -600,6 +593,70 @@ filtrar();
 
 </script>
 
+<style>
+/* =====================================================
+   HERO PREMIUM
+===================================================== */
 
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    margin-bottom:35px;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    margin:0;
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:27px;
+
+    }
+
+}
+</style>
 
 {% endblock %}

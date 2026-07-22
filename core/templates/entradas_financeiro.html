@@ -65,84 +65,100 @@ Entradas Financeiras | EdusCel
 /* =====================================================
    HEADER
 ===================================================== */
+/* =====================================================
+   HERO PREMIUM
+===================================================== */
 
+.receipt-hero{
 
-.finance-header{
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
 
+    border-radius:30px;
 
-    background:white;
+    padding:45px;
 
+    color:#fff;
 
-    border-radius:24px;
-
-
-    padding:30px;
-
-
-    margin-bottom:25px;
-
-
-    border:1px solid #e2e8f0;
-
+    margin-bottom:35px;
 
     box-shadow:
-
-
-    0 15px 40px rgba(15,23,42,.07);
-
-
+    0 25px 60px rgba(15,23,42,.25);
 
 }
 
+.receipt-hero .hero-content{
 
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    flex-wrap:wrap;
 
-.finance-title{
+}
 
+.receipt-hero h1{
 
-    font-size:28px;
-
-
+    font-size:34px;
     font-weight:900;
-
-
-    color:#0f172a;
-
-
-    letter-spacing:-.5px;
-
+    margin-bottom:10px;
 
 }
 
+.receipt-hero p{
 
-
-.finance-title i{
-
-
-    color:#16a34a;
-
+    color:#cbd5e1;
+    margin:0;
 
 }
 
+.hero-btn{
 
+    background:#ffffff;
 
-.finance-subtitle{
+    color:#2563eb;
 
+    border:none;
 
-    color:#64748b;
+    border-radius:16px;
 
+    padding:14px 28px;
 
-    font-size:14px;
+    font-weight:800;
 
-
-    margin-top:5px;
-
+    transition:.25s;
 
 }
 
+.hero-btn:hover{
 
+    background:#f8fafc;
 
+    color:#1d4ed8;
 
+    transform:translateY(-2px);
 
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:28px;
+
+    }
+
+}
 
 
 /* =====================================================
@@ -1064,67 +1080,32 @@ Entradas Financeiras | EdusCel
      CABEÇALHO
 ===================================================== -->
 
+<!-- =====================================================
+     HERO
+===================================================== -->
 
-<div class="finance-header">
+<div class="receipt-hero">
 
+    <div class="hero-content">
 
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
 
+            <h1>
 
+                <i class="bi bi-cash-stack me-2"></i>
 
-<div>
+                ENTRADAS FINANCEIRAS
 
-
-
-<div class="finance-title">
-
-
-<i class="bi bi-cash-stack me-2"></i>
-
-
-Entradas Financeiras
+            </h1>
 
 
-</div>
+        </div>
 
 
 
-<div class="finance-subtitle">
-
-
-Gestão das receitas escolares, mensalidades e pagamentos recebidos.
-
+    </div>
 
 </div>
-
-
-
-</div>
-
-
-
-
-
-<a href="{% url 'entradas_financeiro' %}"
-
-class="btn btn-clear btn-outline-secondary">
-
-
-<i class="bi bi-arrow-clockwise me-2"></i>
-
-
-Limpar filtros
-
-
-</a>
-
-
-
-
-</div>
-
-
-
 
 
 
@@ -1263,7 +1244,20 @@ Filtrar
 
 </button>
 
+<button
 
+type="submit"
+
+class="btn-eduscel flex-fill">
+
+
+<i class="bi bi-search me-2"></i>
+
+
+Limpar Filtros
+
+
+</button>
 
 
 

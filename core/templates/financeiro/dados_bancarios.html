@@ -10,30 +10,745 @@ Dados Bancários | EdusCel
 
 
 
-
 {% block content %}
 
 
 
-<div class="container-fluid">
+<style>
+
+/* ==========================================================
+   EDUSCEL FINANCEIRO
+   DADOS BANCÁRIOS PREMIUM ERP
+========================================================== */
+
+
+:root{
+
+    --edus-primary:#2563eb;
+
+    --edus-dark:#0f172a;
+
+    --edus-muted:#64748b;
+
+    --edus-border:#e2e8f0;
+
+    --edus-bg:#f8fafc;
+
+}
+
+
+
+body{
+
+    background:var(--edus-bg);
+
+}
+
+
+
+
+/* ==========================================================
+   WRAPPER
+========================================================== */
+
+
+.finance-wrapper{
+
+    animation:fadePage .35s ease;
+
+}
+
+
+
+@keyframes fadePage{
+
+
+from{
+
+opacity:0;
+
+transform:translateY(10px);
+
+}
+
+
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================================================
+   HERO PREMIUM
+========================================================== */
+
+
+.hero-financeiro{
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#020617,
+
+#1e40af,
+
+#2563eb
+
+);
+
+
+
+border-radius:28px;
+
+
+padding:35px;
+
+
+margin-bottom:30px;
+
+
+color:white;
+
+
+overflow:hidden;
+
+
+position:relative;
+
+
+box-shadow:
+
+
+0 20px 45px rgba(37,99,235,.25);
+
+
+}
+
+
+
+
+.hero-title{
+
+
+font-size:32px;
+
+
+font-weight:900;
+
+
+letter-spacing:-.5px;
+
+
+margin-bottom:12px;
+
+
+}
+
+
+
+
+.hero-subtitle{
+
+
+color:rgba(255,255,255,.85);
+
+
+font-size:15px;
+
+
+line-height:1.7;
+
+
+max-width:750px;
+
+
+}
+
+
+
+
+.hero-icon{
+
+
+width:80px;
+
+
+height:80px;
+
+
+border-radius:25px;
+
+
+background:
+
+
+rgba(255,255,255,.15);
+
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+font-size:38px;
+
+
+}
+
+
+
+
+
+/* ==========================================================
+   BOTÃO
+========================================================== */
+
+
+.btn-eduscel{
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#1d4ed8
+
+);
+
+
+
+color:white;
+
+
+border:none;
+
+
+border-radius:16px;
+
+
+padding:14px 24px;
+
+
+font-weight:800;
+
+
+transition:.3s;
+
+
+box-shadow:
+
+
+0 10px 25px rgba(37,99,235,.25);
+
+
+}
+
+
+
+.btn-eduscel:hover{
+
+
+color:white;
+
+
+transform:translateY(-3px);
+
+
+}
+
+
+
+
+
+/* ==========================================================
+   CARD PRINCIPAL
+========================================================== */
+
+
+.table-container{
+
+
+background:white;
+
+
+border-radius:28px;
+
+
+overflow:hidden;
+
+
+border:1px solid var(--edus-border);
+
+
+box-shadow:
+
+
+0 15px 40px rgba(15,23,42,.06);
+
+
+margin-bottom:25px;
+
+
+}
+
+
+
+
+
+.table-header{
+
+
+padding:28px;
+
+
+border-bottom:1px solid var(--edus-border);
+
+
+}
+
+
+
+
+.table-header h5{
+
+
+font-size:20px;
+
+
+font-weight:900;
+
+
+color:var(--edus-dark);
+
+
+}
+
+
+
+.table-header p{
+
+
+color:var(--edus-muted);
+
+
+margin:5px 0 0;
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+
+.table{
+
+
+margin:0;
+
+
+}
+
+
+
+.table thead th{
+
+
+background:#0f172a;
+
+
+color:white;
+
+
+padding:18px;
+
+
+font-size:12px;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:.5px;
+
+
+}
+
+
+
+.table tbody td{
+
+
+padding:18px;
+
+
+vertical-align:middle;
+
+
+border-bottom:1px solid #f1f5f9;
+
+
+}
+
+
+
+.table tbody tr{
+
+
+transition:.25s;
+
+
+}
+
+
+
+.table tbody tr:hover{
+
+
+background:#f8fafc;
+
+
+}
+
+
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+
+.badge-warning{
+
+
+background:#fef3c7;
+
+
+color:#92400e;
+
+
+padding:7px 14px;
+
+
+border-radius:50px;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+.badge-success{
+
+
+background:#dcfce7;
+
+
+color:#166534;
+
+
+padding:7px 14px;
+
+
+border-radius:50px;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+.badge-danger{
+
+
+background:#fee2e2;
+
+
+color:#991b1b;
+
+
+padding:7px 14px;
+
+
+border-radius:50px;
+
+
+font-size:12px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+/* ==========================================================
+   FORMULÁRIOS
+========================================================== */
+
+
+.form-control,
+
+
+.form-select{
+
+
+border-radius:14px;
+
+
+padding:13px;
+
+
+border:1px solid #cbd5e1;
+
+
+}
+
+
+
+.form-control:focus,
+
+
+.form-select:focus{
+
+
+border-color:var(--edus-primary);
+
+
+box-shadow:
+
+
+0 0 0 .25rem rgba(37,99,235,.15);
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+
+.empty-state{
+
+
+text-align:center;
+
+
+padding:60px;
+
+
+color:var(--edus-muted);
+
+
+}
+
+
+
+.empty-state i{
+
+
+font-size:50px;
+
+
+color:#94a3b8;
+
+
+}
+
+
+
+.empty-state h5{
+
+
+font-weight:900;
+
+
+color:var(--edus-dark);
+
+
+}
+
+
+
+
+
+
+@media(max-width:768px){
+
+
+
+.hero-title{
+
+
+font-size:24px;
+
+
+}
+
+
+
+.hero-icon{
+
+
+display:none;
+
+
+}
+
+
+
+.btn-eduscel{
+
+
+width:100%;
+
+
+}
+
+
+
+.table{
+
+
+min-width:1100px;
+
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<div class="finance-wrapper">
+
+
 
 
 
 
 
 <!-- =====================================================
-     TÍTULO
+     HERO PREMIUM
 ===================================================== -->
 
 
-<div class="section-title">
+<div class="hero-financeiro">
 
-<i class="bi bi-bank me-2"></i>
 
-Dados Bancários da Escola
+
+<div class="row align-items-center">
+
+
+
+
+
+<div class="col-lg-9">
+
+
+
+<h1 class="hero-title">
+
+
+DADOS BANCÁRIOS DA ESCOLA
+
+
+</h1>
+
+
+
+
+
 
 </div>
 
+
+
+
+
+
+
+<div class="col-lg-3 text-end">
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
 
 
 
@@ -50,63 +765,42 @@ Dados Bancários da Escola
 
 
 
-<div class="header d-flex justify-content-between align-items-center">
+<div class="table-header">
 
-
-
-<div>
 
 
 <h5>
 
-<i class="bi bi-building-bank me-2"></i>
+
+<i class="bi bi-bank2 me-2 text-primary"></i>
+
 
 Contas Bancárias Registadas
+
 
 </h5>
 
 
+
+
 <p>
 
-Gestão das contas financeiras associadas à instituição.
+
+Contas financeiras associadas exclusivamente à escola actual.
+
 
 </p>
 
 
-</div>
-
-
-
-
-
-<a href="#formularioBanco"
-
-class="btn-eduscel btn-sm">
-
-
-<i class="bi bi-plus-circle me-2"></i>
-
-Nova Conta
-
-
-</a>
-
-
 
 </div>
-
-
-
-
-
-
-
-
 <div class="table-responsive">
 
 
 
 <table class="table align-middle mb-0">
+
+
 
 
 
@@ -123,11 +817,13 @@ Banco
 </th>
 
 
+
 <th>
 
 Titular
 
 </th>
+
 
 
 <th>
@@ -137,11 +833,21 @@ Tipo
 </th>
 
 
+
 <th>
 
 Conta
 
 </th>
+
+
+
+<th>
+
+Agência
+
+</th>
+
 
 
 <th>
@@ -151,11 +857,13 @@ IBAN
 </th>
 
 
+
 <th>
 
 Moeda
 
 </th>
+
 
 
 <th>
@@ -165,10 +873,12 @@ Estado
 </th>
 
 
+
 </tr>
 
 
 </thead>
+
 
 
 
@@ -197,12 +907,19 @@ Estado
 
 
 
+
+
+<!-- BANCO -->
+
+
 <td>
 
 
 <strong>
 
+
 {{ conta.banco }}
+
 
 </strong>
 
@@ -214,9 +931,17 @@ Estado
 
 
 
+
+
+
+<!-- TITULAR -->
+
+
 <td>
 
+
 {{ conta.titular }}
+
 
 </td>
 
@@ -226,7 +951,13 @@ Estado
 
 
 
+
+
+<!-- TIPO -->
+
+
 <td>
+
 
 
 <span class="badge-warning">
@@ -238,6 +969,7 @@ Estado
 </span>
 
 
+
 </td>
 
 
@@ -246,7 +978,13 @@ Estado
 
 
 
+
+
+<!-- CONTA -->
+
+
 <td>
+
 
 {{ conta.numero_conta|default:"-" }}
 
@@ -258,6 +996,29 @@ Estado
 
 
 
+
+
+
+<!-- AGENCIA -->
+
+
+<td>
+
+
+{{ conta.agencia|default:"-" }}
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<!-- IBAN -->
 
 
 <td>
@@ -280,7 +1041,13 @@ Estado
 
 
 
+
+
+<!-- MOEDA -->
+
+
 <td>
+
 
 
 <span class="badge-warning">
@@ -292,6 +1059,7 @@ Estado
 </span>
 
 
+
 </td>
 
 
@@ -301,6 +1069,10 @@ Estado
 
 
 
+
+<!-- ESTADO -->
+
+
 <td>
 
 
@@ -308,21 +1080,35 @@ Estado
 {% if conta.ativo %}
 
 
+
 <span class="badge-success">
+
+
+<i class="bi bi-check-circle me-1"></i>
+
 
 Activo
 
+
 </span>
+
 
 
 {% else %}
 
 
+
 <span class="badge-danger">
+
+
+<i class="bi bi-x-circle me-1"></i>
+
 
 Inactivo
 
+
 </span>
+
 
 
 {% endif %}
@@ -336,8 +1122,8 @@ Inactivo
 
 
 
-
 </tr>
+
 
 
 
@@ -357,41 +1143,59 @@ Inactivo
 
 
 
+
+
 <tr>
 
 
-<td colspan="7">
+<td colspan="8">
+
 
 
 <div class="empty-state">
 
 
+
 <i class="bi bi-bank"></i>
+
+
+
 
 
 <h5>
 
+
 Nenhuma conta bancária registada
+
 
 </h5>
 
 
 
+
+
 <p>
+
 
 Adicione a conta oficial da escola.
 
+
 </p>
+
+
 
 
 
 </div>
 
 
+
 </td>
 
 
+
 </tr>
+
 
 
 
@@ -404,7 +1208,10 @@ Adicione a conta oficial da escola.
 
 
 
+
 </tbody>
+
+
 
 
 
@@ -414,11 +1221,6 @@ Adicione a conta oficial da escola.
 
 
 
-</div>
-
-
-
-
 
 </div>
 
@@ -427,16 +1229,10 @@ Adicione a conta oficial da escola.
 
 
 
-
-
-
-
-
-
+</div>
 <!-- =====================================================
-     FORMULÁRIO
+     FORMULÁRIO CADASTRO
 ===================================================== -->
-
 
 
 <div class="table-container p-4"
@@ -447,17 +1243,21 @@ id="formularioBanco">
 
 
 
+
 <div class="d-flex justify-content-between align-items-center mb-4">
+
+
 
 
 
 <div>
 
 
-<h5>
+
+<h5 class="fw-bold">
 
 
-<i class="bi bi-pencil-square me-2"></i>
+<i class="bi bi-pencil-square me-2 text-primary"></i>
 
 
 Cadastrar / Actualizar Conta Bancária
@@ -467,9 +1267,14 @@ Cadastrar / Actualizar Conta Bancária
 
 
 
+
+
+
 <p class="text-muted small mb-0">
 
-Informe os dados financeiros oficiais da instituição.
+
+Informe os dados financeiros oficiais utilizados pela instituição.
+
 
 </p>
 
@@ -480,11 +1285,18 @@ Informe os dados financeiros oficiais da instituição.
 
 
 
-<i class="bi bi-bank2 fs-2 text-primary"></i>
+
+
+
+<i class="bi bi-bank2 fs-1 text-primary"></i>
+
+
+
 
 
 
 </div>
+
 
 
 
@@ -502,6 +1314,9 @@ Informe os dados financeiros oficiais da instituição.
 
 
 
+
+
+
 <div class="row g-4">
 
 
@@ -510,31 +1325,47 @@ Informe os dados financeiros oficiais da instituição.
 
 
 
-<!-- BANCO -->
+<!-- =====================================================
+     BANCO
+===================================================== -->
 
 
 <div class="col-md-6">
 
 
 <label class="form-label fw-bold">
+
 
 Banco
 
+
 </label>
+
+
 
 
 
 <input
 
+
 type="text"
+
 
 name="banco"
 
+
 class="form-control"
+
 
 placeholder="Ex: BFA, BIC, Banco Sol"
 
-required>
+
+required
+
+
+
+>
+
 
 
 </div>
@@ -546,7 +1377,10 @@ required>
 
 
 
-<!-- TITULAR -->
+
+<!-- =====================================================
+     TITULAR
+===================================================== -->
 
 
 <div class="col-md-6">
@@ -554,23 +1388,38 @@ required>
 
 <label class="form-label fw-bold">
 
+
 Titular da Conta
+
 
 </label>
 
 
 
+
+
 <input
+
 
 type="text"
 
+
 name="titular"
+
 
 class="form-control"
 
-placeholder="Nome da instituição"
 
-required>
+placeholder="Nome oficial da instituição"
+
+
+
+required
+
+
+
+>
+
 
 
 </div>
@@ -583,7 +1432,9 @@ required>
 
 
 
-<!-- TIPO -->
+<!-- =====================================================
+     TIPO CONTA
+===================================================== -->
 
 
 <div class="col-md-4">
@@ -591,46 +1442,74 @@ required>
 
 <label class="form-label fw-bold">
 
+
 Tipo de Conta
+
 
 </label>
 
 
 
+
+
 <select
+
 
 name="tipo_conta"
 
-class="form-select">
+
+class="form-select"
+
+>
+
 
 
 
 <option value="PRINCIPAL">
 
+
 Conta Principal
 
+
 </option>
+
+
+
 
 
 <option value="MENSALIDADES">
 
+
 Recebimento de Mensalidades
 
+
 </option>
+
+
+
 
 
 <option value="SALARIOS">
 
+
 Pagamento de Salários
 
+
 </option>
+
+
+
 
 
 <option value="OUTRA">
 
+
 Outra
 
+
 </option>
+
+
 
 
 
@@ -638,6 +1517,7 @@ Outra
 
 
 
+
 </div>
 
 
@@ -648,27 +1528,44 @@ Outra
 
 
 
-<!-- CONTA -->
+<!-- =====================================================
+     NUMERO CONTA
+===================================================== -->
 
 
 <div class="col-md-4">
 
 
 <label class="form-label fw-bold">
+
 
 Número da Conta
 
+
 </label>
+
+
 
 
 
 <input
 
+
 type="text"
+
 
 name="numero_conta"
 
-class="form-control">
+
+class="form-control"
+
+
+placeholder="Número da conta bancária"
+
+
+
+>
+
 
 
 </div>
@@ -681,7 +1578,9 @@ class="form-control">
 
 
 
-<!-- IBAN -->
+<!-- =====================================================
+     AGENCIA
+===================================================== -->
 
 
 <div class="col-md-4">
@@ -689,52 +1588,34 @@ class="form-control">
 
 <label class="form-label fw-bold">
 
-IBAN
-
-</label>
-
-
-
-<input
-
-type="text"
-
-name="iban"
-
-class="form-control">
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- AGÊNCIA -->
-
-
-<div class="col-md-4">
-
-
-<label class="form-label fw-bold">
 
 Agência
 
+
 </label>
+
+
 
 
 
 <input
 
+
 type="text"
+
 
 name="agencia"
 
-class="form-control">
+
+class="form-control"
+
+
+placeholder="Código ou nome da agência"
+
+
+
+>
+
 
 
 </div>
@@ -747,46 +1628,118 @@ class="form-control">
 
 
 
-<!-- MOEDA -->
+<!-- =====================================================
+     IBAN
+===================================================== -->
 
 
-<div class="col-md-4">
+<div class="col-md-6">
 
 
 <label class="form-label fw-bold">
 
-Moeda
+
+IBAN
+
 
 </label>
+
+
+
+
+
+<input
+
+
+type="text"
+
+
+name="iban"
+
+
+class="form-control"
+
+
+placeholder="AO06 0000 0000 0000 0000 0000"
+
+
+
+>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MOEDA
+===================================================== -->
+
+
+<div class="col-md-3">
+
+
+<label class="form-label fw-bold">
+
+
+Moeda
+
+
+</label>
+
+
 
 
 
 <select
 
+
 name="moeda"
 
-class="form-select">
+
+class="form-select"
+
+
+
+>
 
 
 
 <option value="AOA">
 
+
 AOA - Kwanza
 
+
 </option>
+
+
+
 
 
 <option value="USD">
 
+
 USD - Dólar
 
+
 </option>
+
+
 
 
 
 </select>
 
 
+
 </div>
 
 
@@ -797,36 +1750,111 @@ USD - Dólar
 
 
 
-<!-- OBS -->
+<!-- =====================================================
+     ESTADO
+===================================================== -->
 
 
-<div class="col-md-8">
+<div class="col-md-3">
 
 
 <label class="form-label fw-bold">
 
-Observações
+
+Estado
+
 
 </label>
 
 
 
+
+
+<select
+
+
+name="ativo"
+
+
+class="form-select"
+
+
+
+>
+
+
+
+<option value="true">
+
+
+Activo
+
+
+</option>
+
+
+
+
+
+<option value="false">
+
+
+Inactivo
+
+
+</option>
+
+
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     OBSERVAÇÕES
+===================================================== -->
+
+
+<div class="col-12">
+
+
+<label class="form-label fw-bold">
+
+
+Observações
+
+
+</label>
+
+
+
+
+
 <textarea
+
 
 name="observacoes"
 
+
 rows="3"
+
 
 class="form-control"
 
-placeholder="Informações adicionais..."></textarea>
 
-
-
-</div>
-
-
-
+placeholder="Informações adicionais sobre a conta bancária..."></textarea>
 
 
 
@@ -840,11 +1868,37 @@ placeholder="Informações adicionais..."></textarea>
 
 
 
+</div>
 
-<div class="mt-4">
 
 
-<button class="btn-eduscel">
+
+
+
+
+
+<!-- =====================================================
+     BOTÃO CANTO DIREITO
+===================================================== -->
+
+
+<div class="d-flex justify-content-end mt-4">
+
+
+
+
+
+<button
+
+
+type="submit"
+
+
+class="btn-eduscel"
+
+
+
+>
 
 
 <i class="bi bi-check-circle me-2"></i>
@@ -857,8 +1911,9 @@ Guardar Conta Bancária
 
 
 
-</div>
 
+
+</div>
 
 
 
@@ -871,26 +1926,56 @@ Guardar Conta Bancária
 
 
 
+
+
+
 </div>
+<!-- =====================================================
+     INFORMAÇÃO FINANCEIRA
+===================================================== -->
 
 
+<div class="alert alert-info mt-4 rounded-4 shadow-sm">
 
-
-
-
-
-
-
-
-
-
-<div class="alert alert-info mt-4">
 
 
 <i class="bi bi-info-circle me-2"></i>
 
 
-As contas bancárias registadas serão utilizadas automaticamente nos recibos, relatórios financeiros e documentos oficiais da escola.
+
+<strong>
+
+Informação:
+
+</strong>
+
+
+As contas bancárias registadas serão utilizadas automaticamente nos recibos,
+relatórios financeiros, mapas de receitas e documentos oficiais da escola.
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
 
 
 </div>
@@ -902,6 +1987,19 @@ As contas bancárias registadas serão utilizadas automaticamente nos recibos, r
 
 
 </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
 
 
 

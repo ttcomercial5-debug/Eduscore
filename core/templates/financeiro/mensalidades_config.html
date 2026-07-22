@@ -43,87 +43,65 @@ body{
    HERO
 ========================================================== */
 
-
-.hero-financeiro{
+.receipt-hero{
 
     background:
     linear-gradient(
         135deg,
         #020617,
-        #1e40af,
         #2563eb
     );
 
+    border-radius:30px;
 
-    border-radius:24px;
+    padding:45px;
 
-    padding:35px;
+    color:#fff;
 
-    margin-bottom:25px;
-
-    color:white;
-
-    overflow:hidden;
-
-    position:relative;
+    margin-bottom:35px;
 
     box-shadow:
-    0 20px 45px rgba(37,99,235,.20);
+    0 25px 60px rgba(15,23,42,.25);
 
 }
 
-
-
-.hero-title{
-
-    font-size:32px;
-
-    font-weight:900;
-
-    margin-bottom:12px;
-
-}
-
-
-
-.hero-subtitle{
-
-    max-width:750px;
-
-    color:
-    rgba(255,255,255,.85);
-
-    line-height:1.7;
-
-}
-
-
-
-.hero-icon{
-
-    width:75px;
-
-    height:75px;
-
-    border-radius:22px;
-
-    background:
-    rgba(255,255,255,.15);
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
+.receipt-hero h1{
 
     font-size:34px;
 
+    font-weight:900;
+
+    margin-bottom:10px;
+
 }
 
+.receipt-hero p{
 
+    margin:0;
 
+    color:#cbd5e1;
 
+    font-size:16px;
 
+    max-width:760px;
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+}
 
 /* ==========================================================
    CARDS
@@ -368,65 +346,25 @@ body{
 {% block content %}
 
 
+
+
 <!-- =====================================================
-     HERO
+     HERO PREMIUM
 ===================================================== -->
 
+<div class="receipt-hero">
 
-<div class="hero-financeiro">
+    <h1>
 
+        <i class="bi bi-cash-coin me-2"></i>
 
-<div class="row align-items-center">
+        CONFIGURAÇÃO DE MENSALIDADES
 
+    </h1>
 
-<div class="col-lg-9">
-
-
-<h1 class="hero-title">
-
-Configuração de Mensalidades
-
-</h1>
-
-
-<p class="hero-subtitle">
-
-Gestão financeira escolar por classe e curso.
-
-O Ensino Geral utiliza valores por classe.
-
-O Ensino Médio utiliza valores personalizados
-
-por curso e classe.
-
-</p>
 
 
 </div>
-
-
-
-<div class="col-lg-3 text-end">
-
-
-<div class="hero-icon ms-auto">
-
-
-<i class="bi bi-cash-coin"></i>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
 
 
 

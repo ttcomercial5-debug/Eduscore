@@ -18,70 +18,32 @@ Mensalidades por Classe | EdusCel
 
 
 <!-- =====================================================
-     HEADER
+     HERO
 ===================================================== -->
 
+<div class="receipt-hero">
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div class="hero-content">
 
+        <div>
 
+            <h1>
 
-<div>
+                <i class="bi bi-cash-stack me-2"></i>
 
+                MENSALIDADES POR CLASSE
 
-<div class="section-title">
-
-<i class="bi bi-cash-stack me-2"></i>
-
-Mensalidades por Classe
-
-</div>
+            </h1>
 
 
 
-
-<p class="text-muted mb-0">
-
-Consulta das propinas configuradas por classe e curso.
-
-</p>
+        </div>
 
 
+
+    </div>
 
 </div>
-
-
-
-
-
-
-
-<div>
-
-
-<a href="{% url 'gerar_mensalidades' %}"
-
-class="btn btn-success rounded-pill px-4 shadow-sm">
-
-
-<i class="bi bi-calendar-plus me-2"></i>
-
-
-Gerar Mensalidades
-
-
-</a>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
 
 
 <!-- =====================================================
@@ -640,7 +602,96 @@ Nenhuma mensalidade encontrada.
 </div>
 
 
+<style>
 
+/* =====================================================
+   HERO
+===================================================== */
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    margin-bottom:35px;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+.receipt-hero .hero-content{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    flex-wrap:wrap;
+
+}
+
+.receipt-hero h1{
+
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+    margin:0;
+
+}
+
+.hero-btn{
+
+    background:#22c55e;
+    color:#fff;
+    border:none;
+    border-radius:16px;
+    padding:14px 28px;
+    font-weight:800;
+    transition:.25s;
+
+}
+
+.hero-btn:hover{
+
+    background:#16a34a;
+    color:#fff;
+    transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:28px;
+
+    }
+
+}
+
+</style>
 
 
 {% endblock %}
