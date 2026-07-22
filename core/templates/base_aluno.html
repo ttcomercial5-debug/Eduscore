@@ -5,48 +5,73 @@
 
 <meta charset="UTF-8">
 
-<title>Painel do Aluno - EdusCel</title>
+<title>
+Painel do Aluno | EdusCel
+</title>
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+rel="stylesheet">
 
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+rel="stylesheet">
+
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
 
 
 <style>
 
 
+/* =====================================================
+   EDUSCEL BASE ALUNO PREMIUM
+   SEM TOPBAR
+===================================================== */
+
+
+
 *{
+
     box-sizing:border-box;
+
 }
 
 
 
 body{
 
-    margin:0;
 
-    display:flex;
+    margin:0;
 
     font-family:'Inter',sans-serif;
 
     background:
+
     linear-gradient(
         135deg,
         #eef2f7,
         #f8fafc
     );
 
+
     color:#0f172a;
 
     overflow-x:hidden;
 
+
 }
+
+
 
 
 
@@ -62,7 +87,9 @@ body{
 }
 
 
+
 ::-webkit-scrollbar-thumb{
+
 
     background:#cbd5e1;
 
@@ -72,73 +99,99 @@ body{
 
 
 
+
+
+
 /* =====================================================
-   SIDEBAR
+   SIDEBAR DESKTOP
 ===================================================== */
 
 
 .sidebar{
 
-    width:270px;
+
+    width:260px;
+
 
     height:100vh;
 
+
+    position:fixed;
+
+
+    left:0;
+
+
+    top:0;
+
+
     background:
+
+
     linear-gradient(
         180deg,
         #0f172a,
         #020617
     );
 
-    color:white;
 
-    padding:30px 22px;
+    padding:28px 18px;
 
-    position:fixed;
-
-    top:0;
-    left:0;
 
     display:flex;
 
+
     flex-direction:column;
 
+
     box-shadow:
+
+
     8px 0 35px rgba(0,0,0,.25);
+
 
     z-index:1000;
 
-    overflow:hidden;
 
 }
 
 
+
+
+
+
 /* =====================================================
-   LOGO EDUSCEL
+   LOGO
 ===================================================== */
 
 
 .logo{
 
 
-    margin-bottom:35px;
-
     text-align:center;
 
+
+    margin-bottom:35px;
+
+
 }
+
 
 
 
 .logo-main{
 
 
-    font-size:26px;
+    color:white;
+
+
+    font-size:28px;
+
 
     font-weight:800;
 
-    letter-spacing:.5px;
 
-    color:white;
+    letter-spacing:.5px;
 
 
 }
@@ -149,6 +202,7 @@ body{
 
 
     color:#3b82f6;
+
 
     margin-right:8px;
 
@@ -162,18 +216,25 @@ body{
 
     margin-top:8px;
 
-    font-size:14px;
 
-    font-weight:600;
+    font-size:12px;
 
-    color:#94a3b8;
 
     text-transform:uppercase;
 
-    letter-spacing:1px;
+
+    letter-spacing:1.5px;
+
+
+    color:#94a3b8;
+
+
+    font-weight:600;
 
 
 }
+
+
 
 
 
@@ -183,53 +244,62 @@ body{
    MENU
 ===================================================== */
 
+
 .menu{
+
 
     list-style:none;
 
+
     padding:0;
+
 
     margin:0;
 
+
     flex:1;
+
 
     overflow-y:auto;
 
-    padding-right:8px;
 
 }
 
 
-/* Scroll elegante do menu */
+
 
 .menu::-webkit-scrollbar{
 
-    width:5px;
+
+    width:4px;
+
 
 }
 
 
-.menu::-webkit-scrollbar-track{
-
-    background:transparent;
-
-}
 
 
 .menu::-webkit-scrollbar-thumb{
 
+
     background:#334155;
+
 
     border-radius:20px;
 
+
 }
+
 
 
 .menu li{
 
-    margin-bottom:8px;
+
+    margin-bottom:7px;
+
 
 }
+
 
 
 
@@ -238,10 +308,12 @@ body{
 
     text-decoration:none;
 
+
     color:#cbd5e1;
 
 
     display:flex;
+
 
     align-items:center;
 
@@ -249,10 +321,13 @@ body{
     gap:12px;
 
 
-    padding:13px 15px;
+    padding:12px 14px;
 
 
     border-radius:12px;
+
+
+    font-size:14px;
 
 
     font-weight:500;
@@ -265,10 +340,12 @@ body{
 
 
 
+
 .menu a i{
 
 
     font-size:18px;
+
 
 }
 
@@ -278,16 +355,18 @@ body{
 
 
     background:
-    rgba(59,130,246,.12);
+
+    rgba(59,130,246,.15);
 
 
     color:white;
 
 
-    transform:translateX(6px);
+    transform:translateX(5px);
 
 
 }
+
 
 
 
@@ -295,6 +374,7 @@ body{
 
 
     background:
+
 
     linear-gradient(
         90deg,
@@ -308,7 +388,8 @@ body{
 
     box-shadow:
 
-    0 4px 18px rgba(59,130,246,.45);
+
+    0 8px 20px rgba(37,99,235,.35);
 
 
 }
@@ -321,7 +402,9 @@ body{
 
     color:#f87171;
 
+
 }
+
 
 
 .menu a.logout:hover{
@@ -329,209 +412,49 @@ body{
 
     background:
 
-    rgba(248,113,113,.12);
+
+    rgba(248,113,113,.15);
 
 
 }
 
 
 
+
+
+
+
 /* =====================================================
-   CONTENT
+   CONTEÚDO PRINCIPAL
 ===================================================== */
 
 
 .content{
 
 
-    margin-left:270px;
-
-    width:100%;
-
-    padding:35px 45px;
+    margin-left:260px;
 
 
-    animation:fadeIn .5s ease;
+    width:calc(100% - 260px);
 
 
-}
+    min-height:100vh;
 
 
-
-/* =====================================================
-   TOPBAR
-===================================================== */
+    padding:30px 40px;
 
 
-.topbar{
+    animation:
 
 
-    background:
-
-    linear-gradient(
-        135deg,
-        #1e293b,
-        #020617
-    );
-
-
-    padding:26px 32px;
-
-
-    border-radius:18px;
-
-
-    box-shadow:
-
-    0 20px 50px rgba(0,0,0,.35);
-
-
-    margin-bottom:35px;
-
-
-    display:flex;
-
-
-    justify-content:space-between;
-
-
-    align-items:center;
-
-
-    color:white;
-
+    fadeIn .45s ease;
 
 
 }
 
 
 
-.school-info h4{
 
-
-    margin:0;
-
-
-    font-size:20px;
-
-
-    font-weight:700;
-
-
-}
-
-
-
-.school-info small{
-
-
-    color:#cbd5e1;
-
-
-    font-size:14px;
-
-
-    line-height:2;
-
-
-}
-
-
-
-.school-info strong{
-
-
-    color:white;
-
-}
-
-
-
-
-/* =====================================================
-   USER BOX
-===================================================== */
-
-
-.user-box{
-
-
-    display:flex;
-
-
-    align-items:center;
-
-
-    gap:14px;
-
-
-}
-
-
-
-.avatar{
-
-
-    width:48px;
-
-
-    height:48px;
-
-
-    border-radius:50%;
-
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
-
-
-    display:flex;
-
-
-    align-items:center;
-
-
-    justify-content:center;
-
-
-    font-weight:700;
-
-
-    font-size:18px;
-
-
-    color:white;
-
-
-}
-
-
-
-.user-name{
-
-
-    font-weight:700;
-
-
-}
-
-
-
-.user-role{
-
-
-    font-size:12px;
-
-
-    color:#cbd5e1;
-
-
-}
 
 
 
@@ -545,26 +468,42 @@ body{
 
 from{
 
-opacity:0;
 
-transform:translateY(10px);
+    opacity:0;
+
+
+    transform:translateY(10px);
+
 
 }
+
 
 
 to{
 
-opacity:1;
 
-transform:translateY(0);
+    opacity:1;
+
+
+    transform:translateY(0);
+
 
 }
 
 
 }
+
+
+
+
+
+
+
+
 /* =====================================================
    MOBILE
 ===================================================== */
+
 
 
 .offcanvas{
@@ -572,14 +511,12 @@ transform:translateY(0);
 
     background:
 
+
     linear-gradient(
         180deg,
         #0f172a,
         #020617
     );
-
-
-    color:white;
 
 
 }
@@ -591,10 +528,12 @@ transform:translateY(0);
 
     border-bottom:
 
-    1px solid rgba(255,255,255,.08);
+
+    1px solid rgba(255,255,255,.1);
 
 
 }
+
 
 
 
@@ -603,10 +542,26 @@ transform:translateY(0);
 
     color:white;
 
+
     font-weight:700;
 
 
 }
+
+
+
+.offcanvas-title small{
+
+
+    color:#94a3b8;
+
+
+    font-size:12px;
+
+
+}
+
+
 
 
 
@@ -622,7 +577,9 @@ transform:translateY(0);
 
 
 
-.mobile-topbar{
+
+
+.mobile-header{
 
 
     display:none;
@@ -632,156 +589,129 @@ transform:translateY(0);
 
 
 
+
+
+
 @media(max-width:992px){
 
 
-    .sidebar{
 
-        display:none !important;
+.sidebar{
 
-    }
 
-
-    .content{
-
-
-        margin-left:0;
-
-
-        padding:15px;
-
-
-    }
-
-
-    .mobile-topbar{
-
-
-        display:flex;
-
-
-        justify-content:space-between;
-
-
-        align-items:center;
-
-
-        background:white;
-
-
-        padding:14px 18px;
-
-
-        border-radius:14px;
-
-
-        margin-bottom:15px;
-
-
-        box-shadow:
-
-        0 5px 15px rgba(0,0,0,.08);
-
-
-    }
-
-
-
-    .mobile-title{
-
-
-        font-size:18px;
-
-
-        font-weight:700;
-
-
-        display:flex;
-
-
-        align-items:center;
-
-
-        gap:10px;
-
-
-    }
-
-
-
-    .mobile-title i{
-
-
-        color:#2563eb;
-
-
-    }
-
-
-
-    .menu-toggle{
-
-
-        border:none;
-
-
-        background:none;
-
-
-        font-size:30px;
-
-
-        color:#0f172a;
-
-
-    }
-
-
-
-    .topbar{
-
-
-        flex-direction:column;
-
-
-        align-items:flex-start;
-
-
-        gap:15px;
-
-
-        padding:20px;
-
-
-    }
-
-
-
-    .user-box{
-
-
-        width:100%;
-
-
-    }
+    display:none!important;
 
 
 }
 
 
 
-/* =====================================================
-   SIDEBAR HTML
-===================================================== */
+.content{
+
+
+    margin-left:0;
+
+
+    width:100%;
+
+
+    padding:15px;
+
+
+}
+
+
+
+.mobile-header{
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    background:white;
+
+
+    padding:14px 18px;
+
+
+    border-radius:16px;
+
+
+    margin-bottom:20px;
+
+
+    box-shadow:
+
+
+    0 5px 18px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+.mobile-brand{
+
+
+    font-size:20px;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+.mobile-brand i{
+
+
+    color:#2563eb;
+
+
+}
+
+
+
+.menu-toggle{
+
+
+    border:none;
+
+
+    background:none;
+
+
+    font-size:30px;
+
+
+    color:#0f172a;
+
+
+}
+
+
+
+}
+
+
+
 
 </style>
+
 
 </head>
 
 
 <body>
-
-
 <!-- =====================================================
      SIDEBAR DESKTOP
 ===================================================== -->
@@ -790,30 +720,52 @@ transform:translateY(0);
 <div class="sidebar d-none d-lg-flex">
 
 
+
+    <!-- LOGO -->
+
     <div class="logo">
 
 
         <div class="logo-main">
 
+
             <i class="bi bi-mortarboard-fill"></i>
+
 
             EdusCel
 
+
+
         </div>
+
 
 
         <div class="logo-sub">
 
-            Painel do Aluno
+
+            Área do Aluno
+
+
 
         </div>
+
 
 
     </div>
 
 
 
+
+
+
+
+    <!-- MENU -->
+
+
     <ul class="menu">
+
+
+
 
 
 
@@ -825,14 +777,19 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'dashboard_aluno' %}active{% endif %}">
 
 
+
                 <i class="bi bi-speedometer2"></i>
 
 
                 <span>
 
+
                     Resumo
 
+
+
                 </span>
+
 
 
             </a>
@@ -844,7 +801,10 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'notas_aluno' %}"
@@ -852,17 +812,23 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'notas_aluno' %}active{% endif %}">
 
 
+
                 <i class="bi bi-journal-check"></i>
 
 
                 <span>
 
+
                     Notas
+
+
 
                 </span>
 
 
+
             </a>
+
 
 
         </li>
@@ -871,7 +837,10 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'frequencia_aluno' %}"
@@ -879,17 +848,23 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'frequencia_aluno' %}active{% endif %}">
 
 
+
                 <i class="bi bi-calendar-check"></i>
 
 
                 <span>
 
+
                     Frequência
+
+
 
                 </span>
 
 
+
             </a>
+
 
 
         </li>
@@ -898,7 +873,10 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'horario_aluno' %}"
@@ -906,17 +884,23 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'horario_aluno' %}active{% endif %}">
 
 
+
                 <i class="bi bi-calendar3"></i>
 
 
                 <span>
 
+
                     Horário
+
+
 
                 </span>
 
 
+
             </a>
+
 
 
         </li>
@@ -925,7 +909,10 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'calendario_aluno' %}"
@@ -933,17 +920,23 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'calendario_aluno' %}active{% endif %}">
 
 
+
                 <i class="bi bi-calendar-event"></i>
 
 
                 <span>
 
+
                     Calendário Escolar
+
+
 
                 </span>
 
 
+
             </a>
+
 
 
         </li>
@@ -952,7 +945,10 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'situacao_financeira' %}"
@@ -960,17 +956,23 @@ transform:translateY(0);
             class="{% if request.resolver_match.url_name == 'situacao_financeira' %}active{% endif %}">
 
 
+
                 <i class="bi bi-wallet2"></i>
 
 
                 <span>
 
+
                     Situação Financeira
+
+
 
                 </span>
 
 
+
             </a>
+
 
 
         </li>
@@ -979,55 +981,97 @@ transform:translateY(0);
 
 
 
+
+
         <li>
+
 
 
             <a href="{% url 'boletim_pdf' %}">
 
 
-                <i class="bi bi-file-earmark-arrow-down"></i>
+
+                <i class="bi bi-file-earmark-pdf"></i>
+
 
 
                 <span>
+
 
                     Baixar Boletim
 
+
+
                 </span>
 
 
+
             </a>
+
 
 
         </li>
 
 
 
-
-
-        <li>
-
-
-            <a href="{% url 'logout' %}" class="logout">
-
-
-                <i class="bi bi-box-arrow-right"></i>
-
-
-                <span>
-
-                    Sair
-
-                </span>
-
-
-            </a>
-
-
-        </li>
 
 
 
     </ul>
+
+
+
+
+
+
+
+    <!-- LOGOUT FIXO -->
+
+
+    <div>
+
+
+        <ul class="menu mb-0">
+
+
+            <li>
+
+
+                <a href="{% url 'logout' %}"
+
+                class="logout">
+
+
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+
+
+                    <span>
+
+
+                        Sair
+
+
+
+                    </span>
+
+
+
+                </a>
+
+
+            </li>
+
+
+
+        </ul>
+
+
+    </div>
+
+
+
 
 
 
@@ -1037,9 +1081,14 @@ transform:translateY(0);
 
 
 
+
+
+
+
 <!-- =====================================================
      MENU MOBILE OFFCANVAS
 ===================================================== -->
+
 
 
 <div
@@ -1052,40 +1101,57 @@ id="menuAluno">
 
 
 
+
+
 <div class="offcanvas-header">
 
 
-<h5 class="offcanvas-title">
+
+    <h5 class="offcanvas-title">
 
 
-    EdusCel
+        <i class="bi bi-mortarboard-fill me-2"></i>
 
 
-    <small class="d-block">
-
-        Painel do Aluno
-
-    </small>
+        EdusCel
 
 
-</h5>
+        <small class="d-block">
+
+
+            Área do Aluno
 
 
 
-<button
-
-type="button"
-
-class="btn-close"
-
-data-bs-dismiss="offcanvas">
+        </small>
 
 
-</button>
+
+    </h5>
+
+
+
+
+
+    <button
+
+    type="button"
+
+    class="btn-close"
+
+    data-bs-dismiss="offcanvas">
+
+
+    </button>
+
 
 
 
 </div>
+
+
+
+
 
 
 
@@ -1094,125 +1160,220 @@ data-bs-dismiss="offcanvas">
 <div class="offcanvas-body">
 
 
+
+
+
 <ul class="menu">
 
 
 
+
+
+
 <li>
+
 
 <a href="{% url 'dashboard_aluno' %}">
 
+
 <i class="bi bi-speedometer2"></i>
+
 
 Resumo
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'notas_aluno' %}">
 
+
 <i class="bi bi-journal-check"></i>
+
 
 Notas
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'frequencia_aluno' %}">
 
+
 <i class="bi bi-calendar-check"></i>
+
 
 Frequência
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'horario_aluno' %}">
 
+
 <i class="bi bi-calendar3"></i>
+
 
 Horário
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'calendario_aluno' %}">
 
+
 <i class="bi bi-calendar-event"></i>
+
 
 Calendário Escolar
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'situacao_financeira' %}">
 
+
 <i class="bi bi-wallet2"></i>
+
 
 Situação Financeira
 
+
 </a>
+
 
 </li>
 
 
 
+
+
+
+
+
 <li>
+
 
 <a href="{% url 'boletim_pdf' %}">
 
-<i class="bi bi-file-earmark-arrow-down"></i>
+
+<i class="bi bi-file-earmark-pdf"></i>
+
 
 Baixar Boletim
 
+
 </a>
 
+
 </li>
+
+
+
+
+
 
 
 
 <li>
 
-<a href="{% url 'logout' %}" class="logout">
+
+<a href="{% url 'logout' %}"
+
+class="logout">
+
 
 <i class="bi bi-box-arrow-right"></i>
 
+
 Sair
+
 
 </a>
 
+
 </li>
+
+
+
 
 
 </ul>
 
 
+
+
+
+
+
 </div>
+
+
+
+
 
 
 </div>
@@ -1224,24 +1385,31 @@ Sair
 <div class="content">
 
 
+
+
+
 <!-- =====================================================
-     MOBILE TOPBAR
+     HEADER MOBILE
 ===================================================== -->
 
 
-<div class="mobile-topbar">
+<div class="mobile-header">
 
 
-    <div class="mobile-title">
+
+    <div class="mobile-brand">
 
 
-        <i class="bi bi-mortarboard-fill"></i>
+        <i class="bi bi-mortarboard-fill me-2"></i>
 
 
         EdusCel
 
 
+
     </div>
+
+
 
 
 
@@ -1254,241 +1422,19 @@ Sair
     data-bs-target="#menuAluno">
 
 
+
         <i class="bi bi-list"></i>
+
 
 
     </button>
 
 
 
-</div>
-
-
-
-
-
-<!-- =====================================================
-     TOPBAR PRINCIPAL
-===================================================== -->
-
-
-<div class="topbar">
-
-
-
-
-
-<div class="school-info">
-
-
-
-<h4>
-
-
-{{ aluno.escola.nome }}
-
-
-</h4>
-
-
-
-
-<small>
-
-
-Processo:
-
-<strong>
-
-{{ aluno.numero_processo }}
-
-</strong>
-
-
-
-
-|
-
-
-
-Classe:
-
-<strong>
-
-{{ aluno.classe }}
-
-</strong>
-
-
-
-
-
-|
-
-
-
-Turma:
-
-<strong>
-
-{{ aluno.turma.identificador }}
-
-</strong>
-
-
-
-
-
-{% if aluno.turma.sala %}
-
-
-|
-
-
-Sala:
-
-<strong>
-
-{{ aluno.turma.sala }}
-
-</strong>
-
-
-{% endif %}
-
-
-
-
-
-
-{% if aluno.curso %}
-
-
-|
-
-
-
-Curso:
-
-<strong>
-
-{{ aluno.curso.nome }}
-
-</strong>
-
-
-
-{% endif %}
-
-
-
-
-
-
-
-|
-
-
-
-Ano Letivo:
-
-<strong>
-
-{{ aluno.ano_letivo }}
-
-</strong>
-
-
-
-</small>
-
-
 
 </div>
 
 
-
-
-
-
-
-<!-- =====================================================
-     UTILIZADOR
-===================================================== -->
-
-
-<div class="user-box">
-
-
-
-
-
-<div class="avatar">
-
-
-{% if aluno.nome_completo %}
-
-
-{{ aluno.nome_completo|first|upper }}
-
-
-{% else %}
-
-
-{{ request.user.first_name|first|upper }}
-
-
-{% endif %}
-
-
-
-</div>
-
-
-
-
-
-
-<div>
-
-
-
-<div class="user-role">
-
-
-Aluno
-
-
-</div>
-
-
-
-
-
-<div class="user-name">
-
-
-{{ aluno.nome_completo }}
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-</div>
 
 
 
@@ -1499,10 +1445,14 @@ Aluno
 ===================================================== -->
 
 
+
 {% block content %}
 
 
+
 {% endblock %}
+
+
 
 
 
@@ -1516,24 +1466,42 @@ Aluno
 
 
 
+
+
+
+
+
+
+<!-- =====================================================
+     BOOTSTRAP
+===================================================== -->
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
 
 
+
+
+
+
+<!-- =====================================================
+     CONTROLO DE SESSÃO
+===================================================== -->
+
+
 <script>
 
-
-/* =====================================================
-   CONTROLO DE SESSÃO
-===================================================== */
 
 
 let timer;
 
 
 let warningTimer;
+
+
 
 
 
@@ -1550,6 +1518,7 @@ function resetTimer(){
 
 
 
+
     warningTimer = setTimeout(()=>{
 
 
@@ -1560,7 +1529,10 @@ function resetTimer(){
         );
 
 
+
     },290000);
+
+
 
 
 
@@ -1571,6 +1543,7 @@ function resetTimer(){
     timer=setTimeout(()=>{
 
 
+
         window.location.href="{% url 'logout' %}";
 
 
@@ -1579,7 +1552,11 @@ function resetTimer(){
 
 
 
+
 }
+
+
+
 
 
 
@@ -1596,6 +1573,9 @@ resetTimer
 
 
 
+
+
+
 document.addEventListener(
 
 "keypress",
@@ -1606,6 +1586,9 @@ resetTimer
 
 
 
+
+
+
 document.addEventListener(
 
 "click",
@@ -1613,6 +1596,9 @@ document.addEventListener(
 resetTimer
 
 );
+
+
+
 
 
 
@@ -1628,11 +1614,21 @@ resetTimer
 
 
 
+
+
 resetTimer();
 
 
 
+
+
+
 </script>
+
+
+
+
+
 
 
 

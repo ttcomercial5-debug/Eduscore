@@ -1,403 +1,2294 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-    <meta charset="UTF-8">
-    <title>EdusCel</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<title>
+EdusCel | Administração
+</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
 
-    <style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #eef2f7, #f8fafc);
-        }
 
-        /* ================= SIDEBAR ================= */
 
-        .sidebar {
-            position: fixed;
-            width: 260px;
-            height: 100vh;
-            background: linear-gradient(180deg, #0f172a, #1e293b);
-            padding: 30px 20px;
-            color: white;
-            box-shadow: 6px 0 25px rgba(0,0,0,0.08);
+<!-- =====================================================
+     BOOTSTRAP
+===================================================== -->
 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+rel="stylesheet">
 
-            overflow-y: auto;
-        }
 
-        .sidebar-content{
-            flex: 1;
-        }
 
-        .brand {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            letter-spacing: 0.5px;
-        }
+<!-- =====================================================
+     ICONES
+===================================================== -->
 
-        .menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+rel="stylesheet">
 
-        .menu-item {
-            margin-bottom: 12px;
-        }
 
-        .menu-link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            color: #cbd5e1;
-            font-weight: 500;
-            transition: 0.3s;
-            font-size: 14px;
-        }
 
-        .menu-link i {
-            margin-right: 10px;
-            font-size: 16px;
-        }
+<!-- =====================================================
+     FONT
+===================================================== -->
 
-        .menu-link:hover {
-            background: #334155;
-            color: white;
-            transform: translateX(3px);
-        }
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
-        .menu-link.active {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: white;
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-        }
 
-        /* ================= FOOTER ================= */
 
-        .sidebar-footer {
-            padding-top: 15px;
-            margin-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-        }
 
-        .logout-link {
-            color: #f87171;
-        }
 
-        .logout-link:hover {
-            background: #7f1d1d;
-            color: white;
-        }
 
-        /* ================= CONTENT ================= */
+<style>
 
-        .content {
-            margin-left: 260px;
-            padding: 35px;
-        }
 
-        /* ================= TOPBAR ================= */
+/* =====================================================
+   RESET
+===================================================== */
 
-        .topbar {
-            background: white;
-            padding: 18px 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
 
-        .user-info {
-            font-weight: 600;
-            color: #1e293b;
-        }
+*{
 
-        .btn-switch {
-            border-radius: 10px;
-            font-size: 13px;
-        }
+margin:0;
 
-        /* ================= CARDS ================= */
+padding:0;
 
-        .card-dashboard {
-            border: none;
-            border-radius: 18px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.05);
-        }
+box-sizing:border-box;
 
-        /* ================= RESPONSIVO ================= */
+}
 
-        @media(max-width: 992px){
 
-            .sidebar{
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
 
-            .content{
-                margin-left: 0;
-                padding: 20px;
-            }
 
-        }
+body{
 
-    </style>
+font-family:'Inter',sans-serif;
+
+background:#f1f5f9;
+
+color:#0f172a;
+
+overflow-x:hidden;
+
+}
+
+
+
+
+
+/* =====================================================
+   WRAPPER
+===================================================== */
+
+
+.eduscel-wrapper{
+
+display:flex;
+
+min-height:100vh;
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+
+.eduscel-sidebar{
+
+
+width:285px;
+
+
+height:100vh;
+
+
+position:fixed;
+
+
+left:0;
+
+
+top:0;
+
+
+
+background:
+
+
+linear-gradient(
+
+180deg,
+
+#020617,
+
+#0f172a 45%,
+
+#1e3a8a
+
+);
+
+
+
+
+padding:22px 16px;
+
+
+display:flex;
+
+
+flex-direction:column;
+
+
+
+box-shadow:
+
+10px 0 35px rgba(15,23,42,.25);
+
+
+
+z-index:2000;
+
+
+
+overflow-y:auto;
+
+
+
+}
+
+
+
+
+.eduscel-sidebar::-webkit-scrollbar{
+
+width:5px;
+
+}
+
+
+
+.eduscel-sidebar::-webkit-scrollbar-thumb{
+
+background:#334155;
+
+border-radius:20px;
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+
+.logo-area{
+
+
+padding:
+
+10px 12px 25px;
+
+
+
+border-bottom:
+
+1px solid rgba(255,255,255,.12);
+
+
+
+margin-bottom:20px;
+
+
+}
+
+
+
+
+.logo-content{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:14px;
+
+
+}
+
+
+
+
+
+
+
+.logo-icon{
+
+
+width:52px;
+
+
+height:52px;
+
+
+
+border-radius:16px;
+
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#22c55e
+
+);
+
+
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+
+
+font-size:24px;
+
+
+color:white;
+
+
+
+
+box-shadow:
+
+
+0 12px 30px rgba(37,99,235,.35);
+
+
+
+}
+
+
+
+
+
+.logo-text{
+
+
+color:white;
+
+
+font-size:21px;
+
+
+font-weight:800;
+
+
+line-height:1.1;
+
+
+}
+
+
+
+
+.logo-text small{
+
+
+display:block;
+
+
+margin-top:6px;
+
+
+font-size:11px;
+
+
+font-weight:600;
+
+
+color:#94a3b8;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:1px;
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+
+.sidebar-menu{
+
+flex:1;
+
+}
+
+
+
+
+
+.menu-title{
+
+
+color:#64748b;
+
+
+font-size:11px;
+
+
+font-weight:700;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:.8px;
+
+
+padding:
+
+12px 14px;
+
+
+}
+
+
+
+
+
+.menu-item{
+
+margin-bottom:6px;
+
+}
+
+
+
+
+
+
+
+
+.menu-link{
+
+
+width:100%;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:12px;
+
+
+
+
+padding:
+
+13px 15px;
+
+
+
+border-radius:14px;
+
+
+
+color:#cbd5e1;
+
+
+
+
+text-decoration:none;
+
+
+
+font-size:14px;
+
+
+
+
+font-weight:600;
+
+
+
+
+transition:.25s;
+
+
+
+}
+
+
+
+
+.menu-link i{
+
+
+font-size:18px;
+
+
+}
+
+
+
+
+
+.menu-link:hover{
+
+
+background:
+
+rgba(255,255,255,.08);
+
+
+
+color:white;
+
+
+
+transform:translateX(4px);
+
+
+
+}
+
+
+
+
+
+
+.menu-link.active{
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#1d4ed8
+
+);
+
+
+
+
+color:white;
+
+
+
+box-shadow:
+
+
+0 10px 25px rgba(37,99,235,.35);
+
+
+
+}
+
+
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+
+.logout-area{
+
+
+margin-top:auto;
+
+
+padding-top:15px;
+
+
+
+border-top:
+
+
+1px solid rgba(255,255,255,.12);
+
+
+
+}
+
+
+
+
+
+.logout-link{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:12px;
+
+
+
+
+padding:
+
+
+13px 15px;
+
+
+
+
+border-radius:14px;
+
+
+
+
+color:#fca5a5;
+
+
+
+
+text-decoration:none;
+
+
+
+
+font-weight:700;
+
+
+
+transition:.25s;
+
+
+
+}
+
+
+
+
+
+.logout-link:hover{
+
+
+background:
+
+
+rgba(239,68,68,.15);
+
+
+
+color:white;
+
+
+
+}
+
+
+
+
+</style>
+
 </head>
+
+
 
 <body>
 
-<!-- ================= SIDEBAR ================= -->
 
-<div class="sidebar">
+<div class="eduscel-wrapper">
+<!-- =====================================================
+     SIDEBAR DESKTOP
+===================================================== -->
 
-    <div class="sidebar-content">
 
-        <!-- LOGO -->
+<aside class="eduscel-sidebar">
 
-        <div class="brand">
-            EdusCel
-        </div>
 
 
+<div class="logo-area">
 
-        <!-- MENU -->
 
-        <ul class="menu">
+<div class="logo-content">
 
-            <!-- DASHBOARD -->
 
-            <li class="menu-item">
 
-                <a href="/dashboard/"
-                   class="menu-link {% if request.path == '/dashboard/' %}active{% endif %}">
+<div class="logo-icon">
 
-                    <i class="bi bi-speedometer2"></i>
-
-                    Resumo
-
-                </a>
-
-            </li>
-
-
-
-            <!-- ALUNOS -->
-
-            <li class="menu-item">
-
-                <a href="/alunos/"
-                   class="menu-link {% if '/alunos/' in request.path %}active{% endif %}">
-
-                    <i class="bi bi-people"></i>
-
-                    Alunos
-
-                </a>
-
-            </li>
-
-            <!-- PROFESSORES -->
-
-            <li class="menu-item">
-
-                <a href="/professores/"
-                   class="menu-link {% if '/professores/' in request.path %}active{% endif %}">
-
-                    <i class="bi bi-person-badge"></i>
-
-                    Professores
-
-                </a>
-
-            </li>
-
-            <!-- CURSOS -->
-
-            <li class="menu-item">
-
-                <a href="{% url 'cursos' %}"
-                   class="menu-link {% if request.resolver_match.url_name == 'cursos' %}active{% endif %}">
-
-                    <i class="bi bi-mortarboard"></i>
-
-                    Cursos
-
-                </a>
-
-            </li>
-
-            <!-- TURMAS -->
-
-            <li class="menu-item">
-
-                <a href="/turmas/"
-                   class="menu-link {% if '/turmas/' in request.path %}active{% endif %}">
-
-                    <i class="bi bi-easel"></i>
-
-                    Turmas
-
-                </a>
-
-            </li>
-
-
-
-            <!-- DISCIPLINAS -->
-
-            <li class="menu-item">
-
-                <a href="/disciplinas/"
-                   class="menu-link {% if '/disciplinas/' in request.path %}active{% endif %}">
-
-                    <i class="bi bi-book"></i>
-
-                    Disciplinas
-
-                </a>
-
-            </li>
-
-            <!-- CALENDÁRIO ESCOLAR -->
-
-
-
-            <!-- FUNCIONÁRIOS -->
-
-            <li class="menu-item">
-
-                <a href="{% url 'cadastrar_secretaria' %}"
-                   class="menu-link {% if request.resolver_match.url_name == 'cadastrar_secretaria' %}active{% endif %}">
-
-                    <i class="bi bi-person-plus"></i>
-
-                    Cadastrar Funcionários
-
-                </a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- ================= BOTÃO SAIR ================= -->
-
-    <div class="sidebar-footer">
-
-        <a href="/logout/" class="menu-link logout-link">
-
-            <i class="bi bi-box-arrow-right"></i>
-
-            <span>Sair</span>
-
-        </a>
-
-    </div>
+<i class="bi bi-mortarboard-fill"></i>
 
 </div>
 
-<!-- ================= CONTENT ================= -->
 
-<div class="content">
 
-    {% block content %}
-    {% endblock %}
+
+<div class="logo-text">
+
+EdusCel
+
+
+<small>
+Administração
+</small>
+
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- SWEETALERT 2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="sidebar-menu">
+
+
+
+
+
+<!-- ================= PRINCIPAL ================= -->
+
+
+<div class="menu-title">
+
+Principal
+
+</div>
+
+
+
+
+
+<div class="menu-item">
+
+
+<a href="/dashboard/"
+
+class="menu-link {% if request.path == '/dashboard/' %}active{% endif %}">
+
+
+<i class="bi bi-speedometer2"></i>
+
+
+<span>
+
+Resumo
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- ================= GESTÃO ESCOLAR ================= -->
+
+
+<div class="menu-title mt-3">
+
+Gestão Escolar
+
+</div>
+
+
+
+
+
+
+
+<!-- ALUNOS -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'alunos' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'alunos' %}active{% endif %}">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+<span>
+
+Alunos
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- PROFESSORES -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'professores' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'professores' %}active{% endif %}">
+
+
+<i class="bi bi-person-workspace"></i>
+
+
+<span>
+
+Professores
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CURSOS -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'cursos' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'cursos' %}active{% endif %}">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+<span>
+
+Cursos
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'turmas' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'turmas' %}active{% endif %}">
+
+
+<i class="bi bi-diagram-3-fill"></i>
+
+
+<span>
+
+Turmas
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- DISCIPLINAS -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'disciplinas' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'disciplinas' %}active{% endif %}">
+
+
+<i class="bi bi-book-half"></i>
+
+
+<span>
+
+Disciplinas
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ================= ADMINISTRAÇÃO ================= -->
+
+
+<div class="menu-title mt-3">
+
+Administração
+
+</div>
+
+
+
+
+
+
+
+
+<!-- FUNCIONÁRIOS -->
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'cadastrar_secretaria' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'cadastrar_secretaria' %}active{% endif %}">
+
+
+<i class="bi bi-person-plus-fill"></i>
+
+
+<span>
+
+Funcionários
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     LOGOUT FIXO
+===================================================== -->
+
+
+<div class="logout-area">
+
+
+<a href="{% url 'logout' %}"
+
+class="logout-link">
+
+
+<i class="bi bi-box-arrow-right"></i>
+
+
+<span>
+
+Sair
+
+</span>
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MOBILE OFFCANVAS
+===================================================== -->
+
+
+<div class="offcanvas offcanvas-start"
+
+tabindex="-1"
+
+id="mobileMenu">
+
+
+
+
+
+<div class="offcanvas-header bg-dark text-white">
+
+
+<h5 class="fw-bold">
+
+
+<i class="bi bi-mortarboard-fill me-2"></i>
+
+
+EdusCel
+
+
+</h5>
+
+
+
+
+<button
+
+type="button"
+
+class="btn-close btn-close-white"
+
+data-bs-dismiss="offcanvas">
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="offcanvas-body bg-dark">
+
+
+<ul class="list-unstyled">
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="/dashboard/"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-speedometer2"></i>
+
+
+Resumo
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'alunos' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+Alunos
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'professores' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-person-workspace"></i>
+
+
+Professores
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'turmas' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-diagram-3"></i>
+
+
+Turmas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'disciplinas' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-book-half"></i>
+
+
+Disciplinas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'cursos' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+Cursos
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'cadastrar_secretaria' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-person-plus"></i>
+
+
+Funcionários
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mt-4">
+
+
+<a href="{% url 'logout' %}"
+
+class="text-danger text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-box-arrow-right"></i>
+
+
+Sair
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+</ul>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     ÁREA PRINCIPAL
+===================================================== -->
+
+
+<main class="eduscel-main">
+
+
+<section class="page-content">
+
+
+{% block content %}
+
+{% endblock %}
+
+
+</section>
+
+
+</main>
+
+
+
+
+
+
+</div>
+<!-- =====================================================
+     CSS ÁREA PRINCIPAL
+===================================================== -->
+
+
+<style>
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+
+.eduscel-main{
+
+
+margin-left:285px;
+
+
+width:calc(100% - 285px);
+
+
+
+min-height:100vh;
+
+
+
+background:#f1f5f9;
+
+
+
+}
+
+
+
+
+.page-content{
+
+
+padding:35px;
+
+
+
+animation:
+
+fadeIn .35s ease;
+
+
+
+}
+
+
+
+
+
+
+@keyframes fadeIn{
+
+
+from{
+
+
+opacity:0;
+
+
+transform:translateY(12px);
+
+
+}
+
+
+
+to{
+
+
+opacity:1;
+
+
+transform:translateY(0);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CARDS PADRÃO EDUSCEL
+===================================================== */
+
+
+.card-dashboard{
+
+
+background:white;
+
+
+border:none;
+
+
+border-radius:22px;
+
+
+box-shadow:
+
+
+0 12px 35px rgba(15,23,42,.08);
+
+
+
+transition:.3s;
+
+
+}
+
+
+
+
+.card-dashboard:hover{
+
+
+transform:translateY(-4px);
+
+
+box-shadow:
+
+
+0 18px 45px rgba(15,23,42,.12);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MOBILE BUTTON
+===================================================== */
+
+
+.mobile-menu-btn{
+
+
+position:fixed;
+
+
+top:15px;
+
+
+left:15px;
+
+
+
+z-index:3000;
+
+
+
+width:45px;
+
+
+height:45px;
+
+
+
+border-radius:14px;
+
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+
+box-shadow:
+
+
+0 10px 25px rgba(0,0,0,.18);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   TOAST NOTIFICAÇÕES
+===================================================== */
+
+
+.eduscel-toast{
+
+
+position:fixed;
+
+
+
+top:25px;
+
+
+
+right:25px;
+
+
+
+background:#0f172a;
+
+
+
+color:white;
+
+
+
+padding:18px 22px;
+
+
+
+border-radius:16px;
+
+
+
+min-width:300px;
+
+
+
+box-shadow:
+
+
+0 20px 45px rgba(0,0,0,.30);
+
+
+
+z-index:9999;
+
+
+
+animation:
+
+
+toastShow .35s ease;
+
+
+
+}
+
+
+
+
+@keyframes toastShow{
+
+
+from{
+
+
+opacity:0;
+
+
+transform:translateY(-25px);
+
+
+}
+
+
+
+to{
+
+
+opacity:1;
+
+
+transform:translateY(0);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   OFFCANVAS MOBILE
+===================================================== */
+
+
+.offcanvas{
+
+
+background:
+
+
+linear-gradient(
+
+180deg,
+
+#020617,
+
+#0f172a
+
+);
+
+
+
+}
+
+
+
+
+
+.offcanvas-body{
+
+
+color:white;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+
+@media(max-width:992px){
+
+
+
+.eduscel-sidebar{
+
+
+display:none;
+
+
+}
+
+
+
+
+.eduscel-main{
+
+
+margin-left:0;
+
+
+width:100%;
+
+
+
+}
+
+
+
+
+.page-content{
+
+
+padding:15px;
+
+
+}
+
+
+
+}
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     BOTÃO MOBILE
+===================================================== -->
+
+
+<button
+
+
+class="btn btn-primary mobile-menu-btn d-lg-none"
+
+
+
+data-bs-toggle="offcanvas"
+
+
+
+data-bs-target="#mobileMenu">
+
+
+
+<i class="bi bi-list fs-4"></i>
+
+
+
+</button>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JS
+===================================================== -->
+
+
+<script
+
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+
+</script>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SWEETALERT
+===================================================== -->
+
+
+<script
+
+src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+
+</script>
+
+
+
+
+
+
+
+
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
 
-    document.addEventListener("click", function (e) {
+document.addEventListener(
+"DOMContentLoaded",
 
-        const btn = e.target.closest(".btn-eliminar");
+function(){
 
-        if (!btn) return;
 
-        e.preventDefault();
 
-        const url = btn.getAttribute("href");
+document.addEventListener(
 
-        Swal.fire({
+"click",
 
-            title: "Eliminar curso?",
-            text: "Esta ação não pode ser desfeita.",
-            icon: "warning",
+function(e){
 
-            showCancelButton: true,
-            confirmButtonText: "Sim, eliminar",
-            cancelButtonText: "Cancelar",
 
-            confirmButtonColor: "#dc3545"
 
-        }).then((result) => {
+const btn=e.target.closest(".btn-eliminar");
 
-            if (result.isConfirmed) {
-                window.location.href = url;
-            }
 
-        });
 
-    });
+if(!btn)
+
+return;
+
+
+
+
+
+e.preventDefault();
+
+
+
+
+const url=btn.getAttribute("href");
+
+
+
+
+
+
+Swal.fire({
+
+
+
+title:"Eliminar registo?",
+
+
+
+text:"Esta ação não pode ser desfeita.",
+
+
+
+icon:"warning",
+
+
+
+
+showCancelButton:true,
+
+
+
+confirmButtonText:"Sim, eliminar",
+
+
+
+cancelButtonText:"Cancelar",
+
+
+
+
+confirmButtonColor:"#dc3545",
+
+
+
+cancelButtonColor:"#64748b"
+
+
+
+}).then((result)=>{
+
+
+
+if(result.isConfirmed){
+
+
+
+window.location.href=url;
+
+
+
+}
+
+
 
 });
 
+
+
+});
+
+
+
+});
+
+
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     CONTROLO DE SESSÃO
+     5 MINUTOS
+===================================================== -->
+
 
 <script>
-let timer;
-let warningTimer;
 
-function resetTimer() {
-    clearTimeout(timer);
-    clearTimeout(warningTimer);
 
-    // aviso antes de sair (opcional: 10 segundos antes)
-    warningTimer = setTimeout(() => {
-        console.log("Sessão vai expirar em 10 segundos por inatividade.");
-    }, 290000); // 4min50s
+let inactivityTimer;
 
-    // logout após 5 minutos
-    timer = setTimeout(() => {
-        window.location.href = "{% url 'logout' %}";
-    }, 300000); // 5 minutos
+
+
+
+
+function resetInactivity(){
+
+
+
+clearTimeout(inactivityTimer);
+
+
+
+
+
+
+inactivityTimer=setTimeout(()=>{
+
+
+
+window.location.href="{% url 'logout' %}";
+
+
+
+},300000);
+
+
+
 }
 
-// eventos de atividade
-document.addEventListener("mousemove", resetTimer);
-document.addEventListener("keypress", resetTimer);
-document.addEventListener("click", resetTimer);
-document.addEventListener("scroll", resetTimer);
 
-// inicia timer
-resetTimer();
+
+
+
+
+
+
+[
+
+"mousemove",
+
+"click",
+
+"keypress",
+
+"scroll",
+
+"touchstart"
+
+].forEach(event=>{
+
+
+
+document.addEventListener(
+
+event,
+
+resetInactivity
+
+);
+
+
+
+});
+
+
+
+
+
+resetInactivity();
+
+
+
+
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     NOTIFICAÇÕES TEMPO REAL
+===================================================== -->
+
+
+<script>
+
+
+try{
+
+
+
+
+
+const protocolo =
+
+window.location.protocol === "https:"
+
+?
+
+"wss://"
+
+:
+
+"ws://";
+
+
+
+
+
+
+
+
+const socket = new WebSocket(
+
+
+
+protocolo +
+
+window.location.host +
+
+"/ws/notificacoes/"
+
+
+
+);
+
+
+
+
+
+
+
+
+
+socket.onmessage=function(event){
+
+
+
+const data = JSON.parse(event.data);
+
+
+
+
+
+mostrarToast(
+
+
+data.titulo,
+
+
+data.mensagem
+
+
+);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+socket.onerror=function(){
+
+
+
+console.log(
+
+"Notificações em tempo real indisponíveis."
+
+);
+
+
+
+};
+
+
+
+
+
+
+
+
+}
+
+catch(e){
+
+
+
+console.log(e);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function mostrarToast(titulo,mensagem){
+
+
+
+
+
+const toast=document.createElement("div");
+
+
+
+toast.className="eduscel-toast";
+
+
+
+
+
+
+toast.innerHTML=`
+
+
+
+<strong>
+
+${titulo}
+
+</strong>
+
+
+
+<br>
+
+
+
+<span>
+
+${mensagem}
+
+</span>
+
+
+
+`;
+
+
+
+
+
+
+document.body.appendChild(toast);
+
+
+
+
+
+
+
+
+setTimeout(()=>{
+
+
+
+toast.remove();
+
+
+
+},5000);
+
+
+
+
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
 </body>
+
+
 </html>

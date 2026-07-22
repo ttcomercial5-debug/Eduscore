@@ -1,963 +1,2722 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<div class="container-fluid px-4 mt-4">
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show mt-3">
-            {{ message }}
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"></button>
-        </div>
-    {% endfor %}
-{% endif %}
 
-<!-- ================= HEADER PREMIUM ================= -->
-<div class="card border-0 shadow-lg rounded-4 mb-4 header-premium">
+<div class="container-fluid px-0">
 
-    <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-        <div class="d-flex align-items-center gap-3">
 
-            {% if request.user.escola.logo %}
-            <div class="logo-container">
+<!-- =====================================================
+     PERFIL DIRETOR PREMIUM
+===================================================== -->
 
-                <img src="{{ request.user.escola.logo.url }}"
-                     alt="Logo da escola"
-                     class="logo-escola">
 
-            </div>
-            {% endif %}
+<div class="director-profile-card mb-4">
 
-            <div>
 
-                <h4 class="fw-bold mb-1">
-                    <i class="bi bi-speedometer2 me-2"></i>
-                    Dashboard Executivo
-                </h4>
+    <div class="director-profile-content">
 
-                <small class="text-light opacity-75">
-                    {{ request.user.escola.nome }}
-                </small>
 
-                {% if ano %}
-                <div class="mt-2">
-                    <span class="badge bg-primary">
-                        Ano Letivo: {{ ano.nome }}
-                    </span>
-                </div>
-                {% endif %}
 
-            </div>
+        <div class="row align-items-center g-4">
 
-        </div>
 
-        <div class="profile-badge">
 
-            <div class="profile-icon">
-                {{ request.user.username|first|upper }}
-            </div>
+            <div class="col-lg-8">
 
-            <div>
 
-                <small class="text-light opacity-75">
-                    Diretor
-                </small>
 
-                <br>
+                <div class="d-flex align-items-center gap-4">
 
-                <strong>
-                    {{ request.user.username }}
-                </strong>
 
-            </div>
 
-        </div>
+                    <div class="director-avatar">
 
-    </div>
 
-</div>
+                        {% if request.user.nome_completo %}
 
-<!-- ================= CARDS ================= -->
+                            {{ request.user.nome_completo|first|upper }}
 
-<div class="row g-4">
+                        {% else %}
 
-    <!-- ALUNOS -->
-    <div class="col-md-3">
+                            {{ request.user.first_name|first|upper }}
 
-        <div class="card dashboard-card glass-card">
+                        {% endif %}
 
-            <div>
 
-                <span class="card-label">
-                    Alunos
-                </span>
-
-                <h2>{{ total_alunos }}</h2>
-
-                <small>
-                    Estudantes ativos
-                </small>
-
-            </div>
-
-            <i class="bi bi-mortarboard-fill icon"></i>
-
-        </div>
-
-    </div>
-
-    <!-- PROFESSORES -->
-    <div class="col-md-3">
-
-        <div class="card dashboard-card glass-card success">
-
-            <div>
-
-                <span class="card-label">
-                    Professores
-                </span>
-
-                <h2>{{ total_professores }}</h2>
-
-                <small>
-                    Corpo docente
-                </small>
-
-            </div>
-
-            <i class="bi bi-person-workspace icon"></i>
-
-        </div>
-
-    </div>
-
-    <!-- TURMAS -->
-    <div class="col-md-3">
-
-        <div class="card dashboard-card glass-card warning">
-
-            <div>
-
-                <span class="card-label">
-                    Turmas
-                </span>
-
-                <h2>{{ total_turmas }}</h2>
-
-                <small>
-                    Classes ativas
-                </small>
-
-            </div>
-
-            <i class="bi bi-building icon"></i>
-
-        </div>
-
-    </div>
-
-    <!-- FINANÇAS -->
-    <div class="col-md-3">
-
-        <div class="card dashboard-card glass-card danger">
-
-            <div>
-
-                <span class="card-label">
-                    Pagamentos
-                </span>
-
-                <h2>{{ total_recebido }}</h2>
-
-                <small>
-                    Registros financeiros
-                </small>
-
-            </div>
-
-            <i class="bi bi-cash-stack icon"></i>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================= DASHBOARD INTELIGENTE ================= -->
-
-<div class="row mt-5 g-4">
-
-    <!-- TAXA APROVAÇÃO -->
-    <div class="col-md-6">
-
-        <div class="smart-card">
-
-            <h5 class="smart-title">
-                <i class="bi bi-bar-chart-fill me-2"></i>
-                Taxa de Aprovação
-            </h5>
-
-            <div class="smart-content">
-
-                <h1>{{ percentagem_aprovacao }}%</h1>
-
-                <p>
-                    {{ aprovados }} aprovados
-                    •
-                    {{ reprovados }} reprovados
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- MELHOR TURMA -->
-    <div class="col-md-6">
-
-        <div class="smart-card success-card">
-
-            <h5 class="smart-title">
-                <i class="bi bi-trophy-fill me-2"></i>
-                Melhor Turma
-            </h5>
-
-            {% if melhor_turma %}
-
-            <div class="smart-content">
-
-                <h3>
-                    {{ melhor_turma.nome }}
-                </h3>
-
-                <p>
-                    Média Geral:
-                    <strong>{{ melhor_turma.media }}</strong>
-                </p>
-
-            </div>
-
-            {% else %}
-
-            <div class="alert alert-light">
-                Nenhuma informação disponível.
-            </div>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- SEGUNDA LINHA -->
-<div class="row mt-4 g-4">
-
-    <!-- PIOR DISCIPLINA -->
-    <div class="col-md-6">
-
-        <div class="smart-card danger-card">
-
-            <h5 class="smart-title">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                Pior Disciplina
-            </h5>
-
-            {% if pior_disciplina %}
-
-            <div class="smart-content">
-
-                <h3>
-                    {{ pior_disciplina.nome }}
-                </h3>
-
-                <p>
-                    Média:
-                    <strong>{{ pior_disciplina.media }}</strong>
-                </p>
-
-                <small>
-                    {{ pior_disciplina.negativas }} negativas
-                </small>
-
-            </div>
-
-            {% else %}
-
-            <div class="alert alert-light">
-                Nenhuma informação disponível.
-            </div>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-    <!-- EVOLUÇÃO -->
-    <div class="col-md-6">
-
-        <div class="smart-card evolution-card">
-
-            <h5 class="smart-title">
-                <i class="bi bi-graph-up-arrow me-2"></i>
-                Evolução Escolar
-            </h5>
-
-            {% for item in evolucao %}
-
-            <div class="evolution-item">
-
-                <span>{{ item.trimestre }}</span>
-
-                <strong>{{ item.media }}</strong>
-
-            </div>
-
-            {% empty %}
-
-            <div class="alert alert-light">
-                Sem dados disponíveis.
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================= ALERTAS ================= -->
-
-<div class="smart-card mt-4">
-
-    <h5 class="smart-title text-danger">
-        <i class="bi bi-bell-fill me-2"></i>
-        Alertas Automáticos
-    </h5>
-
-    {% if alertas %}
-
-        <ul class="alert-list">
-
-            {% for alerta in alertas %}
-
-            <li>
-                {{ alerta }}
-            </li>
-
-            {% endfor %}
-
-        </ul>
-
-    {% else %}
-
-        <div class="alert alert-success mb-0">
-            Nenhum alerta encontrado.
-        </div>
-
-    {% endif %}
-
-</div>
-
-<!-- ================= ALTERAR SENHA ================= -->
-
-<a href="{% url 'alterar_senha' %}"
-   class="card-password-diretor">
-
-    <div class="password-text">
-
-        <strong>
-            Alterar Senha
-        </strong>
-
-        <span>
-             da conta do diretor
-        </span>
-
-    </div>
-
-    <i class="bi bi-shield-lock-fill"></i>
-
-</a>
-
-<!-- ================= ENCERRAR ANO LETIVO ================= -->
-
-{% if ano %}
-
-<div class="encerrar-container">
-
-    <div class="encerrar-box">
-
-        <small class="encerrar-label">
-            Área administrativa avançada
-        </small>
-
-        {% if mostrar_botao_promocao %}
-
-        <button class="btn btn-encerrar rounded-pill"
-                data-bs-toggle="modal"
-                data-bs-target="#modalPromocao">
-
-            <i class="bi bi-calendar-x me-2"></i>
-
-            Encerrar Ano Letivo {{ ano.nome }}
-
-        </button>
-
-        {% else %}
-
-        <div class="alert alert-warning mt-2 rounded-pill px-4 py-2">
-            O botão será liberado após lançamento das notas finais.
-        </div>
-
-        {% endif %}
-
-
-        {% if messages %}
-        <script>
-        window.onload = function () {
-
-            const url = "{% url 'download_pdf_encerramento' %}";
-
-            const link = document.createElement("a");
-            link.href = url;
-            link.click();
-
-        }
-        </script>
-        {% endif %}
-
-    </div>
-
-</div>
-
-{% endif %}
-
-<!-- ================= MODAL PROMOÇÃO ================= -->
-
-{% if ano and ano.id %}
-
-<div class="modal fade" id="modalPromocao" tabindex="-1">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content border-0 shadow-lg rounded-4">
-
-            <div class="modal-header bg-dark text-white rounded-top-4">
-
-                <h5 class="modal-title">
-                    Encerrar Ano Letivo {{ ano.nome }}
-                </h5>
-
-                <button type="button"
-                        class="btn-close btn-close-white"
-                        data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <div class="modal-body px-4 py-4">
-
-                <p class="fw-semibold mb-3">
-                    Esta ação irá executar automaticamente:
-                </p>
-
-                <ul class="list-group list-group-flush mb-3">
-
-                    <li class="list-group-item">
-                        Criar novo Ano Letivo {{ proximo_ano }}
-                    </li>
-
-                    <li class="list-group-item">
-                        Promover alunos automaticamente
-                    </li>
-
-                    <li class="list-group-item">
-                        Finalizar alunos da 12ª classe
-                    </li>
-
-                    <li class="list-group-item">
-                        Manter histórico no ano anterior
-                    </li>
-
-                </ul>
-
-                <div class="alert alert-danger mt-3">
-                    Esta ação não poderá ser desfeita.
-                </div>
-
-            </div>
-
-            <div class="modal-footer border-0 pb-4">
-
-                <button type="button"
-                        class="btn btn-outline-secondary rounded-pill px-4"
-                        data-bs-dismiss="modal">
-
-                    Cancelar
-
-                </button>
-
-                <form method="POST"
-                      action="{% url 'promover_alunos' ano.id %}">
-
-                    {% csrf_token %}
-
-                    <div class="mb-3 text-start">
-
-                        <label class="form-label fw-semibold">
-                            Confirme sua senha
-                        </label>
-
-                        <input type="password"
-                               name="senha_confirmacao"
-                               class="form-control rounded-3"
-                               placeholder="Digite sua senha"
-                               required>
-
-                        <small class="text-muted">
-                            Por segurança, informe sua senha para continuar.
-                        </small>
 
                     </div>
 
-                    <button type="submit"
-                            class="btn btn-success rounded-pill px-4 shadow-sm">
 
-                        Confirmar Promoção
 
-                    </button>
 
-                </form>
+
+                    <div>
+
+
+
+                        <h2 class="director-name">
+
+
+                            {% if request.user.nome_completo %}
+
+                                {{ request.user.nome_completo }}
+
+                            {% else %}
+
+                                {{ request.user.get_full_name }}
+
+                            {% endif %}
+
+
+
+                        </h2>
+
+
+
+
+
+                        <div class="director-role">
+
+
+                            Director Geral
+
+
+                        </div>
+
+
+
+
+
+
+
+                        <div class="mt-3">
+
+
+
+                            <span class="director-pill">
+
+
+                                <i class="bi bi-building"></i>
+
+
+                                {{ request.user.escola.nome }}
+
+
+
+                            </span>
+
+
+
+
+
+
+
+                            {% if ano %}
+
+
+                            <span class="director-pill">
+
+
+                                <i class="bi bi-calendar3"></i>
+
+
+                                Ano Letivo {{ ano.nome }}
+
+
+
+                            </span>
+
+
+                            {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+                </div>
+
+
+
 
             </div>
 
+
+
+
+
+
+
+
+            <div class="col-lg-4 text-lg-end">
+
+
+
+                <div class="director-school-box">
+
+
+
+                    {% if request.user.escola.logo %}
+
+
+                    <img src="{{ request.user.escola.logo.url }}"
+
+                         class="director-logo"
+
+                         alt="Logo Escola">
+
+
+                    {% endif %}
+
+
+
+
+
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
         </div>
+
+
+
+
 
     </div>
 
+
+
 </div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MENSAGENS
+===================================================== -->
+
+
+{% if messages %}
+
+
+{% for message in messages %}
+
+
+
+<div class="alert alert-success alert-dismissible fade show shadow-sm rounded-4">
+
+
+    {{ message }}
+
+
+
+    <button type="button"
+
+            class="btn-close"
+
+            data-bs-dismiss="alert">
+
+
+    </button>
+
+
+
+</div>
+
+
+
+
+{% endfor %}
+
+
 
 {% endif %}
 
-<!-- ================= RODAPÉ PREMIUM ================= -->
 
-<footer class="support-footer mt-5">
 
-    <div class="support-card">
 
-        <div class="support-left">
 
-            <div class="support-icon">
-                <i class="bi bi-headset"></i>
-            </div>
 
-            <div>
 
-                <h6 class="mb-1">
-                    Apoio Técnico
-                </h6>
 
-                <small class="opacity-75">
-                    Atendimento rápido via WhatsApp ou Email
-                </small>
 
-            </div>
+<!-- =====================================================
+     INDICADORES PRINCIPAIS
+===================================================== -->
 
-        </div>
 
-        <div class="support-right">
+<div class="row g-4">
 
-            <a href="https://wa.me/940162472?text=Olá,%20preciso%20de%20suporte%20no%20Sistema%20de%20Gestão%20Escolar."
-               target="_blank"
-               class="contact-item whatsapp">
 
-                <i class="bi bi-whatsapp"></i>
 
-                <span>
-                    940 162 472
-                </span>
 
-            </a>
 
-            <a href="mailto:icasystems2026@gmail.com?subject=Suporte%20Sistema%20de%20Gestão%20Escolar"
-               class="contact-item email">
+<!-- ALUNOS -->
 
-                <i class="bi bi-envelope-fill"></i>
 
-                <span>
-                    icasystems2026@gmail.com
-                </span>
+<div class="col-xl-3 col-md-6">
 
-            </a>
 
-        </div>
 
-    </div>
+<div class="dashboard-kpi kpi-blue">
 
-    <div class="developer text-center mt-4">
+
+
+    <div>
+
+
+        <span>
+
+
+            Alunos
+
+
+
+        </span>
+
+
+
+        <h2>
+
+
+            {{ total_alunos }}
+
+
+
+        </h2>
+
+
 
         <small>
-            Desenvolvido por
-            <strong>Ivo Cardoso Avelino</strong> © 2026
+
+
+            Estudantes ativos
+
+
+
         </small>
+
+
 
     </div>
 
-</footer>
+
+
+
+
+    <i class="bi bi-mortarboard-fill"></i>
+
+
+
 
 </div>
 
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- PROFESSORES -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+
+<div class="dashboard-kpi kpi-green">
+
+
+
+    <div>
+
+
+        <span>
+
+
+            Professores
+
+
+
+        </span>
+
+
+
+        <h2>
+
+
+            {{ total_professores }}
+
+
+
+        </h2>
+
+
+
+        <small>
+
+
+            Corpo docente
+
+
+
+        </small>
+
+
+
+    </div>
+
+
+
+
+
+    <i class="bi bi-person-workspace"></i>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- TURMAS -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+
+<div class="dashboard-kpi kpi-orange">
+
+
+
+    <div>
+
+
+        <span>
+
+
+            Turmas
+
+
+
+        </span>
+
+
+
+        <h2>
+
+
+            {{ total_turmas }}
+
+
+
+        </h2>
+
+
+
+        <small>
+
+
+            Classes ativas
+
+
+
+        </small>
+
+
+
+    </div>
+
+
+
+
+
+    <i class="bi bi-diagram-3-fill"></i>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- FINANCEIRO -->
+
+
+<div class="col-xl-3 col-md-6">
+
+
+
+<div class="dashboard-kpi kpi-red">
+
+
+
+    <div>
+
+
+        <span>
+
+
+            Receitas
+
+
+
+        </span>
+
+
+
+        <h2>
+
+
+            {{ total_recebido }}
+
+
+
+        </h2>
+
+
+
+        <small>
+
+
+            Registos financeiros
+
+
+
+        </small>
+
+
+
+    </div>
+
+
+
+
+
+    <i class="bi bi-cash-stack"></i>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+<!-- =====================================================
+     DASHBOARD INTELIGENTE
+===================================================== -->
+
+
+<div class="row g-4 mt-4">
+
+
+
+
+
+<!-- TAXA APROVAÇÃO -->
+
+
+<div class="col-lg-6">
+
+
+
+<div class="executive-card">
+
+
+
+    <div class="executive-card-title">
+
+
+        <i class="bi bi-bar-chart-fill"></i>
+
+
+        Taxa de Aprovação
+
+
+
+    </div>
+
+
+
+
+
+    <div class="approval-box">
+
+
+
+        <h1>
+
+
+            {{ percentagem_aprovacao }}%
+
+
+
+        </h1>
+
+
+
+
+
+        <p>
+
+
+            <strong>
+
+
+                {{ aprovados }}
+
+
+            </strong>
+
+            alunos aprovados
+
+
+
+            <span class="mx-2">
+
+
+                •
+
+
+            </span>
+
+
+
+            <strong>
+
+
+                {{ reprovados }}
+
+
+            </strong>
+
+
+            reprovados
+
+
+
+        </p>
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MELHOR TURMA -->
+
+
+<div class="col-lg-6">
+
+
+
+<div class="executive-card success-border">
+
+
+
+
+
+    <div class="executive-card-title">
+
+
+        <i class="bi bi-trophy-fill"></i>
+
+
+        Melhor Turma
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+{% if melhor_turma %}
+
+
+
+<div class="highlight-box">
+
+
+
+    <h3>
+
+
+        {{ melhor_turma.nome }}
+
+
+
+    </h3>
+
+
+
+
+    <p>
+
+
+        Média Geral:
+
+
+        <strong>
+
+
+            {{ melhor_turma.media }}
+
+
+
+        </strong>
+
+
+
+    </p>
+
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+
+
+<div class="empty-state">
+
+
+    Nenhuma informação disponível.
+
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SEGUNDA LINHA
+===================================================== -->
+
+
+
+<div class="row g-4 mt-1">
+
+
+
+
+
+<!-- PIOR DISCIPLINA -->
+
+
+<div class="col-lg-6">
+
+
+
+<div class="executive-card danger-border">
+
+
+
+
+
+    <div class="executive-card-title">
+
+
+        <i class="bi bi-exclamation-triangle-fill"></i>
+
+
+        Disciplina com Maior Dificuldade
+
+
+
+    </div>
+
+
+
+
+
+
+
+{% if pior_disciplina %}
+
+
+
+
+<div class="highlight-box">
+
+
+
+<h3>
+
+
+{{ pior_disciplina.nome }}
+
+
+
+</h3>
+
+
+
+
+<p>
+
+
+Média:
+
+
+<strong>
+
+
+{{ pior_disciplina.media }}
+
+
+
+</strong>
+
+
+
+</p>
+
+
+
+
+<small>
+
+
+{{ pior_disciplina.negativas }} avaliações negativas
+
+
+
+</small>
+
+
+
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+
+<div class="empty-state">
+
+
+Nenhuma informação disponível.
+
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- EVOLUÇÃO -->
+
+
+<div class="col-lg-6">
+
+
+
+<div class="executive-card primary-border">
+
+
+
+
+
+<div class="executive-card-title">
+
+
+<i class="bi bi-graph-up-arrow"></i>
+
+
+Evolução Escolar
+
+
+
+</div>
+
+
+
+
+
+
+
+{% for item in evolucao %}
+
+
+
+<div class="evolution-line">
+
+
+
+<span>
+
+
+{{ item.trimestre }}
+
+
+
+</span>
+
+
+
+<strong>
+
+
+{{ item.media }}
+
+
+
+</strong>
+
+
+
+</div>
+
+
+
+
+{% empty %}
+
+
+
+
+<div class="empty-state">
+
+
+Sem dados disponíveis.
+
+
+
+</div>
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     ALERTAS AUTOMÁTICOS
+===================================================== -->
+
+
+
+<div class="executive-card mt-4">
+
+
+
+<div class="executive-card-title text-danger">
+
+
+<i class="bi bi-bell-fill"></i>
+
+
+Alertas Automáticos
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{% if alertas %}
+
+
+
+<ul class="executive-alert-list">
+
+
+{% for alerta in alertas %}
+
+
+
+<li>
+
+
+<i class="bi bi-info-circle-fill"></i>
+
+
+{{ alerta }}
+
+
+
+</li>
+
+
+
+
+{% endfor %}
+
+
+
+</ul>
+
+
+
+
+
+{% else %}
+
+
+
+<div class="success-alert">
+
+
+<i class="bi bi-check-circle-fill"></i>
+
+
+Nenhum alerta encontrado.
+
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SEGURANÇA DA CONTA
+===================================================== -->
+
+
+
+<a href="{% url 'alterar_senha' %}"
+
+class="security-director-card">
+
+
+
+
+
+<div>
+
+
+
+<h5>
+
+
+<i class="bi bi-shield-lock-fill me-2"></i>
+
+
+Segurança da Conta
+
+
+
+</h5>
+
+
+
+
+
+<p>
+
+
+Atualize regularmente a senha administrativa do diretor.
+
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+<i class="bi bi-arrow-right-circle-fill"></i>
+
+
+
+
+
+
+
+</a>
+<!-- =====================================================
+     ENCERRAMENTO DO ANO LETIVO
+===================================================== -->
+
+
+{% if ano %}
+
+
+
+<div class="year-close-area">
+
+
+
+<div class="year-close-box">
+
+
+
+<span>
+
+
+Área Administrativa Avançada
+
+
+
+</span>
+
+
+
+
+
+
+{% if mostrar_botao_promocao %}
+
+
+
+
+<button class="btn-year-close"
+
+data-bs-toggle="modal"
+
+data-bs-target="#modalPromocao">
+
+
+
+<i class="bi bi-calendar-x me-2"></i>
+
+
+Encerrar Ano Letivo {{ ano.nome }}
+
+
+
+</button>
+
+
+
+
+
+{% else %}
+
+
+
+
+<div class="alert alert-warning rounded-pill px-4">
+
+
+O encerramento será liberado após lançamento das notas finais.
+
+
+
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MODAL PROMOÇÃO
+===================================================== -->
+
+
+
+
+
+{% if ano and ano.id %}
+
+
+
+
+<div class="modal fade"
+
+id="modalPromocao"
+
+tabindex="-1">
+
+
+
+<div class="modal-dialog modal-dialog-centered">
+
+
+
+<div class="modal-content rounded-4 border-0 shadow-lg">
+
+
+
+
+
+<div class="modal-header bg-dark text-white">
+
+
+
+<h5 class="modal-title">
+
+
+Encerrar Ano Letivo {{ ano.nome }}
+
+
+
+</h5>
+
+
+
+
+<button type="button"
+
+class="btn-close btn-close-white"
+
+data-bs-dismiss="modal">
+
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="modal-body p-4">
+
+
+
+
+
+<p class="fw-semibold">
+
+
+Esta operação irá executar automaticamente:
+
+
+
+</p>
+
+
+
+
+
+
+
+<ul class="list-group mb-3">
+
+
+
+<li class="list-group-item">
+
+
+Criar novo ano letivo {{ proximo_ano }}
+
+
+
+</li>
+
+
+
+<li class="list-group-item">
+
+
+Promover alunos automaticamente
+
+
+
+</li>
+
+
+
+
+<li class="list-group-item">
+
+
+Finalizar alunos da 12ª classe
+
+
+
+</li>
+
+
+
+
+<li class="list-group-item">
+
+
+Manter histórico académico
+
+
+
+</li>
+
+
+
+</ul>
+
+
+
+
+
+
+
+<div class="alert alert-danger">
+
+
+Esta ação não poderá ser revertida.
+
+
+
+</div>
+
+
+
+
+
+<form method="POST"
+
+action="{% url 'promover_alunos' ano.id %}">
+
+
+
+
+
+{% csrf_token %}
+
+
+
+
+
+
+
+<label class="form-label fw-semibold">
+
+
+Confirme sua senha
+
+
+
+</label>
+
+
+
+
+
+
+
+<input type="password"
+
+name="senha_confirmacao"
+
+class="form-control rounded-3"
+
+placeholder="Digite a senha do diretor"
+
+required>
+
+
+
+
+
+
+
+<button type="submit"
+
+class="btn btn-success rounded-pill mt-4 px-4">
+
+
+
+Confirmar Promoção
+
+
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SUPORTE ICA SYSTEMS
+===================================================== -->
+
+
+
+
+<footer class="support-footer mt-5">
+
+
+
+
+
+<div class="support-card">
+
+
+
+
+
+<div class="support-left">
+
+
+
+
+
+<div class="support-icon">
+
+
+<i class="bi bi-headset"></i>
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+
+<h6>
+
+
+Apoio Técnico
+
+
+
+</h6>
+
+
+
+
+<small>
+
+
+ICA Systems | EdusCel
+
+
+
+</small>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="support-contact">
+
+
+
+
+
+<a href="https://wa.me/940162472"
+
+target="_blank">
+
+
+<i class="bi bi-whatsapp"></i>
+
+
+940 162 472
+
+
+
+</a>
+
+
+
+
+
+
+
+<a href="mailto:icasystems2026@gmail.com">
+
+
+<i class="bi bi-envelope-fill"></i>
+
+
+icasystems2026@gmail.com
+
+
+
+</a>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<div class="developer">
+
+
+Desenvolvido por
+
+<strong>
+
+Ivo Cardoso Avelino
+
+</strong>
+
+© 2026
+
+
+
+</div>
+
+
+
+
+
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <style>
 
-/* ================= LOGO ESCOLA ================= */
 
-.logo-container{
-width:100px;
-height:100px;
-background:white;
-border-radius:14px;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:6px;
-box-shadow:0 6px 18px rgba(0,0,0,0.15);
-}
+/* =====================================================
+   PERFIL DIRETOR
+===================================================== */
 
-.logo-escola{
-max-width:100%;
-max-height:100%;
-object-fit:contain;
-}
 
-/* ================= HEADER ================= */
+.director-profile-card{
 
-.header-premium{
-background:linear-gradient(135deg,#1e293b,#0f172a);
-color:white;
-}
 
-.profile-badge{
-display:flex;
-align-items:center;
-gap:12px;
-}
+background:
 
-.profile-icon{
-width:45px;
-height:45px;
-background:linear-gradient(135deg,#2563eb,#1e40af);
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:600;
-color:white;
-font-size:18px;
-}
+linear-gradient(
+135deg,
+#0f172a,
+#1d4ed8
+);
 
-/* ================= CARDS ================= */
 
-.dashboard-card{
-padding:28px;
 border-radius:22px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-transition:0.3s ease;
-border:none;
-cursor:pointer;
-color:white;
-}
 
-.dashboard-card:hover{
-transform:translateY(-6px);
-}
 
-.glass-card{
-background:linear-gradient(135deg,#2563eb,#1e40af);
-}
-
-.glass-card.success{
-background:linear-gradient(135deg,#16a34a,#065f46);
-}
-
-.glass-card.warning{
-background:linear-gradient(135deg,#f59e0b,#b45309);
-}
-
-.glass-card.danger{
-background:linear-gradient(135deg,#dc2626,#7f1d1d);
-}
-
-.dashboard-card h2{
-font-size:32px;
-font-weight:700;
-margin:6px 0;
-}
-
-.card-label{
-font-size:13px;
-text-transform:uppercase;
-opacity:0.85;
-}
-
-.icon{
-font-size:40px;
-opacity:0.95;
-}
-
-/* ================= DASHBOARD INTELIGENTE ================= */
-
-.smart-card{
-background:white;
-border-radius:22px;
 padding:25px;
-box-shadow:0 10px 30px rgba(0,0,0,0.06);
-border:none;
-height:100%;
+
+
+color:white;
+
+
+box-shadow:
+
+0 15px 40px rgba(15,23,42,.20);
+
+
 }
 
-.smart-title{
-font-weight:700;
-margin-bottom:20px;
-color:#0f172a;
-}
 
-.smart-content h1{
-font-size:48px;
-font-weight:800;
-margin:0;
-color:#2563eb;
-}
 
-.smart-content h3{
-font-weight:700;
-margin-bottom:10px;
-}
 
-.smart-content p{
-margin-bottom:0;
-color:#64748b;
-}
+.director-avatar{
 
-.success-card{
-border-left:6px solid #16a34a;
-}
 
-.danger-card{
-border-left:6px solid #dc2626;
-}
+width:75px;
 
-.evolution-card{
-border-left:6px solid #2563eb;
-}
+height:75px;
 
-.evolution-item{
+
+border-radius:50%;
+
+
+background:
+
+linear-gradient(
+135deg,
+#2563eb,
+#22c55e
+);
+
+
 display:flex;
-justify-content:space-between;
-padding:12px 0;
-border-bottom:1px solid #e2e8f0;
-font-size:15px;
-}
 
-.alert-list{
-padding-left:18px;
-margin-bottom:0;
-}
-
-.alert-list li{
-margin-bottom:10px;
-font-size:14px;
-color:#b91c1c;
-font-weight:500;
-}
-
-/* ================= ALTERAR SENHA ================= */
-
-.card-password-diretor{
-border:none;
-border-radius:16px;
-padding:22px 26px;
-display:flex;
 align-items:center;
-justify-content:space-between;
-box-shadow:0 10px 30px rgba(0,0,0,0.10);
-margin-top:30px;
-transition:0.3s;
-text-decoration:none;
-color:white;
-background:linear-gradient(135deg,#1e3a8a,#2563eb);
-}
 
-.card-password-diretor:hover{
-transform:translateY(-4px);
-box-shadow:0 18px 40px rgba(0,0,0,0.18);
-color:white;
-}
-
-.card-password-diretor i{
-font-size:28px;
-}
-
-/* ================= ENCERRAR ================= */
-
-.encerrar-container{
-display:flex;
 justify-content:center;
-margin-top:45px;
-margin-bottom:15px;
+
+
+font-size:30px;
+
+font-weight:800;
+
+
 }
 
-.encerrar-box{
-text-align:center;
+
+
+
+.director-name{
+
+
+font-size:24px;
+
+font-weight:800;
+
+
+margin:0;
+
+
 }
 
-.encerrar-label{
-display:block;
-color:#94a3b8;
-font-size:11px;
-margin-bottom:10px;
-letter-spacing:1px;
+
+
+
+.director-role{
+
+
+color:#cbd5e1;
+
+margin-top:5px;
+
+
+}
+
+
+
+
+
+.director-pill{
+
+
+display:inline-flex;
+
+
+align-items:center;
+
+
+gap:7px;
+
+
+background:
+
+rgba(255,255,255,.15);
+
+
+padding:7px 14px;
+
+
+border-radius:20px;
+
+
+font-size:12px;
+
+
+margin-right:6px;
+
+
+}
+
+
+
+.director-school-box{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:end;
+
+
+gap:15px;
+
+
+}
+
+
+
+.director-logo{
+
+    width:120px;
+
+    height:120px;
+
+    object-fit:contain;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:10px;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.25);
+
+}
+
+
+
+
+/* =====================================================
+   KPI
+===================================================== */
+
+
+.dashboard-kpi{
+
+
+height:150px;
+
+
+border-radius:22px;
+
+
+padding:25px;
+
+
+display:flex;
+
+
+justify-content:space-between;
+
+
+align-items:center;
+
+
+color:white;
+
+
+box-shadow:
+
+0 12px 30px rgba(0,0,0,.12);
+
+
+transition:.3s;
+
+
+}
+
+
+
+
+.dashboard-kpi:hover{
+
+
+transform:translateY(-6px);
+
+
+}
+
+
+
+
+
+.dashboard-kpi span{
+
+
+font-size:12px;
+
+
 text-transform:uppercase;
+
+
+opacity:.85;
+
+
 }
 
-.btn-encerrar{
-background:#e2e8f0;
-color:#475569;
+
+
+
+
+.dashboard-kpi h2{
+
+
+font-size:34px;
+
+
+font-weight:800;
+
+
+margin:8px 0;
+
+
+}
+
+
+
+
+.dashboard-kpi i{
+
+
+font-size:45px;
+
+
+opacity:.8;
+
+
+}
+
+
+
+
+.kpi-blue{
+
+
+background:linear-gradient(135deg,#2563eb,#1e40af);
+
+
+}
+
+
+
+.kpi-green{
+
+
+background:linear-gradient(135deg,#16a34a,#065f46);
+
+
+}
+
+
+
+.kpi-orange{
+
+
+background:linear-gradient(135deg,#f59e0b,#b45309);
+
+
+}
+
+
+
+.kpi-red{
+
+
+background:linear-gradient(135deg,#dc2626,#7f1d1d);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CARDS INTELIGENTES
+===================================================== */
+
+
+.executive-card{
+
+
+background:white;
+
+
+border-radius:22px;
+
+
+padding:28px;
+
+
+box-shadow:
+
+0 10px 30px rgba(15,23,42,.08);
+
+
+height:100%;
+
+
+}
+
+
+
+
+
+.executive-card-title{
+
+
+font-size:17px;
+
+
+font-weight:800;
+
+
+margin-bottom:20px;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:10px;
+
+
+}
+
+
+
+
+.approval-box h1{
+
+
+font-size:55px;
+
+
+font-weight:900;
+
+
+color:#2563eb;
+
+
+}
+
+
+
+
+
+.highlight-box h3{
+
+
+font-weight:800;
+
+
+}
+
+
+
+
+.success-border{
+
+
+border-left:6px solid #16a34a;
+
+
+}
+
+
+
+.danger-border{
+
+
+border-left:6px solid #dc2626;
+
+
+}
+
+
+
+.primary-border{
+
+
+border-left:6px solid #2563eb;
+
+
+}
+
+
+
+
+.evolution-line{
+
+
+display:flex;
+
+
+justify-content:space-between;
+
+
+padding:13px 0;
+
+
+border-bottom:1px solid #e2e8f0;
+
+
+}
+
+
+
+
+
+.executive-alert-list{
+
+
+list-style:none;
+
+
+padding:0;
+
+
+}
+
+
+
+.executive-alert-list li{
+
+
+padding:12px;
+
+
+background:#fee2e2;
+
+
+border-radius:12px;
+
+
+margin-bottom:10px;
+
+
+color:#991b1b;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   SEGURANÇA
+===================================================== */
+/* =====================================================
+   SEGURANÇA COMPACTA
+===================================================== */
+
+
+.security-director-card{
+
+
+    margin-top:25px;
+
+
+    padding:15px 22px;
+
+
+    min-height:75px;
+
+
+    border-radius:18px;
+
+
+    background:
+
+
+    linear-gradient(
+        135deg,
+        #1e3a8a,
+        #2563eb
+    );
+
+
+    color:white;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    text-decoration:none;
+
+
+    box-shadow:
+
+
+    0 10px 25px rgba(37,99,235,.25);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.security-director-card:hover{
+
+
+    transform:translateY(-3px);
+
+
+    color:white;
+
+
+}
+
+
+
+
+.security-director-card h5{
+
+
+    font-size:15px;
+
+
+    margin-bottom:5px;
+
+
+}
+
+
+
+.security-director-card p{
+
+
+    font-size:12px;
+
+
+    margin:0;
+
+
+    opacity:.85;
+
+
+}
+
+
+
+.security-director-card i{
+
+
+    font-size:28px;
+
+
+}
+
+
+
+/* =====================================================
+   ENCERRAMENTO
+===================================================== */
+
+
+.year-close-area{
+
+
+text-align:center;
+
+
+margin:50px 0;
+
+
+}
+
+
+
+
+.year-close-box span{
+
+
+font-size:11px;
+
+
+text-transform:uppercase;
+
+
+color:#94a3b8;
+
+
+letter-spacing:1px;
+
+
+}
+
+
+
+
+.btn-year-close{
+
+
+margin-top:12px;
+
+
 border:none;
-padding:10px 24px;
-font-size:13px;
-font-weight:600;
-transition:0.3s ease;
-box-shadow:0 4px 12px rgba(0,0,0,0.05);
-}
 
-.btn-encerrar:hover{
-background:#cbd5e1;
-color:#1e293b;
-transform:translateY(-2px);
-}
 
-/* ================= MODAL ================= */
+padding:12px 28px;
 
-.modal-content{
-animation:fadeInScale 0.25s ease;
-}
 
-@keyframes fadeInScale{
+border-radius:50px;
 
-from{
-opacity:0;
-transform:scale(0.95);
-}
 
-to{
-opacity:1;
-transform:scale(1);
-}
+background:#e2e8f0;
+
+
+font-weight:700;
+
+
+color:#475569;
+
 
 }
 
-/* ================= SUPORTE ================= */
+
+
+
+
+
+
+
+
+/* =====================================================
+   SUPORTE
+===================================================== */
+/* =====================================================
+   SUPORTE COMPACTO ICA SYSTEMS
+===================================================== */
+
 
 .support-footer{
-padding-top:60px;
+
+
+    margin-top:35px;
+
+
 }
+
+
 
 .support-card{
-background:linear-gradient(135deg,#0f172a,#1e293b);
-color:white;
-border-radius:20px;
-padding:28px 35px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 20px 45px rgba(0,0,0,0.18);
-flex-wrap:wrap;
-gap:20px;
+
+
+    background:#0f172a;
+
+
+    color:white;
+
+
+    padding:18px 25px;
+
+
+    border-radius:18px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    flex-wrap:wrap;
+
+
+    gap:15px;
+
+
 }
+
+
+
+
 
 .support-left{
-display:flex;
-align-items:center;
-gap:20px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
 }
+
+
+
+
+.support-left h6{
+
+
+    font-size:14px;
+
+
+    margin-bottom:3px;
+
+
+}
+
+
+
+
+.support-left small{
+
+
+    font-size:11px;
+
+
+    opacity:.75;
+
+
+}
+
+
+
 
 .support-icon{
-width:60px;
-height:60px;
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    border-radius:50%;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    background:#2563eb;
+
+
+    font-size:18px;
+
+
 }
 
-.support-right{
-display:flex;
-gap:35px;
-flex-wrap:wrap;
+
+
+
+
+.support-contact{
+
+
+    display:flex;
+
+
+    gap:18px;
+
+
+    flex-wrap:wrap;
+
+
 }
 
-.contact-item{
-display:flex;
-align-items:center;
-gap:10px;
-text-decoration:none;
-font-weight:500;
-font-size:14px;
-transition:all 0.3s ease;
+
+
+
+.support-contact a{
+
+
+    color:white;
+
+
+    text-decoration:none;
+
+
+    font-size:12px;
+
+
 }
 
-.contact-item:hover{
-transform:translateY(-3px);
-opacity:0.85;
-}
 
-.whatsapp{
-color:#25D366;
-}
 
-.email{
-color:#60a5fa;
-}
 
 .developer{
-color:#64748b;
-font-size:13px;
+
+
+    text-align:center;
+
+
+    margin-top:12px;
+
+
+    color:#64748b;
+
+
+    font-size:12px;
+
+
 }
 
-.developer strong{
-color:#0f172a;
-}
 
-/* ================= RESPONSIVO ================= */
+
+
 
 @media(max-width:768px){
 
-.dashboard-card{
-padding:20px;
-}
 
-.smart-content h1{
-font-size:34px;
-}
 
-.logo-container{
-width:80px;
-height:80px;
-}
+.director-name{
+
+font-size:19px;
 
 }
+
+
+
+.dashboard-kpi{
+
+height:130px;
+
+}
+
+
+
+.director-school-box{
+
+justify-content:start;
+
+margin-top:20px;
+
+}
+
+.director-logo{
+
+    width:85px;
+
+    height:85px;
+
+}
+
+
+.security-director-card{
+
+    padding:14px 18px;
+
+}
+
+
+.support-card{
+
+    padding:16px;
+
+}
+
+}
+
+
 
 </style>
+
+
+
+
 
 {% endblock %}

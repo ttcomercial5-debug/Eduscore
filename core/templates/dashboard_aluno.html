@@ -2,532 +2,2161 @@
 
 {% block content %}
 
+
 <style>
 
-/* ========================= */
-/* MEDIA FINAL CARD */
-/* ========================= */
+/* =====================================================
+   EDUSCEL - DASHBOARD ALUNO PREMIUM FINAL
+===================================================== */
 
-.media-final-card{
-    background:linear-gradient(135deg,#4f46e5,#6366f1);
+
+.dashboard-aluno *{
+    box-sizing:border-box;
+}
+
+
+
+/* =====================================================
+   PERFIL DO ALUNO
+===================================================== */
+
+
+.aluno-profile-card{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0f172a,
+        #1d4ed8
+    );
+
+    border-radius:18px;
+
+    padding:20px 24px;
+
     color:white;
-    border-radius:16px;
-    text-align:center;
 
-    height:150px;
-    padding:20px 25px;
+    box-shadow:
+    0 15px 40px rgba(15,23,42,.22);
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+
+.aluno-profile-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    right:-120px;
+
+    top:-120px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.08);
+
+}
+
+
+
+.profile-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+
+.profile-avatar{
+
+    width:72px;
+
+    height:72px;
+
+    border-radius:50%;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #22c55e
+    );
 
     display:flex;
-    flex-direction:column;
+
     justify-content:center;
 
-    transition:.3s;
+    align-items:center;
+
+    font-size:30px;
+
+    font-weight:800;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.25);
+
 }
 
-.media-final-card h2{
+
+
+
+.profile-name{
+
+    font-size:22px;
+
+    font-weight:800;
+
     margin:0;
-    font-size:34px;
-    font-weight:700;
+
 }
 
-/* ========================= */
-/* KPI CARDS */
-/* ========================= */
+
+
+.profile-role{
+
+    font-size:13px;
+
+    color:#cbd5e1;
+
+}
+
+
+
+
+
+/* =====================================================
+   PILLS INFORMATIVOS
+===================================================== */
+
+
+.info-pill{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    background:
+
+    rgba(255,255,255,.12);
+
+    padding:
+
+    6px 13px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    margin-right:6px;
+
+    margin-top:8px;
+
+}
+
+
+
+.info-pill i{
+
+    color:#93c5fd;
+
+}
+
+
+
+
+/* =====================================================
+   BOTÃO BOLETIM
+===================================================== */
+
+
+.btn-boletim-premium{
+
+    background:white;
+
+    color:#1d4ed8;
+
+    border:none;
+
+    padding:
+
+    10px 18px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+
+
+.btn-boletim-premium:hover{
+
+    transform:translateY(-2px);
+
+    color:#1d4ed8;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.2);
+
+}
+
+
+
+
+/* =====================================================
+   KPI CARDS
+===================================================== */
+
 
 .kpi-card{
-    border-radius:20px;
-    padding:25px;
-    color:white;
-    text-align:center;
 
-    height:150px;
+    height:145px;
+
+    border-radius:20px;
+
+    padding:22px;
+
+    color:white;
 
     display:flex;
+
     flex-direction:column;
+
     justify-content:center;
 
+    position:relative;
+
+    overflow:hidden;
+
     transition:.3s;
+
 }
 
-.kpi-card:hover,
-.media-final-card:hover{
+
+
+.kpi-card:hover{
+
     transform:translateY(-5px);
+
 }
 
-/* ========================= */
-/* CORES DOS KPIs */
-/* ========================= */
 
-.card-green{
-    background:linear-gradient(135deg,#10b981,#059669);
+
+
+.kpi-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:120px;
+
+    height:120px;
+
+    right:-40px;
+
+    bottom:-40px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.12);
+
 }
 
-.card-red{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
+
+
+.kpi-icon{
+
+    font-size:28px;
+
+    margin-bottom:8px;
+
 }
 
-.card-orange{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-}
 
-/* ========================= */
-/* TEXTOS KPI */
-/* ========================= */
 
 .kpi-title{
+
     font-size:12px;
+
     text-transform:uppercase;
+
     opacity:.9;
-    margin-bottom:6px;
+
 }
+
+
 
 .kpi-value{
-    font-size:30px;
-    font-weight:700;
-    line-height:1.2;
+
+    font-size:28px;
+
+    font-weight:800;
+
 }
 
-/* ========================= */
-/* STATUS BADGES */
-/* ========================= */
+
+
+
+
+.kpi-media{
+
+background:
+linear-gradient(
+135deg,
+#4338ca,
+#6366f1
+);
+
+}
+
+
+.kpi-success{
+
+background:
+linear-gradient(
+135deg,
+#047857,
+#10b981
+);
+
+}
+
+
+
+.kpi-danger{
+
+background:
+linear-gradient(
+135deg,
+#b91c1c,
+#ef4444
+);
+
+}
+
+
+
+.kpi-warning{
+
+background:
+linear-gradient(
+135deg,
+#b45309,
+#f59e0b
+);
+
+}
+
+
+
+
+.status-badge{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:5px;
+
+padding:
+
+5px 13px;
+
+border-radius:30px;
+
+font-size:12px;
+
+font-weight:700;
+
+margin-top:6px;
+
+}
+
 
 .status-aprovado{
-    background:#10b981;
-    color:white;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:12px;
+
+background:#10b981;
+
 }
+
+
 
 .status-reprovado{
-    background:#ef4444;
-    color:white;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:12px;
+
+background:#ef4444;
+
 }
 
-/* ========================= */
-/* CARD PASSWORD */
-/* ========================= */
 
-.card-password-aluno{
-    border:none;
-    border-radius:18px;
-    padding:24px 28px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+/* =====================================================
+   CARDS GERAIS
+===================================================== */
 
-    margin-top:30px;
 
-    text-decoration:none;
-    color:white;
+.dashboard-card{
 
-    background:linear-gradient(135deg,#6d28d9,#a855f7);
+background:white;
 
-    box-shadow:0 12px 30px rgba(0,0,0,0.12);
+border-radius:20px;
 
-    transition:0.3s;
+box-shadow:
+
+0 8px 25px rgba(15,23,42,.08);
+
+overflow:hidden;
+
 }
 
-.card-password-aluno:hover{
-    transform:translateY(-5px);
-    box-shadow:0 20px 45px rgba(0,0,0,0.20);
-    color:white;
+
+
+.dashboard-card-header{
+
+padding:
+
+20px 24px;
+
+border-bottom:
+
+1px solid #e2e8f0;
+
 }
 
-.card-password-aluno i{
-    font-size:30px;
+
+
+.dashboard-card-header h4{
+
+font-size:18px;
+
+font-weight:800;
+
+margin:0;
+
 }
 
-.aluno-password-text{
-    display:flex;
-    flex-direction:column;
+
+
+
+/* =====================================================
+   SEGURANÇA PREMIUM
+===================================================== */
+
+
+.security-card{
+
+background:
+
+linear-gradient(
+135deg,
+#7c3aed,
+#a855f7
+);
+
+border-radius:20px;
+
+padding:22px 25px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+text-decoration:none;
+
+color:white;
+
+box-shadow:
+
+0 10px 30px rgba(124,58,237,.25);
+
+transition:.3s;
+
 }
 
-.aluno-password-text strong{
-    font-size:18px;
-    font-weight:600;
+
+
+.security-card:hover{
+
+transform:translateY(-5px);
+
+color:white;
+
 }
 
-.aluno-password-text span{
-    font-size:13px;
-    opacity:0.9;
-    margin-top:3px;
+
+
+.security-card strong{
+
+font-size:20px;
+
 }
 
-/* ========================= */
-/* BLOQUEIO FINANCEIRO */
-/* ========================= */
 
-.bloqueio-financeiro{
-    font-size:20px;
-    font-weight:600;
-    margin-top:10px;
+
+.security-card span{
+
+display:block;
+
+font-size:13px;
+
+opacity:.9;
+
+margin-top:5px;
+
 }
 
-/* ========================= */
-/* INFO CARD */
-/* ========================= */
 
-.card-info{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.06);
+
+.security-card i{
+
+font-size:45px;
+
 }
 
-/* ========================= */
-/* TURMA BADGE */
-/* ========================= */
 
-.badge-turma{
-    background:#e0e7ff;
-    color:#3730a3;
-    padding:8px 14px;
-    border-radius:20px;
-    font-size:13px;
-    font-weight:600;
-}
+/* =====================================================
+   RESPONSIVO
+===================================================== */
 
-/* ========================= */
-/* HISTÓRICO CARD */
-/* ========================= */
 
-.card-historico{
-    border:none;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 4px 18px rgba(0,0,0,0.06);
-}
+@media(max-width:768px){
 
-/* ========================= */
-/* TABLE HEADER */
-/* ========================= */
 
-.table thead{
-    background:#111827;
-    color:white;
-}
+    .aluno-profile-card{
 
-/* ========================= */
-/* BUTTON */
-/* ========================= */
+        padding:18px;
 
-.btn-boletim{
-    border-radius:12px;
-    padding:10px 18px;
-    font-weight:600;
+    }
+
+
+
+    .profile-name{
+
+        font-size:19px;
+
+    }
+
+
+
+    .kpi-card{
+
+        height:135px;
+
+    }
+
+
+
+    .security-card{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+
 }
 
 </style>
 
 
-<div class="container-fluid">
 
-    <!-- ========================= -->
-    <!-- DADOS DO ALUNO -->
-    <!-- ========================= -->
 
-    <div class="card-info mb-4">
 
-        <div class="row align-items-center">
+<div class="dashboard-aluno container-fluid px-0">
 
-            <div class="col-md-8">
 
-                <h3 class="fw-bold mb-3">
-                    Bem-vindo,
-                    {{ aluno.usuario.get_full_name|default:aluno.usuario.username }}
-                </h3>
 
-                <div class="d-flex flex-wrap gap-2">
 
-                    <span class="badge-turma">
-                        Turma:
-                        {{ aluno.turma.classe }}ª
-                        {{ aluno.turma.identificador }}
-                    </span>
 
-                    <span class="badge-turma">
-                        Ano Letivo:
-                        {{ aluno.turma.ano_letivo.nome }}
-                    </span>
+<!-- =====================================================
+     PERFIL DO ALUNO
+===================================================== -->
 
-                    {% if aluno.turma.curso %}
-                    <span class="badge-turma">
-                        Curso:
-                        {{ aluno.turma.curso.nome }}
-                    </span>
-                    {% endif %}
 
-                </div>
+<div class="aluno-profile-card mb-4">
 
-            </div>
 
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+<div class="profile-content">
 
-                <a href="{% url 'boletim_pdf' %}"
-                   class="btn btn-primary btn-boletim">
 
-                    <i class="bi bi-file-earmark-pdf"></i>
-                    Baixar Boletim Atual
 
-                </a>
+<div class="row align-items-center g-3">
 
-            </div>
 
-        </div>
 
-    </div>
 
 
-    <!-- ========================= -->
-    <!-- KPIs -->
-    <!-- ========================= -->
+<div class="col-lg-9">
 
-    <div class="row g-4">
 
-        <div class="col-md-4">
 
-            <div class="media-final-card">
+<div class="d-flex align-items-center gap-3">
 
-                <div>Média Final do Ano</div>
 
-                {% if tem_divida %}
 
-                    <div class="bloqueio-financeiro">
-                        Regularize a mensalidade
-                    </div>
 
-                {% else %}
 
-                    <h2>{{ media_final_ano }}</h2>
+<div class="profile-avatar">
 
-                    {% if aprovado %}
-                    <span class="status-aprovado">
-                        Aprovado
-                    </span>
-                    {% else %}
-                    <span class="status-reprovado">
-                        Reprovado
-                    </span>
-                    {% endif %}
 
-                {% endif %}
 
-            </div>
+{% if aluno.nome_completo %}
 
-        </div>
 
+{{ aluno.nome_completo|first|upper }}
 
-        <div class="col-md-4">
 
-            {% if tem_divida %}
+{% else %}
 
-            <div class="kpi-card card-red">
 
-                <div class="kpi-title">
-                    Situação Financeira
-                </div>
+{{ request.user.first_name|first|upper }}
 
-                <div class="kpi-value">
-                    Em Dívida
-                </div>
 
-            </div>
+{% endif %}
 
-            {% else %}
 
-            <div class="kpi-card card-green">
-
-                <div class="kpi-title">
-                    Situação Financeira
-                </div>
-
-                <div class="kpi-value">
-                    Em Dia
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        </div>
-
-
-        <div class="col-md-4">
-
-            <div class="kpi-card card-orange">
-
-                <div class="kpi-title">
-                    Total em Dívida
-                </div>
-
-                <div class="kpi-value">
-                    {{ total_divida|default:"0.00" }} Kz
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-
-    </div>
-
-
-
-
-
-
-    <!-- ========================= -->
-    <!-- HISTÓRICO ACADÉMICO -->
-    <!-- ========================= -->
-
-    <div class="card card-historico mt-5">
-
-        <div class="card-header bg-white border-0 pt-4 pb-0">
-
-            <h4 class="fw-bold">
-                Histórico Académico
-            </h4>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Ano Letivo</th>
-                            <th>Classe</th>
-                            <th>Turma</th>
-                            <th>Situação</th>
-                            <th>Boletim</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for historico in aluno.historicos.all %}
-
-                        <tr>
-
-                            <td>
-                                {{ historico.ano_letivo.nome }}
-                            </td>
-
-                            <td>
-                                {{ historico.classe }}ª
-                            </td>
-
-                            <td>
-
-                                {% if historico.turma %}
-                                    {{ historico.turma.identificador }}
-                                {% else %}
-                                    -
-                                {% endif %}
-
-                            </td>
-
-                            <td>
-
-                                {% if historico.situacao == "APROVADO" %}
-
-                                    <span class="badge bg-success">
-                                        Aprovado
-                                    </span>
-
-                                {% elif historico.situacao == "FINALISTA" %}
-
-                                    <span class="badge bg-primary">
-                                        Finalista
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge bg-danger">
-                                        Reprovado
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                            <td>
-
-                                <a href="{% url 'boletim_pdf' %}?ano={{ historico.ano_letivo.id }}"
-                                   class="btn btn-sm btn-outline-primary">
-
-                                    <i class="bi bi-file-earmark-pdf"></i>
-                                    PDF
-
-                                </a>
-
-                            </td>
-
-                        </tr>
-
-                        {% empty %}
-
-                        <tr>
-
-                            <td colspan="5" class="text-center text-muted">
-
-                                Nenhum histórico encontrado.
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ALTERAR SENHA -->
-    <!-- ========================= -->
-
-    <a href="{% url 'alterar_senha' %}"
-       class="card-password-aluno">
-
-        <div class="aluno-password-text">
-
-            <strong>
-                Segurança da Conta
-            </strong>
-
-            <span>
-                Atualize a sua senha de acesso
-            </span>
-
-        </div>
-
-        <i class="bi bi-key-fill"></i>
-
-    </a>
 
 </div>
+
+
+
+
+
+
+
+
+<div>
+
+
+
+<h2 class="profile-name">
+
+{{ aluno.nome_completo }}
+
+</h2>
+
+
+
+
+
+<div class="profile-role">
+
+
+Aluno regularmente matriculado no EdusCel
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="mt-2">
+
+
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-building"></i>
+
+
+{{ aluno.escola.nome }}
+
+
+</span>
+
+
+
+
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-person-badge"></i>
+
+
+Processo:
+
+{{ aluno.numero_processo }}
+
+
+</span>
+
+
+
+
+
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-calendar3"></i>
+
+
+Ano:
+
+{{ aluno.ano_letivo.nome }}
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-lg-3 text-lg-end">
+
+
+
+<a href="{% url 'boletim_pdf' %}"
+
+class="btn btn-boletim-premium">
+
+
+<i class="bi bi-file-earmark-pdf me-1"></i>
+
+
+Boletim PDF
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="mt-3">
+
+
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-book"></i>
+
+
+Classe:
+
+{{ aluno.classe }}ª
+
+
+</span>
+
+
+
+
+
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-diagram-3"></i>
+
+
+Turma:
+
+{{ aluno.turma.identificador }}
+
+
+</span>
+
+
+
+
+
+
+
+
+{% if aluno.turma.sala %}
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-door-open"></i>
+
+
+Sala:
+
+{{ aluno.turma.sala }}
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+{% if aluno.curso %}
+
+
+
+<span class="info-pill">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+Curso:
+
+{{ aluno.curso.nome }}
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     INDICADORES PRINCIPAIS
+===================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+
+
+
+
+
+<!-- MÉDIA FINAL -->
+
+
+<div class="col-xl-4 col-md-6">
+
+
+
+<div class="kpi-card kpi-media">
+
+
+
+
+
+<i class="bi bi-bar-chart-fill kpi-icon"></i>
+
+
+
+
+<div class="kpi-title">
+
+
+Média Final do Ano
+
+
+</div>
+
+
+
+
+
+
+
+{% if tem_divida %}
+
+
+
+
+
+<div class="kpi-value">
+
+Bloqueado
+
+</div>
+
+
+
+<small>
+
+Regularize pagamentos
+
+</small>
+
+
+
+
+
+{% else %}
+
+
+
+
+
+
+<div class="kpi-value">
+
+
+{{ media_final_ano }}
+
+
+</div>
+
+
+
+
+
+
+
+
+{% if aprovado %}
+
+
+
+<span class="status-badge status-aprovado">
+
+
+<i class="bi bi-check-circle"></i>
+
+
+Aprovado
+
+
+</span>
+
+
+
+
+
+{% else %}
+
+
+
+<span class="status-badge status-reprovado">
+
+
+<i class="bi bi-x-circle"></i>
+
+
+Reprovado
+
+
+</span>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- FINANCEIRO -->
+
+
+<div class="col-xl-4 col-md-6">
+
+
+
+
+
+{% if tem_divida %}
+
+
+
+
+
+<div class="kpi-card kpi-danger">
+
+
+
+<i class="bi bi-wallet2 kpi-icon"></i>
+
+
+
+
+
+<div class="kpi-title">
+
+
+Situação Financeira
+
+
+</div>
+
+
+
+
+
+
+<div class="kpi-value">
+
+
+Em Dívida
+
+
+</div>
+
+
+
+
+
+
+<small>
+
+
+Existem valores pendentes
+
+
+</small>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+{% else %}
+
+
+
+
+
+<div class="kpi-card kpi-success">
+
+
+
+
+
+<i class="bi bi-check-circle-fill kpi-icon"></i>
+
+
+
+
+
+
+<div class="kpi-title">
+
+
+Situação Financeira
+
+
+</div>
+
+
+
+
+
+
+
+<div class="kpi-value">
+
+
+Regular
+
+
+</div>
+
+
+
+
+
+
+<small>
+
+
+Mensalidades em dia
+
+
+</small>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- SALDO -->
+
+
+
+<div class="col-xl-4 col-md-6">
+
+
+
+
+
+<div class="kpi-card kpi-warning">
+
+
+
+
+
+
+<i class="bi bi-cash-stack kpi-icon"></i>
+
+
+
+
+
+
+
+<div class="kpi-title">
+
+
+Saldo Pendente
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="kpi-value">
+
+
+{{ total_divida|default:"0.00" }}
+
+
+Kz
+
+
+</div>
+
+
+
+
+
+
+<small>
+
+
+Situação financeira atual
+
+
+</small>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+<!-- =====================================================
+     DADOS ACADÉMICOS
+===================================================== -->
+
+
+<div class="dashboard-card mb-4">
+
+
+
+<div class="dashboard-card-header">
+
+
+<h4>
+
+
+<i class="bi bi-person-lines-fill text-primary me-2"></i>
+
+
+Dados Académicos
+
+
+</h4>
+
+
+</div>
+
+
+
+
+
+<div class="p-4">
+
+
+<div class="row g-4">
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<small class="text-muted">
+
+
+Número de Processo
+
+
+</small>
+
+
+<br>
+
+
+<strong>
+
+
+{{ aluno.numero_processo }}
+
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<small class="text-muted">
+
+
+Classe
+
+
+</small>
+
+
+<br>
+
+
+<strong>
+
+
+{{ aluno.classe }}ª Classe
+
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<small class="text-muted">
+
+
+Turma
+
+
+</small>
+
+
+<br>
+
+
+<strong>
+
+
+{{ aluno.turma.identificador }}
+
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<small class="text-muted">
+
+
+Sala
+
+
+</small>
+
+
+<br>
+
+
+<strong>
+
+
+
+{% if aluno.turma.sala %}
+
+
+{{ aluno.turma.sala }}
+
+
+{% else %}
+
+
+-
+
+
+{% endif %}
+
+
+
+</strong>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     HISTÓRICO ACADÉMICO
+===================================================== -->
+
+
+<div class="dashboard-card mb-4">
+
+
+
+
+
+<div class="dashboard-card-header d-flex justify-content-between align-items-center">
+
+
+
+<h4>
+
+
+<i class="bi bi-clock-history text-primary me-2"></i>
+
+
+Histórico Académico
+
+
+</h4>
+
+
+
+
+
+
+
+<span class="badge bg-primary rounded-pill">
+
+
+{{ aluno.historicos.count }}
+
+
+Registos
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover align-middle mb-0">
+
+
+
+
+
+<thead class="table-dark">
+
+
+<tr>
+
+
+<th>
+
+Ano Letivo
+
+</th>
+
+
+<th>
+
+Classe
+
+</th>
+
+
+<th>
+
+Turma
+
+</th>
+
+
+<th>
+
+Situação
+
+</th>
+
+
+<th class="text-center">
+
+Documento
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+
+<tbody>
+
+
+
+
+
+{% for historico in aluno.historicos.all %}
+
+
+
+
+
+<tr>
+
+
+
+
+
+
+<td>
+
+
+<strong>
+
+
+{{ historico.ano_letivo.nome }}
+
+
+</strong>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{ historico.classe }}ª Classe
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+{% if historico.turma %}
+
+
+{{ historico.turma.identificador }}
+
+
+{% else %}
+
+
+-
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+
+{% if historico.situacao == "APROVADO" %}
+
+
+
+
+
+<span class="badge bg-success px-3 py-2">
+
+
+<i class="bi bi-check-circle me-1"></i>
+
+
+Aprovado
+
+
+</span>
+
+
+
+
+
+
+
+{% elif historico.situacao == "FINALISTA" %}
+
+
+
+
+
+
+<span class="badge bg-primary px-3 py-2">
+
+
+<i class="bi bi-award me-1"></i>
+
+
+Finalista
+
+
+</span>
+
+
+
+
+
+
+
+{% elif historico.situacao == "RECURSO" %}
+
+
+
+
+
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+
+<i class="bi bi-exclamation-triangle me-1"></i>
+
+
+Recurso
+
+
+</span>
+
+
+
+
+
+
+
+{% else %}
+
+
+
+
+
+
+<span class="badge bg-danger px-3 py-2">
+
+
+<i class="bi bi-x-circle me-1"></i>
+
+
+Reprovado
+
+
+</span>
+
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+
+
+<a href="{% url 'boletim_pdf' %}?ano={{ historico.ano_letivo.id }}"
+
+
+class="btn btn-outline-primary btn-sm rounded-pill px-3">
+
+
+
+
+
+<i class="bi bi-file-earmark-pdf"></i>
+
+
+PDF
+
+
+
+
+
+</a>
+
+
+
+
+
+</td>
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+
+<tr>
+
+
+<td colspan="5"
+
+class="text-center text-muted py-4">
+
+
+
+<i class="bi bi-info-circle fs-4 d-block mb-2"></i>
+
+
+
+Nenhum histórico académico encontrado.
+
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SEGURANÇA DA CONTA PREMIUM
+===================================================== -->
+
+
+<div class="dashboard-card mb-4">
+
+
+
+<div class="dashboard-card-header">
+
+
+
+<h4>
+
+
+<i class="bi bi-shield-lock-fill text-primary me-2"></i>
+
+
+Segurança da Conta
+
+
+</h4>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="p-4">
+
+
+
+<a href="{% url 'alterar_senha' %}"
+
+
+class="security-card mb-0">
+
+
+
+
+
+
+<div>
+
+
+
+<strong>
+
+
+Alterar Senha de Acesso
+
+
+</strong>
+
+
+
+
+
+
+<span>
+
+
+Proteja a sua conta mantendo uma senha atualizada
+
+
+</span>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<i class="bi bi-key-fill"></i>
+
+
+
+
+
+
+
+</a>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     INFORMAÇÃO FINAL
+===================================================== -->
+
+
+
+<div class="alert alert-light border rounded-4 p-3 mb-0">
+
+
+
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+
+
+
+<i class="bi bi-info-circle-fill text-primary fs-4"></i>
+
+
+
+
+
+
+
+
+<div>
+
+
+
+<strong>
+
+
+Área do Aluno EdusCel
+
+
+</strong>
+
+
+
+
+
+<br>
+
+
+
+
+
+<span class="text-muted small">
+
+
+Consulte notas, frequências, situação financeira e documentos escolares através da plataforma.
+
+
+</span>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
 
 {% endblock %}

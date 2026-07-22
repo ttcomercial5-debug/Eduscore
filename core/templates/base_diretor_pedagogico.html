@@ -1,299 +1,1996 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-    <meta charset="UTF-8">
-    <title>EdusCel - Diretor Pedagógico</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<title>
+EdusCel | Diretor Pedagógico
+</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        * {
-            font-family: 'Inter', sans-serif;
-        }
 
-        body {
-            margin: 0;
-            background: #f4f7fb;
-        }
 
-        /* ================= SIDEBAR ================= */
+<!-- =====================================================
+     BOOTSTRAP
+===================================================== -->
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(180deg, #0f172a, #1e3a8a);
-            color: #fff;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+rel="stylesheet">
 
-        .logo {
-            padding: 24px;
-            font-size: 22px;
-            font-weight: 800;
-            border-bottom: 1px solid rgba(255,255,255,.1);
-        }
 
-        .logo small {
-            display: block;
-            font-size: 12px;
-            opacity: .7;
-            margin-top: 4px;
-        }
 
-        /* ================= MENU ================= */
+<!-- =====================================================
+     ICONES
+===================================================== -->
 
-        .menu {
-            flex: 1;
-        }
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+rel="stylesheet">
 
-        .menu-btn {
-            width: 100%;
-            text-align: left;
-            padding: 14px 18px;
-            background: transparent;
-            border: none;
-            color: #e2e8f0;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: .2s;
-        }
 
-        .menu-btn:hover {
-            background: rgba(255,255,255,.08);
-        }
 
-        .submenu a {
-            display: block;
-            padding: 10px 35px;
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 14px;
-            transition: .2s;
-        }
+<!-- =====================================================
+     FONT
+===================================================== -->
 
-        .submenu a:hover {
-            background: rgba(255,255,255,.06);
-            color: #fff;
-        }
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
-        /* ================= LOGOUT FIXO ================= */
 
-        .logout-box {
-            padding: 15px;
-            border-top: 1px solid rgba(255,255,255,.1);
-        }
 
-        .logout-box a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fca5a5;
-            text-decoration: none;
-            font-weight: 700;
-            padding: 12px 14px;
-            border-radius: 10px;
-            transition: .2s;
-        }
 
-        .logout-box a:hover {
-            background: rgba(255,255,255,.08);
-            color: #fff;
-        }
 
-        /* ================= MAIN ================= */
+<style>
 
-        .main {
-            margin-left: 280px;
-            padding: 30px;
-        }
 
-        .topbar {
-            background: #fff;
-            border-radius: 16px;
-            padding: 18px 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,.05);
-        }
+/* =====================================================
+   RESET
+===================================================== */
 
-        .badge-role {
-            background: #dbeafe;
-            color: #1d4ed8;
-            padding: 8px 14px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 13px;
-        }
 
-        @media (max-width: 992px) {
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-            }
+*{
 
-            .main {
-                margin-left: 0;
-            }
-        }
+    margin:0;
 
-    </style>
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+
+
+body{
+
+    font-family:'Inter',sans-serif;
+
+    background:#f1f5f9;
+
+    color:#0f172a;
+
+    overflow-x:hidden;
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   WRAPPER
+===================================================== */
+
+
+.eduscel-wrapper{
+
+    display:flex;
+
+    min-height:100vh;
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+
+.eduscel-sidebar{
+
+
+    width:285px;
+
+
+    height:100vh;
+
+
+    position:fixed;
+
+
+    top:0;
+
+
+    left:0;
+
+
+
+
+    background:
+
+
+    linear-gradient(
+
+        180deg,
+
+        #020617,
+
+        #0f172a 45%,
+
+        #1e3a8a
+
+    );
+
+
+
+    padding:22px 16px;
+
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+
+    box-shadow:
+
+
+    10px 0 35px rgba(15,23,42,.20);
+
+
+
+    z-index:2000;
+
+
+    overflow-y:auto;
+
+
+}
+
+
+
+
+
+
+.eduscel-sidebar::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+
+
+.eduscel-sidebar::-webkit-scrollbar-thumb{
+
+    background:#334155;
+
+    border-radius:20px;
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+
+.logo-area{
+
+
+    padding:
+
+    10px 12px 25px;
+
+
+    border-bottom:
+
+
+    1px solid rgba(255,255,255,.12);
+
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+.logo-content{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:14px;
+
+
+}
+
+
+
+
+
+
+.logo-icon{
+
+
+    width:52px;
+
+
+    height:52px;
+
+
+
+    border-radius:16px;
+
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #22c55e
+
+    );
+
+
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+
+
+    color:white;
+
+
+    font-size:24px;
+
+
+
+
+    box-shadow:
+
+
+    0 12px 30px rgba(37,99,235,.35);
+
+
+}
+
+
+
+
+
+
+
+.logo-text{
+
+
+    color:white;
+
+
+    font-size:20px;
+
+
+    font-weight:800;
+
+
+    line-height:1.1;
+
+
+}
+
+
+
+
+
+
+.logo-text small{
+
+
+    display:block;
+
+
+    margin-top:5px;
+
+
+    color:#94a3b8;
+
+
+    font-size:12px;
+
+
+    font-weight:500;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+
+.sidebar-menu{
+
+    flex:1;
+
+}
+
+
+
+
+.menu-title{
+
+
+    color:#64748b;
+
+
+    font-size:11px;
+
+
+    font-weight:700;
+
+
+    text-transform:uppercase;
+
+
+    padding:
+
+    12px 14px;
+
+
+}
+
+
+
+
+
+
+.menu-item{
+
+
+    margin-bottom:6px;
+
+
+}
+
+
+
+
+
+
+.menu-link{
+
+
+    width:100%;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+
+    padding:
+
+    13px 15px;
+
+
+
+    border-radius:14px;
+
+
+
+    color:#cbd5e1;
+
+
+
+    text-decoration:none;
+
+
+
+    font-size:14px;
+
+
+
+    font-weight:600;
+
+
+
+    transition:.25s;
+
+
+}
+
+
+
+
+
+
+
+.menu-link i{
+
+
+    font-size:18px;
+
+
+}
+
+
+
+
+
+.menu-link:hover{
+
+
+    background:
+
+
+    rgba(255,255,255,.08);
+
+
+
+    color:white;
+
+
+
+    transform:translateX(3px);
+
+
+}
+
+
+
+
+
+
+
+.menu-link.active{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #1d4ed8
+
+    );
+
+
+
+    color:white;
+
+
+
+    box-shadow:
+
+
+    0 10px 25px rgba(37,99,235,.35);
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   SUBMENU
+===================================================== */
+
+
+.submenu{
+
+
+    padding-left:15px;
+
+
+}
+
+
+
+
+.submenu a{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+
+    padding:
+
+    10px 18px;
+
+
+
+    color:#cbd5e1;
+
+
+
+    text-decoration:none;
+
+
+
+    font-size:13px;
+
+
+
+    border-radius:10px;
+
+
+
+    transition:.25s;
+
+
+
+}
+
+
+
+
+
+.submenu a:hover{
+
+
+    background:
+
+
+    rgba(255,255,255,.07);
+
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+.submenu a.active{
+
+
+    background:
+
+
+    rgba(37,99,235,.15);
+
+
+
+    color:#60a5fa;
+
+
+}
+
+
+
+
+
+
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+
+.logout-area{
+
+
+    margin-top:auto;
+
+
+    padding-top:15px;
+
+
+
+    border-top:
+
+
+    1px solid rgba(255,255,255,.12);
+
+
+}
+
+
+
+
+
+
+.logout-link{
+
+
+    display:flex;
+
+
+
+    align-items:center;
+
+
+
+    gap:12px;
+
+
+
+    padding:
+
+
+    13px 15px;
+
+
+
+
+    border-radius:14px;
+
+
+
+    text-decoration:none;
+
+
+
+    color:#fca5a5;
+
+
+
+    font-weight:700;
+
+
+
+    transition:.25s;
+
+
+}
+
+
+
+
+
+
+.logout-link:hover{
+
+
+    background:
+
+
+    rgba(239,68,68,.15);
+
+
+
+    color:white;
+
+
+}
+
+
+
+
+</style>
+
 </head>
+
+
 
 <body>
 
-<!-- ================= SIDEBAR ================= -->
 
-<div class="sidebar">
 
-    <div class="logo">
-        EdusCel
-        <small>Diretor Pedagógico</small>
-    </div>
+<div class="eduscel-wrapper">
 
-    <!-- ================= MENU ================= -->
-    <div class="menu">
 
-        <!-- PAINEL -->
-        <button class="menu-btn" data-bs-toggle="collapse" data-bs-target="#painel">
-            <span><i class="bi bi-speedometer2"></i> Painel</span>
-            <i class="bi bi-chevron-down"></i>
-        </button>
 
-        <div class="collapse submenu" id="painel">
-            <a href="{% url 'dashboard_diretor_pedagogico' %}">Resumo</a>
-        </div>
 
-        <!-- ACADÉMICO -->
-        <button class="menu-btn" data-bs-toggle="collapse" data-bs-target="#academico">
-            <span><i class="bi bi-book"></i> Académico</span>
-            <i class="bi bi-chevron-down"></i>
-        </button>
 
-        <div class="collapse submenu" id="academico">
-            <a href="{% url 'alunos' %}">Alunos</a>
-            <a href="{% url 'professores' %}">Professores</a>
-            <a href="{% url 'turmas' %}">Turmas</a>
-            <a href="{% url 'disciplinas' %}">Disciplinas</a>
-            <a href="{% url 'cursos' %}">Cursos</a>
-            <a href="{% url 'painel_diretor_frequencia' %}">Frequências</a>
-            <a href="{% url 'pauta_final_ano' %}">Pautas</a>
-        </div>
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-        <!-- SISTEMA -->
-        <button class="menu-btn" data-bs-toggle="collapse" data-bs-target="#sistema">
-            <span><i class="bi bi-gear"></i> Sistema</span>
-            <i class="bi bi-chevron-down"></i>
-        </button>
 
-        <div class="collapse submenu" id="sistema">
-            <a href="{% url 'horarios_turma' %}">Horários</a>
-            <a href="{% url 'calendario_escolar' %}">Calendário</a>
-            <a href="{% url 'notificacoes' %}">Notificações</a>
-        </div>
+<aside class="eduscel-sidebar">
 
-    </div>
 
-    <!-- ================= LOGOUT FORA DOS MENUS ================= -->
-    <div class="logout-box">
-        <a href="{% url 'logout' %}">
-            <i class="bi bi-box-arrow-right"></i>
-            Sair
-        </a>
-    </div>
+
+<div class="logo-area">
+
+
+<div class="logo-content">
+
+
+
+<div class="logo-icon">
+
+<i class="bi bi-mortarboard-fill"></i>
 
 </div>
 
-<!-- ================= MAIN ================= -->
-
-<div class="main">
-
-    <div class="topbar">
-
-        <div>
-            <h4 class="mb-0">
-                Bem-vindo, {{ request.user.first_name|default:request.user.username }}
-            </h4>
-            <small>Painel de Gestão Pedagógica</small>
-
-        </div>
-
-        <span class="badge-role">
-            Diretor Pedagógico
-        </span>
 
 
-    </div>
 
-    {% block content %}
-    {% endblock %}
+<div class="logo-text">
+
+EdusCel
+
+
+<small>
+Diretor Pedagógico
+</small>
+
 
 </div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="sidebar-menu">
+
+
+<div class="menu-title">
+
+Principal
+
+</div>
+
+
+
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'dashboard_diretor_pedagogico' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'dashboard_diretor_pedagogico' %}active{% endif %}">
+
+
+<i class="bi bi-speedometer2"></i>
+
+
+<span>
+Resumo
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="menu-title mt-3">
+
+Gestão Académica
+
+</div>
+
+
+
+
+
+<div class="menu-item">
+
+
+<button
+
+class="menu-link border-0 bg-transparent"
+
+data-bs-toggle="collapse"
+
+data-bs-target="#menuAcademico">
+
+
+
+<i class="bi bi-book-half"></i>
+
+
+<span class="flex-grow-1 text-start">
+
+Académico
+
+</span>
+
+
+
+<i class="bi bi-chevron-down small"></i>
+
+
+</button>
+
+
+
+<div class="collapse submenu"
+
+id="menuAcademico">
+
+
+
+<a href="{% url 'alunos' %}">
+
+<i class="bi bi-people"></i>
+
+Alunos
+
+</a>
+
+
+
+<a href="{% url 'professores' %}">
+
+<i class="bi bi-person-workspace"></i>
+
+Professores
+
+</a>
+
+
+
+<a href="{% url 'turmas' %}">
+
+<i class="bi bi-diagram-3"></i>
+
+Turmas
+
+</a>
+
+
+
+<a href="{% url 'disciplinas' %}">
+
+<i class="bi bi-journal-bookmark"></i>
+
+Disciplinas
+
+</a>
+
+<a href="{% url 'cursos' %}">
+
+<i class="bi bi-mortarboard"></i>
+
+Cursos
+
+</a>
+
+
+
+
+<a href="{% url 'painel_diretor_frequencia' %}">
+
+<i class="bi bi-calendar-check"></i>
+
+Frequências
+
+</a>
+
+
+
+
+
+<a href="{% url 'pauta_final_ano' %}">
+
+<i class="bi bi-table"></i>
+
+Pautas Finais
+
+</a>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     GESTÃO PEDAGÓGICA
+===================================================== -->
+
+
+<div class="menu-title mt-3">
+
+Gestão Pedagógica
+
+</div>
+
+
+
+
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'horarios_turma' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'horarios_turma' %}active{% endif %}">
+
+
+<i class="bi bi-clock-history"></i>
+
+
+<span>
+
+Horários
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'calendario_escolar' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'calendario_escolar' %}active{% endif %}">
+
+
+<i class="bi bi-calendar-event"></i>
+
+
+<span>
+
+Calendário Escolar
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     SISTEMA
+===================================================== -->
+
+
+<div class="menu-title mt-3">
+
+Sistema
+
+</div>
+
+
+
+
+
+
+<div class="menu-item">
+
+
+<a href="{% url 'notificacoes' %}"
+
+class="menu-link {% if request.resolver_match.url_name == 'notificacoes' %}active{% endif %}">
+
+
+<i class="bi bi-bell"></i>
+
+
+<span>
+
+Notificações
+
+</span>
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     LOGOUT FIXO
+===================================================== -->
+
+
+<div class="logout-area">
+
+
+<a href="{% url 'logout' %}"
+
+class="logout-link">
+
+
+<i class="bi bi-box-arrow-right"></i>
+
+
+Sair
+
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+</aside>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
+
+
+<div class="offcanvas offcanvas-start"
+
+tabindex="-1"
+
+id="mobileMenu">
+
+
+
+<div class="offcanvas-header bg-dark text-white">
+
+
+<h5 class="fw-bold">
+
+EdusCel
+
+</h5>
+
+
+
+
+<button
+
+type="button"
+
+class="btn-close btn-close-white"
+
+data-bs-dismiss="offcanvas">
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="offcanvas-body bg-dark">
+
+
+<ul class="list-unstyled">
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'dashboard_diretor_pedagogico' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-speedometer2"></i>
+
+
+Resumo
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'alunos' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-people"></i>
+
+
+Alunos
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'professores' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-person-workspace"></i>
+
+
+Professores
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'turmas' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-diagram-3"></i>
+
+
+Turmas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'disciplinas' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-journal-bookmark"></i>
+
+
+Disciplinas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'pauta_final_ano' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-table"></i>
+
+
+Pautas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+
+<li class="mb-2">
+
+
+<a href="{% url 'calendario_escolar' %}"
+
+class="text-white text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-calendar-event"></i>
+
+
+Calendário
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li class="mt-4">
+
+
+<a href="{% url 'logout' %}"
+
+class="text-danger text-decoration-none d-flex align-items-center gap-2 p-2">
+
+
+<i class="bi bi-box-arrow-right"></i>
+
+
+Sair
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+</ul>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     ÁREA PRINCIPAL
+     SEM TOPBAR
+===================================================== -->
+
+
+<main class="eduscel-main">
+
+
+
+<section class="page-content">
+
+
+{% block content %}
+
+{% endblock %}
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+
+
+</div>
+<!-- =====================================================
+     CSS ÁREA PRINCIPAL
+===================================================== -->
+
+
+<style>
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+
+.eduscel-main{
+
+
+    margin-left:285px;
+
+
+    width:calc(100% - 285px);
+
+
+    min-height:100vh;
+
+
+    background:#f1f5f9;
+
+
+}
+
+
+
+
+
+
+
+.page-content{
+
+
+    padding:30px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MOBILE BUTTON
+===================================================== */
+
+
+.mobile-menu-btn{
+
+
+    position:fixed;
+
+
+    top:15px;
+
+
+    left:15px;
+
+
+    z-index:3000;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   TOAST NOTIFICAÇÕES
+===================================================== */
+
+
+.eduscel-toast{
+
+
+    position:fixed;
+
+
+    top:25px;
+
+
+    right:25px;
+
+
+    background:#0f172a;
+
+
+    color:white;
+
+
+    padding:18px 22px;
+
+
+    border-radius:15px;
+
+
+    min-width:280px;
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(0,0,0,.25);
+
+
+
+    z-index:9999;
+
+
+
+    animation:
+
+    aparecer .3s ease;
+
+
+
+}
+
+
+
+
+
+@keyframes aparecer{
+
+
+from{
+
+
+    opacity:0;
+
+
+    transform:translateY(-20px);
+
+
+}
+
+
+to{
+
+
+    opacity:1;
+
+
+    transform:translateY(0);
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+
+@media(max-width:992px){
+
+
+
+.eduscel-sidebar{
+
+
+    display:none;
+
+
+}
+
+
+
+
+.eduscel-main{
+
+
+    margin-left:0;
+
+
+    width:100%;
+
+
+}
+
+
+
+
+.page-content{
+
+
+    padding:15px;
+
+
+}
+
+
+}
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     BOTÃO MOBILE
+===================================================== -->
+
+
+<button
+
+class="btn btn-primary mobile-menu-btn d-lg-none"
+
+data-bs-toggle="offcanvas"
+
+data-bs-target="#mobileMenu">
+
+
+<i class="bi bi-list fs-4"></i>
+
+
+</button>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JS
+===================================================== -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     LOGOUT AUTOMÁTICO POR INATIVIDADE
+===================================================== -->
+
+
 <script>
-const socket = new WebSocket("ws://" + window.location.host + "/ws/notificacoes/");
 
-socket.onmessage = function(event){
-    const data = JSON.parse(event.data);
 
-    // badge do sino
-    let badge = document.querySelector(".notif-badge");
+let inactivityTimer;
 
-    if(badge){
-        badge.innerText = parseInt(badge.innerText || 0) + 1;
-    }
 
-    // toast simples
-    showToast(data.titulo, data.mensagem);
-};
 
-function showToast(title, message){
+function resetInactivity(){
 
-    const toast = document.createElement("div");
 
-    toast.innerHTML = `
-        <div style="
-            position:fixed;
-            top:20px;
-            right:20px;
-            background:#111827;
-            color:white;
-            padding:12px 16px;
-            border-radius:10px;
-            z-index:9999;
-            margin-top:10px;
-            box-shadow:0 10px 30px rgba(0,0,0,.2);
-        ">
-            <strong>${title}</strong><br>
-            <small>${message}</small>
-        </div>
-    `;
 
-    document.body.appendChild(toast);
+    clearTimeout(inactivityTimer);
 
-    setTimeout(() => toast.remove(), 5000);
+
+
+
+    inactivityTimer=setTimeout(()=>{
+
+
+        window.location.href="{% url 'logout' %}";
+
+
+    },300000);
+
+
+
 }
+
+
+
+
+
+
+[
+
+'mousemove',
+
+'click',
+
+'keypress',
+
+'scroll',
+
+'touchstart'
+
+].forEach(event=>{
+
+
+    document.addEventListener(
+
+        event,
+
+        resetInactivity
+
+    );
+
+
+});
+
+
+
+
+
+resetInactivity();
+
+
+
 </script>
 
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     NOTIFICAÇÕES EM TEMPO REAL
+===================================================== -->
+
+
+<script>
+
+
+try{
+
+
+
+const protocolo = window.location.protocol === "https:"
+
+? "wss://"
+
+: "ws://";
+
+
+
+
+
+
+const socket = new WebSocket(
+
+
+
+protocolo +
+
+window.location.host +
+
+"/ws/notificacoes/"
+
+
+
+);
+
+
+
+
+
+
+
+socket.onmessage=function(event){
+
+
+
+const data = JSON.parse(event.data);
+
+
+
+
+mostrarToast(
+
+data.titulo,
+
+data.mensagem
+
+);
+
+
+
+
+};
+
+
+
+
+
+
+socket.onerror=function(){
+
+
+console.log(
+
+"Sistema de notificações indisponível."
+
+);
+
+
+};
+
+
+
+
+
+
+}catch(e){
+
+
+
+console.log(e);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function mostrarToast(titulo,mensagem){
+
+
+
+const toast=document.createElement("div");
+
+
+
+toast.className="eduscel-toast";
+
+
+
+
+toast.innerHTML=`
+
+
+
+<strong>
+
+${titulo}
+
+</strong>
+
+
+
+<br>
+
+
+
+<span>
+
+${mensagem}
+
+</span>
+
+
+
+`;
+
+
+
+
+
+document.body.appendChild(toast);
+
+
+
+
+
+
+setTimeout(()=>{
+
+
+
+toast.remove();
+
+
+
+},5000);
+
+
+
+}
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
 </body>
+
 </html>

@@ -1,39 +1,125 @@
 {% extends "base_financeiro.html" %}
 {% load humanize %}
 
+
+{% block title %}
+
+Entradas Financeiras | EdusCel
+
+{% endblock %}
+
+
+
+
+
 {% block content %}
+
 
 
 <style>
 
-/* ==============================
-   HEADER
-============================== */
+/* =====================================================
+   EDUSCEL FINANCEIRO
+   ENTRADAS PREMIUM
+===================================================== */
 
 
-.finance-header{
+.finance-page{
 
-    background:white;
 
-    border-radius:20px;
+    animation:fadeIn .35s ease;
 
-    padding:25px;
-
-    box-shadow:
-    0 10px 30px rgba(15,23,42,.08);
-
-    margin-bottom:30px;
 
 }
 
 
+
+@keyframes fadeIn{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(12px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+
+.finance-header{
+
+
+    background:white;
+
+
+    border-radius:24px;
+
+
+    padding:30px;
+
+
+    margin-bottom:25px;
+
+
+    border:1px solid #e2e8f0;
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(15,23,42,.07);
+
+
+
+}
+
+
+
 .finance-title{
 
-    font-size:24px;
 
-    font-weight:800;
+    font-size:28px;
+
+
+    font-weight:900;
+
 
     color:#0f172a;
+
+
+    letter-spacing:-.5px;
+
+
+}
+
+
+
+.finance-title i{
+
+
+    color:#16a34a;
+
 
 }
 
@@ -41,196 +127,632 @@
 
 .finance-subtitle{
 
+
     color:#64748b;
+
 
     font-size:14px;
 
+
+    margin-top:5px;
+
+
 }
 
 
 
 
-/* ==============================
-   CARDS
-============================== */
 
 
-.finance-summary-card{
 
-    border:none;
+/* =====================================================
+   FILTROS
+===================================================== */
+
+
+.filter-card{
+
+
+    background:white;
+
 
     border-radius:22px;
 
+
     padding:25px;
+
+
+    margin-bottom:30px;
+
+
+    border:1px solid #e2e8f0;
+
+
+    box-shadow:
+
+
+    0 10px 30px rgba(15,23,42,.05);
+
+
+
+}
+
+
+
+
+.filter-card label{
+
+
+    font-size:13px;
+
+
+    font-weight:800;
+
+
+    color:#334155;
+
+
+    margin-bottom:7px;
+
+
+
+}
+
+
+
+
+.form-control,
+.form-select{
+
+
+    height:48px;
+
+
+    border-radius:12px;
+
+
+    border:1px solid #dbe3ef;
+
+
+    font-size:14px;
+
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+
+    border-color:#2563eb;
+
+
+    box-shadow:
+
+
+    0 0 0 .20rem rgba(37,99,235,.15);
+
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+
+
+.btn-eduscel{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #3b82f6
+
+    );
+
+
+    border:none;
+
 
     color:white;
 
-    position:relative;
+
+    height:48px;
+
+
+    padding:0 25px;
+
+
+    border-radius:12px;
+
+
+    font-weight:800;
+
+
+    transition:.25s;
+
+
+
+}
+
+
+
+.btn-eduscel:hover{
+
+
+    color:white;
+
+
+    transform:translateY(-2px);
+
+
+    box-shadow:
+
+
+    0 12px 25px rgba(37,99,235,.30);
+
+
+
+}
+
+
+
+
+
+.btn-excel{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #16a34a,
+
+        #22c55e
+
+    );
+
+
+    border:none;
+
+
+    color:white;
+
+
+    height:48px;
+
+
+    padding:0 25px;
+
+
+    border-radius:12px;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+.btn-excel:hover{
+
+
+    color:white;
+
+
+    transform:translateY(-2px);
+
+
+}
+
+
+
+
+
+.btn-clear{
+
+
+    height:48px;
+
+
+    border-radius:12px;
+
+
+    font-weight:700;
+
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   CARDS RESUMO
+===================================================== */
+
+
+.summary-card{
+
+
+    background:white;
+
+
+    border-radius:22px;
+
+
+    padding:25px;
+
+
+    border:1px solid #e2e8f0;
+
+
+    box-shadow:
+
+
+    0 10px 30px rgba(15,23,42,.06);
+
+
+    transition:.25s;
+
 
     overflow:hidden;
 
-    transition:.3s ease;
 
-    box-shadow:
-    0 15px 35px rgba(0,0,0,.12);
+    position:relative;
+
+
 
 }
 
 
 
-.finance-summary-card:hover{
+.summary-card:hover{
 
-    transform:translateY(-6px);
+
+    transform:translateY(-5px);
+
 
 }
 
 
 
-.finance-summary-card::before{
+
+.summary-card:before{
+
 
     content:"";
 
+
     position:absolute;
 
-    width:150px;
 
-    height:150px;
+    width:120px;
 
-    right:-40px;
 
-    top:-40px;
+    height:120px;
 
-    background:rgba(255,255,255,.15);
+
+    right:-35px;
+
+
+    top:-35px;
+
 
     border-radius:50%;
 
-}
+
+    background:rgba(37,99,235,.08);
 
 
-
-.summary-success{
-
-    background:
-    linear-gradient(
-        135deg,
-        #16a34a,
-        #22c55e
-    );
 
 }
 
-
-
-.summary-primary{
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
-
-}
-
-
-
-.summary-dark{
-
-    background:
-    linear-gradient(
-        135deg,
-        #0f172a,
-        #334155
-    );
-
-}
 
 
 
 .summary-icon{
 
+
     width:60px;
+
 
     height:60px;
 
+
     border-radius:18px;
 
-    background:rgba(255,255,255,.20);
 
     display:flex;
 
+
     align-items:center;
+
 
     justify-content:center;
 
-    font-size:28px;
+
+    color:white;
+
+
+    font-size:25px;
+
+
 
 }
 
 
 
 
-
-/* ==============================
-   TABLE CARD
-============================== */
+.icon-success{
 
 
-.finance-table-card{
+    background:
 
-    background:white;
 
-    border-radius:22px;
+    linear-gradient(
 
-    overflow:hidden;
+        135deg,
 
-    box-shadow:
+        #16a34a,
 
-    0 10px 30px rgba(15,23,42,.08);
+        #22c55e
+
+    );
 
 }
 
 
 
-.finance-table-header{
+.icon-primary{
 
-    padding:22px 25px;
 
-    border-bottom:1px solid #e2e8f0;
+    background:
 
-    display:flex;
 
-    justify-content:space-between;
+    linear-gradient(
 
-    align-items:center;
+        135deg,
+
+        #2563eb,
+
+        #3b82f6
+
+    );
 
 }
 
 
 
-.finance-table-header h5{
+.icon-dark{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #0f172a,
+
+        #334155
+
+    );
+
+}
+
+
+
+
+.summary-label{
+
+
+    color:#64748b;
+
+
+    font-size:12px;
+
 
     font-weight:800;
 
-    margin:0;
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.5px;
+
+
 
 }
 
+
+
+
+.summary-value{
+
+
+    font-size:30px;
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+    margin-top:8px;
+
+
+
+}
+
+
+
+
+.summary-description{
+
+
+    color:#64748b;
+
+
+    font-size:13px;
+
+
+    margin-top:8px;
+
+
+
+}
+/* =====================================================
+   TABELA PREMIUM
+===================================================== */
+
+
+.table-card{
+
+
+    background:white;
+
+
+    border-radius:24px;
+
+
+    overflow:hidden;
+
+
+    border:1px solid #e2e8f0;
+
+
+    box-shadow:
+
+
+    0 12px 35px rgba(15,23,42,.06);
+
+
+}
+
+
+
+
+
+.table-header{
+
+
+    padding:24px 28px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    border-bottom:1px solid #e2e8f0;
+
+
+
+}
+
+
+
+
+.table-header h5{
+
+
+    margin:0;
+
+
+    font-size:18px;
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+
+}
+
+
+
+
+.table-header p{
+
+
+    margin:5px 0 0;
+
+
+    font-size:13px;
+
+
+    color:#64748b;
+
+
+
+}
+
+
+
+
+
+.table{
+
+
+    margin:0;
+
+
+}
 
 
 
 
 .table thead th{
 
+
     background:#0f172a;
+
 
     color:white;
 
-    padding:16px;
-
-    font-size:13px;
 
     border:none;
+
+
+    padding:16px;
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.6px;
+
 
 }
 
@@ -238,7 +760,16 @@
 
 .table tbody td{
 
+
     padding:16px;
+
+
+    vertical-align:middle;
+
+
+    border-color:#f1f5f9;
+
+
 
 }
 
@@ -246,7 +777,9 @@
 
 .table tbody tr{
 
-    transition:.2s;
+
+    transition:.25s;
+
 
 }
 
@@ -254,7 +787,9 @@
 
 .table tbody tr:hover{
 
+
     background:#f8fafc;
+
 
 }
 
@@ -262,30 +797,53 @@
 
 
 
-/* ==============================
-   STUDENT AVATAR
-============================== */
+/* =====================================================
+   ALUNO
+===================================================== */
 
 
 .student-avatar{
 
-    width:38px;
 
-    height:38px;
+    width:42px;
+
+
+    height:42px;
+
 
     border-radius:50%;
 
+
     background:#dbeafe;
+
 
     color:#2563eb;
 
-    display:inline-flex;
+
+    display:flex;
+
 
     align-items:center;
 
+
     justify-content:center;
 
-    font-weight:700;
+
+    font-weight:900;
+
+
+}
+
+
+
+.student-name{
+
+
+    font-weight:800;
+
+
+    color:#0f172a;
+
 
 }
 
@@ -293,48 +851,198 @@
 
 
 
-/* ==============================
-   STATUS
-============================== */
 
 
-.status-paid{
+/* =====================================================
+   BADGES
+===================================================== */
+
+
+.badge-paid{
+
 
     background:#dcfce7;
 
-    color:#15803d;
+
+    color:#166534;
+
 
     padding:7px 14px;
 
+
     border-radius:30px;
+
 
     font-size:12px;
 
-    font-weight:700;
+
+    font-weight:800;
+
+
 
 }
 
 
 
 
-/* MOBILE */
+.badge-value{
 
-@media(max-width:768px){
+
+    background:#eff6ff;
+
+
+    color:#1d4ed8;
+
+
+    padding:7px 14px;
+
+
+    border-radius:20px;
+
+
+    font-size:12px;
+
+
+    font-weight:800;
+
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+
+.empty-state{
+
+
+    padding:70px 20px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+.empty-state i{
+
+
+    font-size:55px;
+
+
+    color:#cbd5e1;
+
+
+    margin-bottom:20px;
+
+
+
+}
+
+
+
+.empty-state h5{
+
+
+    font-weight:900;
+
+
+    color:#0f172a;
+
+
+}
+
+
+
+.empty-state p{
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+
+@media(max-width:992px){
+
 
     .finance-header{
 
-        padding:18px;
+
+        padding:22px;
+
 
     }
+
 
 
     .finance-title{
 
-        font-size:20px;
+
+        font-size:23px;
+
 
     }
 
+
 }
+
+
+
+
+@media(max-width:768px){
+
+
+
+    .table-header{
+
+
+        flex-direction:column;
+
+
+        align-items:flex-start;
+
+
+        gap:15px;
+
+
+    }
+
+
+
+
+    .summary-value{
+
+
+        font-size:24px;
+
+
+    }
+
+
+
+}
+
+
 
 
 </style>
@@ -343,112 +1051,74 @@
 
 
 
-<!-- HEADER -->
+
+<div class="finance-page">
+
+
+
+
+
+
+
+<!-- =====================================================
+     CABEÇALHO
+===================================================== -->
+
 
 <div class="finance-header">
 
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-
-        <div>
-
-
-            <div class="finance-title">
-
-                <i class="bi bi-cash-stack text-success me-2"></i>
-
-                Entradas Financeiras
-
-            </div>
-
-
-            <div class="finance-subtitle">
-
-                Gestão e acompanhamento das receitas escolares
-
-            </div>
-
-
-        </div>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
 
 
 
-
-        <form method="get" class="d-flex flex-wrap gap-2">
-
-
-            <select
-            name="mes"
-            class="form-select">
-
-
-                <option value="">
-                    Todos os meses
-                </option>
-
-
-                {% for i,nome in MESES %}
-
-                <option value="{{ i }}"
-                {% if mes == i %}selected{% endif %}>
-
-                    {{ nome }}
-
-                </option>
-
-                {% endfor %}
-
-
-            </select>
+<div>
 
 
 
+<div class="finance-title">
 
-            <input
-            type="number"
-            name="ano"
-            value="{{ ano }}"
-            min="2020"
-            max="2100"
-            class="form-control"
-            style="width:100px;">
+
+<i class="bi bi-cash-stack me-2"></i>
+
+
+Entradas Financeiras
+
+
+</div>
+
+
+
+<div class="finance-subtitle">
+
+
+Gestão das receitas escolares, mensalidades e pagamentos recebidos.
+
+
+</div>
+
+
+
+</div>
 
 
 
 
 
-            <button class="btn btn-primary px-4">
+<a href="{% url 'entradas_financeiro' %}"
 
-                <i class="bi bi-search"></i>
-
-                Filtrar
-
-            </button>
+class="btn btn-clear btn-outline-secondary">
 
 
+<i class="bi bi-arrow-clockwise me-2"></i>
 
 
-
-            <button
-            type="submit"
-            name="export_excel"
-            value="1"
-            class="btn btn-success">
+Limpar filtros
 
 
-                <i class="bi bi-file-earmark-excel"></i>
-
-                Excel
+</a>
 
 
-            </button>
-
-
-        </form>
-
-
-    </div>
 
 
 </div>
@@ -459,50 +1129,264 @@
 
 
 
-<!-- RESUMO -->
+<!-- =====================================================
+     FILTROS
+===================================================== -->
+
+
+<div class="filter-card">
+
+
+
+<form method="GET">
+
+
+
+<div class="row g-3">
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label>
+
+Mês
+
+</label>
+
+
+
+<select name="mes"
+
+class="form-select">
+
+
+
+<option value="">
+
+
+Todos os meses
+
+
+</option>
+
+
+
+{% for numero,nome in MESES %}
+
+
+
+<option value="{{ numero }}"
+
+{% if mes == numero %}
+
+selected
+
+{% endif %}
+
+>
+
+
+{{ nome }}
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="col-md-3">
+
+
+<label>
+
+Ano
+
+</label>
+
+
+
+<input
+
+type="number"
+
+name="ano"
+
+value="{{ ano }}"
+
+placeholder="2026"
+
+class="form-control">
+
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-5 d-flex align-items-end gap-2">
+
+
+
+<button
+
+type="submit"
+
+class="btn-eduscel flex-fill">
+
+
+<i class="bi bi-search me-2"></i>
+
+
+Filtrar
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+type="submit"
+
+name="export_excel"
+
+value="1"
+
+class="btn-excel flex-fill">
+
+
+<i class="bi bi-file-earmark-excel me-2"></i>
+
+
+Excel
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+<!-- =====================================================
+     CARDS DE RESUMO
+===================================================== -->
 
 
 <div class="row g-4 mb-4">
 
 
-<div class="col-lg-4">
 
 
-<div class="finance-summary-card summary-success">
+
+<div class="col-lg-4 col-md-6">
+
+
+
+<div class="summary-card">
+
 
 
 <div class="d-flex justify-content-between align-items-center">
 
 
+
 <div>
 
-<small>
+
+
+<div class="summary-label">
+
 Total Recebido
-</small>
+
+</div>
 
 
-<h2 class="fw-bold mt-2">
 
-{{ total_entradas|intcomma }} Kz
+<div class="summary-value">
 
-</h2>
+
+{{ total_entradas|intcomma }}
+
+
+<small style="font-size:15px;">Kz</small>
 
 
 </div>
 
 
-<div class="summary-icon">
+
+<div class="summary-description">
+
+
+Valor total das entradas filtradas.
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="summary-icon icon-success">
+
 
 <i class="bi bi-wallet2"></i>
 
-</div>
-
-
-</div>
-
-
-</div>
-
 
 </div>
 
@@ -510,44 +1394,81 @@ Total Recebido
 
 
 
-<div class="col-lg-4">
+
+</div>
 
 
-<div class="finance-summary-card summary-primary">
+
+</div>
 
 
-<div class="d-flex justify-content-between">
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-lg-4 col-md-6">
+
+
+
+<div class="summary-card">
+
+
+
+<div class="d-flex justify-content-between align-items-center">
+
 
 
 <div>
 
-<small>
-Pagamentos Recebidos
-</small>
 
 
-<h2 class="fw-bold mt-2">
+<div class="summary-label">
+
+Pagamentos
+
+</div>
+
+
+
+<div class="summary-value">
+
 
 {{ pagamentos|length }}
 
-</h2>
+
+</div>
+
+
+
+<div class="summary-description">
+
+
+Registos encontrados.
 
 
 </div>
 
 
-<div class="summary-icon">
+
+</div>
+
+
+
+
+
+
+<div class="summary-icon icon-primary">
+
 
 <i class="bi bi-receipt"></i>
 
-</div>
-
-
-</div>
-
-
-</div>
-
 
 </div>
 
@@ -555,47 +1476,83 @@ Pagamentos Recebidos
 
 
 
-<div class="col-lg-4">
+
+</div>
 
 
-<div class="finance-summary-card summary-dark">
+
+</div>
 
 
-<div class="d-flex justify-content-between">
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-lg-4 col-md-12">
+
+
+
+<div class="summary-card">
+
+
+
+<div class="d-flex justify-content-between align-items-center">
+
 
 
 <div>
 
-<small>
-Módulo
-</small>
 
 
-<h4 class="fw-bold mt-2">
+<div class="summary-label">
 
-Financeiro Escolar
+Sistema
 
-</h4>
+</div>
+
+
+
+<div class="summary-value"
+
+style="font-size:24px;">
+
+
+EdusCel
 
 
 </div>
 
 
-<div class="summary-icon">
+
+<div class="summary-description">
+
+
+Gestão financeira escolar.
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="summary-icon icon-dark">
+
 
 <i class="bi bi-building"></i>
 
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
 
 </div>
 
@@ -604,33 +1561,98 @@ Financeiro Escolar
 
 
 
-
-<!-- TABELA -->
-
-
-<div class="finance-table-card">
+</div>
 
 
-<div class="finance-table-header">
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     TABELA DE PAGAMENTOS
+===================================================== -->
+
+
+
+<div class="table-card">
+
+
+
+
+
+<div class="table-header">
+
+
+
+<div>
+
 
 
 <h5>
 
+
 <i class="bi bi-list-check me-2"></i>
 
-Pagamentos Recebidos
+
+Histórico de Entradas
+
 
 </h5>
 
 
-<span class="text-muted">
 
-{{ pagamentos|length }} registros
+<p>
 
-</span>
+
+Pagamentos realizados pelos alunos.
+
+
+</p>
+
 
 
 </div>
+
+
+
+
+
+<div class="text-muted small">
+
+
+{{ pagamentos|length }} registros
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
 
 
 
@@ -639,26 +1661,64 @@ Pagamentos Recebidos
 <div class="table-responsive">
 
 
-<table class="table table-hover mb-0">
+
+<table class="table align-middle mb-0">
+
+
+
 
 
 <thead>
 
+
 <tr>
 
-<th>Aluno</th>
 
-<th>Descrição</th>
+<th>
 
-<th>Valor</th>
+Aluno
 
-<th>Data</th>
+</th>
 
-<th>Status</th>
+
+<th>
+
+Descrição
+
+</th>
+
+
+<th>
+
+Valor
+
+</th>
+
+
+<th>
+
+Data
+
+</th>
+
+
+<th>
+
+Estado
+
+</th>
+
 
 </tr>
 
+
 </thead>
+
+
+
+
+
+
 
 
 
@@ -666,34 +1726,87 @@ Pagamentos Recebidos
 
 
 
+
+
 {% for pagamento in pagamentos %}
+
+
+
 
 
 <tr>
 
 
+
+
+
 <td>
+
 
 
 <div class="d-flex align-items-center gap-3">
 
 
+
 <div class="student-avatar">
 
-<i class="bi bi-person"></i>
+
+<i class="bi bi-person-fill"></i>
+
+
+</div>
+
+
+
+
+
+
+<div>
+
+
+
+<div class="student-name">
+
+
+{% if pagamento.aluno.usuario.get_full_name %}
+
+
+{{ pagamento.aluno.usuario.get_full_name }}
+
+
+{% else %}
+
+
+{{ pagamento.aluno }}
+
+
+{% endif %}
+
 
 </div>
 
 
 
-<strong>
+<small class="text-muted">
 
-{{ pagamento.aluno.usuario.get_full_name|default:pagamento.aluno }}
 
-</strong>
+Processo:
+
+{{ pagamento.aluno.usuario.username }}
+
+
+</small>
+
 
 
 </div>
+
+
+
+
+
+</div>
+
 
 
 </td>
@@ -701,11 +1814,16 @@ Pagamentos Recebidos
 
 
 
+
+
+
+
+
 <td>
 
 
-{% if pagamento.mensalidade %}
 
+{% if pagamento.mensalidade %}
 
 <span class="fw-semibold text-primary">
 
@@ -714,12 +1832,20 @@ Mensalidade - {{ pagamento.mensalidade.mes }}
 </span>
 
 
-{% else %}
+{% elif pagamento.tipo %}
 
-
-<span class="text-secondary fw-semibold">
+<span class="fw-semibold text-success">
 
 {{ pagamento.tipo }}
+
+</span>
+
+
+{% else %}
+
+<span class="fw-semibold text-secondary">
+
+Pagamento
 
 </span>
 
@@ -727,38 +1853,26 @@ Mensalidade - {{ pagamento.mensalidade.mes }}
 {% endif %}
 
 
+
+
 </td>
 
 
 
 
 
-<td class="fw-bold text-success">
+
+
+
+
+<td>
+
+
+<span class="badge-value">
 
 
 {{ pagamento.valor_pago|intcomma }} Kz
 
-
-</td>
-
-
-
-
-<td>
-
-{{ pagamento.data_pagamento|date:"d/m/Y" }}
-
-</td>
-
-
-
-
-<td>
-
-
-<span class="status-paid">
-
-Pago
 
 </span>
 
@@ -767,33 +1881,135 @@ Pago
 
 
 
+
+
+
+
+
+
+<td>
+
+
+{{ pagamento.data_pagamento|date:"d/m/Y" }}
+
+
+
+<br>
+
+
+<small class="text-muted">
+
+
+{{ pagamento.data_pagamento|date:"H:i" }}
+
+
+</small>
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+<span class="badge-paid">
+
+
+<i class="bi bi-check-circle me-1"></i>
+
+
+Pago
+
+
+</span>
+
+
+
+</td>
+
+
+
+
+
+
+
+
+
 </tr>
+
+
+
+
+
 
 
 {% empty %}
 
 
 
+
+
 <tr>
 
 
-<td colspan="5" class="text-center py-5">
+
+<td colspan="5">
 
 
-<i class="bi bi-inbox fs-1 text-muted"></i>
 
 
-<p class="mt-3 text-muted">
 
-Nenhum pagamento registrado
+<div class="empty-state">
+
+
+
+<i class="bi bi-inbox"></i>
+
+
+
+<h5>
+
+
+Nenhum pagamento encontrado
+
+
+</h5>
+
+
+
+<p>
+
+
+Não existem entradas financeiras para os filtros seleccionados.
+
 
 </p>
+
+
+
+</div>
+
+
+
 
 
 </td>
 
 
+
 </tr>
+
+
+
+
 
 
 
@@ -801,16 +2017,83 @@ Nenhum pagamento registrado
 
 
 
+
+
+
 </tbody>
+
+
+
+
+
 
 
 </table>
 
 
+
+
+
+
+
 </div>
 
 
+
+
+
+
+
 </div>
+
+
+
+
+
+
+
+
+
+{% if pagamentos %}
+
+
+
+
+<div class="alert alert-success mt-4">
+
+
+<i class="bi bi-check-circle me-2"></i>
+
+
+Foram encontrados
+
+<strong>
+
+{{ pagamentos|length }}
+
+</strong>
+
+pagamentos.
+
+
+</div>
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+</div>
+
+
+
+
 
 
 

@@ -7196,8 +7196,7 @@ def registrar_pagamento(request):
         "Abril",
         "Maio",
         "Junho",
-        "Julho",
-        "Agosto",
+
         "Setembro",
         "Outubro",
         "Novembro",
@@ -7548,18 +7547,7 @@ def registrar_pagamento(request):
                     ],
 
 
-                "Julho":
-                    [
-                        "Julho",
-                        "July"
-                    ],
 
-
-                "Agosto":
-                    [
-                        "Agosto",
-                        "August"
-                    ],
 
 
                 "Setembro":
@@ -8072,8 +8060,7 @@ MESES = [
     "Abril",
     "Maio",
     "Junho",
-    "Julho",
-    "Agosto",
+
     "Setembro",
     "Outubro",
     "Novembro",
@@ -12664,7 +12651,7 @@ def relatorio_mensalidades(request):
     turmas = Turma.objects.all()
     meses = [
         "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+        "Setembro","Outubro","Novembro","Dezembro"
     ]
 
     turma_id = request.GET.get("turma")
@@ -14846,83 +14833,350 @@ def toggle_trimestre(request, trimestre_id):
 
 
 
-import csv
+from io import BytesIO
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
 from openpyxl import Workbook
-from django.http import HttpResponse
+
+from academic.models import Pagamento
+
 
 
 @login_required
 def entradas_financeiro(request):
-    # ================== PERMISSÕES ==================
-    if request.user.role not in ["FINANCEIRO", "DIRETOR"]:
+
+
+    # =====================================================
+    # PERMISSÕES
+    # =====================================================
+
+    permissoes = [
+
+        "FINANCEIRO",
+
+        "DIRETOR",
+
+        "DIRETOR_PEDAGOGICO",
+
+    ]
+
+
+    if request.user.role not in permissoes:
+
         return redirect("dashboard")
+
+
+
+
+
+    # =====================================================
+    # ESCOLA
+    # =====================================================
 
     escola = request.user.escola
 
-    # ================== QUERY INICIAL ==================
-    pagamentos = Pagamento.objects.filter(aluno__escola=escola).order_by("-data_pagamento")
 
-    # ================== FILTRO POR MÊS E ANO ==================
+    if not escola:
+
+        return redirect("dashboard")
+
+
+
+
+
+    # =====================================================
+    # PAGAMENTOS DA ESCOLA
+    # =====================================================
+
+
+    pagamentos = Pagamento.objects.filter(
+
+        aluno__escola=escola
+
+    ).select_related(
+
+        "aluno",
+
+        "aluno__usuario",
+
+        "mensalidade"
+
+    ).order_by(
+
+        "-data_pagamento"
+
+    )
+
+
+
+
+
+
+    # =====================================================
+    # FILTROS
+    # =====================================================
+
+
     mes = request.GET.get("mes")
+
     ano = request.GET.get("ano")
-    if mes and ano:
+
+
+
+
+    if mes:
+
+
         try:
+
             pagamentos = pagamentos.filter(
-                data_pagamento__month=int(mes),
-                data_pagamento__year=int(ano)
+
+                data_pagamento__month=int(mes)
+
             )
-        except ValueError:
-            pass  # Ignora valores inválidos
 
-    total_entradas = pagamentos.aggregate(total=Sum("valor_pago"))["total"] or 0
+        except:
 
-    # ================== EXPORTAÇÃO EXCEL ==================
-    if "export_excel" in request.GET:
+            pass
+
+
+
+
+
+    if ano:
+
+
+        try:
+
+            pagamentos = pagamentos.filter(
+
+                data_pagamento__year=int(ano)
+
+            )
+
+        except:
+
+            pass
+
+
+
+
+
+
+
+    # =====================================================
+    # TOTAL
+    # =====================================================
+
+
+    total_entradas = pagamentos.aggregate(
+
+        total=Sum("valor_pago")
+
+    )["total"] or 0
+
+
+
+
+
+
+
+
+    # =====================================================
+    # EXPORTAR EXCEL
+    # =====================================================
+
+
+    if request.GET.get("export_excel"):
+
+
+
         wb = Workbook()
+
+
         ws = wb.active
-        ws.title = "Entradas Financeiras"
 
-        # Cabeçalho
-        ws.append(["Aluno", "Descrição", "Valor (Kz)", "Data"])
 
-        # Linhas
+        ws.title = "Entradas"
+
+
+
+        ws.append([
+
+            "Aluno",
+
+            "Descrição",
+
+            "Valor",
+
+            "Data"
+
+        ])
+
+
+
+
         for p in pagamentos:
-            desc = p.mensalidade.mes if p.mensalidade else "Pagamento"
+
+
+
+            if p.mensalidade:
+
+
+                descricao = (
+
+                    f"Mensalidade - {p.mensalidade.mes}"
+
+                )
+
+
+            elif hasattr(p, "matricula"):
+
+
+                descricao = "Matrícula"
+
+
+
+            elif getattr(p, "tipo", None):
+
+
+                descricao = p.tipo
+
+
+
+            else:
+
+
+                descricao = "Pagamento"
+
+
+
+
             ws.append([
+
+
                 p.aluno.usuario.get_full_name(),
-                desc,
+
+
+                descricao,
+
+
                 float(p.valor_pago),
+
+
                 p.data_pagamento.strftime("%d/%m/%Y")
+
+
             ])
 
-        # Preparar resposta
+
+
+
         buffer = BytesIO()
+
+
         wb.save(buffer)
+
+
         response = HttpResponse(
+
             buffer.getvalue(),
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+            content_type=
+
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
         )
-        response["Content-Disposition"] = "attachment; filename=Entradas.xlsx"
+
+
+        response["Content-Disposition"] = (
+
+            "attachment; filename=entradas_financeiras.xlsx"
+
+        )
+
+
         return response
 
-    # ================== LISTA DE MESES ==================
+
+
+
+
+
+
+    # =====================================================
+    # MESES
+    # =====================================================
+
+
     MESES = [
-        ('1','Janeiro'),('2','Fevereiro'),('3','Março'),('4','Abril'),
-        ('5','Maio'),('6','Junho'),('7','Julho'),('8','Agosto'),
-        ('9','Setembro'),('10','Outubro'),('11','Novembro'),('12','Dezembro')
+
+        ("1","Janeiro"),
+
+        ("2","Fevereiro"),
+
+        ("3","Março"),
+
+        ("4","Abril"),
+
+        ("5","Maio"),
+
+        ("6","Junho"),
+
+
+        ("9","Setembro"),
+
+        ("10","Outubro"),
+
+        ("11","Novembro"),
+
+        ("12","Dezembro"),
+
     ]
 
-    # ================== CONTEXTO PARA TEMPLATE ==================
-    context = {
+
+
+
+
+
+
+    contexto = {
+
+
         "pagamentos": pagamentos,
+
+
         "total_entradas": total_entradas,
+
+
         "mes": mes or "",
+
+
         "ano": ano or "",
+
+
         "MESES": MESES,
+
+
     }
 
-    return render(request, "entradas_financeiro.html", context)
+
+
+
+
+    return render(
+
+        request,
+
+        "entradas_financeiro.html",
+
+        contexto
+
+    )
 
 
 
@@ -21155,9 +21409,7 @@ def gerar_mensalidades(request):
 
         "June": "Junho",
 
-        "July": "Julho",
 
-        "August": "Agosto",
 
         "September": "Setembro",
 

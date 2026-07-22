@@ -1,588 +1,2421 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<title>Painel do Professor</title>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-<!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+
+<title>
+
+{% block title %}
+Painel do Professor | EdusCel
+{% endblock %}
+
+</title>
+
+
+<!-- =====================================================
+     BOOTSTRAP 5.3
+===================================================== -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+
+
+<!-- =====================================================
+     BOOTSTRAP ICONS
+===================================================== -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+rel="stylesheet">
+
+
+
+<!-- =====================================================
+     GOOGLE FONT
+===================================================== -->
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+rel="stylesheet">
+
+
+
+
+
+
 <style>
 
+
 /* =====================================================
-   RESET
+   EDUSCEL PROFESSOR PREMIUM
 ===================================================== */
+
+
+:root{
+
+
+--primary:#2563eb;
+
+--primary-dark:#1d4ed8;
+
+--primary-light:#60a5fa;
+
+
+--dark:#0f172a;
+
+--dark-soft:#1e293b;
+
+
+--background:#f8fafc;
+
+
+--white:#ffffff;
+
+
+--text:#334155;
+
+
+--muted:#64748b;
+
+
+--border:#e2e8f0;
+
+
+--success:#16a34a;
+
+
+--danger:#dc2626;
+
+
+}
+
+
+
+
+
+/* =====================================================
+RESET
+===================================================== */
+
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
 }
+
+
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+
 
 body{
-    font-family:'Inter',sans-serif;
-    background:#f1f5f9;
-    overflow-x:hidden;
+
+
+font-family:'Inter',sans-serif;
+
+
+background:var(--background);
+
+
+color:var(--text);
+
+
+overflow-x:hidden;
+
+
 }
 
+
+
+a{
+
+text-decoration:none;
+
+}
+
+
+
+
+
 /* =====================================================
-   LAYOUT BASE
+SCROLLBAR
 ===================================================== */
+
+
+::-webkit-scrollbar{
+
+width:7px;
+
+}
+
+
+
+::-webkit-scrollbar-thumb{
+
+
+background:#cbd5e1;
+
+
+border-radius:20px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+LAYOUT
+===================================================== */
+
 
 .wrapper{
-    display:flex;
-    min-height:100vh;
+
+
+display:flex;
+
+
+min-height:100vh;
+
+
 }
 
+
+
+
+
+
+
+
 /* =====================================================
-   SIDEBAR
+SIDEBAR PREMIUM
 ===================================================== */
+
 
 .sidebar{
-    width:270px;
-    height:100vh;
-    background:linear-gradient(180deg,#0f172a,#111827);
-    position:fixed;
-    left:0;
-    top:0;
-    padding:25px 18px;
-    overflow-y:auto;
-    box-shadow:8px 0 30px rgba(0,0,0,0.12);
-    z-index:1000;
+
+
+position:fixed;
+
+
+left:0;
+
+
+top:0;
+
+
+width:270px;
+
+
+height:100vh;
+
+
+background:
+
+
+linear-gradient(
+
+180deg,
+
+#020617,
+
+#0f172a 55%,
+
+#172554
+
+);
+
+
+
+padding:22px 15px;
+
+
+overflow-y:auto;
+
+
+z-index:2000;
+
+
+box-shadow:
+
+
+10px 0 35px rgba(15,23,42,.25);
+
+
+transition:.3s ease;
+
+
 }
 
-/* SCROLL */
+
+
+
 .sidebar::-webkit-scrollbar{
-    width:6px;
-}
-.sidebar::-webkit-scrollbar-thumb{
-    background:#334155;
-    border-radius:20px;
+
+
+width:5px;
+
+
 }
 
-/* LOGO */
-.logo-box{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:40px;
-    padding-bottom:22px;
-    border-bottom:1px solid rgba(255,255,255,0.08);
+
+.sidebar::-webkit-scrollbar-thumb{
+
+
+background:#334155;
+
+
+border-radius:20px;
+
+
 }
+
+
+
+
+
+
+
+
+
+/* =====================================================
+LOGO
+===================================================== */
+
+
+.logo-box{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:13px;
+
+
+padding:15px;
+
+
+margin-bottom:28px;
+
+
+border-radius:18px;
+
+
+background:
+
+
+rgba(255,255,255,.05);
+
+
+border:
+
+
+1px solid rgba(255,255,255,.08);
+
+
+}
+
+
+
+
 
 .logo-icon{
-    width:48px;
-    height:48px;
-    border-radius:14px;
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:22px;
-    color:white;
-    box-shadow:0 8px 18px rgba(37,99,235,0.35);
+
+
+width:48px;
+
+
+height:48px;
+
+
+border-radius:16px;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#38bdf8
+
+);
+
+
+
+color:white;
+
+
+font-size:22px;
+
+
+box-shadow:
+
+
+0 10px 25px rgba(37,99,235,.35);
+
+
 }
+
+
+
 
 .logo-text{
-    color:white;
-    font-size:18px;
-    font-weight:700;
-    line-height:1.2;
+
+
+color:white;
+
+
+font-size:23px;
+
+
+font-weight:900;
+
+
+letter-spacing:-1px;
+
+
 }
 
-.logo-text small{
-    display:block;
-    color:#94a3b8;
-    font-size:12px;
+
+
+.logo-text span{
+
+
+color:#60a5fa;
+
+
 }
 
-/* MENU */
+
+
+
+.logo-subtitle{
+
+
+display:block;
+
+
+color:#94a3b8;
+
+
+font-size:11px;
+
+
+font-weight:600;
+
+
+margin-top:2px;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+ESCOLA BOX
+===================================================== */
+
+
+.school-mini{
+
+
+margin-bottom:25px;
+
+
+padding:12px;
+
+
+border-radius:15px;
+
+
+background:
+
+
+rgba(255,255,255,.06);
+
+
+color:#cbd5e1;
+
+
+font-size:12px;
+
+
+}
+
+
+
+.school-mini i{
+
+
+color:#38bdf8;
+
+
+margin-right:8px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+MENU
+===================================================== */
+
+
 .menu{
-    list-style:none;
-    padding:0;
-    margin:0;
+
+
+list-style:none;
+
+
+padding:0;
+
+
+margin:0;
+
+
 }
+
+
+
+
+.menu-title{
+
+
+color:#64748b;
+
+
+font-size:11px;
+
+
+font-weight:800;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:.8px;
+
+
+padding:12px 14px;
+
+
+}
+
+
+
+
 
 .menu li{
-    margin-bottom:10px;
+
+
+margin-bottom:6px;
+
+
 }
 
-.menu a{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    text-decoration:none;
-    padding:13px 16px;
-    border-radius:14px;
-    color:#cbd5e1;
-    transition:.25s;
-    font-size:14px;
-    font-weight:600;
+
+
+
+
+.menu-link{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:13px;
+
+
+padding:13px 14px;
+
+
+border-radius:14px;
+
+
+color:#cbd5e1;
+
+
+font-size:14px;
+
+
+font-weight:600;
+
+
+transition:.25s ease;
+
+
 }
 
-.menu a i{
-    font-size:18px;
+
+
+.menu-link i{
+
+
+font-size:18px;
+
+
+width:22px;
+
+
+text-align:center;
+
+
 }
 
-.menu a:hover{
-    background:rgba(255,255,255,0.08);
-    color:white;
-    transform:translateX(4px);
+
+
+
+
+.menu-link:hover{
+
+
+background:
+
+
+rgba(255,255,255,.08);
+
+
+color:white;
+
+
+transform:translateX(4px);
+
+
 }
 
-.menu a.active{
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-    color:white;
-    box-shadow:0 10px 25px rgba(37,99,235,0.35);
+
+
+
+
+.menu-link.active{
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#3b82f6
+
+);
+
+
+
+color:white;
+
+
+box-shadow:
+
+
+0 10px 25px rgba(37,99,235,.35);
+
+
 }
+
+
+
+
+
+
 
 /* =====================================================
-   MAIN
+SEPARADOR
 ===================================================== */
+
+
+.menu-divider{
+
+
+height:1px;
+
+
+background:
+
+
+rgba(255,255,255,.08);
+
+
+margin:20px 10px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+LOGOUT
+===================================================== */
+
+
+.logout{
+
+
+margin-top:30px;
+
+
+}
+
+
+
+
+.logout .menu-link{
+
+
+color:#fca5a5;
+
+
+}
+
+
+
+.logout .menu-link:hover{
+
+
+background:
+
+
+rgba(220,38,38,.15);
+
+
+color:white;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+MAIN
+===================================================== */
+
 
 .main{
-    margin-left:270px;
-    width:calc(100% - 270px);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
+
+
+margin-left:270px;
+
+
+width:calc(100% - 270px);
+
+
+min-height:100vh;
+
+
+display:flex;
+
+
+flex-direction:column;
+
+
 }
+
+
+
+
 
 /* =====================================================
-   TOPBAR
+CONTENT
 ===================================================== */
 
-.topbar{
-    height:75px;
-    background:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.04);
-    position:sticky;
-    top:0;
-    z-index:999;
-}
-
-.topbar-title{
-    font-size:22px;
-    font-weight:700;
-    color:#0f172a;
-}
-
-/* USER */
-.user-box{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.avatar{
-    width:45px;
-    height:45px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-weight:700;
-    font-size:17px;
-    box-shadow:0 8px 20px rgba(37,99,235,0.25);
-}
-
-.user-info strong{
-    display:block;
-    color:#0f172a;
-    font-size:14px;
-}
-
-.user-info small{
-    color:#64748b;
-    font-size:12px;
-}
-
-/* =====================================================
-   CONTENT
-===================================================== */
 
 .content{
-    padding:20px;
-    flex:1;
-    width:100%;
+
+
+padding:30px;
+
+
+flex:1;
+
+
 }
 
-/* =====================================================
-   RESPONSIVO
-===================================================== */
 
-@media (max-width: 992px){
 
-    .sidebar{
-        display:none;
-    }
 
-    .main{
-        margin-left:0;
-        width:100%;
-    }
-
-    .topbar{
-        padding:0 18px;
-    }
-
-    .content{
-        padding:15px;
-    }
-}
-
-/* =====================================================
-   OFFCANVAS MOBILE MENU
-===================================================== */
-
-.offcanvas{
-    background:linear-gradient(180deg,#0f172a,#020617);
-    color:white;
-}
-
-.offcanvas-header{
-    border-bottom:1px solid rgba(255,255,255,0.08);
-}
-
-.offcanvas-title{
-    color:white;
-    font-weight:700;
-}
-
-.offcanvas .btn-close{
-    filter:invert(1);
-}
-
-/* MENU MOBILE */
-.offcanvas .menu{
-    list-style:none;
-    padding:0;
-    margin:0;
-}
-
-.offcanvas .menu li{
-    margin-bottom:8px;
-}
-
-.offcanvas .menu a{
-    text-decoration:none;
-    color:#cbd5e1;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:13px 15px;
-    border-radius:12px;
-    font-weight:500;
-    transition:.25s;
-}
-
-.offcanvas .menu a:hover{
-    background:rgba(59,130,246,0.12);
-    color:white;
-}
-
-.offcanvas .menu a.active{
-    background:linear-gradient(90deg,#2563eb,#3b82f6);
-    color:white;
-    box-shadow:0 4px 18px rgba(59,130,246,0.45);
-}
-
-.offcanvas .menu a.logout{
-    color:#f87171;
-}
-
-.offcanvas .menu a.logout:hover{
-    background:rgba(248,113,113,0.1);
-}
 
 </style>
 
 
 </head>
+
+
+
 <body>
+
+
+
+<div class="wrapper">
+
+
+
+
+
 <!-- =====================================================
-     SIDEBAR
+SIDEBAR
 ===================================================== -->
-<div class="sidebar">
-<!-- LOGO -->
+
+
+<aside class="sidebar">
+
+
+
 <div class="logo-box">
-    <div class="logo-icon">
-        <i class="bi bi-mortarboard-fill"></i>
-    </div>
-    <div class="logo-text">
-        EdusCel
-        <small>
-            Painel do Professor
-        </small>
-    </div>
+
+
+<div class="logo-icon">
+
+<i class="bi bi-mortarboard-fill"></i>
+
 </div>
-<!-- MENU -->
+
+
+
+<div>
+
+
+<div class="logo-text">
+
+Edus<span>Cel</span>
+
+</div>
+
+
+<span class="logo-subtitle">
+
+Painel do Professor
+
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="school-mini">
+
+
+<i class="bi bi-building"></i>
+
+
+{% if request.user.escola %}
+
+{{ request.user.escola.nome }}
+
+{% else %}
+
+Escola não associada
+
+{% endif %}
+
+
+
+</div>
+
+
+
 
 
 
 <ul class="menu">
-    <!-- DASHBOARD -->
-    <li>
-        <a href="{% url 'dashboard_professor' %}"
-           class="{% if request.resolver_match.url_name == 'dashboard_professor' %}active{% endif %}">
-            <i class="bi bi-speedometer2"></i>
-            <span>Resumo</span>
-        </a>
-    </li>
-    <!-- TURMAS -->
-    <li>
-        <a href="{% url 'minhas_turmas' %}"
-           class="{% if request.resolver_match.url_name == 'minhas_turmas' %}active{% endif %}">
-            <i class="bi bi-people-fill"></i>
-            <span>Minhas Turmas</span>
-        </a>
-    </li>
 
-    <!-- MINI PAUTAS -->
-    <li>
-        <a href="{% url 'mini_pautas' %}"
-           class="{% if request.resolver_match.url_name == 'mini_pautas' %}active{% endif %}">
-            <i class="bi bi-table"></i>
-            <span>Mini Pautas</span>
-        </a>
-    </li>
 
-    <!-- LANÇAR NOTAS -->
-    <li>
-        <a href="{% url 'lancar_notas' %}"
-           class="{% if request.resolver_match.url_name == 'lancar_notas' %}active{% endif %}">
-            <i class="bi bi-journal-check"></i>
-            <span>Lançar Notas</span>
-        </a>
-    </li>
+<li class="menu-title">
 
-    <!-- HISTÓRICO NOTAS -->
+Principal
 
-    <li>
-        <a href="{% url 'historico_notas' %}"
-           class="{% if request.resolver_match.url_name == 'historico_notas' %}active{% endif %}">
-            <i class="bi bi-clock-history"></i>
-            <span>Histórico de Notas</span>
-        </a>
-    </li>
+</li>
 
-    <!-- HISTÓRICO -->
-    <li>
-        <a href="{% url 'historico_professor' %}"
-           class="{% if request.resolver_match.url_name == 'historico_professor' %}active{% endif %}">
-            <i class="bi bi-clock-history"></i>
-            <span>Histórico Acadêmico</span>
-        </a>
-    </li>
-    <!-- CALENDÁRIO -->
-    <li>
-        <a href="{% url 'calendario_professor' %}"
-           class="{% if request.resolver_match.url_name == 'calendario_professor' %}active{% endif %}">
-            <i class="bi bi-calendar-event-fill"></i>
-            <span>Calendário Escolar</span>
-        </a>
-    </li>
-    <!-- RELATÓRIOS -->
-    <li>
-        <a href="{% url 'relatorios_professor' %}"
-           class="{% if request.resolver_match.url_name == 'relatorios_professor' %}active{% endif %}">
-            <i class="bi bi-bar-chart-line-fill"></i>
-            <span>Relatórios</span>
-        </a>
-    </li>
-    <!-- SAIR -->
-    <li class="mt-4">
-        <a href="{% url 'logout' %}">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Sair</span>
-        </a>
-    </li>
-</ul>
-</div>
+
+
+<li>
+
+<a href="{% url 'dashboard_professor' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'dashboard_professor' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-speedometer2"></i>
+
+
+Resumo
+
+
+</a>
+
+</li>
+
+
+
+
+
+<li>
+
+<a href="{% url 'minhas_turmas' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'minhas_turmas' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+Minhas Turmas
+
+
+</a>
+
+</li>
+
+
+
+
+
+<li>
+
+<a href="{% url 'lancar_notas' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'lancar_notas' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-journal-check"></i>
+
+
+Lançar Notas
+
+
+</a>
+
+</li>
+
+
+
+
+
+<li>
+
+<a href="{% url 'mini_pautas' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'mini_pautas' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-table"></i>
+
+
+Mini Pautas
+
+
+</a>
+
+</li>
 <!-- =====================================================
-     MAIN
+     CONTINUAÇÃO MENU SIDEBAR
 ===================================================== -->
+
+
+<li>
+
+<a href="{% url 'historico_notas' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'historico_notas' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-clock-history"></i>
+
+
+Histórico de Notas
+
+
+</a>
+
+</li>
+
+
+
+
+
+<li>
+
+<a href="{% url 'historico_professor' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'historico_professor' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+Histórico Académico
+
+
+</a>
+
+</li>
+
+
+
+
+
+
+<li>
+
+<a href="{% url 'calendario_professor' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'calendario_professor' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-calendar-event"></i>
+
+
+Calendário Escolar
+
+
+</a>
+
+</li>
+
+
+
+
+
+
+<li>
+
+<a href="{% url 'relatorios_professor' %}"
+
+class="menu-link
+
+{% if request.resolver_match.url_name == 'relatorios_professor' %}
+
+active
+
+{% endif %}
+
+">
+
+
+<i class="bi bi-bar-chart-line"></i>
+
+
+Relatórios
+
+
+</a>
+
+</li>
+
+
+
+
+
+
+
+<div class="menu-divider"></div>
+
+
+
+
+
+
+
+<li class="menu-title">
+
+Conta
+
+</li>
+
+
+
+
+
+
+
+<li class="logout">
+
+
+<a href="{% url 'logout' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-box-arrow-right"></i>
+
+
+Sair
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MAIN AREA
+===================================================== -->
+
+
 <div class="main">
-<!-- TOPBAR -->
-<div class="topbar">
-    <div class="topbar-title">
-        Painel do Professor
-    </div>
-    <!-- USER -->
-    <div class="user-box">
-        <div class="avatar">
-            {{ request.user.username|first|upper }}
-        </div>
-        <div class="user-info">
-            <strong>
-                {{ request.user.get_full_name|default:request.user.username }}
-            </strong>
-            <small>
-                Professor
-            </small>
-        </div>
-    </div>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     MOBILE HEADER
+===================================================== -->
+
+
+<div class="mobile-header d-lg-none">
+
+
+
+<button
+
+class="btn btn-primary"
+
+data-bs-toggle="offcanvas"
+
+data-bs-target="#menuProfessor">
+
+
+<i class="bi bi-list"></i>
+
+
+</button>
+
+
+
+
+
+<strong>
+
+
+EdusCel Professor
+
+
+</strong>
+
+
+
 </div>
 
-<!-- BOTÃO MOBILE -->
-
-<div class="d-lg-none mb-3">
-
-    <button
-        class="btn btn-dark"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#menuAluno">
-
-        <i class="bi bi-list"></i>
-        Menu
-
-    </button>
-
-</div>
 
 
-<!-- MENU MOBILE -->
+
+
+
+
+
+
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
+
 
 <div
+
 class="offcanvas offcanvas-start"
+
 tabindex="-1"
-id="menuAluno">
+
+id="menuProfessor">
+
+
+
+
 
 <div class="offcanvas-header">
 
-    <h5 class="offcanvas-title">
-        Área do Aluno
-    </h5>
 
-    <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="offcanvas">
-    </button>
+
+<h5 class="offcanvas-title">
+
+
+<i class="bi bi-mortarboard-fill me-2"></i>
+
+
+Professor
+
+
+</h5>
+
+
+
+
+<button
+
+type="button"
+
+class="btn-close"
+
+data-bs-dismiss="offcanvas">
+
+
+</button>
+
+
 
 </div>
+
+
+
+
+
+
 
 <div class="offcanvas-body">
 
+
+
 <ul class="menu">
 
+
+
+
+
+
 <li>
-<a href="{% url 'dashboard_professor' %}">
+
+
+<a href="{% url 'dashboard_professor' %}"
+
+class="menu-link">
+
+
 <i class="bi bi-speedometer2"></i>
-<span>Resumo</span>
+
+
+Resumo
+
+
 </a>
+
+
 </li>
 
-<li>
-<a href="{% url 'minhas_turmas' %}">
-<i class="bi bi-journal-check"></i>
-<span>Minhas Turmas</span>
-</a>
-</li>
+
+
+
+
+
 
 <li>
-<a href="{% url 'mini_pautas' %}">
+
+
+<a href="{% url 'minhas_turmas' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+Minhas Turmas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+<li>
+
+
+<a href="{% url 'mini_pautas' %}"
+
+class="menu-link">
+
+
 <i class="bi bi-table"></i>
-<span>Mini Pautas</span>
+
+
+Mini Pautas
+
+
 </a>
+
+
 </li>
 
-<li>
-<a href="{% url 'lancar_notas' %}">
-<i class="bi bi-calendar3"></i>
-<span>Lançar Notas</span>
-</a>
-</li>
+
+
+
+
+
+
 
 <li>
-<a href="{% url 'historico_notas' %}">
+
+
+<a href="{% url 'lancar_notas' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-journal-check"></i>
+
+
+Lançar Notas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+
+<li>
+
+
+<a href="{% url 'historico_notas' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-clock-history"></i>
+
+
+Histórico de Notas
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+<li>
+
+
+<a href="{% url 'historico_professor' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-mortarboard"></i>
+
+
+Histórico Académico
+
+
+</a>
+
+
+</li>
+
+
+
+
+
+
+
+<li>
+
+
+<a href="{% url 'calendario_professor' %}"
+
+class="menu-link">
+
+
 <i class="bi bi-calendar-event"></i>
-<span>Histórico de Notas</span>
+
+
+Calendário Escolar
+
+
 </a>
+
+
 </li>
 
+
+
+
+
+
+
 <li>
-<a href="{% url 'historico_professor' %}">
-<i class="bi bi-calendar-event"></i>
-<span>Histórico Acâdemico</span>
+
+
+<a href="{% url 'relatorios_professor' %}"
+
+class="menu-link">
+
+
+<i class="bi bi-bar-chart-line"></i>
+
+
+Relatórios
+
+
 </a>
+
+
 </li>
 
 
-<li>
-<a href="{% url 'calendario_professor' %}">
-<i class="bi bi-wallet2"></i>
-<span>Calendário Escolar</span>
-</a>
-</li>
 
-<li>
-<a href="{% url 'relatorios_professor' %}">
-<i class="bi bi-file-earmark-arrow-down"></i>
-<span>Relatórios</span>
-</a>
-</li>
 
-<li>
-<a href="{% url 'logout' %}" class="logout">
+
+
+
+<li class="mt-4">
+
+
+<a href="{% url 'logout' %}"
+
+class="menu-link logout">
+
+
 <i class="bi bi-box-arrow-right"></i>
-<span>Sair</span>
+
+
+Sair
+
+
 </a>
+
+
 </li>
+
+
+
+
+
 
 </ul>
 
-</div>
+
 
 </div>
 
-<!-- CONTENT -->
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     CONTEÚDO DAS PÁGINAS
+===================================================== -->
+
+
 <div class="content">
-    {% block content %}
-    {% endblock %}
+
+
+
+{% block content %}
+
+
+{% endblock %}
+
+
+
 </div>
-</div>
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-let timer;
-let warningTimer;
+<footer class="text-center py-4">
 
-function resetTimer() {
-    clearTimeout(timer);
-    clearTimeout(warningTimer);
 
-    // aviso antes de sair (opcional: 10 segundos antes)
-    warningTimer = setTimeout(() => {
-        console.log("Sessão vai expirar em 10 segundos por inatividade.");
-    }, 290000); // 4min50s
+<span class="text-muted small">
 
-    // logout após 5 minutos
-    timer = setTimeout(() => {
-        window.location.href = "{% url 'logout' %}";
-    }, 300000); // 5 minutos
+
+© <span id="anoAtual"></span>
+
+
+EdusCel - Sistema de Gestão Escolar
+
+
+
+</span>
+
+
+
+</footer>
+
+
+
+
+
+
+
+</div> <!-- FIM MAIN -->
+
+
+
+</div> <!-- FIM WRAPPER -->
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     RESPONSIVIDADE FINAL
+===================================================== -->
+
+
+<style>
+
+
+/* =====================================================
+   MOBILE HEADER
+===================================================== */
+
+
+.mobile-header{
+
+
+display:none;
+
+
+background:white;
+
+
+height:65px;
+
+
+position:fixed;
+
+
+top:0;
+
+
+left:0;
+
+
+right:0;
+
+
+z-index:3000;
+
+
+padding:0 18px;
+
+
+align-items:center;
+
+
+justify-content:space-between;
+
+
+box-shadow:
+
+
+0 5px 20px rgba(15,23,42,.12);
+
+
 }
 
-// eventos de atividade
-document.addEventListener("mousemove", resetTimer);
-document.addEventListener("keypress", resetTimer);
-document.addEventListener("click", resetTimer);
-document.addEventListener("scroll", resetTimer);
 
-// inicia timer
-resetTimer();
+
+
+.mobile-header strong{
+
+
+font-size:16px;
+
+
+font-weight:800;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+
+.topbar{
+
+
+height:80px;
+
+
+background:white;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:space-between;
+
+
+padding:0 30px;
+
+
+position:sticky;
+
+
+top:0;
+
+
+z-index:1000;
+
+
+box-shadow:
+
+
+0 5px 20px rgba(15,23,42,.06);
+
+
+}
+
+
+
+
+
+.topbar h4{
+
+
+font-size:22px;
+
+
+color:#0f172a;
+
+
+}
+
+
+
+
+
+
+
+
+
+.user-box{
+
+
+display:flex;
+
+
+align-items:center;
+
+
+gap:12px;
+
+
+}
+
+
+
+
+
+.avatar{
+
+
+width:48px;
+
+
+height:48px;
+
+
+border-radius:50%;
+
+
+background:
+
+
+linear-gradient(
+
+135deg,
+
+#2563eb,
+
+#38bdf8
+
+);
+
+
+
+color:white;
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
+
+font-weight:900;
+
+
+font-size:18px;
+
+
+box-shadow:
+
+
+0 10px 25px rgba(37,99,235,.35);
+
+
+}
+
+
+
+
+.user-info strong{
+
+
+display:block;
+
+
+font-size:14px;
+
+
+font-weight:800;
+
+
+}
+
+
+
+.user-info small{
+
+
+color:#64748b;
+
+
+font-size:12px;
+
+
+}
+
+
+
+
+
+/* =====================================================
+   OFFCANVAS MOBILE
+===================================================== */
+
+
+.offcanvas{
+
+
+background:
+
+
+linear-gradient(
+
+180deg,
+
+#020617,
+
+#0f172a
+
+);
+
+
+
+}
+
+
+
+
+.offcanvas-title{
+
+
+color:white;
+
+
+font-weight:900;
+
+
+}
+
+
+
+
+.offcanvas .btn-close{
+
+
+filter:invert(1);
+
+
+}
+
+
+
+
+.offcanvas .menu-link{
+
+
+color:#cbd5e1;
+
+
+}
+
+
+
+
+
+.offcanvas .menu-link:hover{
+
+
+background:
+
+
+rgba(255,255,255,.08);
+
+
+color:white;
+
+
+}
+
+
+
+
+
+.offcanvas .logout{
+
+
+color:#fca5a5;
+
+
+}
+
+
+
+
+
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+
+@media(max-width:1100px){
+
+
+
+.content{
+
+
+padding:22px;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+
+@media(max-width:992px){
+
+
+
+.sidebar{
+
+
+display:none;
+
+
+}
+
+
+
+
+.main{
+
+
+margin-left:0;
+
+
+width:100%;
+
+
+}
+
+
+
+.mobile-header{
+
+
+display:flex;
+
+
+}
+
+
+
+.topbar{
+
+
+display:none;
+
+
+}
+
+
+
+
+.content{
+
+
+padding:
+
+
+85px 18px 25px;
+
+
+}
+
+
+
+
+.user-box{
+
+
+display:none;
+
+
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+
+@media(max-width:576px){
+
+
+
+.content{
+
+
+padding:
+
+
+85px 14px 20px;
+
+
+}
+
+
+
+
+.mobile-header strong{
+
+
+font-size:14px;
+
+
+}
+
+
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     JAVASCRIPT BOOTSTRAP
+===================================================== -->
+
+
+<script
+
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+
 </script>
 
+
+
+
+
+
+
+
+
+<script>
+
+
+/* =====================================================
+   ANO AUTOMÁTICO
+===================================================== */
+
+
+document
+.getElementById("anoAtual")
+.innerHTML =
+
+new Date().getFullYear();
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   FECHAR MENU MOBILE APÓS CLICK
+===================================================== */
+
+
+document
+.querySelectorAll(".offcanvas .menu-link")
+.forEach(function(link){
+
+
+link.addEventListener(
+
+"click",
+
+function(){
+
+
+let menu = bootstrap.Offcanvas
+.getInstance(
+document.getElementById("menuProfessor")
+);
+
+
+
+if(menu){
+
+menu.hide();
+
+}
+
+
+
+});
+
+
+});
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   CONTROLO DE SESSÃO
+===================================================== */
+
+
+let inactivityTimer;
+
+
+
+let warningTimer;
+
+
+
+
+
+const SESSION_TIME = 300000;
+
+
+
+const WARNING_TIME = 290000;
+
+
+
+
+
+
+
+function resetSession(){
+
+
+
+clearTimeout(inactivityTimer);
+
+
+clearTimeout(warningTimer);
+
+
+
+
+
+
+
+warningTimer=setTimeout(function(){
+
+
+
+let alertBox=document.createElement("div");
+
+
+
+alertBox.style.position="fixed";
+
+alertBox.style.bottom="25px";
+
+alertBox.style.right="25px";
+
+alertBox.style.background="#0f172a";
+
+alertBox.style.color="white";
+
+alertBox.style.padding="15px 22px";
+
+alertBox.style.borderRadius="14px";
+
+alertBox.style.zIndex="9999";
+
+alertBox.style.boxShadow=
+"0 15px 35px rgba(0,0,0,.25)";
+
+
+
+
+alertBox.innerHTML=
+
+
+`
+<i class="bi bi-clock me-2"></i>
+
+Sessão será encerrada por inatividade.
+`;
+
+
+
+
+document.body.appendChild(alertBox);
+
+
+
+
+setTimeout(function(){
+
+
+alertBox.remove();
+
+
+},7000);
+
+
+
+
+},WARNING_TIME);
+
+
+
+
+
+
+
+
+
+inactivityTimer=setTimeout(function(){
+
+
+
+window.location.href="{% url 'logout' %}";
+
+
+
+},SESSION_TIME);
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+[
+
+"mousemove",
+
+"mousedown",
+
+"keypress",
+
+"scroll",
+
+"touchstart"
+
+
+]
+
+.forEach(function(event){
+
+
+document.addEventListener(
+
+event,
+
+resetSession
+
+);
+
+
+
+});
+
+
+
+
+
+
+
+
+resetSession();
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+{% block scripts %}
+
+{% endblock %}
+
+
+
+
+
 </body>
+
+
 </html>
