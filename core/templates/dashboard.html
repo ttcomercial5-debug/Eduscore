@@ -9,207 +9,102 @@
 
 
 <!-- =====================================================
-     PERFIL DIRETOR PREMIUM
+     HEADER EDUSCEL DIRETOR PREMIUM
 ===================================================== -->
 
 
-<div class="director-profile-card mb-4">
+<div class="director-header">
 
 
-    <div class="director-profile-content">
+<div class="row align-items-center">
 
 
+<div class="col-lg-7">
 
-        <div class="row align-items-center g-4">
 
 
+<h2>
 
-            <div class="col-lg-8">
+Direção Geral
 
+</h2>
 
 
-                <div class="d-flex align-items-center gap-4">
 
+<p>
 
+Gestão estratégica da instituição através do EdusCel.
 
-                    <div class="director-avatar">
+</p>
 
 
-                        {% if request.user.nome_completo %}
 
-                            {{ request.user.nome_completo|first|upper }}
 
-                        {% else %}
 
-                            {{ request.user.first_name|first|upper }}
+<div class="director-user">
 
-                        {% endif %}
 
 
+<div class="director-avatar-new">
 
-                    </div>
 
+{% if request.user.nome_completo %}
 
+{{ request.user.nome_completo|first|upper }}
 
+{% else %}
 
+{{ request.user.first_name|first|upper }}
 
-                    <div>
+{% endif %}
 
 
 
-                        <h2 class="director-name">
+</div>
 
 
-                            {% if request.user.nome_completo %}
 
-                                {{ request.user.nome_completo }}
 
-                            {% else %}
 
-                                {{ request.user.get_full_name }}
+<div>
 
-                            {% endif %}
 
 
+<strong>
 
-                        </h2>
 
+{% if request.user.nome_completo %}
 
+{{ request.user.nome_completo }}
 
+{% else %}
 
+{{ request.user.get_full_name }}
 
-                        <div class="director-role">
+{% endif %}
 
 
-                            Director Geral
+</strong>
 
 
-                        </div>
 
 
+<br>
 
 
 
 
 
-                        <div class="mt-3">
 
 
+</div>
 
-                            <span class="director-pill">
 
 
-                                <i class="bi bi-building"></i>
 
+</div>
 
-                                {{ request.user.escola.nome }}
 
-
-
-                            </span>
-
-
-
-
-
-
-
-                            {% if ano %}
-
-
-                            <span class="director-pill">
-
-
-                                <i class="bi bi-calendar3"></i>
-
-
-                                Ano Letivo {{ ano.nome }}
-
-
-
-                            </span>
-
-
-                            {% endif %}
-
-
-
-
-
-
-
-
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
-
-
-                </div>
-
-
-
-
-            </div>
-
-
-
-
-
-
-
-
-            <div class="col-lg-4 text-lg-end">
-
-
-
-                <div class="director-school-box">
-
-
-
-                    {% if request.user.escola.logo %}
-
-
-                    <img src="{{ request.user.escola.logo.url }}"
-
-                         class="director-logo"
-
-                         alt="Logo Escola">
-
-
-                    {% endif %}
-
-
-
-
-
-
-
-
-                </div>
-
-
-
-            </div>
-
-
-
-
-
-
-        </div>
-
-
-
-
-
-    </div>
 
 
 
@@ -221,7 +116,110 @@
 
 
 
+<div class="col-lg-5 mt-3 mt-lg-0 text-lg-end">
 
+
+
+
+
+<div class="school-highlight-director">
+
+
+
+
+
+{% if request.user.escola.logo %}
+
+
+
+<img src="{{ request.user.escola.logo.url }}"
+
+
+class="school-logo-director"
+
+
+alt="Logo Escola">
+
+
+
+{% endif %}
+
+
+
+
+<div class="school-info-director">
+
+
+
+<small>
+
+
+Instituição activa
+
+
+</small>
+
+
+
+
+<strong>
+
+
+{{ request.user.escola.nome }}
+
+
+</strong>
+
+
+
+
+{% if ano %}
+
+
+
+<span>
+
+
+<i class="bi bi-calendar3"></i>
+
+
+Ano Letivo {{ ano.nome }}
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+</div>
 
 <!-- =====================================================
      MENSAGENS
@@ -1785,30 +1783,70 @@ Ivo Cardoso Avelino
 ===================================================== */
 
 
-.director-profile-card{
+
+.director-header{
 
 
 background:
 
+
 linear-gradient(
 135deg,
-#0f172a,
-#1d4ed8
+#020617,
+#1e3a8a
 );
+
 
 
 border-radius:22px;
 
 
-padding:25px;
+padding:25px 28px;
 
 
 color:white;
 
 
+margin-bottom:22px;
+
+
 box-shadow:
 
-0 15px 40px rgba(15,23,42,.20);
+
+0 15px 35px rgba(15,23,42,.18);
+
+
+
+}
+
+
+
+.director-header h2{
+
+
+font-size:25px;
+
+
+font-weight:900;
+
+
+margin-bottom:5px;
+
+
+}
+
+
+
+.director-header p{
+
+
+margin:0;
+
+
+font-size:14px;
+
+
+opacity:.8;
 
 
 }
@@ -1816,18 +1854,41 @@ box-shadow:
 
 
 
-.director-avatar{
+.director-user{
 
 
-width:75px;
+display:flex;
 
-height:75px;
+
+align-items:center;
+
+
+gap:12px;
+
+
+margin-top:18px;
+
+
+
+}
+
+
+
+
+.director-avatar-new{
+
+
+width:52px;
+
+
+height:52px;
 
 
 border-radius:50%;
 
 
 background:
+
 
 linear-gradient(
 135deg,
@@ -1836,16 +1897,21 @@ linear-gradient(
 );
 
 
+
 display:flex;
 
+
 align-items:center;
+
 
 justify-content:center;
 
 
-font-size:30px;
+font-size:22px;
 
-font-weight:800;
+
+font-weight:900;
+
 
 
 }
@@ -1853,15 +1919,23 @@ font-weight:800;
 
 
 
-.director-name{
+.director-user strong{
 
 
-font-size:24px;
-
-font-weight:800;
+font-size:16px;
 
 
-margin:0;
+}
+
+
+
+.director-user small{
+
+
+font-size:12px;
+
+
+opacity:.75;
 
 
 }
@@ -1869,21 +1943,29 @@ margin:0;
 
 
 
-.director-role{
+.school-highlight-director{
 
 
-color:#cbd5e1;
-
-margin-top:5px;
+margin-top:18px;
 
 
-}
+padding:14px 18px;
+
+
+border-radius:16px;
+
+
+background:
+
+
+rgba(255,255,255,.10);
 
 
 
+border:
 
+1px solid rgba(255,255,255,.15);
 
-.director-pill{
 
 
 display:inline-flex;
@@ -1892,69 +1974,145 @@ display:inline-flex;
 align-items:center;
 
 
-gap:7px;
+gap:14px;
 
 
-background:
 
-rgba(255,255,255,.15);
-
-
-padding:7px 14px;
+}
 
 
-border-radius:20px;
+
+
+
+.school-logo-director{
+
+
+width:70px;
+
+
+height:70px;
+
+
+object-fit:contain;
+
+
+background:white;
+
+
+border-radius:15px;
+
+
+padding:8px;
+
+
+
+}
+
+
+
+
+
+.school-info-director small{
+
+
+display:block;
+
+
+font-size:11px;
+
+
+color:#cbd5e1;
+
+
+text-transform:uppercase;
+
+
+letter-spacing:.8px;
+
+
+}
+
+
+
+
+.school-info-director strong{
+
+
+display:block;
+
+
+font-size:18px;
+
+
+font-weight:900;
+
+
+color:white;
+
+
+
+}
+
+
+
+
+.school-info-director span{
+
+
+display:block;
+
+
+margin-top:5px;
 
 
 font-size:12px;
 
 
-margin-right:6px;
+color:#dbeafe;
 
 
 }
 
 
 
-.director-school-box{
+
+@media(max-width:768px){
 
 
-display:flex;
+
+.director-header{
 
 
-align-items:center;
-
-
-justify-content:end;
-
-
-gap:15px;
+padding:20px;
 
 
 }
 
 
 
-.director-logo{
+.school-highlight-director{
 
-    width:120px;
 
-    height:120px;
+width:100%;
 
-    object-fit:contain;
-
-    background:white;
-
-    border-radius:20px;
-
-    padding:10px;
-
-    box-shadow:
-    0 8px 20px rgba(0,0,0,.25);
 
 }
 
 
+
+.school-logo-director{
+
+
+width:60px;
+
+
+height:60px;
+
+
+}
+
+
+}
 
 
 /* =====================================================
