@@ -3,7 +3,39 @@
 
 <div class="container-fluid py-4">
 
-    <h2 class="mb-4 fw-bold">Gestão de Mensalidades</h2>
+    <!-- ======================================================
+     HERO
+====================================================== -->
+
+
+<div class="mensalidade-hero">
+
+
+    <div class="mensalidade-hero-content">
+
+
+
+
+
+
+
+        <h1 class="hero-title">
+
+
+            <i class="bi bi-wallet2 me-2"></i>
+
+
+            GESTÃO DE MENSALIDADES
+
+
+        </h1>
+
+
+
+    </div>
+
+
+</div>
 
     <!-- FILTROS -->
     <div class="card shadow-sm border-0 rounded-4 mb-4 p-3">
@@ -127,4 +159,201 @@
 
 </div>
 
+
+
+
+<style>
+/* ======================================================
+   EDUSCEL - HERO GESTÃO MENSALIDADES
+====================================================== */
+
+
+.mensalidade-hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:24px;
+
+    padding:32px;
+
+    margin-bottom:30px;
+
+    color:white;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+
+    box-shadow:
+
+    0 20px 45px rgba(15,23,42,.18);
+
+}
+
+
+
+.mensalidade-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    right:-90px;
+
+    top:-100px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.10);
+
+}
+
+
+
+.mensalidade-hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+
+.hero-badge{
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+
+    padding:8px 16px;
+
+
+    border-radius:50px;
+
+
+    background:
+
+    rgba(255,255,255,.12);
+
+
+    border:
+
+    1px solid rgba(255,255,255,.15);
+
+
+    font-size:13px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.hero-title{
+
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-.5px;
+
+    margin:0;
+
+
+}
+
+
+
+.hero-subtitle{
+
+
+    margin-top:10px;
+
+    max-width:700px;
+
+    color:rgba(255,255,255,.85);
+
+    font-size:15px;
+
+    line-height:1.7;
+
+
+}
+
+
+
+.btn-hero-white{
+
+
+    background:white;
+
+    color:#2563eb;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 24px;
+
+    font-weight:700;
+
+    transition:.3s;
+
+}
+
+
+
+.btn-hero-white:hover{
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+@media(max-width:768px){
+
+    .mensalidade-hero{
+
+        padding:22px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:25px;
+
+    }
+
+}
+
+
+
+</style>
 {% endblock %}

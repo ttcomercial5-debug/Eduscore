@@ -3,9 +3,68 @@
 
 <div class="container-fluid">
 
-    <div class="topbar mb-4">
-        <h4 class="fw-bold">Confirmação de Matrícula</h4>
+    <!-- ======================================================
+     HERO
+====================================================== -->
+
+
+<div class="matricula-hero">
+
+
+    <div class="matricula-hero-content">
+
+
+
+        <div class="hero-badge">
+
+
+            <i class="bi bi-check-circle-fill"></i>
+
+
+            Gestão Académica - EdusCel
+
+
+        </div>
+
+
+
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+
+            <div>
+
+
+
+                <h1 class="hero-title">
+
+
+                    <i class="bi bi-person-check-fill me-2"></i>
+
+
+                    CONFIRMAÇÃO DE MATRÍCULAS
+
+
+                </h1>
+
+
+
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
     </div>
+
+
+</div>
 
     {% if messages %}
         {% for message in messages %}
@@ -101,5 +160,210 @@
     {% endif %}
 
 </div>
+
+
+<style>
+
+/* ======================================================
+   EDUSCEL - HERO CONFIRMAÇÃO MATRÍCULA
+====================================================== */
+
+
+.matricula-hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:24px;
+
+    padding:32px;
+
+    margin-bottom:30px;
+
+    color:white;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+
+    box-shadow:
+
+    0 20px 45px rgba(15,23,42,.18);
+
+}
+
+
+
+.matricula-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    right:-90px;
+
+    top:-100px;
+
+    border-radius:50%;
+
+    background:
+
+    rgba(255,255,255,.10);
+
+}
+
+
+
+.matricula-hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+
+.hero-badge{
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+
+    padding:8px 16px;
+
+
+    border-radius:50px;
+
+
+    background:
+
+    rgba(255,255,255,.12);
+
+
+    border:
+
+    1px solid rgba(255,255,255,.15);
+
+
+    font-size:13px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.hero-title{
+
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-.5px;
+
+    margin:0;
+
+
+}
+
+
+
+.hero-subtitle{
+
+
+    margin-top:10px;
+
+    max-width:650px;
+
+    color:rgba(255,255,255,.85);
+
+    line-height:1.7;
+
+    font-size:15px;
+
+}
+
+
+
+/* BOTÃO HERO */
+
+
+.btn-hero{
+
+
+    background:white;
+
+    color:#2563eb;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 24px;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    transition:.3s;
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,.15);
+
+}
+
+
+
+.btn-hero:hover{
+
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-3px);
+
+}
+
+
+
+@media(max-width:768px){
+
+    .matricula-hero{
+
+        padding:22px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:25px;
+
+    }
+
+}
+
+
+</style>
 
 {% endblock %}

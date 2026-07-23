@@ -1,104 +1,1500 @@
 {% extends "base_secretaria.html" %}
 {% block content %}
 
-<div class="container-fluid py-4">
+<style>
 
-<h2 class="fw-bold mb-4">Relatório de Mensalidades</h2>
+/* ==========================================================
+   EDUSCEL
+   RELATÓRIO DE MENSALIDADES
+   PREMIUM UI 2026
+========================================================== */
 
-<div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
-<form method="get" class="row g-3">
+:root{
 
-<div class="col-md-4">
-<label class="form-label">Turma</label>
-<select name="turma" class="form-select">
-<option value="">Selecione a Turma</option>
-{% for turma in turmas %}
-<option value="{{ turma.id }}" {% if turma.id|stringformat:"s" == turma_id %}selected{% endif %}>
-{{ turma.classe }}ª - {{ turma.identificador }}
-</option>
-{% endfor %}
-</select>
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --warning:#f59e0b;
+
+    --bg:#f4f7fb;
+
+    --text:#0f172a;
+    --muted:#64748b;
+
+    --card:#ffffff;
+
+}
+
+body{
+
+    background:var(--bg);
+
+}
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.page-wrapper{
+
+    padding:25px 8px 45px;
+
+}
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.report-hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    padding:38px;
+
+    margin-bottom:28px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+    color:#fff;
+
+    box-shadow:
+    0 20px 50px rgba(15,23,42,.20);
+
+}
+
+.report-hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:320px;
+    height:320px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.08);
+
+    right:-110px;
+    top:-110px;
+
+}
+
+.report-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.05);
+
+    left:-60px;
+    bottom:-80px;
+
+}
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.hero-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:9px 18px;
+
+    border-radius:50px;
+
+    background:
+    rgba(255,255,255,.12);
+
+    border:
+    1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(10px);
+
+    font-size:13px;
+
+    margin-bottom:18px;
+
+}
+
+.hero-title{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+    letter-spacing:-.5px;
+
+}
+
+.hero-subtitle{
+
+    max-width:700px;
+
+    line-height:1.7;
+
+    color:rgba(255,255,255,.88);
+
+    font-size:15px;
+
+}
+
+/* ==========================================================
+   BOTÃO VOLTAR
+========================================================== */
+
+.btn-back{
+
+    background:#fff;
+
+    color:#1e3a8a;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 22px;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    transition:.25s;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.15);
+
+}
+
+.btn-back:hover{
+
+    color:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================================================
+   ESTATÍSTICAS
+========================================================== */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(230px,1fr));
+
+    gap:18px;
+
+    margin-bottom:28px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border:none;
+
+    border-radius:22px;
+
+    padding:24px;
+
+    box-shadow:
+    0 12px 30px rgba(15,23,42,.08);
+
+    transition:.30s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.stat-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.stat-title{
+
+    font-size:12px;
+
+    color:#64748b;
+
+    text-transform:uppercase;
+
+    letter-spacing:.6px;
+
+    font-weight:700;
+
+}
+
+.stat-number{
+
+    margin-top:8px;
+
+    font-size:33px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+.stat-icon{
+
+    width:58px;
+
+    height:58px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+    font-size:24px;
+
+}
+
+/* ==========================================================
+   CARD DOS FILTROS
+========================================================== */
+
+.filter-card{
+
+    background:#fff;
+
+    border:none;
+
+    border-radius:24px;
+
+    box-shadow:
+    0 12px 30px rgba(15,23,42,.08);
+
+    overflow:hidden;
+
+    margin-bottom:30px;
+
+}
+
+.filter-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color:#fff;
+
+    padding:22px 28px;
+
+}
+
+.filter-header h5{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.filter-header p{
+
+    margin-top:5px;
+
+    margin-bottom:0;
+
+    opacity:.85;
+
+    font-size:14px;
+
+}
+
+.filter-body{
+
+    padding:28px;
+
+}
+
+.form-label{
+
+    font-weight:700;
+
+    color:#334155;
+
+}
+
+.form-control,
+.form-select{
+
+    min-height:52px;
+
+    border-radius:14px;
+
+    border:1px solid #dbe4ef;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 .18rem rgba(37,99,235,.15);
+
+}
+
+.btn-filtrar{
+
+    height:52px;
+
+    border:none;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color:#fff;
+
+}
+
+.btn-filtrar:hover{
+
+    color:#fff;
+
+}
+/* ==========================================================
+   CARD RELATÓRIO
+========================================================== */
+
+.report-card{
+
+    background:#fff;
+
+    border:none;
+
+    border-radius:26px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 15px 40px rgba(15,23,42,.08);
+
+}
+
+
+.report-header{
+
+    padding:25px 30px;
+
+    border-bottom:1px solid #eef2f7;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+
+.report-header h4{
+
+    margin:0;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+
+.report-header p{
+
+    margin:5px 0 0;
+
+    color:#64748b;
+
+    font-size:14px;
+
+}
+
+
+/* ==========================================================
+   BOTÃO PDF
+========================================================== */
+
+
+.btn-pdf{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #dc2626,
+        #991b1b
+    );
+
+    color:#fff;
+
+    border:none;
+
+    padding:11px 20px;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+
+.btn-pdf:hover{
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================================================
+   TABELA PREMIUM
+========================================================== */
+
+
+.table-container{
+
+    padding:0 25px 25px;
+
+}
+
+
+.table{
+
+    margin-bottom:0;
+
+}
+
+
+.table thead th{
+
+    background:#f8fafc;
+
+    color:#475569;
+
+    border:none;
+
+    padding:18px;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+}
+
+
+.table tbody td{
+
+    padding:18px;
+
+    border-bottom:1px solid #f1f5f9;
+
+    color:#334155;
+
+}
+
+
+.table tbody tr{
+
+    transition:.25s;
+
+}
+
+
+.table tbody tr:hover{
+
+    background:#f8fbff;
+
+    transform:scale(1.002);
+
+}
+
+
+/* ==========================================================
+   ALUNO
+========================================================== */
+
+
+.student-name{
+
+    font-weight:800;
+
+    color:#0f172a;
+
+}
+
+
+.process-number{
+
+    font-weight:600;
+
+    color:#475569;
+
+}
+
+
+/* ==========================================================
+   BADGES STATUS
+========================================================== */
+
+
+.status-badge{
+
+    padding:8px 15px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+
+.status-paid{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+
+.status-late{
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+}
+
+
+.status-pending{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+
+.empty-state{
+
+    text-align:center;
+
+    padding:70px 20px;
+
+}
+
+
+.empty-state i{
+
+    font-size:55px;
+
+    color:#94a3b8;
+
+}
+
+
+.empty-state h5{
+
+    margin-top:15px;
+
+    font-weight:800;
+
+    color:#334155;
+
+}
+
+
+/* ==========================================================
+   RESPONSIVO
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+    .page-wrapper{
+
+        padding:15px 5px;
+
+    }
+
+
+    .report-hero{
+
+        padding:25px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:26px;
+
+    }
+
+
+    .filter-body{
+
+        padding:20px;
+
+    }
+
+
+    .table-container{
+
+        padding:0 15px 15px;
+
+    }
+
+
+}
+
+
+
+</style>
+
+
+
+<div class="container-fluid page-wrapper">
+
+
+
+<!-- ==========================================================
+     HERO
+========================================================== -->
+
+
+<div class="report-hero">
+
+
+<div class="hero-content">
+
+
+<div class="hero-top">
+
+
+<div>
+
+
+
+
+
+
+<h1 class="hero-title">
+
+
+RELATÓRIOS DE MENSALIDADES
+
+
+</h1>
+
+
+
 </div>
 
-<div class="col-md-4">
-<label class="form-label">Mês</label>
-<select name="mes" class="form-select">
-<option value="">Selecione</option>
-{% for m in meses %}
-<option value="{{ m }}" {% if m == mes %}selected{% endif %}>
-{{ m }}
-</option>
-{% endfor %}
-</select>
-</div>
 
-<div class="col-md-4 d-grid">
-<label class="form-label invisible">.</label>
-<button class="btn btn-primary">Gerar Relatório</button>
-</div>
 
-</form>
-</div>
+<a href="{% url 'dashboard_secretaria' %}"
 
-{% if mensalidades %}
+class="btn-back">
 
-<div class="card shadow-sm border-0 rounded-4 p-4">
 
-<div class="table-responsive">
+<i class="bi bi-arrow-left me-2"></i>
 
-<table class="table table-hover">
+Voltar
 
-<thead class="table-light">
-<tr>
-<th>Aluno</th>
-<th>Processo</th>
-<th>Mês</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody>
-
-{% for m in mensalidades %}
-
-<tr>
-<td>{{ m.aluno.usuario.get_full_name }}</td>
-<td>{{ m.aluno.numero_processo }}</td>
-<td>{{ m.mes }}</td>
-
-<td>
-{% if m.status == "PAGA" %}
-<span class="badge bg-success">Paga</span>
-{% else %}
-<span class="badge bg-danger">Atrasada</span>
-{% endif %}
-</td>
-
-</tr>
-
-{% endfor %}
-
-{% if turma_id and mes %}
-
-<a href="{% url 'exportar_estado_turma_pdf' %}?turma={{ turma_id }}&mes={{ mes }}"
-class="btn btn-danger mb-3">
-
-<i class="bi bi-file-earmark-pdf"></i> Exportar PDF
 
 </a>
 
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- ==========================================================
+     ESTATÍSTICAS
+========================================================== -->
+
+
+<div class="stats-grid">
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-top">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Registos Encontrados
+
+</div>
+
+
+<div class="stat-number">
+
+
+{{ mensalidades|length|default:"0" }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-icon">
+
+
+<i class="bi bi-receipt"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-top">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Turmas
+
+</div>
+
+
+<div class="stat-number">
+
+
+{{ turmas|length|default:"0" }}
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-icon">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-top">
+
+
+<div>
+
+
+<div class="stat-title">
+
+Estado Financeiro
+
+</div>
+
+
+<div class="stat-number">
+
+Kz
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-icon">
+
+
+<i class="bi bi-bar-chart-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================================
+     FILTROS
+========================================================== -->
+
+
+<div class="filter-card">
+
+
+<div class="filter-header">
+
+
+<h5>
+
+<i class="bi bi-funnel-fill me-2"></i>
+
+FILTROS DO RELATÓRIO
+
+</h5>
+
+
+<p>
+
+Selecione turma e mês para consultar as mensalidades.
+
+</p>
+
+
+</div>
+
+
+
+<div class="filter-body">
+
+
+<form method="get" class="row g-4">
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Turma
+
+</label>
+
+
+<select name="turma"
+
+class="form-select">
+
+
+<option value="">
+
+Selecione a Turma
+
+</option>
+
+
+{% for turma in turmas %}
+
+
+<option value="{{ turma.id }}"
+
+{% if turma.id|stringformat:"s" == turma_id %}
+
+selected
+
+{% endif %}>
+
+
+{{ turma.classe }}ª - {{ turma.identificador }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4">
+
+
+<label class="form-label">
+
+Mês
+
+</label>
+
+
+<select name="mes"
+
+class="form-select">
+
+
+<option value="">
+
+Selecione
+
+</option>
+
+
+{% for m in meses %}
+
+
+<option value="{{ m }}"
+
+{% if m == mes %}
+
+selected
+
+{% endif %}>
+
+
+{{ m }}
+
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+<div class="col-md-4 d-grid">
+
+
+<label class="form-label invisible">
+
+Filtro
+
+</label>
+
+
+<button class="btn btn-filtrar">
+
+
+<i class="bi bi-search me-2"></i>
+
+Gerar Relatório
+
+
+</button>
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+{% if mensalidades %}
+
+
+<!-- ==========================================================
+     RESULTADO DO RELATÓRIO
+========================================================== -->
+
+
+<div class="report-card">
+
+
+
+<div class="report-header">
+
+
+
+<div>
+
+
+<h4>
+
+
+<i class="bi bi-table me-2 text-primary"></i>
+
+
+LISTA DE MENSALIDADES
+
+
+</h4>
+
+
+
+<p>
+
+
+Detalhamento dos pagamentos dos alunos selecionados.
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+{% if turma_id and mes %}
+
+
+<a href="{% url 'exportar_estado_turma_pdf' %}?turma={{ turma_id }}&mes={{ mes }}"
+
+class="btn-pdf">
+
+
+<i class="bi bi-file-earmark-pdf-fill"></i>
+
+
+Exportar PDF
+
+
+</a>
+
+
+
 {% endif %}
+
+
+
+
+</div>
+
+
+
+
+
+<div class="table-container">
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle">
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Aluno
+
+</th>
+
+
+<th>
+
+Número Processo
+
+</th>
+
+
+<th>
+
+Mês
+
+</th>
+
+
+<th>
+
+Estado
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+<tbody>
+
+
+
+{% for m in mensalidades %}
+
+
+
+<tr>
+
+
+
+<td>
+
+
+<div class="student-name">
+
+
+{{ m.aluno.usuario.get_full_name }}
+
+
+</div>
+
+
+</td>
+
+
+
+
+<td>
+
+
+<span class="process-number">
+
+
+{{ m.aluno.numero_processo }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+<td>
+
+
+{{ m.mes }}
+
+
+</td>
+
+
+
+
+<td>
+
+
+{% if m.status == "PAGA" %}
+
+
+<span class="status-badge status-paid">
+
+
+<i class="bi bi-check-circle-fill me-1"></i>
+
+
+Paga
+
+
+</span>
+
+
+
+{% elif m.status == "PAGA_COM_MULTA" %}
+
+
+
+<span class="status-badge status-pending">
+
+
+<i class="bi bi-exclamation-circle-fill me-1"></i>
+
+
+Paga com Multa
+
+
+</span>
+
+
+
+
+{% elif m.status == "ATRASADA" %}
+
+
+
+<span class="status-badge status-late">
+
+
+<i class="bi bi-x-circle-fill me-1"></i>
+
+
+Atrasada
+
+
+</span>
+
+
+
+
+{% else %}
+
+
+
+<span class="status-badge status-pending">
+
+
+<i class="bi bi-clock-fill me-1"></i>
+
+
+Pendente
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
 
 </tbody>
 
+
+
 </table>
 
-</div>
+
 
 </div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+{% if turma_id or mes %}
+
+
+
+<div class="report-card">
+
+
+<div class="empty-state">
+
+
+<i class="bi bi-search"></i>
+
+
+
+<h5>
+
+
+Nenhuma mensalidade encontrada
+
+
+</h5>
+
+
+
+<p class="text-muted">
+
+
+Não existem registos para os filtros selecionados.
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
 
 {% endif %}
 
+
+
+{% endif %}
+
+
+
 </div>
+
 
 {% endblock %}

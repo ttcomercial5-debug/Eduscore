@@ -22,20 +22,45 @@
 }
 
 .btn-alunos-existentes{
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-    color:white;
+
+    background:white;
+
+    color:#2563eb;
+
     border:none;
+
     border-radius:12px;
-    padding:12px 22px;
-    font-weight:600;
+
+    padding:12px 24px;
+
+    font-weight:700;
+
     text-decoration:none;
-    box-shadow:0 10px 25px rgba(37,99,235,.25);
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,.15);
+
     transition:.3s;
+
 }
 
+
+
 .btn-alunos-existentes:hover{
-    color:white;
-    transform:translateY(-2px);
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-3px);
+
 }
 
 .card-premium{
@@ -120,30 +145,236 @@
     font-weight:600;
 }
 
+
+/* ======================================================
+   HERO MATRÍCULA
+====================================================== */
+
+
+.matricula-hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:24px;
+
+    padding:32px;
+
+    margin-bottom:30px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+
+    color:white;
+
+    box-shadow:
+
+    0 20px 45px rgba(15,23,42,.18);
+
+}
+
+
+
+.matricula-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    right:-80px;
+
+    top:-90px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.10);
+
+}
+
+
+
+.matricula-hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+
+.hero-badge{
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 16px;
+
+    border-radius:50px;
+
+    background:
+
+    rgba(255,255,255,.12);
+
+
+    border:
+
+    1px solid rgba(255,255,255,.15);
+
+
+    font-size:13px;
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+.hero-title{
+
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-.5px;
+
+    margin:0;
+
+
+}
+
+
+
+.hero-subtitle{
+
+
+    margin-top:10px;
+
+    max-width:650px;
+
+    color:rgba(255,255,255,.85);
+
+    font-size:15px;
+
+    line-height:1.7;
+
+
+}
+
+
+
+@media(max-width:768px){
+
+
+    .matricula-hero{
+
+        padding:22px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:25px;
+
+    }
+
+
+}
+
 </style>
 
 <div class="container-fluid">
 
-    <!-- CABEÇALHO -->
-    <div class="page-header">
+<!-- ======================================================
+     HERO - NOVA MATRÍCULA
+====================================================== -->
 
-        <div class="page-title">
-            <h3>
-                <i class="bi bi-journal-plus"></i>
-                Nova Matrícula
-            </h3>
-            <p>
-                Cadastro oficial de novos alunos no sistema académico
-            </p>
+<div class="matricula-hero">
+
+
+    <div class="matricula-hero-content">
+
+
+        <div class="hero-badge">
+
+            <i class="bi bi-journal-plus"></i>
+
+            Gestão Académica - EdusCel
+
         </div>
 
-        <a href="{% url 'adicionar_aluno' %}"
-           class="btn-alunos-existentes">
-            <i class="bi bi-people-fill"></i>
-            Alunos Existentes
-        </a>
+
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+
+            <div>
+
+
+                <h1 class="hero-title">
+
+
+                    <i class="bi bi-person-vcard-fill me-2"></i>
+
+
+                    NOVA MATRÍCULA
+
+
+                </h1>
+
+
+
+
+
+
+            </div>
+
+
+
+
+            <a href="{% url 'adicionar_aluno' %}"
+               class="btn-alunos-existentes">
+
+
+                <i class="bi bi-people-fill me-2"></i>
+
+
+                Alunos Existentes
+
+
+            </a>
+
+
+
+        </div>
+
+
 
     </div>
+
+
+
+</div>
 
     <!-- ALERTAS -->
     {% if messages %}
@@ -160,7 +391,7 @@
         <div class="card-header-premium">
             <h4>
                 <i class="bi bi-person-vcard-fill"></i>
-                Registro de Matrícula
+                REGISTRO DE MATRÍCULA
             </h4>
             <small>
                 O Nome Completo identifica o aluno no sistema. O Número de Processo será gerado automaticamente e utilizado como Username.
