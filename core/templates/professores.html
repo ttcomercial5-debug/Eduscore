@@ -7,7 +7,7 @@
 
 
 /* ======================================================
-        EDUSCORE
+        EDUSCEL
         GESTÃO DE PROFESSORES
         TABELA PREMIUM
 ====================================================== */
@@ -245,6 +245,102 @@
 
 }
 
+/* ======================================================
+   HERO PREMIUM - GESTÃO DE PROFESSORES
+====================================================== */
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+
+.receipt-hero .hero-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+}
+
+
+
+@media(max-width:768px){
+
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+
+}
+
+
+.container-fluid{
+
+    padding-left:0 !important;
+
+    padding-right:0 !important;
+
+}
 
 
 </style>
@@ -265,81 +361,76 @@
 <!-- ======================================================
                     CABEÇALHO
 ====================================================== -->
+<!-- ======================================================
+                    HERO
+====================================================== -->
 
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="receipt-hero mb-4">
+
+
+    <div class="hero-content">
+
+
+        <div>
+
+
+            <h1>
+
+                <i class="bi bi-person-badge-fill me-2"></i>
+
+                GESTÃO DE PROFESSORES
+
+            </h1>
 
 
 
-<div class="page-header">
 
 
-<h2 class="mb-1">
-
-Gestão de Professores
-
-</h2>
+        </div>
 
 
-<p class="text-muted mb-0">
 
-Corpo docente, disciplinas e distribuição académica
+        {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
 
-</p>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+
+            <a href="{% url 'atribuir_professor' %}"
+
+            class="btn btn-light rounded-3 px-4 shadow-sm">
+
+
+                Gerir Atribuições
+
+
+            </a>
+
+
+
+            <a href="{% url 'adicionar_professor' %}"
+
+            class="btn btn-success rounded-3 px-4 shadow-sm">
+
+
+                Adicionar Professor
+
+
+            </a>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+
+    </div>
 
 
 </div>
-
-
-
-
-
-
-{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
-
-
-
-<a href="{% url 'atribuir_professor' %}"
-
-class="btn btn-primary rounded-3 px-4 shadow-sm">
-
-
-Gerir Atribuições
-
-
-</a>
-
-
-
-
-
-<a href="{% url 'adicionar_professor' %}"
-
-class="btn btn-primary rounded-3 px-4 shadow-sm">
-
-
-Adicionar Professor
-
-
-</a>
-
-
-
-
-{% endif %}
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
 
 <!-- ======================================================
                     FILTROS

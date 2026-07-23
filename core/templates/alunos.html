@@ -156,13 +156,87 @@
     }
 
 }
+.receipt-hero{
 
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+.receipt-hero .hero-content{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    flex-wrap:wrap;
+
+}
+
+
+.receipt-hero h1{
+
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:10px;
+
+}
+
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+    margin:0;
+
+}
+
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+}
+
+.container-fluid{
+
+    padding-left:0 !important;
+    padding-right:0 !important;
+
+}
 
 </style>
 
 
 
-<div class="container-fluid">
+<div class="container-fluid px-0">
 
 
 
@@ -171,35 +245,34 @@
 ====================================================== -->
 
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="receipt-hero mb-4">
 
 
-<div>
+    <div class="hero-content">
 
 
-<h2 class="page-title mb-1">
-
-Lista de Alunos
-
-</h2>
+        <div>
 
 
-<p class="text-muted mb-0">
+            <h1>
 
-Gestão académica dos estudantes da instituição
+                <i class="bi bi-people-fill me-2"></i>
 
-</p>
+                LISTA DE ALUNOS
+
+            </h1>
+
+
+
+
+
+        </div>
+
+
+    </div>
 
 
 </div>
-
-
-
-</div>
-
-
-
-
 
 <!-- ======================================================
      INDICADORES

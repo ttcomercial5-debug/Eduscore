@@ -8,7 +8,7 @@
 <style>
 
 /* ==========================================================
-        EDUSCORE
+        EDUSCEL
         ATRIBUIÇÃO DE PROFESSORES
         PREMIUM ACADEMIC UI V2
 ========================================================== */
@@ -39,46 +39,6 @@ body{
 }
 
 
-
-/* HEADER */
-
-
-.page-header{
-
-    background:#ffffff;
-
-    border-radius:24px;
-
-    padding:35px;
-
-    border:1px solid #e9ecef;
-
-    box-shadow:
-    0 10px 35px rgba(15,23,42,.06);
-
-}
-
-
-
-.page-title{
-
-    font-size:2rem;
-
-    font-weight:800;
-
-    color:#183153;
-
-}
-
-
-
-.page-description{
-
-    color:#6c757d;
-
-    max-width:850px;
-
-}
 
 
 
@@ -314,6 +274,105 @@ body{
 }
 
 
+/* ======================================================
+   HERO PREMIUM - ATRIBUIÇÃO DE PROFESSORES
+====================================================== */
+
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+
+
+.receipt-hero .hero-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+}
+
+
+
+@media(max-width:768px){
+
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+
+}
+
+
+
+.container-fluid{
+
+    padding-left:0 !important;
+
+    padding-right:0 !important;
+
+}
 
 </style>
 
@@ -340,55 +399,56 @@ body{
 
 
 
-<!-- CABEÇALHO -->
+<!-- ======================================================
+                    HERO
+====================================================== -->
 
 
-<div class="page-header mb-4">
+<div class="receipt-hero mb-4">
 
 
-<div class="row align-items-center">
+    <div class="hero-content">
 
 
-<div class="col-lg-8">
+        <div>
 
 
-<h2 class="page-title mb-2">
+            <h1>
 
-Atribuição de Professores
+                <i class="bi bi-person-workspace me-2"></i>
 
-</h2>
+                ATRIBUIÇÃO DE PROFESSORES
 
-
-
-<p class="page-description mb-0">
-
-Organize o corpo docente associando professores às turmas e disciplinas do ano letivo.
-
-</p>
-
-
-</div>
+            </h1>
 
 
 
-<div class="col-lg-4 text-lg-end">
 
 
-<a href="{% url 'professores' %}"
-
-class="btn btn-outline-secondary btn-premium">
+        </div>
 
 
-Voltar aos Professores
 
 
-</a>
+        <div>
 
 
-</div>
+            <a href="{% url 'professores' %}"
+
+            class="btn btn-light rounded-3 px-4 shadow-sm">
 
 
-</div>
+                Voltar aos Professores
+
+
+            </a>
+
+
+        </div>
+
+
+
+    </div>
 
 
 </div>
