@@ -154,6 +154,217 @@ BUTTONS
     font-weight:600;
 }
 
+
+
+/* ==========================================================
+   EDUSCEL ALUNO
+   HISTÓRICO ACADÉMICO PREMIUM
+========================================================== */
+
+
+.page-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
+    color:white;
+
+    padding:30px;
+
+    border-radius:24px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+    0 20px 45px rgba(15,23,42,.18);
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+
+
+.page-header::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:260px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    border-radius:50%;
+
+    right:-90px;
+
+    top:-90px;
+
+}
+
+
+
+.page-header-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+
+
+.header-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:20px;
+
+    background:
+    rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:32px;
+
+    backdrop-filter:blur(10px);
+
+    border:
+    1px solid rgba(255,255,255,.2);
+
+}
+
+
+
+.page-title{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    margin:0;
+
+    letter-spacing:-.5px;
+
+}
+
+
+
+.page-subtitle{
+
+    margin-top:6px;
+
+    opacity:.85;
+
+    font-size:14px;
+
+}
+
+
+
+.card-custom{
+
+    border:none;
+
+    border-radius:22px;
+
+    box-shadow:
+    0 12px 35px rgba(15,23,42,.08);
+
+}
+
+
+
+.table{
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+}
+
+
+
+.table thead th{
+
+    font-weight:700;
+
+    padding:15px;
+
+}
+
+
+
+.table tbody td{
+
+    padding:15px;
+
+}
+
+
+
+.btn-pdf{
+
+    border-radius:12px;
+
+    font-weight:700;
+
+}
+
+
+
+@media(max-width:768px){
+
+    .page-header-content{
+
+        align-items:flex-start;
+
+    }
+
+
+    .page-title{
+
+        font-size:24px;
+
+    }
+
+
+    .header-icon{
+
+        width:55px;
+
+        height:55px;
+
+        font-size:26px;
+
+    }
+
+}
+
+
+
 </style>
 
 <div class="container-fluid page-wrapper">
@@ -162,7 +373,7 @@ BUTTONS
 <div class="page-header d-flex justify-content-between align-items-center flex-wrap">
 
     <div>
-        <h3 class="page-title">Histórico de Notas</h3>
+        <h3 class="page-title">HISTÓRICO DE NOTAS</h3>
         <div class="page-subtitle">Consulta de desempenho dos alunos</div>
     </div>
 

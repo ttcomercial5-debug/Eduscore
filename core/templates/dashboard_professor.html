@@ -4,32 +4,27 @@
 <style>
 
 /* ===========================================================
-                    DASHBOARD PROFESSOR PREMIUM
-                     EDUSCEL • ICA SYSTEMS
-===========================================================*/
+   EDUSCEL - DASHBOARD PROFESSOR PREMIUM
+   ICA SYSTEMS SaaS ERP
+=========================================================== */
+
 
 :root{
 
-    --primary:#0d6efd;
-    --primary-dark:#0b5ed7;
+    --edus-blue:#2563eb;
+    --edus-blue-dark:#1d4ed8;
+    --edus-green:#10b981;
+    --edus-orange:#f59e0b;
+    --edus-purple:#7c3aed;
 
-    --success:#198754;
+    --text:#0f172a;
+    --muted:#64748b;
 
-    --warning:#ffc107;
-
-    --danger:#dc3545;
-
-    --dark:#16213e;
-
-    --secondary:#64748b;
-
-    --border:#e9ecef;
-
-    --bg:#f4f7fb;
-
-    --white:#ffffff;
+    --bg:#f8fafc;
 
 }
+
+
 
 body{
 
@@ -37,1051 +32,2326 @@ body{
 
 }
 
-.dashboard-header{
+
+
+/* ===========================================================
+   CONTAINER
+=========================================================== */
+
+
+.professor-dashboard{
+
+    padding:25px 10px 50px;
+
+}
+
+
+
+/* ===========================================================
+   HERO PREMIUM
+=========================================================== */
+
+
+.hero-professor{
+
 
     background:
-        linear-gradient(135deg,#0f172a,#1d4ed8);
 
-    color:#fff;
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
 
-    border-radius:24px;
 
-    padding:35px;
+    border-radius:28px;
+
+
+    padding:38px;
+
+
+    color:white;
+
 
     position:relative;
 
+
     overflow:hidden;
 
+
     box-shadow:
-    0 20px 45px rgba(15,23,42,.18);
+
+    0 25px 60px rgba(15,23,42,.20);
+
 
     margin-bottom:30px;
 
+
 }
 
-.dashboard-header::before{
+
+
+.hero-professor::before{
+
 
     content:"";
 
+
     position:absolute;
 
-    width:260px;
 
-    height:260px;
+    width:340px;
 
-    background:rgba(255,255,255,.06);
+
+    height:340px;
+
+
+    right:-120px;
+
+
+    top:-130px;
+
+
+    background:
+
+    rgba(255,255,255,.10);
+
 
     border-radius:50%;
 
-    right:-80px;
-
-    top:-80px;
 
 }
 
-.dashboard-header::after{
+
+
+.hero-professor::after{
+
 
     content:"";
 
+
     position:absolute;
 
-    width:180px;
 
-    height:180px;
+    width:200px;
 
-    background:rgba(255,255,255,.05);
+
+    height:200px;
+
+
+    left:-80px;
+
+
+    bottom:-100px;
+
+
+    background:
+
+    rgba(255,255,255,.05);
+
 
     border-radius:50%;
 
-    right:120px;
-
-    bottom:-70px;
 
 }
 
-.header-content{
+
+
+.hero-content{
+
 
     position:relative;
 
+
     z-index:2;
 
-}
-
-.school-name{
-
-    font-size:32px;
-
-    font-weight:800;
-
-    margin-bottom:8px;
 
 }
 
-.header-content p{
+
+
+.hero-badge{
+
+
+    display:inline-flex;
+
+
+    align-items:center;
+
+
+    gap:8px;
+
+
+    padding:8px 16px;
+
+
+    border-radius:50px;
+
+
+    background:
+
+    rgba(255,255,255,.14);
+
+
+    font-size:13px;
+
 
     margin-bottom:15px;
 
-    opacity:.95;
-
-    font-size:15px;
 
 }
 
-.info-badges{
 
-    display:flex;
 
-    flex-wrap:wrap;
+.hero-title{
 
-    gap:12px;
 
-}
+    font-size:34px;
 
-.info-badge{
 
-    background:rgba(255,255,255,.14);
+    font-weight:900;
 
-    padding:10px 18px;
 
-    border-radius:12px;
+    letter-spacing:-.6px;
 
-    font-size:14px;
-
-    backdrop-filter:blur(10px);
-
-}
-
-.cards{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
-    gap:20px;
-
-    margin-bottom:35px;
-
-}
-
-.stat-card{
-
-    border:none;
-
-    border-radius:22px;
-
-    overflow:hidden;
-
-    transition:.35s;
-
-    box-shadow:
-    0 12px 30px rgba(0,0,0,.08);
-
-    color:#fff;
-
-}
-
-.stat-card:hover{
-
-    transform:translateY(-8px);
-
-}
-
-.stat-body{
-
-    padding:28px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
-
-.stat-title{
-
-    font-size:15px;
-
-    opacity:.95;
 
     margin-bottom:8px;
 
-}
-
-.stat-value{
-
-    font-size:38px;
-
-    font-weight:800;
 
 }
 
-.stat-icon{
 
-    width:70px;
 
-    height:70px;
+.hero-description{
 
-    border-radius:20px;
 
-    background:rgba(255,255,255,.15);
+    max-width:650px;
+
+
+    font-size:15px;
+
+
+    opacity:.88;
+
+
+    line-height:1.7;
+
+
+}
+
+
+
+/* ===========================================================
+   INFORMAÇÕES DO HERO
+=========================================================== */
+
+
+.hero-info{
+
 
     display:flex;
 
-    align-items:center;
 
-    justify-content:center;
+    flex-wrap:wrap;
 
-    font-size:28px;
+
+    gap:12px;
+
+
+    margin-top:20px;
+
 
 }
 
-.card-blue{
+
+
+.hero-info-item{
+
 
     background:
-    linear-gradient(135deg,#2563eb,#1d4ed8);
 
-}
+    rgba(255,255,255,.12);
 
-.card-green{
 
-    background:
-    linear-gradient(135deg,#10b981,#059669);
+    border:
 
-}
+    1px solid rgba(255,255,255,.15);
 
-.card-purple{
 
-    background:
-    linear-gradient(135deg,#7c3aed,#6d28d9);
+    padding:10px 16px;
 
-}
-
-.card-orange{
-
-    background:
-    linear-gradient(135deg,#f59e0b,#d97706);
-
-}
-
-.card-premium{
-
-    background:#fff;
-
-    border:none;
-
-    border-radius:22px;
-
-    box-shadow:
-    0 12px 35px rgba(0,0,0,.07);
-
-}
-
-.card-premium .card-header{
-
-    background:#fff;
-
-    border-bottom:1px solid var(--border);
-
-    padding:20px 25px;
-
-}
-
-.card-premium .card-body{
-
-    padding:25px;
-
-}
-
-.form-select{
-
-    height:52px;
 
     border-radius:14px;
 
-    font-weight:500;
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    font-size:13px;
+
+
+    backdrop-filter:blur(8px);
+
 
 }
 
-.section-title{
 
-    font-size:20px;
+.hero-info-item i{
+
+
+    font-size:18px;
+
+
+}
+
+
+
+/* ===========================================================
+   KPI CARDS
+=========================================================== */
+
+
+.kpi-grid{
+
+
+    display:grid;
+
+
+    grid-template-columns:
+
+    repeat(auto-fit,minmax(230px,1fr));
+
+
+    gap:20px;
+
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+.kpi-card{
+
+
+    border:none;
+
+
+    border-radius:22px;
+
+
+    padding:25px;
+
+
+    color:white;
+
+
+    position:relative;
+
+
+    overflow:hidden;
+
+
+    transition:.3s;
+
+
+    box-shadow:
+
+    0 12px 30px rgba(15,23,42,.10);
+
+
+}
+
+
+
+.kpi-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+}
+
+
+
+.kpi-card::after{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:130px;
+
+
+    height:130px;
+
+
+    right:-40px;
+
+
+    top:-40px;
+
+
+    background:
+
+    rgba(255,255,255,.10);
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+.kpi-blue{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+
+}
+
+
+
+.kpi-green{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #10b981,
+        #059669
+    );
+
+
+}
+
+
+
+.kpi-purple{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #8b5cf6,
+        #6d28d9
+    );
+
+
+}
+
+
+
+.kpi-orange{
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #f59e0b,
+        #d97706
+    );
+
+
+}
+
+
+
+.kpi-content{
+
+
+    position:relative;
+
+
+    z-index:2;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+}
+
+
+
+.kpi-title{
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.8px;
+
+
+    opacity:.85;
+
+
+}
+
+
+
+.kpi-number{
+
+
+    font-size:36px;
+
+
+    font-weight:900;
+
+
+    margin-top:8px;
+
+
+}
+
+
+
+.kpi-icon{
+
+
+    width:60px;
+
+
+    height:60px;
+
+
+    border-radius:18px;
+
+
+    background:
+
+    rgba(255,255,255,.16);
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:26px;
+
+
+}
+
+
+/* ===========================================================
+   CARDS PRINCIPAIS
+=========================================================== */
+
+
+.content-card{
+
+
+    background:white;
+
+
+    border:none;
+
+
+    border-radius:24px;
+
+
+    box-shadow:
+
+
+    0 12px 35px rgba(15,23,42,.07);
+
+
+    overflow:hidden;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+.content-header{
+
+
+    padding:24px 28px;
+
+
+    border-bottom:
+
+
+    1px solid #eef2f7;
+
+
+}
+
+
+
+.content-header h5{
+
+
+    margin:0;
+
+
+    font-weight:800;
+
+
+    color:var(--text);
+
+
+}
+
+
+
+.content-header p{
+
+
+    margin:5px 0 0;
+
+
+    color:var(--muted);
+
+
+    font-size:14px;
+
+
+}
+
+
+
+.content-body{
+
+
+    padding:28px;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   SELECT TURMA
+=========================================================== */
+
+
+.form-label{
+
 
     font-weight:700;
 
-    color:#1e293b;
+
+    color:#334155;
+
+
+}
+
+
+
+.form-select{
+
+
+    height:52px;
+
+
+    border-radius:14px;
+
+
+    border:1px solid #e2e8f0;
+
+
+    font-weight:500;
+
+
+}
+
+
+
+.btn-primary{
+
+
+    border-radius:14px;
+
+
+    padding:13px 25px;
+
+
+    font-weight:700;
+
+
+    background:#2563eb;
+
+
+    border:none;
+
+
+}
+
+
+
+.btn-primary:hover{
+
+
+    background:#1d4ed8;
+
+
+}
+
+
+
+/* ===========================================================
+   RESUMO TURMA
+=========================================================== */
+
+
+.summary-card{
+
+
+    background:white;
+
+
+    border-radius:20px;
+
+
+    padding:22px;
+
+
+    height:100%;
+
+
+    box-shadow:
+
+
+    0 10px 25px rgba(15,23,42,.06);
+
+
+}
+
+
+
+.summary-label{
+
+
+    color:#64748b;
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+.summary-value{
+
+
+    font-size:20px;
+
+
+    font-weight:800;
+
+
+    color:#0f172a;
+
+
+    margin-top:8px;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   DISCIPLINAS
+=========================================================== */
+
+
+.discipline-card{
+
+
+    background:white;
+
+
+    border-radius:24px;
+
+
+    overflow:hidden;
+
+
+    box-shadow:
+
+
+    0 12px 30px rgba(15,23,42,.07);
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+.discipline-header{
+
+
+    padding:22px 28px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+    border-bottom:
+
+
+    1px solid #eef2f7;
+
+
+}
+
+
+
+.discipline-header h5{
+
+
+    font-weight:800;
+
+
+    margin:0;
+
+
+}
+
+
+
+.discipline-header small{
+
+
+    color:#64748b;
+
+
+}
+
+
+
+.table{
+
+
+    margin:0;
+
+
+}
+
+
+
+.table thead th{
+
+
+    background:#f8fafc;
+
+
+    color:#475569;
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.5px;
+
+
+    padding:16px;
+
+
+    border:none;
+
+
+}
+
+
+
+.table tbody td{
+
+
+    padding:16px;
+
+
+    border-bottom:
+
+
+    1px solid #f1f5f9;
+
+
+}
+
+
+
+.table tbody tr{
+
+
+    transition:.2s;
+
+
+}
+
+
+
+.table tbody tr:hover{
+
+
+    background:#f8fbff;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   ALUNO AVATAR
+=========================================================== */
+
+
+.student-avatar{
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    border-radius:50%;
+
+
+    background:#dbeafe;
+
+
+    color:#2563eb;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-weight:800;
+
+
+    margin-right:12px;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   BADGES
+=========================================================== */
+
+
+.badge{
+
+
+    padding:8px 14px;
+
+
+    border-radius:50px;
+
+
+    font-weight:700;
+
+
+    font-size:12px;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   SEGURANÇA
+=========================================================== */
+
+
+.security-card{
+
+
+    background:white;
+
+
+    border-radius:22px;
+
+
+    padding:25px;
+
+
+    box-shadow:
+
+
+    0 10px 30px rgba(15,23,42,.07);
+
+
+}
+
+
+
+.security-icon{
+
+
+    width:60px;
+
+
+    height:60px;
+
+
+    border-radius:18px;
+
+
+    background:#fef3c7;
+
+
+    color:#d97706;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:25px;
+
+
+}
+
+
+
+
+
+/* ===========================================================
+   RESPONSIVO
+=========================================================== */
+
+
+@media(max-width:768px){
+
+
+    .professor-dashboard{
+
+
+        padding:10px 5px 40px;
+
+
+    }
+
+
+
+    .hero-professor{
+
+
+        padding:25px;
+
+
+    }
+
+
+
+    .hero-title{
+
+
+        font-size:26px;
+
+
+    }
+
+
+
+    .hero-info-item{
+
+
+        width:100%;
+
+
+    }
+
+
+
+    .kpi-number{
+
+
+        font-size:30px;
+
+
+    }
+
+
 
 }
 
 </style>
 
-<div class="container-fluid py-4">
+
+
+
+
+<div class="container-fluid professor-dashboard">
+
+
 
 <!-- ===========================================================
-                        HEADER
-===========================================================-->
+                         HERO
+=========================================================== -->
 
-<div class="dashboard-header">
 
-    <div class="header-content">
+<div class="hero-professor">
 
-        <div class="school-name">
 
-            {{ escola_nome }}
+<div class="hero-content">
 
-        </div>
 
-        <p>
+<div class="hero-badge">
 
-            Bem-vindo(a),
 
-            <strong>
+<i class="bi bi-person-workspace"></i>
 
-                {{ request.user.get_full_name|default:request.user.username }}
 
-            </strong>
+PAINEL DO PROFESSOR
 
-        </p>
-
-        <div class="info-badges">
-
-            <div class="info-badge">
-
-                <strong>Ano Letivo:</strong>
-
-                {% if ano_letivo %}
-
-                    {{ ano_letivo.nome }}
-
-                {% else %}
-
-                    Não definido
-
-                {% endif %}
-
-            </div>
-
-            <div class="info-badge">
-
-                Professor
-
-            </div>
-
-        </div>
-
-    </div>
 
 </div>
 
-<!-- ===========================================================
-                        KPI
-===========================================================-->
 
-<div class="cards">
 
-    <div class="stat-card card-blue">
 
-        <div class="stat-body">
+<h1 class="hero-title">
 
-            <div>
 
-                <div class="stat-title">
+{{ escola_nome }}
 
-                    Turmas
 
-                </div>
+</h1>
 
-                <div class="stat-value">
 
-                    {{ total_turmas }}
 
-                </div>
 
-            </div>
+<p class="hero-description">
 
-            <div class="stat-icon">
 
-                <i class="bi bi-easel2-fill"></i>
+Bem-vindo Professor(a),
 
-            </div>
+<strong>
 
-        </div>
+{{ request.user.get_full_name|default:request.user.username }}
 
-    </div>
+</strong>
 
-    <div class="stat-card card-green">
 
-        <div class="stat-body">
 
-            <div>
 
-                <div class="stat-title">
+</p>
 
-                    Alunos
 
-                </div>
 
-                <div class="stat-value">
 
-                    {{ total_alunos }}
+<div class="hero-info">
 
-                </div>
 
-            </div>
 
-            <div class="stat-icon">
+<div class="hero-info-item">
 
-                <i class="bi bi-people-fill"></i>
 
-            </div>
+<i class="bi bi-calendar-check"></i>
 
-        </div>
 
-    </div>
+<div>
 
-    <div class="stat-card card-purple">
 
-        <div class="stat-body">
+<strong>Ano Letivo:</strong>
 
-            <div>
 
-                <div class="stat-title">
+{% if ano_letivo %}
 
-                    Disciplinas
-
-                </div>
-
-                <div class="stat-value">
-
-                    {{ total_disciplinas }}
-
-                </div>
-
-            </div>
-
-            <div class="stat-icon">
-
-                <i class="bi bi-journal-bookmark-fill"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="stat-card card-orange">
-
-        <div class="stat-body">
-
-            <div>
-
-                <div class="stat-title">
-
-                    Ano Letivo
-
-                </div>
-
-                <div class="stat-value" style="font-size:22px;">
-
-                    {% if ano_letivo %}
-                        {{ ano_letivo.nome }}
-                    {% else %}
-                        —
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-            <div class="stat-icon">
-
-                <i class="bi bi-calendar-check-fill"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
- <!-- ==========================================================
-                    FILTRO DA TURMA
-========================================================== -->
-
-<div class="card card-premium mb-4">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-
-        <div>
-
-            <h5 class="section-title mb-1">
-
-                Seleção da Turma
-
-            </h5>
-
-            <small class="text-muted">
-
-                Escolha uma turma para visualizar as disciplinas e o desempenho dos alunos.
-
-            </small>
-
-        </div>
-
-    </div>
-
-    <div class="card-body">
-
-        <form method="GET">
-
-            <div class="row align-items-end g-3">
-
-                <div class="col-lg-10">
-
-                    <label class="form-label fw-semibold">
-
-                        Turma
-
-                    </label>
-
-                    <select
-
-                        name="turma"
-
-                        class="form-select"
-
-                        onchange="this.form.submit()"
-
-                    >
-
-                        <option value="">
-
-                            Selecione uma turma
-
-                        </option>
-
-                        {% for turma in turmas %}
-
-                        <option
-
-                            value="{{ turma.id }}"
-
-                            {% if turma_selecionada and turma.id == turma_selecionada.id %}
-
-                                selected
-
-                            {% endif %}
-
-                        >
-
-                            {{ turma.classe }}ª
-
-                            {{ turma.identificador }}
-
-                            —
-
-                            {% if turma.curso %}
-                                {{ turma.curso.nome }}
-                            {% else %}
-                                Curso Geral
-                            {% endif %}
-
-                            —
-
-                            {{ turma.turno }}
-
-                        </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-                <div class="col-lg-2 d-grid">
-
-                    <button class="btn btn-primary">
-
-                        <i class="bi bi-search me-2"></i>
-
-                        Visualizar
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ==========================================================
-                RESUMO DA TURMA
-========================================================== -->
-
-{% if turma_selecionada %}
-
-<div class="row g-4 mb-4">
-
-    <div class="col-lg-3">
-
-        <div class="card card-premium h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    Turma
-
-                </small>
-
-                <h5 class="fw-bold mt-2">
-
-                    {{ turma_selecionada }}
-
-                </h5>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3">
-
-        <div class="card card-premium h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    Curso
-
-                </small>
-
-                <h5 class="fw-bold mt-2">
-
-                    {% if turma_selecionada.curso %}
-
-                        {{ turma_selecionada.curso.nome }}
-
-                    {% else %}
-
-                        Geral
-
-                    {% endif %}
-
-                </h5>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3">
-
-        <div class="card card-premium h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    Turno
-
-                </small>
-
-                <h5 class="fw-bold mt-2">
-
-                    {{ turma_selecionada.turno }}
-
-                </h5>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-lg-3">
-
-        <div class="card card-premium h-100">
-
-            <div class="card-body">
-
-                <small class="text-muted">
-
-                    Ano Letivo
-
-                </small>
-
-                <h5 class="fw-bold mt-2">
-
-                    {{ turma_selecionada.ano_letivo }}
-
-                </h5>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
+{{ ano_letivo.nome }}
 
 {% else %}
 
-<div class="alert alert-primary border-0 shadow-sm">
-
-    <div class="d-flex align-items-center">
-
-        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-
-        <div>
-
-            <strong>
-
-                Nenhuma turma selecionada.
-
-            </strong>
-
-            <br>
-
-            Selecione uma turma acima para visualizar as disciplinas, alunos e médias finais.
-
-        </div>
-
-    </div>
-
-</div>
+Não definido
 
 {% endif %}
-<!-- ==========================================================
-                    DISCIPLINAS
-========================================================== -->
 
-{% for disciplina in disciplinas %}
-
-<div class="card card-premium mb-4">
-
-    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-
-        <div>
-
-            <h5 class="fw-bold mb-1">
-
-                {{ disciplina.nome }}
-
-            </h5>
-
-            <small class="text-muted">
-
-                Relação de alunos e desempenho académico
-
-            </small>
-
-        </div>
-
-        <span class="badge bg-primary rounded-pill px-3 py-2">
-
-            {{ disciplina.alunos|length }} aluno{{ disciplina.alunos|length|pluralize }}
-
-        </span>
-
-    </div>
-
-    <div class="card-body p-0">
-
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle mb-0">
-
-                <thead class="table-dark">
-
-                    <tr>
-
-                        <th style="width:70px">
-
-                            #
-
-                        </th>
-
-                        <th>
-
-                            Aluno
-
-                        </th>
-
-                        <th>
-
-                            Nº Processo
-
-                        </th>
-
-                        <th class="text-center">
-
-                            Média Final
-
-                        </th>
-
-                        <th class="text-center">
-
-                            Situação
-
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for aluno in disciplina.alunos %}
-
-                    <tr>
-
-                        <td class="fw-bold">
-
-                            {{ forloop.counter }}
-
-                        </td>
-
-                        <td>
-
-                            <div class="d-flex align-items-center">
-
-                                <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-3"
-
-                                     style="width:42px;height:42px;font-weight:700;">
-
-                                    {{ aluno.nome|first|upper }}
-
-                                </div>
-
-                                <div>
-
-                                    <div class="fw-semibold">
-
-                                        {{ aluno.nome }}
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                        <td>
-
-                            <span class="badge bg-light text-dark border px-3 py-2">
-
-                                {{ aluno.numero_processo }}
-
-                            </span>
-
-                        </td>
-
-                        <td class="text-center">
-
-                            {% if aluno.media_final != None %}
-
-                                <span class="fw-bold fs-5">
-
-                                    {{ aluno.media_final }}
-
-                                </span>
-
-                            {% else %}
-
-                                <span class="text-muted">
-
-                                    —
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td class="text-center">
-
-                            {% if aluno.media_final != None %}
-
-                                {% if aluno.media_final >= 10 %}
-
-                                    <span class="badge bg-success rounded-pill px-3 py-2">
-
-                                        Aprovado
-
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge bg-danger rounded-pill px-3 py-2">
-
-                                        Reprovado
-
-                                    </span>
-
-                                {% endif %}
-
-                            {% else %}
-
-                                <span class="badge bg-secondary rounded-pill px-3 py-2">
-
-                                    Sem Avaliação
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
-                {% empty %}
-
-                    <tr>
-
-                        <td colspan="5" class="text-center py-5">
-
-                            <div class="text-muted">
-
-                                Nenhum aluno encontrado nesta disciplina.
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
 
 </div>
 
-{% empty %}
+
+</div>
+
+
+
+
+
+<div class="hero-info-item">
+
+
+<i class="bi bi-mortarboard-fill"></i>
+
+
+Professor:
+{{ request.user.get_full_name|default:request.user.username }}
+
+</div>
+
+
+
+
+
+<div class="hero-info-item">
+
+
+<i class="bi bi-building"></i>
+
+
+EdusCel
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- ===========================================================
+                         KPI
+=========================================================== -->
+
+
+<div class="kpi-grid">
+
+
+
+<div class="kpi-card kpi-blue">
+
+
+<div class="kpi-content">
+
+
+<div>
+
+
+<div class="kpi-title">
+
+Turmas
+
+</div>
+
+
+<div class="kpi-number">
+
+{{ total_turmas }}
+
+</div>
+
+
+</div>
+
+
+<div class="kpi-icon">
+
+
+<i class="bi bi-easel2-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="kpi-card kpi-green">
+
+
+<div class="kpi-content">
+
+
+<div>
+
+
+<div class="kpi-title">
+
+Alunos
+
+</div>
+
+
+<div class="kpi-number">
+
+{{ total_alunos }}
+
+</div>
+
+
+</div>
+
+
+<div class="kpi-icon">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="kpi-card kpi-purple">
+
+
+<div class="kpi-content">
+
+
+<div>
+
+
+<div class="kpi-title">
+
+Disciplinas
+
+</div>
+
+
+<div class="kpi-number">
+
+{{ total_disciplinas }}
+
+</div>
+
+
+</div>
+
+
+<div class="kpi-icon">
+
+
+<i class="bi bi-journal-bookmark-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="kpi-card kpi-orange">
+
+
+<div class="kpi-content">
+
+
+<div>
+
+
+<div class="kpi-title">
+
+Ano Letivo
+
+</div>
+
+
+<div class="kpi-number" style="font-size:22px;">
+
+
+{% if ano_letivo %}
+
+{{ ano_letivo.nome }}
+
+{% else %}
+
+—
+
+{% endif %}
+
+
+</div>
+
+
+</div>
+
+
+<div class="kpi-icon">
+
+
+<i class="bi bi-calendar-check-fill"></i>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+<!-- ===========================================================
+                    SELEÇÃO DA TURMA
+=========================================================== -->
+
+
+<div class="content-card">
+
+
+<div class="content-header">
+
+
+<h5>
+
+<i class="bi bi-search text-primary me-2"></i>
+
+Selecionar Turma
+
+</h5>
+
+
+<p>
+
+Escolha uma turma para visualizar disciplinas e desempenho académico.
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="content-body">
+
+
+<form method="GET">
+
+
+<div class="row g-3 align-items-end">
+
+
+<div class="col-lg-10">
+
+
+<label class="form-label">
+
+Turma
+
+</label>
+
+
+<select
+
+name="turma"
+
+class="form-select"
+
+
+>
+
+
+<option value="">
+
+
+Selecione uma turma
+
+
+</option>
+
+
+
+{% for turma in turmas %}
+
+
+<option
+
+value="{{ turma.id }}"
+
+
+{% if turma_selecionada and turma.id == turma_selecionada.id %}
+
+selected
+
+{% endif %}
+
+
+>
+
+
+{{ turma.classe }}ª
+
+{{ turma.identificador }}
+
+
+{% if turma.curso %}
+
+- {{ turma.curso.nome }}
+
+{% else %}
+
+- Curso Geral
+
+{% endif %}
+
+
+- {{ turma.turno }}
+
+
+
+</option>
+
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-2 d-grid">
+
+
+<button class="btn btn-primary">
+
+
+<i class="bi bi-eye me-2"></i>
+
+
+Visualizar
+
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+</form>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- ===========================================================
+                    RESUMO DA TURMA
+=========================================================== -->
+
 
 {% if turma_selecionada %}
 
-<div class="card card-premium">
 
-    <div class="card-body text-center py-5">
 
-        <i class="bi bi-journal-x fs-1 text-muted"></i>
+<div class="row g-4 mb-4">
 
-        <h5 class="mt-3 fw-bold">
 
-            Nenhuma disciplina encontrada
+<div class="col-lg-3 col-md-6">
 
-        </h5>
 
-        <p class="text-muted mb-0">
+<div class="summary-card">
 
-            Ainda não existem disciplinas associadas à turma selecionada.
 
-        </p>
+<div class="summary-label">
 
-    </div>
+Turma
 
 </div>
+
+
+<div class="summary-value">
+
+{{ turma_selecionada }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="summary-card">
+
+
+<div class="summary-label">
+
+Curso
+
+</div>
+
+
+<div class="summary-value">
+
+
+{% if turma_selecionada.curso %}
+
+{{ turma_selecionada.curso.nome }}
+
+{% else %}
+
+Geral
 
 {% endif %}
 
-{% endfor %}
-<!-- ==========================================================
-                    SEGURANÇA DA CONTA
-========================================================== -->
-
-<div class="row mt-4">
-
-    <div class="col-lg-6 col-xl-5">
-
-        <a href="{% url 'alterar_senha' %}"
-           class="text-decoration-none">
-
-            <div class="card card-premium h-100 border-0">
-
-                <div class="card-body p-4">
-
-                    <div class="d-flex align-items-center">
-
-                        <div class="rounded-circle bg-warning bg-opacity-10
-                                    d-flex align-items-center justify-content-center me-3"
-                             style="width:64px;height:64px;">
-
-                            <i class="bi bi-shield-lock-fill
-                                      text-warning fs-2"></i>
-
-                        </div>
-
-                        <div class="flex-grow-1">
-
-                            <h5 class="fw-bold mb-1 text-dark">
-
-                                Segurança da Conta
-
-                            </h5>
-
-                            <p class="text-muted mb-3">
-
-                                Atualize periodicamente a sua palavra-passe
-                                para manter a conta protegida.
-
-                            </p>
-
-                            <span class="btn btn-warning">
-
-                                Alterar Palavra-passe
-
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </a>
-
-    </div>
 
 </div>
 
-<!-- ==========================================================
-                    JAVASCRIPT
-========================================================== -->
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="summary-card">
+
+
+<div class="summary-label">
+
+Turno
+
+</div>
+
+
+<div class="summary-value">
+
+
+{{ turma_selecionada.turno }}
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="summary-card">
+
+
+<div class="summary-label">
+
+Ano Letivo
+
+</div>
+
+
+<div class="summary-value">
+
+
+{{ turma_selecionada.ano_letivo }}
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% else %}
+
+
+
+<div class="alert alert-primary border-0 rounded-4 shadow-sm">
+
+
+<i class="bi bi-info-circle-fill me-2"></i>
+
+
+<strong>
+
+Nenhuma turma selecionada.
+
+</strong>
+
+
+Selecione uma turma acima para consultar os dados académicos.
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+
+
+
+
+<!-- ===========================================================
+                    DISCIPLINAS
+=========================================================== -->
+
+
+{% for disciplina in disciplinas %}
+
+
+
+<div class="discipline-card">
+
+
+
+<div class="discipline-header">
+
+
+<div>
+
+
+<h5>
+
+
+{{ disciplina.nome }}
+
+
+</h5>
+
+
+<small>
+
+
+Desempenho académico dos alunos
+
+
+</small>
+
+
+</div>
+
+
+
+<span class="badge bg-primary">
+
+
+{{ disciplina.alunos|length }}
+
+Aluno{{ disciplina.alunos|length|pluralize }}
+
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle">
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+#
+
+</th>
+
+
+<th>
+
+Aluno
+
+</th>
+
+
+<th>
+
+Número Processo
+
+</th>
+
+
+<th class="text-center">
+
+Média Final
+
+</th>
+
+
+<th class="text-center">
+
+Situação
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody>
+
+
+
+{% for aluno in disciplina.alunos %}
+
+
+
+<tr>
+
+
+
+<td class="fw-bold">
+
+
+{{ forloop.counter }}
+
+
+</td>
+
+
+
+
+<td>
+
+
+<div class="d-flex align-items-center">
+
+
+
+<div class="student-avatar">
+
+
+{{ aluno.nome|first|upper }}
+
+
+</div>
+
+
+
+<div>
+
+
+<strong>
+
+
+{{ aluno.nome }}
+
+
+</strong>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-light text-dark border">
+
+
+{{ aluno.numero_processo }}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+{% if aluno.media_final != None %}
+
+
+<strong class="fs-5">
+
+
+{{ aluno.media_final }}
+
+
+</strong>
+
+
+{% else %}
+
+
+<span class="text-muted">
+
+—
+
+</span>
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td class="text-center">
+
+
+
+{% if aluno.media_final != None %}
+
+
+
+{% if aluno.media_final >= 10 %}
+
+
+
+<span class="badge bg-success">
+
+
+Aprovado
+
+
+</span>
+
+
+
+{% else %}
+
+
+
+<span class="badge bg-danger">
+
+
+Reprovado
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+
+{% else %}
+
+
+
+<span class="badge bg-secondary">
+
+
+Sem Avaliação
+
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="5" class="text-center py-5 text-muted">
+
+
+Nenhum aluno encontrado nesta disciplina.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+{% empty %}
+
+
+
+{% if turma_selecionada %}
+
+
+
+<div class="content-card">
+
+
+<div class="content-body text-center py-5">
+
+
+<i class="bi bi-journal-x fs-1 text-muted"></i>
+
+
+<h5 class="fw-bold mt-3">
+
+
+Nenhuma disciplina encontrada
+
+
+</h5>
+
+
+<p class="text-muted">
+
+
+Não existem disciplinas associadas a esta turma.
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+{% endfor %}
+
+
+
+
+
+
+
+
+<!-- ===========================================================
+                    SEGURANÇA
+=========================================================== -->
+
+
+<div class="row mt-4">
+
+
+<div class="col-lg-6">
+
+
+<a href="{% url 'alterar_senha' %}"
+
+class="text-decoration-none">
+
+
+
+<div class="security-card">
+
+
+
+<div class="d-flex align-items-center">
+
+
+
+<div class="security-icon me-3">
+
+
+<i class="bi bi-shield-lock-fill"></i>
+
+
+</div>
+
+
+
+
+<div>
+
+
+
+<h5 class="fw-bold text-dark">
+
+
+Segurança da Conta
+
+
+</h5>
+
+
+
+<p class="text-muted mb-3">
+
+
+Atualize a sua palavra-passe para manter a conta protegida.
+
+
+</p>
+
+
+
+<span class="btn btn-warning">
+
+
+Alterar Palavra-passe
+
+
+</span>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
 
-    // Ativa tooltips do Bootstrap (caso existam)
-    const tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
+document.addEventListener(
+"DOMContentLoaded",
+function(){
 
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+
+const tooltipTriggerList = document.querySelectorAll(
+'[data-bs-toggle="tooltip"]'
+);
+
+
+tooltipTriggerList.forEach(function(el){
+
+
+new bootstrap.Tooltip(el);
+
 
 });
 
+
+});
+
+
 </script>
+
+
 
 {% endblock %}

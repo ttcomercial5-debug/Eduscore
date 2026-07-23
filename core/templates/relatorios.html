@@ -1,175 +1,781 @@
 {% extends "base_professor.html" %}
 {% block content %}
 
+
 <style>
 
-.page-header{
-    background: linear-gradient(135deg,#4338ca,#6366f1);
+/* ==========================================================
+   EDUSCEL PROFESSOR
+   RELATÓRIOS ESTATÍSTICOS PREMIUM SaaS
+========================================================== */
+
+
+:root{
+
+    --primary:#2563eb;
+    --secondary:#1e40af;
+    --dark:#0f172a;
+    --background:#f8fafc;
+
+}
+
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+
+.hero{
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
+
     color:white;
-    padding:20px;
-    border-radius:16px;
-    margin-bottom:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
 
-.kpi-card{
-    background:white;
-    border-radius:14px;
-    padding:15px;
-    text-align:center;
-    box-shadow:0 5px 15px rgba(0,0,0,.06);
-}
+    padding:32px;
 
-.kpi-number{
-    font-size:24px;
-    font-weight:800;
-    color:#4338ca;
-}
+    border-radius:26px;
 
-.table-card{
-    background:white;
-    border-radius:16px;
-    box-shadow:0 5px 15px rgba(0,0,0,.06);
+    margin-bottom:25px;
+
+    box-shadow:
+
+    0 20px 50px rgba(15,23,42,.18);
+
+    position:relative;
+
     overflow:hidden;
+
 }
 
-.badge-ok{
-    background:#22c55e;
-    color:white;
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:12px;
+
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:280px;
+
+    height:280px;
+
+    right:-100px;
+
+    top:-100px;
+
+    background:
+
+    rgba(255,255,255,.10);
+
+    border-radius:50%;
+
 }
 
-.badge-bad{
-    background:#ef4444;
-    color:white;
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:12px;
+
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
 }
+
+
+
+.hero-title{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    margin:0;
+
+    letter-spacing:-.5px;
+
+}
+
+
+
+.hero-subtitle{
+
+    margin-top:8px;
+
+    opacity:.85;
+
+    font-size:14px;
+
+}
+
+
+
+/* ==========================================================
+   HERO ICON
+========================================================== */
+
+
+.hero-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+
+    rgba(255,255,255,.15);
+
+    border:
+
+    1px solid rgba(255,255,255,.20);
+
+    font-size:32px;
+
+}
+
+
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
 
 .btn-pdf{
-    background:#dc2626;
-    color:white;
+
+    background:white;
+
+    color:#dc2626;
+
     border:none;
-    padding:8px 14px;
-    border-radius:10px;
+
+    padding:11px 18px;
+
+    border-radius:12px;
+
+    font-weight:800;
+
+    transition:.25s;
+
 }
 
+
+
 .btn-pdf:hover{
-    opacity:.9;
-    color:white;
+
+    transform:translateY(-3px);
+
+    color:#b91c1c;
+
 }
+
+
+
+/* ==========================================================
+   KPI CARDS
+========================================================== */
+
+
+.kpi-card{
+
+    background:white;
+
+    border:none;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.07);
+
+    transition:.25s;
+
+}
+
+
+
+.kpi-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.kpi-number{
+
+    font-size:28px;
+
+    font-weight:900;
+
+    color:#2563eb;
+
+}
+
+
+
+.kpi-label{
+
+    color:#64748b;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+
+.table-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    0 12px 35px rgba(15,23,42,.08);
+
+}
+
+
+
+.table{
+
+    margin:0;
+
+}
+
+
+
+.table thead th{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:16px;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+}
+
+
+
+.table tbody td{
+
+    padding:16px;
+
+    vertical-align:middle;
+
+}
+
+
+
+.table tbody tr{
+
+    transition:.25s;
+
+}
+
+
+
+.table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+
+.badge-ok{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    padding:7px 14px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+.badge-bad{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+    padding:7px 14px;
+
+    border-radius:50px;
+
+    font-size:12px;
+
+    font-weight:800;
+
+}
+
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+    .hero{
+
+        padding:25px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:24px;
+
+    }
+
+
+    .hero-content{
+
+        align-items:flex-start;
+
+    }
+
+
+}
+
+
 
 </style>
 
-<div class="container-fluid">
 
-    <!-- HEADER -->
-    <div class="page-header d-flex justify-content-between align-items-center">
 
-        <div>
-            <h4 class="mb-0">Relatórios Estatísticos</h4>
-            <small>Ano Letivo: {{ ano_letivo }}</small>
-        </div>
 
-        <a href="?export=pdf" class="btn btn-pdf">
-            📄 Gerar PDF
-        </a>
+<div class="container-fluid py-4">
 
-    </div>
 
-    <!-- KPIs -->
-    <div class="row mb-3">
 
-        <div class="col-md-3">
-            <div class="kpi-card">
-                <div class="kpi-number">{{ total_turmas }}</div>
-                <small>Turmas</small>
-            </div>
-        </div>
+<!-- ==========================================================
+     HERO
+========================================================== -->
 
-        <div class="col-md-3">
-            <div class="kpi-card">
-                <div class="kpi-number">{{ total_alunos_geral }}</div>
-                <small>Alunos</small>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="kpi-card">
-                <div class="kpi-number">{{ media_global }}</div>
-                <small>Média Geral</small>
-            </div>
-        </div>
+<div class="hero">
 
-        <div class="col-md-3">
-            <div class="kpi-card">
-                <div class="kpi-number">{{ percent_global }}%</div>
-                <small>Aprovação</small>
-            </div>
-        </div>
 
-    </div>
+<div class="hero-content">
 
-    <!-- TABLE -->
-    <div class="table-card">
 
-        <table class="table mb-0">
 
-            <thead class="table-dark">
-                <tr>
-                    <th>Turma</th>
-                    <th>Alunos</th>
-                    <th>Média</th>
-                    <th>Aprovados</th>
-                    <th>%</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+<div class="d-flex align-items-center gap-3">
 
-            <tbody>
 
-                {% for item in dados %}
+<div class="hero-icon">
 
-                <tr>
-
-                    <td>
-                        <strong>{{ item.turma }}</strong>
-                    </td>
-
-                    <td>{{ item.total_alunos }}</td>
-                    <td>{{ item.media }}</td>
-                    <td>{{ item.total_aprovados }}</td>
-                    <td>{{ item.percentagem }}%</td>
-
-                    <td>
-                        {% if item.percentagem >= 50 %}
-                            <span class="badge-ok">Bom</span>
-                        {% else %}
-                            <span class="badge-bad">Fraco</span>
-                        {% endif %}
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-                    <td colspan="6" class="text-center p-4 text-muted">
-                        Nenhum dado encontrado
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
+<i class="bi bi-bar-chart-fill"></i>
 
 </div>
+
+
+
+<div>
+
+
+<h3 class="hero-title">
+
+RELATÓRIOS ESTATÍSTICO
+
+</h3>
+
+
+
+<div class="hero-subtitle">
+
+Ano Letivo: {{ ano_letivo }}
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<a href="?export=pdf" class="btn btn-pdf">
+
+<i class="bi bi-file-earmark-pdf-fill me-2"></i>
+
+Gerar PDF
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- ==========================================================
+     KPIs
+========================================================== -->
+
+
+<div class="row g-3 mb-4">
+
+
+
+<div class="col-md-3">
+
+
+<div class="kpi-card">
+
+
+<div class="kpi-number">
+
+{{ total_turmas }}
+
+</div>
+
+
+<div class="kpi-label">
+
+Turmas
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="kpi-card">
+
+
+<div class="kpi-number">
+
+{{ total_alunos_geral }}
+
+</div>
+
+
+<div class="kpi-label">
+
+Alunos
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="kpi-card">
+
+
+<div class="kpi-number">
+
+{{ media_global }}
+
+</div>
+
+
+<div class="kpi-label">
+
+Média Geral
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="col-md-3">
+
+
+<div class="kpi-card">
+
+
+<div class="kpi-number">
+
+{{ percent_global }}%
+
+</div>
+
+
+<div class="kpi-label">
+
+Aprovação
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ==========================================================
+     TABELA
+========================================================== -->
+
+
+<div class="table-card">
+
+
+<div class="table-responsive">
+
+
+<table class="table align-middle">
+
+
+
+<thead>
+
+
+<tr>
+
+<th>Turma</th>
+
+<th>Alunos</th>
+
+<th>Média</th>
+
+<th>Aprovados</th>
+
+<th>%</th>
+
+<th>Status</th>
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for item in dados %}
+
+
+<tr>
+
+
+<td>
+
+<strong>
+
+{{ item.turma }}
+
+</strong>
+
+</td>
+
+
+
+<td>
+
+{{ item.total_alunos }}
+
+</td>
+
+
+
+<td>
+
+{{ item.media }}
+
+</td>
+
+
+
+<td>
+
+{{ item.total_aprovados }}
+
+</td>
+
+
+
+<td>
+
+{{ item.percentagem }}%
+
+</td>
+
+
+
+
+<td>
+
+
+{% if item.percentagem >= 50 %}
+
+
+<span class="badge-ok">
+
+Bom
+
+</span>
+
+
+
+{% else %}
+
+
+<span class="badge-bad">
+
+Fraco
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+
+<td colspan="6" class="text-center p-5 text-muted">
+
+
+Nenhum dado estatístico encontrado.
+
+
+</td>
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
 
 {% endblock %}

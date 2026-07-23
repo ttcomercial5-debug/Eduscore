@@ -8,17 +8,26 @@
 <style>
 
 /* ==========================================================
-        EDUSCORE PROFESSOR
-        MINHAS TURMAS - PREMIUM UI
+   EDUSCEL PROFESSOR
+   MINHAS TURMAS PREMIUM SaaS
+   ICA SYSTEMS
 ========================================================== */
 
 
 :root{
 
-    --primary:#0d6efd;
-    --dark:#172033;
-    --gray:#64748b;
-    --background:#f5f7fb;
+    --edus-primary:#2563eb;
+    --edus-primary-dark:#1d4ed8;
+
+    --edus-success:#16a34a;
+    --edus-warning:#f59e0b;
+
+    --edus-dark:#0f172a;
+    --edus-muted:#64748b;
+
+    --edus-bg:#f8fafc;
+
+    --edus-border:#e5e7eb;
 
 }
 
@@ -26,7 +35,7 @@
 
 body{
 
-    background:var(--background);
+    background:var(--edus-bg);
 
     font-family:
     Inter,
@@ -38,10 +47,23 @@ body{
 
 
 
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+
+.teacher-page{
+
+    padding:25px 10px 50px;
+
+}
+
+
+
 
 
 /* ==========================================================
-        HEADER
+   HERO
 ========================================================== */
 
 
@@ -49,59 +71,228 @@ body{
 
 
     background:
+
     linear-gradient(
         135deg,
-        #0b1f44,
-        #0d6efd
+        #020617,
+        #1e3a8a,
+        #2563eb
     );
 
 
     border-radius:28px;
 
-    padding:38px;
+    padding:40px;
 
     color:white;
+
+    position:relative;
+
+    overflow:hidden;
 
 
     box-shadow:
 
-    0 15px 40px rgba(13,110,253,.18);
+    0 25px 60px rgba(15,23,42,.20);
+
+
+    margin-bottom:35px;
 
 
 }
+
+
+
+.teacher-header::before{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:350px;
+
+
+    height:350px;
+
+
+    right:-120px;
+
+
+    top:-140px;
+
+
+    background:
+
+    rgba(255,255,255,.10);
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+.teacher-header::after{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:220px;
+
+
+    height:220px;
+
+
+    left:-100px;
+
+
+    bottom:-100px;
+
+
+    background:
+
+    rgba(255,255,255,.07);
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+
+.teacher-content{
+
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+
+
+
+.teacher-badge{
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+
+    background:
+
+    rgba(255,255,255,.14);
+
+
+    padding:8px 16px;
+
+
+    border-radius:50px;
+
+
+    font-size:13px;
+
+
+    margin-bottom:15px;
+
+
+}
+
 
 
 
 .teacher-title{
 
 
-    font-size:34px;
+    font-size:38px;
 
-    font-weight:800;
+
+    font-weight:900;
+
 
     letter-spacing:-1px;
 
-}
 
+    margin-bottom:12px;
 
-
-.teacher-subtitle{
-
-
-    opacity:.85;
-
-    max-width:650px;
-
-    line-height:1.6;
 
 }
 
 
 
 
+.teacher-description{
 
 
-.year-card{
+    max-width:700px;
+
+
+    line-height:1.7;
+
+
+    opacity:.9;
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+
+
+.hero-info{
+
+
+    display:flex;
+
+
+    flex-wrap:wrap;
+
+
+    gap:12px;
+
+
+    margin-top:25px;
+
+
+}
+
+
+
+
+.hero-info-box{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    padding:11px 18px;
+
+
+    border-radius:15px;
 
 
     background:
@@ -114,40 +305,13 @@ body{
     1px solid rgba(255,255,255,.15);
 
 
-    padding:18px 25px;
+    backdrop-filter:blur(10px);
 
 
-    border-radius:18px;
-
-
-    backdrop-filter:blur(12px);
+    font-size:14px;
 
 
 }
-
-
-
-.year-card small{
-
-
-    opacity:.75;
-
-
-}
-
-
-
-.year-card h5{
-
-
-    font-weight:800;
-
-    margin:5px 0 0;
-
-
-}
-
-
 
 
 
@@ -155,7 +319,7 @@ body{
 
 
 /* ==========================================================
-        INDICADOR
+   ESTATÍSTICAS
 ========================================================== */
 
 
@@ -171,61 +335,83 @@ body{
     padding:25px;
 
 
-    box-shadow:
-
-
-    0 8px 25px rgba(15,23,42,.06);
-
-
     border:
 
-    1px solid #edf1f7;
+    1px solid var(--edus-border);
+
+
+    box-shadow:
+
+    0 10px 30px rgba(15,23,42,.06);
+
+
+    height:100%;
+
+
+    transition:.3s;
 
 
 }
+
+
+
+.stat-box:hover{
+
+
+    transform:translateY(-5px);
+
+
+}
+
+
 
 
 
 .stat-icon{
 
 
-    width:55px;
+    width:58px;
 
-    height:55px;
+
+    height:58px;
+
 
     border-radius:18px;
 
 
-    background:#e8f1ff;
-
-
-    color:#0d6efd;
-
-
     display:flex;
 
+
     align-items:center;
+
 
     justify-content:center;
 
 
-    font-size:24px;
+    background:#eff6ff;
+
+
+    color:var(--edus-primary);
+
+
+    font-size:25px;
 
 
 }
 
 
 
+
 .stat-number{
 
 
-    font-size:32px;
+    font-size:34px;
 
 
     font-weight:900;
 
 
-    color:var(--dark);
+    color:var(--edus-dark);
 
 
 }
@@ -235,10 +421,54 @@ body{
 .stat-label{
 
 
-    color:var(--gray);
+    color:var(--edus-muted);
 
 
     font-size:14px;
+
+
+}
+
+
+
+/* ==========================================================
+   SECÇÃO
+========================================================== */
+
+
+.section-header{
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+.section-header h4{
+
+
+    color:var(--edus-dark);
+
+
+    font-weight:900;
+
+
+    letter-spacing:-.3px;
+
+
+}
+
+
+
+.section-header p{
+
+
+    color:var(--edus-muted);
+
+
+    margin:5px 0 0;
 
 
 }
@@ -249,13 +479,12 @@ body{
 
 
 
-
 /* ==========================================================
-        TURMAS
+   TURMAS
 ========================================================== */
 
 
-.turma-card{
+.turma-item{
 
 
     background:white;
@@ -269,31 +498,32 @@ body{
 
     border:
 
-    1px solid #edf1f7;
+    1px solid var(--edus-border);
 
 
     height:100%;
 
 
-    transition:.3s ease;
+    transition:.35s;
 
 
 }
 
 
 
+.turma-item:hover{
 
 
-.turma-card:hover{
-
-
-    transform:translateY(-6px);
+    transform:translateY(-7px);
 
 
     box-shadow:
 
 
-    0 18px 40px rgba(15,23,42,.12);
+    0 20px 45px rgba(37,99,235,.15);
+
+
+    border-color:#bfdbfe;
 
 
 }
@@ -302,7 +532,7 @@ body{
 
 
 
-.turma-header{
+.turma-top{
 
 
     padding:28px;
@@ -315,9 +545,9 @@ body{
 
         135deg,
 
-        #0d6efd,
+        #1e3a8a,
 
-        #084298
+        #2563eb
 
     );
 
@@ -325,19 +555,37 @@ body{
     color:white;
 
 
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:flex-start;
+
+
 }
 
 
 
 
 
-.turma-header small{
+.classe-label{
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    font-weight:700;
 
 
     opacity:.8;
 
 
-    font-weight:600;
+    letter-spacing:.5px;
 
 
 }
@@ -346,13 +594,13 @@ body{
 
 
 
-.turma-header h3{
+.turma-top h3{
 
 
     margin:8px 0 0;
 
 
-    font-size:32px;
+    font-size:40px;
 
 
     font-weight:900;
@@ -364,10 +612,16 @@ body{
 
 
 
-.turma-body{
+.identificador{
 
 
-    padding:25px;
+    font-size:15px;
+
+
+    font-weight:700;
+
+
+    opacity:.9;
 
 
 }
@@ -376,15 +630,56 @@ body{
 
 
 
+.turno-box{
+
+
+    background:
+
+    rgba(255,255,255,.15);
+
+
+    padding:9px 15px;
+
+
+    border-radius:30px;
+
+
+    font-size:13px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:7px;
+
+
+}
+
+
 
 
 
 /* ==========================================================
-        INFORMAÇÕES
+   CORPO TURMA
 ========================================================== */
 
 
-.info-row{
+.turma-body{
+
+
+    padding:26px;
+
+
+}
+
+
+
+
+
+.linha-info{
 
 
     display:flex;
@@ -396,19 +691,20 @@ body{
     align-items:center;
 
 
-    padding:14px 0;
+    padding:15px 0;
 
 
     border-bottom:
 
-    1px solid #edf2f7;
+
+    1px solid #f1f5f9;
 
 
 }
 
 
 
-.info-row:last-child{
+.linha-info:last-child{
 
 
     border-bottom:none;
@@ -418,26 +714,22 @@ body{
 
 
 
-.info-label{
+.linha-info div{
 
 
-    color:#64748b;
+    color:var(--edus-muted);
 
 
     font-size:14px;
 
 
-}
+    display:flex;
 
 
-
-.info-value{
-
-
-    font-weight:700;
+    align-items:center;
 
 
-    color:#172033;
+    gap:8px;
 
 
 }
@@ -445,43 +737,34 @@ body{
 
 
 
+.linha-info i{
 
 
+    color:var(--edus-primary);
 
 
-.badge-custom{
-
-
-    padding:8px 15px;
-
-
-    border-radius:50px;
-
-
-    font-size:12px;
-
-
-    font-weight:700;
+    width:20px;
 
 
 }
 
 
 
-.badge-sala{
+.linha-info strong{
 
 
-    background:#dcfce7;
+    color:var(--edus-dark);
 
 
-    color:#15803d;
+    font-weight:800;
 
 
 }
 
 
 
-.badge-curso{
+
+.curso-tag{
 
 
     background:#dbeafe;
@@ -490,14 +773,24 @@ body{
     color:#1d4ed8;
 
 
+    padding:7px 15px;
+
+
+    border-radius:50px;
+
+
+    font-size:12px;
+
+
+    font-weight:800;
+
+
 }
 
 
 
 
-
-
-.btn-alunos{
+.btn-acessar{
 
 
     border-radius:14px;
@@ -506,7 +799,29 @@ body{
     padding:13px;
 
 
-    font-weight:700;
+    font-weight:800;
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+
+    border:none;
+
+
+}
+
+
+
+.btn-acessar:hover{
+
+
+    transform:translateY(-2px);
 
 
 }
@@ -516,12 +831,13 @@ body{
 
 
 
+
 /* ==========================================================
-        EMPTY
+   ESTADO VAZIO
 ========================================================== */
 
 
-.empty-box{
+.empty-area{
 
 
     background:white;
@@ -538,53 +854,589 @@ body{
 
     border:
 
-    1px solid #edf1f7;
+    1px solid var(--edus-border);
 
 
 }
 
 
 
-.empty-box h4{
+.empty-icon{
+
+
+    width:75px;
+
+
+    height:75px;
+
+
+    margin:auto;
+
+
+    border-radius:50%;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    background:#eff6ff;
+
+
+    color:#2563eb;
+
+
+    font-size:32px;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+.empty-area h4{
+
+
+    font-weight:900;
+
+
+    color:var(--edus-dark);
+
+
+}
+
+
+
+
+
+.empty-area p{
+
+
+    color:var(--edus-muted);
+
+
+}
+
+
+
+
+
+
+/* ==========================================================
+   SEGURANÇA
+========================================================== */
+
+
+.security-card{
+
+
+    background:white;
+
+
+    border-radius:24px;
+
+
+    padding:28px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+    border:
+
+
+    1px solid var(--edus-border);
+
+
+    box-shadow:
+
+
+    0 12px 35px rgba(15,23,42,.07);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.security-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+}
+
+
+
+
+
+.security-icon{
+
+
+    width:65px;
+
+
+    height:65px;
+
+
+    border-radius:20px;
+
+
+    background:#fff7ed;
+
+
+    color:#f59e0b;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:28px;
+
+
+}
+
+
+
+.security-card h5{
+
+
+    font-weight:900;
+
+
+    color:var(--edus-dark);
+
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+
+.security-card p{
+
+
+    color:var(--edus-muted);
+
+
+    font-size:14px;
+
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+
+.security-btn{
+
+
+    display:inline-block;
+
+
+    background:#f59e0b;
+
+
+    color:white;
+
+
+    padding:10px 18px;
+
+
+    border-radius:12px;
 
 
     font-weight:800;
 
 
+    font-size:14px;
+
+
+}
+/* ==========================================================
+   ANIMAÇÃO
+========================================================== */
+
+
+.turma-item,
+.stat-box,
+.security-card{
+
+
+    animation:
+
+    fadeUp .45s ease;
+
+
+}
+
+
+
+
+@keyframes fadeUp{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
 }
 
 
 
 
 
+
+/* ==========================================================
+   RESPONSIVO TABLET
+========================================================== */
+
+
+@media(max-width:992px){
+
+
+    .teacher-header{
+
+
+        padding:30px;
+
+
+    }
+
+
+
+    .teacher-title{
+
+
+        font-size:30px;
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   RESPONSIVO MOBILE
+========================================================== */
 
 
 @media(max-width:768px){
 
 
-.teacher-header{
+
+    .teacher-header{
 
 
-    padding:25px;
+        padding:24px;
+
+
+        border-radius:22px;
+
+
+    }
+
+
+
+
+    .teacher-title{
+
+
+        font-size:26px;
+
+
+    }
+
+
+
+
+
+    .teacher-description{
+
+
+        font-size:14px;
+
+
+    }
+
+
+
+
+
+    .turma-top{
+
+
+        flex-direction:column;
+
+
+        gap:15px;
+
+
+    }
+
+
+
+
+
+    .turma-top h3{
+
+
+        font-size:32px;
+
+
+    }
+
+
+
+
+
+    .linha-info{
+
+
+        flex-direction:column;
+
+
+        align-items:flex-start;
+
+
+        gap:8px;
+
+
+    }
+
+
+
+
+
+    .security-card{
+
+
+        flex-direction:column;
+
+
+        align-items:flex-start;
+
+
+    }
 
 
 }
 
 
 
-.teacher-title{
 
 
-    font-size:26px;
+
+@media(max-width:480px){
+
+
+
+    .stat-number{
+
+
+        font-size:28px;
+
+
+    }
+
+
+
+
+    .stat-box{
+
+
+        padding:20px;
+
+
+    }
+
+
 
 
 }
-
-
-}
-
 
 </style>
+
+
+
+
+
+<div class="container-fluid teacher-page">
+
+
+
+<!-- ==========================================================
+        HERO
+========================================================== -->
+
+
+<div class="teacher-header">
+
+
+<div class="teacher-content">
+
+
+
+
+
+
+
+
+
+<h1 class="teacher-title">
+
+
+MINHAS TURMAS
+
+
+</h1>
+
+
+
+
+
+<div class="hero-info">
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+        ESTATÍSTICAS
+========================================================== -->
+
+
+<div class="row g-4 mb-5">
+
+
+
+<div class="col-lg-4 col-md-6">
+
+
+<div class="stat-box">
+
+
+<div class="d-flex align-items-center gap-3">
+
+
+<div class="stat-icon">
+
+
+<i class="bi bi-easel-fill"></i>
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+<div class="stat-number">
+
+
+{{ turmas|length }}
+
+
+</div>
+
+
+<div class="stat-label">
+
+
+TURMAS ATRIBUÍDAS
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
 <!-- ==========================================================
         TURMAS
 ========================================================== -->
@@ -593,31 +1445,30 @@ body{
 {% if turmas %}
 
 
-<div class="turmas-header mb-4">
+
+<div class="section-header">
 
 
-    <div>
+<h4>
 
 
-        <h4 class="fw-bold mb-1">
-
-            Turmas atribuídas
-
-        </h4>
+TURMAS ATRIBUÍDAS
 
 
-        <p class="text-muted mb-0">
-
-            Lista das turmas sob responsabilidade académica.
-
-        </p>
+</h4>
 
 
-    </div>
+<p>
 
+
+Lista das turmas sob sua responsabilidade académica.
+
+
+</p>
 
 
 </div>
+
 
 
 
@@ -640,7 +1491,6 @@ body{
 
 
 
-<!-- CABEÇALHO TURMA -->
 
 
 <div class="turma-top">
@@ -650,19 +1500,34 @@ body{
 <div>
 
 
+
 <span class="classe-label">
 
-{{ turma.get_classe_display }}
+Classe
 
 </span>
 
 
 
+
 <h3>
+
+
+{{ turma.classe }}ª
+
+
+</h3>
+
+
+
+<div class="identificador">
+
 
 {{ turma.identificador }}
 
-</h3>
+
+</div>
+
 
 
 </div>
@@ -674,25 +1539,24 @@ body{
 <div class="turno-box">
 
 
-<i class="fas fa-clock"></i>
+<i class="bi bi-clock-fill"></i>
 
 
-{{ turma.get_turno_display }}
-
-
-</div>
-
+{{ turma.turno }}
 
 
 </div>
 
 
 
+</div>
 
 
 
 
-<!-- CONTEÚDO -->
+
+
+
 
 
 <div class="turma-body">
@@ -706,11 +1570,9 @@ body{
 
 <div>
 
-<i class="fas fa-school"></i>
-
+<i class="bi bi-door-open-fill"></i>
 
 Sala
-
 
 </div>
 
@@ -741,18 +1603,14 @@ Não definida
 
 
 
-
 <div class="linha-info">
 
 
 <div>
 
-
-<i class="fas fa-calendar"></i>
-
+<i class="bi bi-calendar-check-fill"></i>
 
 Ano Letivo
-
 
 </div>
 
@@ -760,14 +1618,13 @@ Ano Letivo
 
 <strong>
 
-
 {{ turma.ano_letivo }}
-
 
 </strong>
 
 
 </div>
+
 
 
 
@@ -784,12 +1641,9 @@ Ano Letivo
 
 <div>
 
-
-<i class="fas fa-book"></i>
-
+<i class="bi bi-book-fill"></i>
 
 Curso
-
 
 </div>
 
@@ -822,14 +1676,12 @@ Curso
 
 <div>
 
-
-<i class="fas fa-users"></i>
-
+<i class="bi bi-people-fill"></i>
 
 Alunos
 
-
 </div>
+
 
 
 <strong>
@@ -850,33 +1702,21 @@ Alunos
 
 
 
-<div class="mt-4">
-
 
 <a href="{% url 'alunos_da_turma' turma.id %}"
 
+class="btn btn-primary w-100 btn-acessar mt-3">
 
-class="btn btn-primary w-100 btn-acessar">
+
+<i class="bi bi-eye-fill me-2"></i>
 
 
-Aceder à Turma
+Visualizar Turma
 
 
 </a>
 
 
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
 
 
 
@@ -887,6 +1727,8 @@ Aceder à Turma
 </div>
 
 
+
+</div>
 
 
 
@@ -901,7 +1743,10 @@ Aceder à Turma
 
 
 
+
+
 {% else %}
+
 
 
 
@@ -912,7 +1757,7 @@ Aceder à Turma
 <div class="empty-icon">
 
 
-<i class="fas fa-chalkboard"></i>
+<i class="bi bi-easel-fill"></i>
 
 
 </div>
@@ -921,7 +1766,9 @@ Aceder à Turma
 
 <h4>
 
+
 Nenhuma turma atribuída
+
 
 </h4>
 
@@ -929,12 +1776,16 @@ Nenhuma turma atribuída
 
 <p>
 
+
 Ainda não existem turmas associadas ao seu perfil docente.
+
 
 </p>
 
 
 </div>
+
+
 
 
 
@@ -946,6 +1797,26 @@ Ainda não existem turmas associadas ao seu perfil docente.
 
 
 
+
+
+
+
+</div>
+
+
+
+</a>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
 </div>
 
 
@@ -953,328 +1824,36 @@ Ainda não existem turmas associadas ao seu perfil docente.
 
 
 
-<style>
 
+<script>
 
-/* ==========================================================
-        TURMAS MODERNAS
-========================================================== */
 
+document.addEventListener(
+"DOMContentLoaded",
+function(){
 
-.turmas-header{
 
-    display:flex;
+const tooltipTriggerList =
+[].slice.call(
+document.querySelectorAll(
+'[data-bs-toggle="tooltip"]'
+)
+);
 
-    justify-content:space-between;
 
-    align-items:center;
+tooltipTriggerList.map(
+function(element){
 
-}
 
+return new bootstrap.Tooltip(element);
 
 
+});
 
 
-.turma-item{
+});
 
-    background:#fff;
-
-    border-radius:22px;
-
-    overflow:hidden;
-
-    border:1px solid #e5e7eb;
-
-    transition:.3s ease;
-
-    height:100%;
-
-}
-
-
-
-
-
-.turma-item:hover{
-
-    transform:translateY(-6px);
-
-    border-color:#2563eb;
-
-    box-shadow:
-    0 15px 35px rgba(37,99,235,.12);
-
-}
-
-
-
-
-
-.turma-top{
-
-    padding:25px;
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #1e3a8a,
-        #2563eb
-    );
-
-    color:white;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-start;
-
-}
-
-
-
-
-
-.classe-label{
-
-    font-size:13px;
-
-    opacity:.85;
-
-    text-transform:uppercase;
-
-    font-weight:600;
-
-}
-
-
-
-
-
-.turma-top h3{
-
-    margin-top:8px;
-
-    font-size:38px;
-
-    font-weight:900;
-
-    margin-bottom:0;
-
-}
-
-
-
-
-
-.turno-box{
-
-    background:
-    rgba(255,255,255,.15);
-
-    padding:8px 14px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-}
-
-
-
-
-
-.turma-body{
-
-    padding:25px;
-
-}
-
-
-
-
-
-.linha-info{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:14px 0;
-
-    border-bottom:
-
-    1px solid #f1f5f9;
-
-}
-
-
-
-.linha-info:last-child{
-
-    border-bottom:none;
-
-}
-
-
-
-.linha-info div{
-
-    color:#64748b;
-
-    font-size:14px;
-
-}
-
-
-
-.linha-info i{
-
-    width:22px;
-
-    color:#2563eb;
-
-}
-
-
-
-.linha-info strong{
-
-    color:#0f172a;
-
-}
-
-
-
-
-
-.curso-tag{
-
-    background:#dbeafe;
-
-    color:#1d4ed8;
-
-    padding:6px 14px;
-
-    border-radius:30px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-}
-
-
-
-
-
-.btn-acessar{
-
-    border-radius:14px;
-
-    padding:12px;
-
-    font-weight:700;
-
-}
-
-
-
-
-
-.empty-area{
-
-    background:white;
-
-    border-radius:22px;
-
-    padding:70px 30px;
-
-    text-align:center;
-
-    border:1px solid #e5e7eb;
-
-}
-
-
-
-
-
-.empty-icon{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:50%;
-
-    margin:auto;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    background:#eff6ff;
-
-    color:#2563eb;
-
-    font-size:30px;
-
-    margin-bottom:20px;
-
-}
-
-
-
-
-.empty-area h4{
-
-    font-weight:800;
-
-    color:#0f172a;
-
-}
-
-
-
-.empty-area p{
-
-    color:#64748b;
-
-}
-
-
-
-
-
-@media(max-width:768px){
-
-
-.turma-top{
-
-    padding:20px;
-
-}
-
-
-.turma-top h3{
-
-    font-size:30px;
-
-}
-
-
-}
-
-
-</style>
-
-
+</script>
 
 
 

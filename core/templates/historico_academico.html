@@ -1,127 +1,1118 @@
 {% extends "base_aluno.html" %}
+
 {% block content %}
 
-<div class="container mt-4">
 
-    <div class="card shadow border-0 rounded-4">
+<style>
 
-        <div class="card-body">
+/* ==========================================================
+   EDUSCEL ALUNO
+   HISTÓRICO ACADÉMICO PREMIUM SaaS
+========================================================== */
 
-            <h3 class="fw-bold mb-4">
-                Histórico Académico
-            </h3>
 
-            <div class="table-responsive">
+:root{
 
-                <table class="table table-bordered align-middle">
+    --primary:#2563eb;
 
-                    <thead class="table-dark">
+    --dark:#0f172a;
 
-                        <tr>
+    --muted:#64748b;
 
-                            <th>
-                                Ano Letivo
-                            </th>
+    --background:#f8fafc;
 
-                            <th>
-                                Classe
-                            </th>
+}
 
-                            <th>
-                                Turma
-                            </th>
 
-                            <th>
-                                Situação
-                            </th>
 
-                            <th>
-                                PDF
-                            </th>
+body{
 
-                        </tr>
+    background:var(--background);
 
-                    </thead>
+}
 
-                    <tbody>
 
-                        {% for h in historicos %}
 
-                        <tr>
 
-                            <td>
-                                {{ h.ano_letivo.nome }}
-                            </td>
 
-                            <td>
-                                {{ h.classe }}ª
-                            </td>
+/* ==========================================================
+   HERO PREMIUM
+========================================================== */
 
-                            <td>
-                                {{ h.turma.identificador }}
-                            </td>
 
-                            <td>
+.hero{
 
-                                {% if h.situacao == "APROVADO" %}
 
-                                    <span class="badge bg-success">
-                                        Aprovado
-                                    </span>
+    background:
 
-                                {% elif h.situacao == "REPROVADO" %}
 
-                                    <span class="badge bg-danger">
-                                        Reprovado
-                                    </span>
+    linear-gradient(
+        135deg,
+        #020617,
+        #1e40af,
+        #2563eb
+    );
 
-                                {% else %}
 
-                                    <span class="badge bg-primary">
-                                        Finalista
-                                    </span>
+    color:white;
 
-                                {% endif %}
 
-                            </td>
+    padding:35px;
 
-                            <td>
 
-                                <a href="{% url 'boletim_historico_pdf' h.id %}"
-                                   class="btn btn-sm btn-danger">
+    border-radius:28px;
 
-                                    PDF
 
-                                </a>
+    margin-bottom:30px;
 
-                            </td>
 
-                        </tr>
 
-                        {% empty %}
+    box-shadow:
 
-                        <tr>
 
-                            <td colspan="5" class="text-center text-muted">
+    0 25px 60px rgba(15,23,42,.20);
 
-                                Nenhum histórico encontrado.
 
-                            </td>
 
-                        </tr>
+    position:relative;
 
-                        {% endfor %}
 
-                    </tbody>
+    overflow:hidden;
 
-                </table>
 
-            </div>
+}
+
+
+
+.hero::before{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:320px;
+
+
+    height:320px;
+
+
+    right:-120px;
+
+
+    top:-130px;
+
+
+    background:
+
+
+    rgba(255,255,255,.10);
+
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+
+.hero::after{
+
+
+    content:"";
+
+
+    position:absolute;
+
+
+    width:180px;
+
+
+    height:180px;
+
+
+    left:-70px;
+
+
+    bottom:-80px;
+
+
+    background:
+
+
+    rgba(255,255,255,.06);
+
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+
+
+.hero-content{
+
+
+    position:relative;
+
+
+    z-index:2;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+}
+
+
+
+
+.hero-icon{
+
+
+    width:70px;
+
+
+    height:70px;
+
+
+    border-radius:22px;
+
+
+    background:
+
+
+    rgba(255,255,255,.15);
+
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:34px;
+
+
+
+    border:
+
+
+    1px solid rgba(255,255,255,.20);
+
+
+
+    backdrop-filter:blur(12px);
+
+
+}
+
+
+
+
+.hero-title{
+
+
+    font-size:34px;
+
+
+    font-weight:900;
+
+
+    margin:0;
+
+
+    letter-spacing:-.8px;
+
+
+}
+
+
+
+
+
+.hero-subtitle{
+
+
+    margin-top:8px;
+
+
+    opacity:.88;
+
+
+    font-size:15px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+
+.card-custom{
+
+
+    background:white;
+
+
+    border:none;
+
+
+    border-radius:24px;
+
+
+    overflow:hidden;
+
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(15,23,42,.08);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   TABLE
+========================================================== */
+
+
+.table{
+
+
+    margin:0;
+
+
+}
+
+
+
+
+.table thead th{
+
+
+    background:#0f172a;
+
+
+    color:white;
+
+
+    padding:16px;
+
+
+    font-size:13px;
+
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.3px;
+
+
+    border:none;
+
+
+}
+
+
+
+
+
+.table tbody td{
+
+
+    padding:16px;
+
+
+    vertical-align:middle;
+
+
+    color:#334155;
+
+
+}
+
+
+
+
+.table tbody tr{
+
+
+    transition:.25s ease;
+
+
+}
+
+
+
+
+.table tbody tr:hover{
+
+
+    background:#f8fafc;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+
+.status-badge{
+
+
+    padding:8px 16px;
+
+
+    border-radius:50px;
+
+
+    font-size:12px;
+
+
+    font-weight:800;
+
+
+}
+
+
+
+
+.status-aprovado{
+
+
+    background:#dcfce7;
+
+
+    color:#15803d;
+
+
+}
+
+
+
+
+.status-reprovado{
+
+
+    background:#fee2e2;
+
+
+    color:#dc2626;
+
+
+}
+
+
+
+
+.status-finalista{
+
+
+    background:#dbeafe;
+
+
+    color:#1d4ed8;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   BUTTON PDF
+========================================================== */
+
+
+.btn-pdf{
+
+
+    background:#dc2626;
+
+
+    border:none;
+
+
+    color:white;
+
+
+    padding:10px 18px;
+
+
+    border-radius:12px;
+
+
+    font-weight:700;
+
+
+    transition:.25s;
+
+
+}
+
+
+
+
+.btn-pdf:hover{
+
+
+    background:#b91c1c;
+
+
+    transform:translateY(-2px);
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+
+.empty-state{
+
+
+    padding:60px 20px;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+.empty-state i{
+
+
+    font-size:50px;
+
+
+    color:#94a3b8;
+
+
+}
+
+
+
+
+.empty-state h5{
+
+
+    margin-top:15px;
+
+
+    font-weight:800;
+
+
+    color:#334155;
+
+
+}
+
+
+
+
+.empty-state p{
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+    .hero{
+
+
+        padding:25px;
+
+
+        border-radius:22px;
+
+
+    }
+
+
+
+    .hero-content{
+
+
+        align-items:flex-start;
+
+
+    }
+
+
+
+    .hero-icon{
+
+
+        width:55px;
+
+
+        height:55px;
+
+
+        font-size:26px;
+
+
+    }
+
+
+
+    .hero-title{
+
+
+        font-size:25px;
+
+
+    }
+
+
+
+    .table{
+
+
+        font-size:14px;
+
+
+    }
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+
+<div class="container-fluid py-4">
+
+
+
+
+
+
+
+<!-- ==========================================================
+     HERO
+========================================================== -->
+
+
+<div class="hero">
+
+
+
+    <div class="hero-content">
+
+
+
+        <div class="hero-icon">
+
+
+            <i class="bi bi-mortarboard-fill"></i>
+
 
         </div>
 
+
+
+
+        <div>
+
+
+
+            <h3 class="hero-title">
+
+
+                HISTÓRICO ACADÊMICO
+
+
+            </h3>
+
+
+
+
+
+            <div class="hero-subtitle">
+
+
+                Consulte o seu percurso escolar, resultados e boletins académicos.
+
+
+            </div>
+
+
+
+        </div>
+
+
+
     </div>
 
+
+
 </div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+     HISTÓRICO
+========================================================== -->
+
+
+<div class="card card-custom">
+
+
+
+<div class="table-responsive">
+
+
+
+<table class="table align-middle">
+
+
+
+<thead>
+
+
+
+<tr>
+
+
+
+<th>
+Ano Letivo
+</th>
+
+
+
+<th>
+Classe
+</th>
+
+
+
+<th>
+Turma
+</th>
+
+
+
+<th>
+Situação
+</th>
+
+
+
+<th>
+Documento
+</th>
+
+
+
+</tr>
+
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+
+{% for h in historicos %}
+
+
+
+
+<tr>
+
+
+
+
+<td class="fw-semibold">
+
+
+{{ h.ano_letivo.nome }}
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<span class="badge bg-light text-dark border px-3 py-2">
+
+
+{{ h.classe }}ª
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+{{ h.turma.identificador }}
+
+
+</td>
+
+
+
+
+
+
+
+
+
+<td>
+
+
+
+
+{% if h.situacao == "APROVADO" %}
+
+
+
+<span class="status-badge status-aprovado">
+
+
+<i class="bi bi-check-circle-fill me-1"></i>
+
+
+Aprovado
+
+
+</span>
+
+
+
+
+
+{% elif h.situacao == "REPROVADO" %}
+
+
+
+
+<span class="status-badge status-reprovado">
+
+
+<i class="bi bi-x-circle-fill me-1"></i>
+
+
+Reprovado
+
+
+</span>
+
+
+
+
+
+{% else %}
+
+
+
+
+
+<span class="status-badge status-finalista">
+
+
+<i class="bi bi-award-fill me-1"></i>
+
+
+Finalista
+
+
+</span>
+
+
+
+
+
+{% endif %}
+
+
+
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+
+
+<a href="{% url 'boletim_historico_pdf' h.id %}"
+
+
+class="btn btn-pdf">
+
+
+
+
+
+<i class="bi bi-file-earmark-pdf-fill me-2"></i>
+
+
+PDF
+
+
+
+
+
+</a>
+
+
+
+
+
+</td>
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+{% empty %}
+
+
+
+
+
+<tr>
+
+
+
+
+<td colspan="5">
+
+
+
+
+
+<div class="empty-state">
+
+
+
+
+
+<i class="bi bi-journal-x"></i>
+
+
+
+
+
+<h5>
+
+
+Nenhum histórico encontrado
+
+
+</h5>
+
+
+
+
+
+
+<p>
+
+
+Ainda não existem registos académicos disponíveis.
+
+
+</p>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+
+
+</table>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
 
 {% endblock %}
