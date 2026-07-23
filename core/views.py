@@ -6794,7 +6794,8 @@ from academic.models import (
     Disciplina,
     Curso,
     Horario,
-    Aluno
+    Aluno,
+    AnoLetivo
 )
 
 
@@ -6840,11 +6841,16 @@ def dashboard_diretor_pedagogico(request):
         escola=escola
     ).count()
 
+    ano_letivo = AnoLetivo.objects.filter(
+        escola=escola
+    ).order_by("-id").first()
+
     # ======================================================
     # CONTEXTO
     # ======================================================
     context = {
         "escola": escola,
+        "ano_letivo": ano_letivo,
         "total_turmas": total_turmas,
         "total_professores": total_professores,
         "total_disciplinas": total_disciplinas,
