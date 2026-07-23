@@ -1,81 +1,719 @@
 {% extends "base_aluno.html" %}
+
 {% block content %}
 
-<h3 class="mb-4" style="font-weight:700; color:#1a202c;">Situação Financeira</h3>
 
-<div class="row mb-5 g-4">
+<div class="container-fluid py-4">
 
-    <!-- Total em Dívida -->
-    <div class="col-lg-4 col-md-6">
-        <div class="card shadow-sm p-3" style="border-radius:12px; background:#fff;">
-            <div class="d-flex flex-column align-items-center">
-                <h6 style="color:#e53e3e; font-weight:600;">Total em Dívida</h6>
-                <h3 style="margin:10px 0; color:#c53030; font-weight:700;">{{ total_divida|floatformat:2 }} Kzs</h3>
-                <p class="text-muted mb-0">{% if tem_divida %}Mensalidades pendentes{% else %}Sem dívidas{% endif %}</p>
-            </div>
+
+<!-- =====================================================
+     HERO PREMIUM
+===================================================== -->
+
+
+<div class="hero-aluno">
+
+
+    <div class="row align-items-center">
+
+
+        <div class="col-lg-9">
+
+
+            <h1 class="hero-aluno-title">
+
+                SITUAÇÃO FINANCEIRA
+
+            </h1>
+
+
+
+
         </div>
+
+
+
+        <div class="col-lg-3 text-end">
+
+
+            <div class="hero-aluno-icon ms-auto">
+
+
+                <i class="bi bi-wallet2"></i>
+
+
+            </div>
+
+
+        </div>
+
+
     </div>
 
-    <!-- Total Pago -->
-    <div class="col-lg-4 col-md-6">
-        <div class="card shadow-sm p-3" style="border-radius:12px; background:#f0f7ff;">
-            <div class="d-flex flex-column align-items-center">
-                <h6 style="color:#3182ce; font-weight:600;">Total Pago</h6>
-                <h3 style="margin:10px 0; color:#2b6cb0; font-weight:700;">{{ total_pago|floatformat:2 }} Kzs</h3>
-                <p class="text-muted mb-0">Mensalidades quitadas</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Meses em Atraso -->
-    <div class="col-lg-4 col-md-6">
-        <div class="card shadow-sm p-3" style="border-radius:12px; background:#fffaf0;">
-            <div class="d-flex flex-column align-items-center">
-                <h6 style="color:#dd6b20; font-weight:600;">Meses em Atraso</h6>
-                <h3 style="margin:10px 0; color:#c05621; font-weight:700;">{{ dividas|length }}</h3>
-                <p class="text-muted mb-0">{% if dividas|length > 1 %}Meses{% else %}Mês{% endif %} pendentes</p>
-            </div>
-        </div>
-    </div>
 
 </div>
 
-<!-- Tabela detalhada -->
-<div class="card shadow-sm p-3" style="border-radius:12px; background:#fff;">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle" style="margin-bottom:0;">
-            <thead style="background:#1a202c; color:white;">
-                <tr>
-                    <th>Mês</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
+
+
+
+<!-- =====================================================
+     RESUMO FINANCEIRO
+===================================================== -->
+
+
+<div class="row g-4 mb-5">
+
+
+    <!-- DIVIDA -->
+
+    <div class="col-xl-4 col-md-6">
+
+
+        <div class="finance-card finance-danger">
+
+
+            <div class="finance-icon">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+            </div>
+
+
+            <div>
+
+
+                <span>
+
+                    Total em Dívida
+
+                </span>
+
+
+                <h3>
+
+                    {{ total_divida|floatformat:2 }} Kzs
+
+                </h3>
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <!-- PAGO -->
+
+
+    <div class="col-xl-4 col-md-6">
+
+
+        <div class="finance-card finance-success">
+
+
+            <div class="finance-icon">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+            </div>
+
+
+            <div>
+
+
+                <span>
+
+                    Total Pago
+
+                </span>
+
+
+                <h3>
+
+                    {{ total_pago|floatformat:2 }} Kzs
+
+                </h3>
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- ATRASO -->
+
+
+    <div class="col-xl-4 col-md-6">
+
+
+        <div class="finance-card finance-warning">
+
+
+            <div class="finance-icon">
+
+                <i class="bi bi-clock-history"></i>
+
+            </div>
+
+
+            <div>
+
+
+                <span>
+
+                    Meses em Atraso
+
+                </span>
+
+
+                <h3>
+
+                    {{ dividas|length }}
+
+                </h3>
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<!-- =====================================================
+     DETALHAMENTO
+===================================================== -->
+
+
+<div class="card border-0 shadow-lg rounded-4">
+
+
+    <div class="card-header bg-white py-3">
+
+
+        <h5 class="fw-bold mb-1">
+
+            Histórico Financeiro
+
+        </h5>
+
+
+        <small class="text-muted">
+
+            Consulte o estado das suas mensalidades.
+
+        </small>
+
+
+    </div>
+
+
+
+
+    <div class="card-body p-0">
+
+
+        <div class="table-responsive">
+
+
+            <table class="table table-hover align-middle mb-0">
+
+
+
+                <thead class="table-dark">
+
+
+                    <tr>
+
+
+                        <th class="ps-4">
+
+                            Mês
+
+                        </th>
+
+
+                        <th>
+
+                            Valor
+
+                        </th>
+
+
+                        <th class="text-center">
+
+                            Status
+
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
                 {% if dividas %}
+
+
                     {% for m in dividas %}
+
+
                     <tr>
-                        <td>{{ m.mes }}</td>
-                        <td>{{ m.valor|floatformat:2 }} Kzs</td>
-                        <td>
-                            {% if m.status == "PAGA" %}
-                                <span class="badge bg-success">{{ m.status }}</span>
-                            {% elif m.status == "ATRASADA" %}
-                                <span class="badge bg-danger">{{ m.status }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">{{ m.status }}</span>
-                            {% endif %}
+
+
+                        <td class="ps-4 fw-semibold">
+
+                            {{ m.mes }}
+
                         </td>
+
+
+
+                        <td>
+
+                            {{ m.valor|floatformat:2 }} Kzs
+
+                        </td>
+
+
+
+                        <td class="text-center">
+
+
+                            {% if m.status == "PAGA" %}
+
+
+                                <span class="badge bg-success rounded-pill px-3">
+
+                                    {{ m.status }}
+
+                                </span>
+
+
+                            {% elif m.status == "ATRASADA" %}
+
+
+                                <span class="badge bg-danger rounded-pill px-3">
+
+                                    {{ m.status }}
+
+                                </span>
+
+
+                            {% else %}
+
+
+                                <span class="badge bg-secondary rounded-pill px-3">
+
+                                    {{ m.status }}
+
+                                </span>
+
+
+                            {% endif %}
+
+
+
+                        </td>
+
+
+
                     </tr>
+
+
                     {% endfor %}
+
+
+
                 {% else %}
+
+
+
                     <tr>
-                        <td colspan="3" class="text-center text-success">Nenhuma mensalidade em atraso.</td>
+
+
+                        <td colspan="3" class="text-center py-5">
+
+
+                            <i class="bi bi-check-circle-fill text-success fs-1 d-block mb-3"></i>
+
+
+                            <h5 class="fw-bold">
+
+                                Nenhuma mensalidade em atraso
+
+                            </h5>
+
+
+                            <p class="text-muted mb-0">
+
+                                Todas as suas obrigações financeiras estão regularizadas.
+
+                            </p>
+
+
+                        </td>
+
+
                     </tr>
+
+
+
                 {% endif %}
-            </tbody>
-        </table>
+
+
+
+                </tbody>
+
+
+
+            </table>
+
+
+        </div>
+
+
     </div>
+
+
 </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<style>
+
+
+/* ==========================================================
+   HERO PREMIUM EDUSCEL
+========================================================== */
+
+
+.hero-aluno{
+
+
+    background:
+
+    linear-gradient(
+
+        135deg,
+
+        #020617,
+
+        #1e40af,
+
+        #2563eb
+
+    );
+
+
+    border-radius:28px;
+
+
+    padding:35px;
+
+
+    margin-bottom:30px;
+
+
+    color:white;
+
+
+    box-shadow:
+
+    0 20px 45px rgba(37,99,235,.20);
+
+
+}
+
+
+
+.hero-aluno-title{
+
+
+    font-size:32px;
+
+
+    font-weight:900;
+
+
+    letter-spacing:-.5px;
+
+
+}
+
+
+
+.hero-aluno-subtitle{
+
+
+    color:rgba(255,255,255,.85);
+
+
+    margin-top:10px;
+
+
+}
+
+
+
+
+.hero-aluno-icon{
+
+
+    width:75px;
+
+
+    height:75px;
+
+
+    border-radius:24px;
+
+
+    background:
+
+    rgba(255,255,255,.15);
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:36px;
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   CARDS FINANCEIROS
+========================================================== */
+
+
+.finance-card{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:20px;
+
+
+    padding:25px;
+
+
+    border-radius:22px;
+
+
+    background:white;
+
+
+    box-shadow:
+
+    0 10px 30px rgba(0,0,0,.08);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.finance-card:hover{
+
+
+    transform:translateY(-5px);
+
+
+}
+
+
+
+
+.finance-card span{
+
+
+    font-size:14px;
+
+
+    font-weight:700;
+
+
+    text-transform:uppercase;
+
+
+    color:#64748b;
+
+
+}
+
+
+
+.finance-card h3{
+
+
+    font-size:28px;
+
+
+    font-weight:900;
+
+
+    margin:8px 0;
+
+
+}
+
+
+
+
+.finance-icon{
+
+
+    width:60px;
+
+
+    height:60px;
+
+
+    border-radius:18px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:28px;
+
+
+}
+
+
+
+
+.finance-danger .finance-icon{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+
+
+.finance-success .finance-icon{
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+}
+
+
+
+.finance-warning .finance-icon{
+
+    background:#fef3c7;
+
+    color:#d97706;
+
+}
+
+
+
+
+@media(max-width:768px){
+
+
+.hero-aluno-title{
+
+
+    font-size:24px;
+
+}
+
+
+.hero-aluno-icon{
+
+
+    display:none;
+
+}
+
+
+
+.finance-card h3{
+
+
+    font-size:22px;
+
+}
+
+
+}
+
+
+
+</style>
+
+
 
 {% endblock %}

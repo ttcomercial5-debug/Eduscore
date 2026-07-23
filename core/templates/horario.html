@@ -1,169 +1,1602 @@
 {% extends "base_aluno.html" %}
 {% load extras %}
+
 {% block content %}
 
+
 <style>
-/* =============================
-   ESTILOS PREMIUM PARA HORÁRIO DO ALUNO
-============================= */
 
-/* Cards principais */
-.card-premium {
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 25px;
-    background: #ffffff;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease forwards;
-}
-.card-premium:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-}
+/* ==========================================================
+   EDUSCEL ALUNO
+   HORÁRIO ESCOLAR PREMIUM UI
+========================================================== */
 
-/* Títulos */
-.section-title {
-    font-weight: 700;
-    font-size: 28px;
-    color: #4f46e5;
-    margin-bottom: 20px;
-}
 
-/* Badge Turno */
-.badge-turno {
-    background: linear-gradient(135deg,#4f46e5,#6366f1);
-    color: #fff;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 14px;
+:root{
+
+    --edus-primary:#2563eb;
+
+    --edus-secondary:#1d4ed8;
+
+    --edus-success:#10b981;
+
+    --edus-warning:#f59e0b;
+
+    --edus-dark:#0f172a;
+
+    --edus-muted:#64748b;
+
+    --edus-border:#e2e8f0;
+
+    --edus-bg:#f8fafc;
+
 }
 
-/* Tabela Horário */
-.table thead {
-    background: #4f46e5;
-    color: #fff;
-    text-align: center;
-}
-.table td, .table th {
-    vertical-align: middle !important;
-    text-align: center;
+
+
+
+
+/* ==========================================================
+   CONTAINER PRINCIPAL
+========================================================== */
+
+
+.schedule-wrapper{
+
+
+    animation:fadePage .35s ease;
+
+
 }
 
-/* Aulas e Intervalos */
-.aula-card {
-    border-radius: 12px;
-    padding: 8px 10px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    transition: 0.3s;
-    text-align: center;
-    line-height: 1.3;
-}
-.aula-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
-.bg-aula {
-    background: linear-gradient(135deg,#10b981,#059669);
-}
-.bg-intervalo {
-    background: linear-gradient(135deg,#f59e0b,#d97706);
+
+
+
+
+
+@keyframes fadePage{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
 }
 
-/* Horas coluna */
-.hora-cell {
-    font-weight: 600;
-    background: #f8f9fa;
+
+
+
+
+
+
+
+/* ==========================================================
+   HERO PREMIUM
+========================================================== */
+
+
+.page-header{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #020617,
+
+        #1e40af,
+
+        #2563eb
+
+    );
+
+
+    border-radius:28px;
+
+
+    padding:35px;
+
+
+    margin-bottom:30px;
+
+
+    color:white;
+
+
+    box-shadow:
+
+
+    0 20px 45px rgba(37,99,235,.20);
+
+
+    overflow:hidden;
+
+
 }
 
-/* Animação de entrada */
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+
+
+
+
+.page-header h3{
+
+
+    font-size:32px;
+
+
+    font-weight:900;
+
+
+    letter-spacing:-.5px;
+
+
+    margin-bottom:10px;
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+.page-icon{
+
+
+    width:70px;
+
+
+    height:70px;
+
+
+    border-radius:24px;
+
+
+    background:
+
+
+    rgba(37,99,235,.12);
+
+
+    color:var(--edus-primary);
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:32px;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   CARDS PREMIUM
+========================================================== */
+
+
+.card-premium{
+
+
+    background:white;
+
+
+    border-radius:28px;
+
+
+    border:1px solid var(--edus-border);
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(15,23,42,.06);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+.card-premium:hover{
+
+
+    transform:translateY(-4px);
+
+
+    box-shadow:
+
+
+    0 20px 45px rgba(15,23,42,.12);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   CARD INFORMAÇÃO TURMA
+========================================================== */
+
+
+.schedule-info{
+
+
+    padding:28px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:space-between;
+
+
+    gap:20px;
+
+
+    flex-wrap:wrap;
+
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+
+
+.schedule-info-left{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:18px;
+
+
+}
+
+
+
+
+
+.schedule-class-icon{
+
+
+    width:65px;
+
+
+    height:65px;
+
+
+    border-radius:22px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    background:
+
+
+    rgba(37,99,235,.12);
+
+
+    color:var(--edus-primary);
+
+
+    font-size:28px;
+
+
+}
+
+
+
+
+
+
+
+.schedule-info h4{
+
+
+    font-weight:900;
+
+
+    color:var(--edus-dark);
+
+
+    margin:0;
+
+
+    font-size:22px;
+
+
+}
+
+
+
+
+
+
+
+.schedule-info p{
+
+
+    color:var(--edus-muted);
+
+
+    margin:5px 0 0;
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   BADGE TURNO
+========================================================== */
+
+
+.badge-turno{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #1d4ed8
+
+    );
+
+
+    color:white;
+
+
+    padding:12px 22px;
+
+
+    border-radius:50px;
+
+
+    font-size:14px;
+
+
+    font-weight:800;
+
+
+    box-shadow:
+
+
+    0 10px 25px rgba(37,99,235,.25);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+
+.schedule-table{
+
+
+    background:white;
+
+
+    border-radius:28px;
+
+
+    overflow:hidden;
+
+
+    border:1px solid var(--edus-border);
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(15,23,42,.06);
+
+
+}
+
+
+
+
+.schedule-table .table{
+
+
+    margin:0;
+
+
+}
+
+
+
+
+
+
+.schedule-table thead th{
+
+
+    background:#0f172a;
+
+
+    color:white;
+
+
+    padding:18px;
+
+
+    text-align:center;
+
+
+    font-size:12px;
+
+
+    text-transform:uppercase;
+
+
+    letter-spacing:.5px;
+
+
+    white-space:nowrap;
+
+
+}
+
+
+
+
+
+
+.schedule-table tbody td{
+
+
+    padding:14px;
+
+
+    text-align:center;
+
+
+    vertical-align:middle;
+
+
+    border-color:#f1f5f9;
+
+
+}
+
+
+
+
+
+
+.schedule-table tbody tr{
+
+
+    transition:.25s;
+
+
+}
+
+
+
+.schedule-table tbody tr:hover{
+
+
+    background:#f8fafc;
+
+
+}
+
+
+
+
+
+/* ==========================================================
+   HORA
+========================================================== */
+
+
+.hora-cell{
+
+
+    font-weight:900;
+
+
+    color:var(--edus-dark);
+
+
+    background:#f8fafc;
+
+
+    min-width:110px;
+
+
+}
+
 </style>
 
-<div class="container mt-4">
+<!-- ==========================================================
+     WRAPPER PRINCIPAL
+========================================================== -->
 
-    <h2 class="mb-4 section-title">Meu Horário Escolar</h2>
+<div class="schedule-wrapper">
 
-    {% if horario %}
 
-    <!-- Cabeçalho Turma -->
-    <div class="card-premium mb-4">
-        <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h4 class="fw-bold mb-0">
-                Turma: {{ aluno.turma.classe }}ª {{ aluno.turma.identificador }}
-                {% if mostrar_curso %}
-                    | {{ aluno.turma.curso.nome }}
-                {% endif %}
-            </h4>
-            <span class="badge-turno">
-                Turno: {{ horario.turno }}
-            </span>
-        </div>
-    </div>
 
-    <!-- Tabela Horário -->
-    <div class="card-premium p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered mb-0">
-                <thead>
-                    <tr>
-                        <th style="width:120px;">Hora</th>
-                        {% for dia in dias %}
-                            <th>{{ dia }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for linha in linhas %}
-                    <tr>
-                        <td class="hora-cell">
-                            {{ linha.hora|time:"H:i" }}
-                        </td>
-                        {% for dia in dias %}
-                        {% with aula=linha|get_item:dia %}
-                        <td>
-                            {% if aula %}
-                                {% if aula.tipo == "INTERVALO" %}
-                                    <div class="aula-card bg-intervalo">
-                                        Intervalo<br>
-                                        <small>{{ aula.hora_inicio|time:"H:i" }} - {{ aula.hora_fim|time:"H:i" }}</small>
-                                    </div>
-                                {% else %}
-                                    <div class="aula-card bg-aula">
-                                        {{ aula.disciplina.nome }}
-                                        {% if mostrar_curso %}
-                                        <br>
-                                        <small>{{ aluno.turma.classe }}ª {{ aluno.turma.identificador }} | {{ aluno.turma.curso.nome }}</small>
-                                        {% endif %}
-                                        <br>
-                                        <small>{{ aula.hora_inicio|time:"H:i" }} - {{ aula.hora_fim|time:"H:i" }}</small>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                        {% endwith %}
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    {% else %}
 
-    <div class="alert alert-info text-center">
-        O horário da sua turma ainda não foi definido.
-    </div>
+<!-- ==========================================================
+     HERO PREMIUM
+========================================================== -->
 
-    {% endif %}
+
+<div class="page-header">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+
+
+
+<div>
+
+
+<h3>
+
+<i class="bi bi-calendar-week me-2 text-primary"></i>
+
+MEU HORÁRIO ESCOLAR
+
+</h3>
+
+
+
+
 
 </div>
+
+
+
+
+
+<div class="page-icon">
+
+
+<i class="bi bi-calendar-check-fill"></i>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{% if horario %}
+
+
+
+
+
+
+
+<!-- ==========================================================
+     INFORMAÇÕES DA TURMA
+========================================================== -->
+
+
+<div class="card-premium schedule-info">
+
+
+
+
+
+<div class="schedule-info-left">
+
+
+
+<div class="schedule-class-icon">
+
+
+<i class="bi bi-people-fill"></i>
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+
+<h4>
+
+
+Turma:
+
+{{ aluno.turma.classe }}ª
+
+{{ aluno.turma.identificador }}
+
+
+
+{% if mostrar_curso %}
+
+
+<span>
+
+
+| {{ aluno.turma.curso.nome }}
+
+
+</span>
+
+
+{% endif %}
+
+
+</h4>
+
+
+
+
+
+<p>
+
+
+<i class="bi bi-mortarboard me-2"></i>
+
+
+Horário semanal da turma
+
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+<span class="badge-turno">
+
+
+<i class="bi bi-clock-fill me-2"></i>
+
+
+Turno:
+
+{{ horario.turno }}
+
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+     TABELA DO HORÁRIO
+========================================================== -->
+
+
+<div class="schedule-table">
+
+
+<div class="table-responsive">
+
+
+
+<table class="table table-bordered align-middle mb-0">
+
+
+
+<thead>
+
+
+
+<tr>
+
+
+<th style="width:120px;">
+
+
+<i class="bi bi-clock me-2"></i>
+
+
+Hora
+
+
+</th>
+
+
+
+
+{% for dia in dias %}
+
+
+<th>
+
+
+<i class="bi bi-calendar-day me-1"></i>
+
+
+{{ dia }}
+
+
+</th>
+
+
+
+{% endfor %}
+
+
+
+
+
+</tr>
+
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+{% for linha in linhas %}
+
+
+
+<tr>
+
+
+
+
+<td class="hora-cell">
+
+
+{{ linha.hora|time:"H:i" }}
+
+
+</td>
+
+
+
+
+
+
+
+{% for dia in dias %}
+
+
+
+{% with aula=linha|get_item:dia %}
+
+
+
+<td>
+
+
+
+{% if aula %}
+
+
+
+
+
+{% if aula.tipo == "INTERVALO" %}
+
+
+
+<div class="aula-card bg-intervalo">
+
+
+<i class="bi bi-cup-hot-fill me-1"></i>
+
+
+Intervalo
+
+
+
+<br>
+
+
+<small>
+
+
+{{ aula.hora_inicio|time:"H:i" }}
+
+
+-
+
+
+{{ aula.hora_fim|time:"H:i" }}
+
+
+
+</small>
+
+
+
+</div>
+
+
+
+
+
+{% else %}
+
+
+
+<div class="aula-card bg-aula">
+
+
+<i class="bi bi-book-fill me-1"></i>
+
+
+
+{{ aula.disciplina.nome }}
+
+
+
+<br>
+
+
+
+{% if mostrar_curso %}
+
+
+
+<small>
+
+
+{{ aluno.turma.classe }}ª
+
+{{ aluno.turma.identificador }}
+
+
+|
+
+{{ aluno.turma.curso.nome }}
+
+
+</small>
+
+
+
+<br>
+
+
+
+{% endif %}
+
+
+
+
+
+<small>
+
+
+<i class="bi bi-clock me-1"></i>
+
+
+{{ aula.hora_inicio|time:"H:i" }}
+
+
+-
+
+
+{{ aula.hora_fim|time:"H:i" }}
+
+
+
+</small>
+
+
+
+
+</div>
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+{% endwith %}
+
+
+
+{% endfor %}
+
+
+
+
+
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+
+</tbody>
+
+
+
+
+
+</table>
+
+
+
+
+
+</div>
+
+
+</div>
+<!-- ==========================================================
+     ESTILOS DOS BLOCOS DE AULA
+========================================================== -->
+
+
+<style>
+
+
+/* ==========================================================
+   BLOCO DE AULA
+========================================================== */
+
+
+.aula-card{
+
+
+    border-radius:16px;
+
+
+    padding:12px 10px;
+
+
+    color:white;
+
+
+    font-size:13px;
+
+
+    font-weight:800;
+
+
+    line-height:1.4;
+
+
+    min-width:120px;
+
+
+    transition:.3s;
+
+
+    box-shadow:
+
+
+    0 8px 20px rgba(15,23,42,.12);
+
+
+}
+
+
+
+
+
+.aula-card:hover{
+
+
+    transform:translateY(-3px);
+
+
+    box-shadow:
+
+
+    0 15px 30px rgba(15,23,42,.18);
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   AULA NORMAL
+========================================================== */
+
+
+.bg-aula{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #10b981,
+
+        #059669
+
+    );
+
+
+}
+
+
+
+
+
+
+
+/* ==========================================================
+   INTERVALO
+========================================================== */
+
+
+.bg-intervalo{
+
+
+    background:
+
+
+    linear-gradient(
+
+        135deg,
+
+        #f59e0b,
+
+        #d97706
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================================================
+   TEXTO PEQUENO
+========================================================== */
+
+
+.aula-card small{
+
+
+    font-size:11px;
+
+
+    opacity:.95;
+
+
+}
+
+
+
+
+
+
+
+
+/* ==========================================================
+   SEM HORÁRIO
+========================================================== */
+
+
+.empty-schedule{
+
+
+    background:white;
+
+
+    border-radius:28px;
+
+
+    padding:60px 30px;
+
+
+    text-align:center;
+
+
+    border:1px solid var(--edus-border);
+
+
+    box-shadow:
+
+
+    0 15px 40px rgba(15,23,42,.06);
+
+
+}
+
+
+
+
+
+
+.empty-schedule i{
+
+
+    font-size:60px;
+
+
+    color:#94a3b8;
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+
+
+.empty-schedule h5{
+
+
+    color:var(--edus-dark);
+
+
+    font-weight:900;
+
+
+}
+
+
+
+
+
+
+
+.empty-schedule p{
+
+
+    color:var(--edus-muted);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================
+   RESPONSIVO MOBILE
+========================================================== */
+
+
+@media(max-width:768px){
+
+
+
+.page-header{
+
+
+    padding:22px;
+
+
+}
+
+
+
+
+
+.page-header h3{
+
+
+    font-size:22px;
+
+
+}
+
+
+
+
+.page-icon{
+
+
+    width:55px;
+
+
+    height:55px;
+
+
+    font-size:25px;
+
+
+}
+
+
+
+
+
+
+
+.schedule-info{
+
+
+    padding:20px;
+
+
+}
+
+
+
+
+
+.schedule-info h4{
+
+
+    font-size:18px;
+
+
+}
+
+
+
+
+.schedule-class-icon{
+
+
+    width:55px;
+
+
+    height:55px;
+
+
+    font-size:22px;
+
+
+}
+
+
+
+
+
+
+
+.badge-turno{
+
+
+    width:100%;
+
+
+    text-align:center;
+
+
+}
+
+
+
+
+
+.schedule-table{
+
+
+    border-radius:20px;
+
+
+}
+
+
+
+
+
+.schedule-table .table{
+
+
+    min-width:900px;
+
+
+}
+
+
+
+
+
+.aula-card{
+
+
+    min-width:110px;
+
+
+    font-size:12px;
+
+
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+</style>
+
+
+
+
+
+
+
+
+
+{% else %}
+
+
+
+
+
+
+
+
+<!-- ==========================================================
+     HORÁRIO NÃO DEFINIDO
+========================================================== -->
+
+
+<div class="empty-schedule">
+
+
+<i class="bi bi-calendar-x"></i>
+
+
+
+
+<h5>
+
+
+Horário não disponível
+
+
+</h5>
+
+
+
+
+
+<p>
+
+
+O horário da sua turma ainda não foi definido pela instituição.
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+{% endif %}
+
+
+
+
+
+</div>
+<!-- ==========================================================
+     SCRIPTS / ACABAMENTOS FINAIS
+========================================================== -->
+
+
+<script>
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+
+
+    const cards = document.querySelectorAll(
+
+        ".card-premium, .schedule-table, .page-header"
+
+    );
+
+
+
+    cards.forEach(function(card,index){
+
+
+
+        card.style.animationDelay =
+
+        (index * 0.08) + "s";
+
+
+
+    });
+
+
+
+});
+
+
+
+</script>
+
+
+
+
 
 {% endblock %}
