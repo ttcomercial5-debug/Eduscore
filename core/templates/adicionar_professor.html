@@ -90,134 +90,137 @@ body{
 
 
 
-
-/* ==========================
-        HEADER
-========================== */
-
+/* ======================================================
+   HERO PREMIUM
+====================================================== */
 
 .page-header{
 
+    background:linear-gradient(135deg,#020617,#2563eb);
 
-    background:
+    border-radius:30px;
 
-        linear-gradient(
-            135deg,
-            #0d6efd,
-            #4285f4
-        );
+    padding:45px;
 
+    color:#fff;
 
-    border-radius:28px;
-
-
-    padding:32px 38px;
-
-
-    color:white;
-
-
-    box-shadow:
-
-        0 20px 55px rgba(13,110,253,.20);
-
+    box-shadow:0 25px 60px rgba(15,23,42,.25);
 
     margin-bottom:30px;
 
-
 }
-
-
-
 
 .page-title{
 
-
     display:flex;
-
 
     align-items:center;
 
+    gap:25px;
 
-    gap:18px;
-
+    flex-wrap:wrap;
 
 }
-
-
-
 
 .page-icon{
 
+    width:90px;
 
-    width:72px;
+    height:90px;
 
+    border-radius:22px;
 
-    height:72px;
-
-
-    border-radius:20px;
-
-
-    background:
-
-        rgba(255,255,255,.18);
-
+    background:rgba(255,255,255,.12);
 
     display:flex;
 
+    align-items:center;
 
     justify-content:center;
 
+    font-size:42px;
 
-    align-items:center;
+    color:#fff;
 
-
-    font-size:32px;
-
+    backdrop-filter:blur(8px);
 
 }
-
-
-
-
 
 .page-header h2{
 
-
     margin:0;
 
+    font-size:34px;
 
-    font-size:32px;
+    font-weight:900;
 
-
-    font-weight:800;
-
+    letter-spacing:-1px;
 
 }
-
-
-
 
 .page-header p{
 
+    margin-top:10px;
 
-    margin:
+    color:#cbd5e1;
 
-        8px 0 0;
-
-
-    font-size:15px;
-
-
-    opacity:.95;
-
+    font-size:16px;
 
 }
 
+.btn-header{
 
+    background:#fff;
 
+    color:#2563eb;
 
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 24px;
+
+    font-weight:700;
+
+    transition:.25s ease;
+
+}
+
+.btn-header:hover{
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+    .page-header{
+
+        padding:30px;
+
+    }
+
+    .page-header h2{
+
+        font-size:28px;
+
+    }
+
+    .page-icon{
+
+        width:70px;
+
+        height:70px;
+
+        font-size:32px;
+
+    }
+
+}
 
 /* ==========================
         BOTÃO HEADER
@@ -743,91 +746,51 @@ body{
 
 
 
-
-<!-- HEADER -->
-
+<!-- ======================================================
+                    HERO
+====================================================== -->
 
 <div class="page-header">
 
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="page-title">
 
+            <div class="page-icon">
 
+                <i class="bi bi-person-workspace"></i>
 
-<div class="page-title">
+            </div>
 
+            <div>
 
+                <h2>
 
-<div class="page-icon">
+                    REGISTO DE PROFESSORES
 
-
-<i class="bi bi-person-workspace"></i>
-
-
-</div>
-
-
-
-
-<div>
-
-
-<h2>
-
-Registo de Professor
-
-</h2>
+                </h2>
 
 
 
-<p>
+            </div>
 
-Preencha os dados para criar um novo professor.
+        </div>
 
-</p>
+        <div>
 
+            <a href="{% url 'professores' %}" class="btn btn-header">
 
+                <i class="bi bi-arrow-left-circle me-2"></i>
 
-</div>
+                Voltar
 
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
-
-
-
-
-
-
-<div>
-
-
-<a href="{% url 'professores' %}"
-
-class="btn btn-header">
-
-
-<i class="bi bi-arrow-left me-2"></i>
-
-
-Voltar
-
-
-</a>
-
-
-</div>
-
-
-
-
-</div>
-
-
-</div>
-
-
-
-
 
 
 

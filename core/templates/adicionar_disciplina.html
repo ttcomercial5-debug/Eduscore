@@ -2,18 +2,114 @@
 {% block content %}
 
 <style>
-.page-header{
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
-    padding:30px;
-    border-radius:20px;
-    margin-bottom:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
+/* ======================================================
+   HERO PREMIUM
+====================================================== */
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
 }
-.page-header h2{
+
+.receipt-hero .hero-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+.receipt-hero h2{
+
+    font-size:32px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
     margin:0;
-    font-weight:800;
+
+    font-size:15px;
+
 }
+
+.hero-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.12);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:42px;
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h2{
+
+        font-size:32px;
+
+    }
+
+    .hero-icon{
+
+        width:70px;
+        height:70px;
+        font-size:32px;
+
+    }
+
+}
+
 .card-premium{
     border:none;
     border-radius:20px;
@@ -67,13 +163,37 @@
     color:#ef4444;
 }
 </style>
+
 <div class="container-fluid">
-<div class="page-header">
-    <h2>Nova Disciplina</h2>
-    <p class="mb-0 mt-2 opacity-75">
-        Crie disciplinas e atribua professores às turmas.
-    </p>
+
+<div class="receipt-hero mb-4">
+
+    <div class="hero-content">
+
+        <div>
+
+            <h2>
+
+                <i class="bi bi-journal-bookmark-fill me-2"></i>
+
+                NOVA DISCIPLINA
+
+            </h2>
+
+
+        </div>
+
+        <div class="hero-icon d-none d-lg-flex">
+
+            <i class="bi bi-journal-bookmark-fill"></i>
+
+        </div>
+
+    </div>
+
 </div>
+
+
 <div class="row justify-content-center">
     <div class="col-xl-8">
         <div class="card card-premium">

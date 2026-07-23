@@ -15,18 +15,147 @@
 }
 
 
+/* ======================================================
+   HERO PREMIUM
+====================================================== */
 
 .turma-header{
 
-    background:
-    linear-gradient(135deg,#0d6efd,#084298);
+    background:linear-gradient(135deg,#020617,#2563eb);
 
-    color:white;
-    padding:30px;
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    box-shadow:0 25px 60px rgba(15,23,42,.25);
 
 }
 
+.hero-content{
 
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+.hero-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.hero-icon{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.12);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:42px;
+
+    color:#fff;
+
+    backdrop-filter:blur(8px);
+
+}
+
+.turma-header h1{
+
+    margin:0;
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+}
+
+.turma-header p{
+
+    margin-top:10px;
+
+    color:#cbd5e1;
+
+    font-size:16px;
+
+}
+
+.btn-header{
+
+    background:#fff;
+
+    color:#2563eb;
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 24px;
+
+    font-weight:700;
+
+    transition:.25s;
+
+}
+
+.btn-header:hover{
+
+    background:#f8fafc;
+
+    color:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+    .turma-header{
+
+        padding:30px;
+
+    }
+
+    .turma-header h1{
+
+        font-size:28px;
+
+    }
+
+    .hero-icon{
+
+        width:70px;
+
+        height:70px;
+
+        font-size:32px;
+
+    }
+
+}
 
 .form-control,
 .form-select{
@@ -134,34 +263,51 @@
 
 
 
+<!-- ======================================================
+                    HERO
+====================================================== -->
+
+<div class="turma-header mb-4">
+
+    <div class="hero-content">
+
+        <div class="hero-title">
+
+            <div class="hero-icon">
+
+                <i class="bi bi-people-fill"></i>
+
+            </div>
+
+            <div>
+
+                <h1>
+
+                    NOVA TURMA
+
+                </h1>
 
 
-<!-- HEADER -->
 
-<div class="turma-header">
+            </div>
 
+        </div>
 
-<h3 class="fw-bold mb-2">
+        <div>
 
-<i class="bi bi-people-fill me-2"></i>
+            <a href="{% url 'turmas' %}" class="btn btn-header">
 
-Nova Turma
+                <i class="bi bi-arrow-left-circle me-2"></i>
 
-</h3>
+                Voltar
 
+            </a>
 
-<p class="mb-0 opacity-75">
+        </div>
 
-Configure a turma, responsável pedagógico e organização curricular.
-
-</p>
-
+    </div>
 
 </div>
-
-
-
-
 
 
 

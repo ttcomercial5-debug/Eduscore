@@ -6,7 +6,7 @@
 <style>
 
 /* ==========================================================
-   EDUSCORE
+   EDUSCEL
    GESTÃO DE HORÁRIOS DE TURMAS
    INTERFACE PREMIUM ERP ESCOLAR
 ========================================================== */
@@ -410,6 +410,144 @@
 
 }
 
+
+/* ==========================================================
+        HERO PREMIUM - GESTÃO DE HORÁRIOS
+========================================================== */
+
+.hero-header{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:38px 45px;
+
+    color:white;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+
+.hero-header-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+.hero-title{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    letter-spacing:-.8px;
+
+    margin:0;
+
+    color:white;
+
+}
+
+
+
+.hero-subtitle{
+
+    margin-top:10px;
+
+    margin-bottom:0;
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+}
+
+
+
+.hero-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.15);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:30px;
+
+    color:white;
+
+}
+
+
+
+.hero-title-area{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+
+
+.hero-header .btn-light{
+
+    border-radius:14px;
+
+    padding:12px 25px;
+
+    font-weight:700;
+
+}
+
+
+
+@media(max-width:768px){
+
+    .hero-header{
+
+        padding:30px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:24px;
+
+    }
+
+}
+
+
 </style>
 
 
@@ -419,54 +557,40 @@
 
 
 <!-- ==========================================================
-        CABEÇALHO PRINCIPAL
+        HERO PRINCIPAL
 ========================================================== -->
 
 
-<div class="card card-premium header-card mb-4">
+<div class="hero-header mb-4">
 
 
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+<div class="hero-header-content">
+
+
+
+<div class="hero-title-area">
+
+
+<div class="hero-icon">
+
+<i class="bi bi-calendar-week"></i>
+
+</div>
+
 
 
 
 <div>
 
 
-<h2 class="header-title mb-2">
+<h2 class="hero-title">
 
-Gestão de Horários
+GESTÃO DE HORÁRIOS
 
 </h2>
 
 
 
-<p class="header-subtitle mb-0">
-
-Organização dos horários das turmas por ano letivo
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-<div>
-
-
-<a href="{% url 'dashboard' %}"
-
-class="btn btn-outline-secondary btn-premium">
-
-Voltar
-
-</a>
-
-
 </div>
 
 
@@ -474,13 +598,18 @@ Voltar
 </div>
 
 
+
+
+
+
+
+
+
+
 </div>
 
 
-
-
-
-
+</div>
 
 <!-- ==========================================================
         INDICADORES

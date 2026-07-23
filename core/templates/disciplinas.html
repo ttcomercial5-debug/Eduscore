@@ -5,6 +5,96 @@
 
 <style>
 
+/* ======================================================
+   HERO PREMIUM - GESTÃO DE DISCIPLINAS
+====================================================== */
+
+.receipt-hero{
+
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
+
+}
+
+
+.receipt-hero .hero-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+}
+
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+}
+
+
+.container-fluid{
+
+    padding-left:0 !important;
+
+    padding-right:0 !important;
+
+}
 
 .page-header h2{
 
@@ -144,66 +234,48 @@
 
 
 
+<!-- ======================================================
+                    HERO
+====================================================== -->
+
+<div class="receipt-hero mb-4">
+
+    <div class="hero-content">
+
+        <div>
+
+            <h1>
+
+                <i class="bi bi-journal-bookmark-fill me-2"></i>
+
+                GESTÃO DE DISCIPLINAS
+
+            </h1>
 
 
+        </div>
 
+        {% if request.user.role == "DIRETOR_PEDAGOGICO" %}
 
-<!-- HEADER -->
+        <div>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'adicionar_disciplina' %}"
 
+            class="btn btn-light rounded-3 px-4 shadow-sm">
 
+                <i class="bi bi-plus-circle me-2"></i>
 
-<div class="page-header">
+                Nova Disciplina
 
+            </a>
 
-<h2 class="mb-1">
+        </div>
 
-Gestão de Disciplinas
+        {% endif %}
 
-</h2>
-
-
-
-<p class="text-muted mb-0">
-
-Organização curricular e distribuição das disciplinas por turma
-
-</p>
-
-
-</div>
-
-
-
-
-
-{% if request.user.role == "DIRETOR_PEDAGOGICO" %}
-
-
-<a href="{% url 'adicionar_disciplina' %}"
-
-class="btn btn-primary rounded-3 px-4 shadow-sm">
-
-
-Nova Disciplina
-
-
-</a>
-
-
-{% endif %}
-
-
+    </div>
 
 </div>
-
-
-
-
-
-
-
 
 
 

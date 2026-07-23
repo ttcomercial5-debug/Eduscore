@@ -5,28 +5,90 @@
 
 <style>
 
+/* ======================================================
+   HERO PREMIUM - GESTÃO DE CURSOS
+====================================================== */
 
-/* =====================================================
-   GESTÃO DE CURSOS
-   MODELO PREMIUM - BOOTSTRAP
-===================================================== */
+.receipt-hero{
 
+    background:
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
 
-.page-header h2{
+    border-radius:30px;
 
-    font-weight:800;
-    letter-spacing:-0.6px;
+    padding:45px;
+
+    color:#fff;
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    box-shadow:
+    0 25px 60px rgba(15,23,42,.25);
 
 }
 
+.receipt-hero .hero-content{
 
+    display:flex;
 
-.page-header p{
+    justify-content:space-between;
 
-    font-size:15px;
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
 
 }
 
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+}
+
+.container-fluid{
+
+    padding-left:0 !important;
+    padding-right:0 !important;
+
+}
 
 
 .card-premium{
@@ -256,7 +318,80 @@
 
 }
 
+/* =====================================================
+   AJUSTE DOS MODAIS PARA O BASE_DIRETOR_PEDAGOGICO
+===================================================== */
 
+.modal{
+    padding-left:260px !important; /* largura da sidebar */
+}
+
+.modal-dialog{
+    margin:1.75rem auto;
+    max-width:700px;
+}
+
+.modal-dialog-centered{
+    min-height:calc(100vh - 3.5rem);
+}
+
+.modal-content{
+    border-radius:22px;
+}
+
+@media(max-width:992px){
+
+    .modal{
+        padding-left:0 !important;
+    }
+
+    .modal-dialog{
+        max-width:95%;
+    }
+
+}
+
+
+/* =====================================================
+   HERO DO MODAL
+===================================================== */
+
+.modal-header-hero{
+
+    background:linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    color:#fff;
+
+    border:none;
+
+    padding:22px 28px;
+}
+
+.modal-header-hero .modal-title{
+
+    font-size:1.45rem;
+
+    font-weight:800;
+
+    letter-spacing:-.4px;
+
+}
+
+.modal-header-hero .btn-close{
+
+    filter:invert(1) brightness(200%);
+
+    opacity:.9;
+}
+
+.modal-header-hero .btn-close:hover{
+
+    opacity:1;
+}
 
 </style>
 
@@ -271,71 +406,53 @@
 
 
 
+<!-- ======================================================
+                    HERO
+====================================================== -->
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+<div class="receipt-hero mb-4">
 
+    <div class="hero-content">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
 
+            <h1>
 
-<div class="page-header">
+                <i class="bi bi-book-half me-2"></i>
 
+                GESTÃO DE CURSOS
 
-<h2 class="mb-1">
-
-Gestão de Cursos
-
-</h2>
-
-
-
-<p class="text-muted mb-0">
-
-Organização curricular, coordenadores e estrutura académica da instituição.
-
-</p>
+            </h1>
 
 
 
-</div>
+        </div>
 
+        {% if request.user.role|upper == "DIRETOR_PEDAGOGICO" %}
 
+        <div>
 
+            <button
 
+            class="btn btn-light rounded-3 px-4 shadow-sm"
 
+            data-bs-toggle="modal"
 
-{% if request.user.role|upper == "DIRETOR_PEDAGOGICO" %}
+            data-bs-target="#novoCursoModal">
 
+                <i class="bi bi-plus-circle me-2"></i>
 
+                Novo Curso
 
-<button
+            </button>
 
-class="btn btn-primary px-4 py-2 rounded-3 shadow-sm"
+        </div>
 
-data-bs-toggle="modal"
+        {% endif %}
 
-data-bs-target="#novoCursoModal">
-
-
-<i class="fas fa-plus me-2"></i>
-
-Novo Curso
-
-
-</button>
-
-
-
-{% endif %}
-
-
+    </div>
 
 </div>
-
-
-
 
 
 
@@ -1739,8 +1856,7 @@ tabindex="-1">
 
 
 
-<div class="modal-dialog modal-lg">
-
+<div class="modal-dialog modal-dialog-centered" style="max-width:700px;">
 
 
 
@@ -1763,49 +1879,33 @@ tabindex="-1">
 
 
 
+<div class="modal-header modal-header-hero">
 
+    <div>
 
+        <h5 class="modal-title mb-1">
 
-<div class="modal-header bg-light">
+            <i class="bi bi-book-half me-2"></i>
 
+            NOVO CURSO
 
+        </h5>
 
+        <small class="text-white-50">
 
+            Registe um novo curso para a instituição.
 
+        </small>
 
-<h5 class="modal-title fw-bold">
+    </div>
 
-
-Novo Curso
-
-
-</h5>
-
-
-
-
-
-
-
-<button type="button"
-
-
-class="btn-close"
-
-
-data-bs-dismiss="modal">
-
-
-</button>
-
-
-
-
-
+    <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal">
+    </button>
 
 </div>
-
-
 
 
 

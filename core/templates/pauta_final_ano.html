@@ -616,6 +616,122 @@ form,
 
 }
 
+/* ======================================================
+   HERO PREMIUM
+====================================================== */
+
+.receipt-hero{
+
+    background:linear-gradient(135deg,#020617,#2563eb);
+
+    border-radius:30px;
+
+    padding:45px;
+
+    color:#fff;
+
+    box-shadow:0 25px 60px rgba(15,23,42,.25);
+
+}
+
+.receipt-hero .hero-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+.receipt-hero h1{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    letter-spacing:-1px;
+
+    margin-bottom:10px;
+
+}
+
+.receipt-hero p{
+
+    color:#cbd5e1;
+
+    margin:0;
+
+    max-width:700px;
+
+}
+
+.card-premium{
+
+    border:none;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+@media(max-width:768px){
+
+    .receipt-hero{
+
+        padding:30px;
+
+    }
+
+    .receipt-hero h1{
+
+        font-size:26px;
+
+    }
+
+}
+
+
+.btn-hero{
+
+    background:#1d4ed8;
+
+    border:1px solid #3b82f6;
+
+    color:#fff;
+
+    font-weight:700;
+
+    transition:.25s ease;
+
+}
+
+.btn-hero:hover{
+
+    background:#2563eb;
+
+    border-color:#60a5fa;
+
+    color:#fff;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 25px rgba(37,99,235,.35);
+
+}
+
+.btn-hero:focus{
+
+    color:#fff;
+
+    box-shadow:0 0 0 .25rem rgba(59,130,246,.35);
+
+}
 
 </style>
 
@@ -627,171 +743,119 @@ form,
                     FILTROS
 ====================================================== -->
 
+<!-- ======================================================
+                    HERO
+====================================================== -->
 
-<div class="card card-pauta mb-4 no-print">
+<div class="receipt-hero mb-4 no-print">
 
+    <div class="hero-content">
 
-<div class="filtro-title">
+        <div>
 
-Pauta Final do Ano Lectivo
+            <h1>
 
-</div>
+                <i class="bi bi-journal-check me-2"></i>
 
+                PAUTA FINAL DO ANO LECTIVO
 
-
-<form method="GET">
-
-
-<div class="row g-3">
-
-
-
-<div class="col-md-5">
-
-<label class="form-label">
-
-Ano Lectivo
-
-</label>
+            </h1>
 
 
-<select name="ano_letivo" class="form-select">
+        </div>
 
 
-<option value="">
 
-Seleccione o ano lectivo
-
-</option>
-
-
-{% for ano in anos_letivos %}
-
-
-<option
-
-value="{{ ano.id }}"
-
-{% if ano.id|stringformat:"s" == ano_letivo_id %}
-
-selected
-
-{% endif %}
-
->
-
-{{ ano.nome }}
-
-</option>
-
-
-{% endfor %}
-
-
-</select>
-
+    </div>
 
 </div>
-<div class="col-md-5">
 
-<label class="form-label">
+<!-- FILTRO -->
 
-Turma
+<div class="card card-premium shadow-sm mb-4 no-print">
 
-</label>
+    <div class="card-body p-4">
 
+        <form method="GET" id="formPauta">
 
-<select
+            <div class="row g-3">
 
-name="turma"
+                <div class="col-lg-5">
 
-class="form-select">
+                    <label class="form-label fw-semibold">
+                        ANO LETIVO
+                    </label>
 
+                    <select name="ano_letivo" class="form-select">
 
-<option value="">
+                        <option value="">
+                            Seleccione o ano lectivo
+                        </option>
 
-Seleccione a turma
+                        {% for ano in anos_letivos %}
 
-</option>
+                        <option value="{{ ano.id }}"
+                            {% if ano.id|stringformat:"s" == ano_letivo_id %}selected{% endif %}>
 
+                            {{ ano.nome }}
 
+                        </option>
 
-{% for t in turmas %}
+                        {% endfor %}
 
+                    </select>
 
-<option
+                </div>
 
-value="{{ t.id }}"
+                <div class="col-lg-5">
 
-{% if t.id|stringformat:"s" == turma_id %}
+                    <label class="form-label fw-semibold">
+                        TURMA
+                    </label>
 
-selected
+                    <select name="turma" class="form-select">
 
-{% endif %}
+                        <option value="">
+                            Seleccione a turma
+                        </option>
 
->
+                        {% for t in turmas %}
 
+                        <option value="{{ t.id }}"
+                            {% if t.id|stringformat:"s" == turma_id %}selected{% endif %}>
 
-{{ t.nome_completo|default:t.identificador }}
+                            {{ t.nome_completo|default:t.identificador }}
 
+                        </option>
 
-</option>
+                        {% endfor %}
 
+                    </select>
 
-{% endfor %}
+                </div>
 
+                <div class="col-lg-2 d-grid">
 
+                    <button
+                        type="submit"
+                        form="formPauta"
+                        class="btn btn-hero rounded-3 px-4 shadow-sm">
 
-</select>
+                        <i class="bi bi-printer-fill me-2"></i>
 
+                        Gerar Pauta
 
-</div>
+                    </button>
 
+                </div>
 
+            </div>
 
+        </form>
 
-
-<div class="col-md-2 d-grid">
-
-
-<label>
-
-&nbsp;
-
-</label>
-
-
-
-<button
-
-type="submit"
-
-class="btn btn-primary">
-
-
-Gerar Pauta
-
-
-</button>
-
-
-
-</div>
-
-
+    </div>
 
 </div>
-
-
-</form>
-
-
-
-</div>
-
-
-
-
 
 {% if pauta %}
 

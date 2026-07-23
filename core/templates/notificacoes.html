@@ -159,6 +159,210 @@ Notificações | EdusCel
 }
 
 
+/* =====================================================
+   HERO NOTIFICAÇÕES EDUSCEL
+===================================================== */
+
+
+.notification-hero{
+
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:28px;
+
+    padding:35px 40px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #020617,
+        #2563eb
+    );
+
+    color:white;
+
+    box-shadow:
+
+    0 20px 50px rgba(15,23,42,.25);
+
+}
+
+
+
+.hero-glow{
+
+    position:absolute;
+
+    right:-120px;
+
+    top:-120px;
+
+    width:350px;
+
+    height:350px;
+
+
+    background:
+
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.18),
+        transparent 70%
+    );
+
+}
+
+
+
+.hero-content{
+
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+}
+
+
+
+.hero-badge{
+
+
+    display:inline-flex;
+
+    align-items:center;
+
+
+    background:
+
+    rgba(255,255,255,.12);
+
+
+    padding:
+
+    8px 18px;
+
+
+    border-radius:50px;
+
+
+    font-size:13px;
+
+
+    font-weight:600;
+
+
+    margin-bottom:15px;
+
+
+    backdrop-filter:blur(10px);
+
+
+}
+
+
+
+.hero-title{
+
+
+    font-size:34px;
+
+
+    font-weight:900;
+
+
+    letter-spacing:-.8px;
+
+
+    margin-bottom:10px;
+
+
+}
+
+
+
+.hero-subtitle{
+
+
+    margin:0;
+
+
+    color:#dbeafe;
+
+
+    font-size:15px;
+
+
+    max-width:650px;
+
+
+}
+
+
+
+.notification-count{
+
+
+    background:
+
+    rgba(255,255,255,.15);
+
+
+    color:white;
+
+
+    padding:
+
+    10px 18px;
+
+
+    border-radius:50px;
+
+
+    font-size:13px;
+
+
+    font-weight:700;
+
+
+    backdrop-filter:blur(10px);
+
+
+}
+
+
+
+@media(max-width:768px){
+
+
+    .notification-hero{
+
+        padding:25px;
+
+    }
+
+
+    .hero-title{
+
+        font-size:26px;
+
+    }
+
+
+}
+
 
 </style>
 
@@ -173,37 +377,46 @@ Notificações | EdusCel
 
 
 
-
-<!-- HEADER -->
-
-
-<div class="notification-header shadow-sm p-4 mb-4">
+<!-- ================= HERO HEADER ================= -->
 
 
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+<div class="notification-hero mb-4">
+
+
+    <div class="hero-glow"></div>
+
+
+    <div class="hero-content">
 
 
 
         <div>
 
 
-            <h2 class="fw-bold mb-1">
+            <div class="hero-badge">
+
+                <i class="bi bi-stars me-2"></i>
+
+                Comunicação Escolar - EdusCel
+
+            </div>
 
 
-                Notificações
 
 
-            </h2>
+            <h1 class="hero-title">
+
+
+                <i class="bi bi-bell-fill me-2"></i>
+
+                NOTIFICAÇÕES
+
+
+            </h1>
 
 
 
-            <p class="text-muted mb-0">
 
-
-                Gestão de alertas e comunicações do sistema
-
-
-            </p>
 
 
 
@@ -213,11 +426,11 @@ Notificações | EdusCel
 
 
 
-
         <div class="d-flex align-items-center gap-3">
 
 
-            <span class="badge bg-primary counter-badge">
+
+            <span class="badge notification-count">
 
 
                 {{ nao_lidas }} não lidas
@@ -234,12 +447,15 @@ Notificações | EdusCel
 
             <button
 
-                class="btn btn-outline-primary rounded-3"
+                class="btn btn-light rounded-pill px-4 shadow-sm"
 
                 onclick="marcarTodasComoLidas()">
 
 
-                Marcar todas como lidas
+
+                <i class="bi bi-check2-all me-2"></i>
+
+                Marcar todas
 
 
             </button>
@@ -249,9 +465,8 @@ Notificações | EdusCel
 
 
 
-
-
         </div>
+
 
 
 
@@ -259,12 +474,6 @@ Notificações | EdusCel
 
 
 </div>
-
-
-
-
-
-
 
 
 <!-- LISTAGEM -->
